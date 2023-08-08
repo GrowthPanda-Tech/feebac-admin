@@ -15,8 +15,8 @@ export default function SurveyInfo() {
     async function getSurveyData() {
         const response = await makeRequest(`survey/get-survey-result?surveyId=${slug}`, 'GET');
         setSurveyInfo(response);
+        console.log(response);
     }
-
     useEffect(() => {
         getSurveyData();
     }, []);
@@ -31,14 +31,14 @@ export default function SurveyInfo() {
                     {surveyInfo.surveyData.total_response} Response{surveyInfo.surveyData.total_response!=1?"s":""}
                 </span>
             </div>
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-4 gap-12">
                 {
                     surveyInfo.data.map((survey, index) => (
-                        <div key={index}>
-                            <div className="capitalize mb-4 text-[#EA525F] font-semibold">
+                        <div key={index} className="flex flex-col gap-4">
+                            <div className="capitalize text-secondary font-semibold">
                                 Question {index + 1} ({survey.questionType})
                             </div>
-                            <div className="bg-white p-4 gap-4 rounded-xl shadow-md w-4/5 h-full border border-[#A6ACBE]">
+                            <div className="bg-white p-4 rounded-xl shadow-md border border-[#A6ACBE] h-full">
                                 <div className="text-lg font-semibold leading-snug mb-8"> {survey.questionTitle} </div>
                                 <div className="gap-4">
                                     {
@@ -52,9 +52,7 @@ export default function SurveyInfo() {
                                                 {/* Progress bar */}
                                                 <div
                                                     className="h-2 bg-[#EA525F] rounded-full"
-                                                    // whew
-                                                    style={{ width: `${ option[2] ? Math.floor(option[2]) : 0 }%` }}
-                                                >
+                                                    style={{ width: `${ option[2] ? Math.floor(option[2]) : 0 }%` }}>
                                                 </div>
                                             </div>
                                         ))

@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom';
 import makeRequest from '../../utils/makeRequest';
 
 // TODO: refactor table into their components
-function TableBody() {
-    
-}
 
 function TableHeader({ columns }) {
     return (
@@ -109,14 +106,12 @@ export default function Survey() {
                                     {survey.created_date.split(" ")[1]} - {survey.end_date.split(" ")[1]} 
                                 </td>
                                 <td className="p-6 flex gap-4 justify-evenly">
-                                    <Link>
-                                        <button className="btn-actions">
-                                            Edit
-                                        </button>
-                                    </Link>
-                                    <Link to={`/survey/survey-details/${survey.survey_id}`}>
-                                        <button className="btn-actions">
-                                            Show Info
+                                    {/* <Link> */}
+                                    {/*     <button className="btn-secondary"> Edit </button> */}
+                                    {/* </Link> */}
+                                    <Link to={`/survey/details/${survey.survey_id}`}>
+                                        <button>
+                                            <i className="fa-solid fa-info"></i>
                                         </button>
                                     </Link>
                                 </td>

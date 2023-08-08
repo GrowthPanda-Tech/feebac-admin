@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import makeRequest from "../../../utils/makeRequest";
 
-export default function Form({setSurveyId}) {
+export default function Form({ setSurveyId, setIsSurveyCreate }) {
     const [categories, setCategories] = useState([]);
     const [surveyData, setSurveyData] = useState({category: '1', surveyDescription: 'test survey'});
 
-    async function fetchCategories() {
+    const fetchCategories = async () => {
         const response = await makeRequest('survey/get-all-category', 'GET');
         setCategories(response.categoryList);
     }
@@ -13,7 +13,7 @@ export default function Form({setSurveyId}) {
         fetchCategories();
     }, []);
 
-    function handleInputChange(e) {
+    const handleInputChange = (e) => {
         if (e.target.name === "startDate" || e.target.name === "endDate") {
             const dateTimeLocal = new Date(e.target.value);
             const formattedDateTime = dateTimeLocal.toISOString().replace('T', ' ').replace(/-/g, '/').slice(0, 19);
@@ -24,9 +24,11 @@ export default function Form({setSurveyId}) {
         setSurveyData({ ...surveyData, [e.target.name]: e.target.value });
     }
 
-    async function handleSubmit() {
+    const handleSubmit = async () => {
         const response = await makeRequest('site-admin/create-survey', 'POST', surveyData);
+        alert(response.message);
         setSurveyId(response.surveyId);
+        setIsSurveyCreate(true);
     }
 
     const today = new Date().toISOString().slice(0, 16);
@@ -67,7 +69,7 @@ export default function Form({setSurveyId}) {
                     <input placeholder="25" className="w-full input-primary" />
                 </label>
             </div>
-            <button className="btn-primary w-fit" onClick={handleSubmit}> Submit </button>
+            <button className="btn-primary w-fit" onClick={handleSubmit}> Create </button>
         </>
-    )
+    );
 }

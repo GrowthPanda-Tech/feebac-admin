@@ -10,18 +10,13 @@ export default function Question({surveyId}) {
         'questionType': 2,
     });
 
-    const arrangeOptions = () => {
+    const arrangeOptions = (updatedOptions) => {
         let questionValue = {};
-        for (let i = 0; i < options.length; i++) {
-            questionValue[(i + 1).toString()] = options[i];
+        for (let i = 0; i < updatedOptions.length; i++) {
+            questionValue[(i + 1).toString()] = updatedOptions[i];
         }
         setQuestionData({...questionData, questionValue});
     }
-
-    const removeOption = (index) => {
-        const updatedOptions = options.filter((_, i) => i !== index);
-        setOptions(updatedOptions);
-    };
 
     const handleInputChange = (e) => setQuestionData({...questionData, [e.target.name]: e.target.value});
 
@@ -31,8 +26,14 @@ export default function Question({surveyId}) {
         setOptions(updatedOptions);
 
         //does this hamper performance
-        arrangeOptions();
+        arrangeOptions(updatedOptions);
     }
+
+    const handleRemoveOption = (index) => {
+        const updatedOptions = options.filter((_, i) => i !== index);
+        setOptions(updatedOptions);
+        arrangeOptions(updatedOptions);
+    };
 
     const handleQuestionSubmit = async () => {
         const response = await makeRequest('survey/add-question', 'POST', questionData);
@@ -53,21 +54,24 @@ export default function Question({surveyId}) {
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="w-[95%]">
-                <input type="text" placeholder={`Question ${questionNumber} :`} className="w-full mb-4 input-primary" name="questionTitle" onChange={handleInputChange} />
-                <div className="flex justify-between">
-                    <div className="flex gap-7">
-                        <button className="btn-secondary" onClick={() => setQuestionData({...questionData, questionType: 1, questionValue: {}})}>Text Answer</button>
-                        <button className="btn-secondary" onClick={() => setQuestionData({...questionData, questionType: 2})}>One Answer</button>
-                        <button className="btn-secondary" onClick={() => setQuestionData({...questionData, questionType: 3})}>Multiple Answer</button>
-                    </div>
-                    <button onClick={() => setOptions([...options, ''])}>
-                        <i className="fa-solid fa-plus"></i>
-                    </button>
+            <label>
+                <span className="font-bold"> Question {questionNumber} : </span>
+                <input type="text" className="w-full mb-4 input-primary" name="questionTitle" onChange={handleInputChange} />
+            </label>
+            <div className="flex justify-between">
+                <div className="flex gap-7">
+                    <button className="btn-secondary" onClick={() => setQuestionData({...questionData, questionType: 1, questionValue: {}})}>Text Answer</button>
+                    <button className="btn-secondary" onClick={() => setQuestionData({...questionData, questionType: 2})}>One Answer</button>
+                    <button className="btn-secondary" onClick={() => setQuestionData({...questionData, questionType: 3})}>Multiple Answer</button>
                 </div>
-                <div className="flex flex-col">
-                    {
-                        questionData.questionType === 1 ? <></> :
+                {/* Add options */}
+                <button onClick={() => setOptions([...options, ''])}>
+                    <i className="fa-solid fa-plus"></i>
+                </button>
+            </div>
+            <div className="flex flex-col">
+                {
+                    questionData.questionType === 1 ? <></> :
                         options.map((option, index) => (
                             <div key={index} className='mt-2 flex items-center justify-between'>
                                 <input
@@ -78,13 +82,12 @@ export default function Question({surveyId}) {
                                     onChange={(e) => handleOptionChange(e, index)}
                                 />
 
-                                <button className='ml-6' onClick={() => removeOption(index)}>
+                                <button className='ml-6' onClick={() => handleRemoveOption(index)}>
                                     <i className='fa-regular fa-trash-can text-xl text-black'></i>
                                 </button>
                             </div>
                         ))
-                    }
-                </div>
+                }
             </div>
             <div className="flex gap-4">
                 <button className="btn-primary w-fit" onClick={handleQuestionSubmit}> Submit </button>

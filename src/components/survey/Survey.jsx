@@ -4,19 +4,37 @@ import makeRequest from '../../utils/makeRequest';
 import TableHeader from './TableHeader';
 import TableBody from './TableBody';
 
+function TypeBtn({ type, setUrl }) {
+    return (
+        <button className={`capitalize btn-secondary`} onClick={() => setUrl(type)}>
+            {type}
+        </button>
+    );
+}
+
+function TypeBtns({setUrl}) {
+    return (
+        <div className='flex gap-4'>
+            <TypeBtn type={'live'} setUrl={setUrl} />
+            <TypeBtn type={'upcoming'} setUrl={setUrl} />
+            <TypeBtn type={'expired'} setUrl={setUrl} />
+        </div>
+    );
+}
+
 export default function Survey() {
     const [surveyData, setsurveyData] = useState([]);
     const [url, setUrl] = useState("live");
 
-    async function fetchSurveyData() {
+    const columns = ['No.', 'Survey Name', 'Survey Category', 'Start Date', 'End Date', 'Survey Timings'];
+
+    const fetchSurveyData = async () => {
         const response = await makeRequest(`site-admin/get-all-survey?time=${url}`, 'GET');
         setsurveyData(response.data);
     }
     useEffect(() => {
         fetchSurveyData();
     }, [url]);
-
-    const columns = ['No.', 'Survey Name', 'Survey Category', 'Start Date', 'End Date', 'Survey Timings', ''];
 
     return (
         <div className="m-16">
@@ -27,14 +45,12 @@ export default function Survey() {
                 </button>
             </Link>
 
-            <button onClick={() => setUrl('live')}>Live</button>
-            <button onClick={() => setUrl('expired')}>Expired</button>
-            <button onClick={() => setUrl('upcoming')}>Upcoming</button>
+            <TypeBtns setUrl={setUrl} />
 
             {/* Table */}
-            <table className="table-auto w-full bg-white rounded-xl mt-8 text-center">
+            <table className="table-fixed w-full bg-white rounded-xl mt-8 text-center">
                 <TableHeader columns={columns} />
-                <TableBody surveyData={surveyData} />
+                <TableBody data={surveyData} />
             </table>
         </div>
     );

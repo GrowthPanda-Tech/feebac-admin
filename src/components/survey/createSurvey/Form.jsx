@@ -3,8 +3,11 @@ import makeRequest from "../../../utils/makeRequest";
 
 export default function Form({ setSurveyId, setIsSurveyCreate }) {
     const [categories, setCategories] = useState([]);
-    const [surveyData, setSurveyData] = useState({category: '1', surveyDescription: 'test survey'});
+    const [surveyData, setSurveyData] = useState({category: '1'});
 
+    console.log(surveyData);
+
+    // TODO: put this is localStorage
     const fetchCategories = async () => {
         const response = await makeRequest('survey/get-all-category', 'GET');
         setCategories(response.categoryList);
@@ -27,8 +30,13 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
     const handleSubmit = async () => {
         const response = await makeRequest('site-admin/create-survey', 'POST', surveyData);
         alert(response.message);
-        setSurveyId(response.surveyId);
-        setIsSurveyCreate(true);
+
+        if (response.isSuccess) {
+            setSurveyId(response.surveyId);
+            setIsSurveyCreate(response.isSuccess);
+        } 
+
+        return;
     }
 
     const today = new Date().toISOString().slice(0, 16);
@@ -38,23 +46,23 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
             <div className="grid gap-5 grid-rows-2 grid-cols-3">
                 <label>
                     Scheduled Start Date
-                    <input type="datetime-local" min={today} name="startDate" className="w-full input-primary" onChange={handleInputChange} />
+                    <input type="datetime-local" min={today} name="startDate" className="w-full input-primary" onChange={handleInputChange} required />
                 </label>
                 <label>
                     Scheduled End Date
-                    <input type="datetime-local" min={today} name="endDate" className="w-full input-primary" onChange={handleInputChange} />
+                    <input type="datetime-local" min={today} name="endDate" className="w-full input-primary" onChange={handleInputChange} required />
                 </label>
                 <label>
                     New Survey Name
-                    <input className="w-full input-primary" name="surveyTitle" onChange={handleInputChange} />
+                    <input className="w-full input-primary" name="surveyTitle" onChange={handleInputChange} required />
                 </label>
                 <label>
                     Survey Description
-                    <input className="w-full input-primary" name="surveyDescription" onChange={handleInputChange} />
+                    <input className="w-full input-primary" name="surveyDescription" onChange={handleInputChange} required />
                 </label>
                 <label>
                     Select Category
-                    <select className="capitalize w-full input-primary bg-white" name="category" onChange={handleInputChange} >
+                    <select className="capitalize w-full input-primary bg-white" name="category" onChange={handleInputChange} required >
                         {
                             categories.map((item) => (
                                 <option key={item.category_id} value={item.category_id}>

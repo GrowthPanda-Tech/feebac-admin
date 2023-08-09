@@ -27,7 +27,7 @@ export default function Content() {
             {/* Top Row */}
             <div className="flex w-full justify-between items-center">
                 <span className="text-2xl font-semibold"> Articles List </span>
-                <Link to={"create-new-article"}>
+                <Link to={"create"}>
                     <button className="btn-primary">
                         <i className="fa-solid fa-plus"></i>
                         Add New Article

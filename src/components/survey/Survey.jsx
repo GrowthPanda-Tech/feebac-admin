@@ -6,13 +6,15 @@ import TableBody from './TableBody';
 
 export default function Survey() {
     const [surveyData, setsurveyData] = useState([]);
+    const [url, setUrl] = useState("live");
+
     async function fetchSurveyData() {
-        const response = await makeRequest('site-admin/get-all-survey?time=upcoming', 'GET');
+        const response = await makeRequest(`site-admin/get-all-survey?time=${url}`, 'GET');
         setsurveyData(response.data);
     }
     useEffect(() => {
         fetchSurveyData();
-    }, []);
+    }, [url]);
 
     const columns = ['No.', 'Survey Name', 'Survey Category', 'Start Date', 'End Date', 'Survey Timings', ''];
 
@@ -24,6 +26,10 @@ export default function Survey() {
                     Create a Survey
                 </button>
             </Link>
+
+            <button onClick={() => setUrl('live')}>Live</button>
+            <button onClick={() => setUrl('expired')}>Expired</button>
+            <button onClick={() => setUrl('upcoming')}>Upcoming</button>
 
             {/* Table */}
             <table className="table-auto w-full bg-white rounded-xl mt-8 text-center">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 function NavList({ link, title, isActive, onClick }) {
     return (
@@ -25,8 +25,11 @@ export default function Navbar() {
         { link: 'settings', title: 'Settings'},
     ];
 
-    const [isActive, setIsActive] = useState();
-    const onClick = (link) => setIsActive(link);
+    const path = useLocation();
+    const link = path.pathname.substring(1); //removes the leading '/'
+
+    const [isActive, setIsActive] = useState(link);
+    const handleClick = (link) => setIsActive(link);
 
     return (
         <div className="bg-primary h-screen w-80 fixed">
@@ -38,7 +41,7 @@ export default function Navbar() {
                             link={item.link}
                             title={item.title}
                             isActive={isActive === item.link}
-                            onClick={() => onClick(item.link)}
+                            onClick={() => handleClick(item.link)}
                         />
                     ))
                 }

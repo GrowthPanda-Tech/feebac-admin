@@ -28,6 +28,10 @@
     .input-primary {
         @apply border border-lighest-grey rounded-xl p-4 font-normal mt-2
     }
+
+    .heading {
+        @apply text-xl font-bold
+    }
 }
 
 @layer utilities {

@@ -26,7 +26,7 @@ export default function Survey() {
     const [surveyData, setsurveyData] = useState([]);
     const [url, setUrl] = useState("live");
 
-    const columns = ['No.', 'Survey Name', 'Survey Category', 'Start Date', 'End Date', 'Survey Timings'];
+    const columns = ['No.', 'Survey Name', 'Survey Category', 'Start Date', 'End Date', 'Survey Timings', ' '];
 
     const fetchSurveyData = async () => {
         const response = await makeRequest(`site-admin/get-all-survey?time=${url}`, 'GET');
@@ -35,6 +35,8 @@ export default function Survey() {
     useEffect(() => {
         fetchSurveyData();
     }, [url]);
+
+    console.log(surveyData);
 
     return (
         <div className="m-16">

@@ -82,9 +82,12 @@ export default function Question({surveyId}) {
                                     onChange={(e) => handleOptionChange(e, index)}
                                 />
 
-                                <button className='ml-6' onClick={() => handleRemoveOption(index)}>
-                                    <i className='fa-regular fa-trash-can text-xl text-black'></i>
-                                </button>
+                                {
+                                    options.length <= 2 ? <></> : 
+                                        <button className='ml-6' onClick={() => handleRemoveOption(index)}>
+                                            <i className='fa-regular fa-trash-can text-xl text-black'></i>
+                                        </button>
+                                }
                             </div>
                         ))
                 }

@@ -74,7 +74,7 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
                 </label>
                 <label>
                     Loyalty Points
-                    <input placeholder="25" className="w-full input-primary" />
+                    <input placeholder="25" name="loyaltyPoint" onChange={handleInputChange} className="w-full input-primary" />
                 </label>
             </div>
             <button className="btn-primary w-fit" onClick={handleSubmit}> Create </button>

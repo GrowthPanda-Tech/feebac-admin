@@ -4,20 +4,28 @@ import makeRequest from '../../utils/makeRequest';
 import TableHeader from './TableHeader';
 import TableBody from './TableBody';
 
-function TypeBtn({ type, setUrl }) {
+function Button({ type, setUrl, isActive, onClick }) {
+    const handleClick = () => {
+        setUrl(type);
+        onClick();
+    }
+
     return (
-        <button className={`capitalize btn-secondary`} onClick={() => setUrl(type)}>
+        <button className={`capitalize btn-${isActive ? 'primary' : 'secondary'}`} onClick={handleClick}>
             {type}
         </button>
     );
 }
 
-function TypeBtns({setUrl}) {
+function ButtonComponent({setUrl}) {
+    const [activeButton, setactiveButton] = useState(1);
+    const handleClick = (buttonId) => setactiveButton(buttonId);
+
     return (
         <div className='flex gap-4'>
-            <TypeBtn type={'live'} setUrl={setUrl} />
-            <TypeBtn type={'upcoming'} setUrl={setUrl} />
-            <TypeBtn type={'expired'} setUrl={setUrl} />
+            <Button type={'live'} setUrl={setUrl} isActive={activeButton === 1} onClick={() => handleClick(1)} />
+            <Button type={'upcoming'} setUrl={setUrl} isActive={activeButton === 2} onClick={() => handleClick(2)} />
+            <Button type={'expired'} setUrl={setUrl} isActive={activeButton === 3} onClick={() => handleClick(3)} />
         </div>
     );
 }
@@ -47,7 +55,7 @@ export default function Survey() {
                 </button>
             </Link>
 
-            <TypeBtns setUrl={setUrl} />
+            <ButtonComponent setUrl={setUrl} />
 
             {/* Table */}
             <table className="table-fixed w-full bg-white rounded-xl mt-8 text-center">

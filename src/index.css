@@ -13,12 +13,16 @@
         @apply border-2 border-accent rounded-3xl py-6 px-12 text-xl;
     }
 
+    .btn {
+        @apply px-8 py-3 rounded-xl flex items-center gap-2 font-semibold
+    }
+
     .btn-primary {
-        @apply bg-secondary text-white px-8 py-3 rounded-xl flex items-center gap-2 font-semibold;
+        @apply bg-secondary text-white btn;
     }
 
     .btn-secondary {
-        @apply bg-light-grey text-dark-grey px-8 py-3 rounded-xl flex items-center gap-2 font-semibold;
+        @apply bg-light-grey text-dark-grey btn;
     }
 
     .page-heading {

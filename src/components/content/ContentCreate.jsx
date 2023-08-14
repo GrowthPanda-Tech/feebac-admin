@@ -37,7 +37,7 @@ export default function ContentCreate() {
         setCategories(response.categoryList);
     }
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         const formData = new FormData();
         formData.append('articleTitle', articleData.articleTitle);
         formData.append('articleDesctiption', articleData.articleDescription);
@@ -45,7 +45,7 @@ export default function ContentCreate() {
         formData.append('category', articleData.category);
         formData.append('articleImg', articleData.articleImg, articleData.articleImg.name);
 
-        const response = await formSubmit(e, 'site-admin/create-article', formData)
+        const response = await formSubmit(e, 'site-admin/create-article', 'PUT', formData)
 
         if (response.isSuccess) {
             alert('Article saved to draft');

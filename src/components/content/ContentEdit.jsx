@@ -14,23 +14,18 @@ export default function ContentEdit() {
     });
 
     async function getArticleInfo() {
-        const response = await makeRequest(`site-admin/show-article-info?articleId=${slug}`, GET);
+        const response = await makeRequest(`site-admin/show-article-info?articleId=${slug}`, 'GET');
         setArticleInfo(response.articleInfo);
     }
 
     // TODO: Put this in localstorage
     async function getAllCategories() {
-        const response = await fetchFromServer('survey/get-all-category');
+        const response = await makeRequest('survey/get-all-category', 'GET');
         if (!response.isSuccess) {
             return;
         }
         setCategories(response.categoryList);
     }
-
-    useEffect(() => {
-        getArticleInfo();
-        getAllCategories();
-    }, []);
 
     function handleInputChange(e) {
         setArticleInfo({...articleInfo, [e.target.name]: e.target.value})
@@ -60,7 +55,7 @@ export default function ContentEdit() {
         formData.append('isUpdateImage', updateImg.isUpdateImage);
         formData.append('articleImg', updateImg.imgFile);
 
-        const response = await formSubmit(e, '/site-admin/update-article', formData, 'PUT')
+        const response = await formSubmit(e, '/site-admin/update-article', 'PUT', formData)
 
         if (response.isSuccess) {
             alert('Article edited');
@@ -71,40 +66,10 @@ export default function ContentEdit() {
 
     const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
-    // return (
-    //     <form className="flex flex-col w-9/12 mx-auto mt-12 gap-4" onSubmit={handleSubmit}>
-    //         <label>
-    //             Title:
-    //             <input value={articleInfo.article_title} name="article_title" onChange={(e) => handleInputChange(e)} />
-    //         </label>
-    //         {/* yeah i know there's a typo. blame the backend guy */}
-    //         <label>
-    //             Description: 
-    //             <input value={articleInfo.article_desctiption} name="article_desctiption" onChange={(e) => handleInputChange(e)} />
-    //         </label>
-    //         <label>
-    //             Content: 
-    //             <textarea className="h-80 p-8" value={articleInfo.article_content} name="article_content" onChange={(e) => handleInputChange(e)} />
-    //         </label>
-    //         <label>
-    //             Category: 
-    //             <select onChange={(e) => handleInputChange(e)}>
-    //                 {
-    //                     categories.map((category) => 
-    //                         <option key={category.category_id} selected={articleInfo.category.category_id == category.category_id} value={category.category_id}>
-    //                             {category.category_name}
-    //                         </option>
-    //                     )
-    //                 }
-    //             </select>
-    //         </label>
-    //         <img src={baseUrl+articleInfo.image_url} className="w-80" />
-    //         <button className="w-fit py-3 px-8 bg-[#EA525F] text-white font-bold">
-    //             <i className="fa-regular fa-pen-to-square mr-4"></i>
-    //             Submit
-    //         </button>
-    //     </form>
-    // )
+    useEffect(() => {
+        getArticleInfo();
+        getAllCategories();
+    }, []);
 
     return (
         <>
@@ -161,7 +126,6 @@ export default function ContentEdit() {
                     {/* {imgPreview && <img src={imgPreview} />} */}
                 </div>
             </div>
-            
         </>
     )
 }

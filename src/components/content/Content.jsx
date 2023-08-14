@@ -23,7 +23,7 @@ export default function Content() {
     }
 
     return (
-        <div className="m-16">
+        <>
             {/* Top Row */}
             <div className="flex w-full justify-between items-center">
                 <span className="text-2xl font-semibold"> Articles List </span>
@@ -37,7 +37,7 @@ export default function Content() {
 
             {/* TODO: Can I make this dynamic somehow? */}
             {/* Table */}
-            <table className="table-auto w-full bg-white rounded-xl mt-8 text-center">
+            <table className='table-fixed w-full bg-white rounded-xl mt-8 text-center'>
                 <thead className="text-xl">
                     <tr>
                         <th className="p-6"> No. </th>
@@ -84,7 +84,7 @@ export default function Content() {
                     }
                 </tbody>
             </table>
-        </div>
+        </>
     );
 }
 

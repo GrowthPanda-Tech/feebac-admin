@@ -47,13 +47,15 @@ export default function Survey() {
     console.log(surveyData);
 
     return (
-        <div className="m-16">
+        <>
             <Link to={'/survey/create'} className='w-fit'>
                 <button className="btn-primary mb-8">
                     <i className="fa-solid fa-plus"></i>
                     Create a Survey
                 </button>
             </Link>
+
+            <h1 className='page-heading mb-9'> Survey List </h1>
 
             <ButtonComponent setUrl={setUrl} />
 
@@ -62,6 +64,6 @@ export default function Survey() {
                 <TableHeader columns={columns} />
                 <TableBody data={surveyData} />
             </table>
-        </div>
+        </>
     );
 }

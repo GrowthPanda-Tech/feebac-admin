@@ -25,16 +25,16 @@
         @apply bg-light-grey text-dark-grey btn;
     }
 
-    .page-heading {
-        @apply text-xl font-semibold;
-    }
-
     .input-primary {
         @apply border border-lighest-grey rounded-xl p-4 font-normal mt-2
     }
 
+    .input-article {
+        @apply border-2 border-accent py-3 px-8 rounded-xl bg-white
+    }
+
     .heading {
-        @apply text-xl font-bold
+        @apply text-2xl font-semibold mb-8
     }
 }
 

@@ -29,7 +29,7 @@ export default function CategoryCreateEdit() {
     const handleSubmit = async (e) => {
         const formdata = new FormData();
         formdata.append("categoryName", categoryCreate.categoryName);
-        formdata.append("categoryImg", categoryCreate.categoryImg);
+        formdata.append("categoryImg", categoryCreate.categoryImg, categoryCreate.categoryImg.name);
 
         const response = await formSubmit(e, 'site-admin/add-category', 'POST', formdata);
 

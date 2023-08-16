@@ -7,11 +7,9 @@ export default function Settings() {
     const toggleCreateEdit = () => setIsShowCreateEdit(!isShowCreateEdit);
 
     return (
-        <div className='p-12'>
+        <>
             <div className='flex justify-between items-center mb-6'>
-                <span className='page-heading'>
-                    Category List
-                </span>
+                <h1 className='heading'> Category List </h1>
                 <button className='btn-primary' onClick={toggleCreateEdit}>
                     <i className={`fa-solid fa-angles-${isShowCreateEdit ? 'up' : 'down'} mr-3`}></i>
                     Add New Category
@@ -21,6 +19,6 @@ export default function Settings() {
             { isShowCreateEdit && <CategoryCreateEdit /> }
 
             <Categories />
-        </div>
+        </>
     );
 }

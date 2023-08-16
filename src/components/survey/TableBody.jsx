@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import makeRequest from "../../utils/makeRequest";
+import TableData from "../TableData"
 
 function Actions({ id }) {
     const handleStatusToggle = async () => {
@@ -22,32 +23,20 @@ function Actions({ id }) {
     );
 }
 
-function TableData({ data, className = '' }) {
-    return <td className={`p-6 ${className}`}> {data} </td>;
-}
-
-function TableRow({ survey, index }) {
-    return (
-        <tr>
-            <TableData data={index + 1} />
-            <TableData data={survey.survey_title} />
-            <TableData data={survey.category} className={'capitalize'} />
-            <TableData data={survey.start_date.split(" ")[0]} />
-            <TableData data={survey.end_date.split(" ")[0]} />
-            <TableData data={`${survey.start_date.split(" ")[1]} - ${survey.end_date.split(" ")[1]}`} />
-            <td>
-                <Actions id={survey.survey_id} />
-            </td>
-        </tr>
-    );
-}
-
 export default function TableBody({data}) {
     return (
         <tbody className="text-lg">
             {
                 data.map((survey, index) => (
-                    <TableRow key={index} survey={survey} index={index} />
+                    <tr>
+                        <TableData data={index + 1} />
+                        <TableData data={survey.survey_title} />
+                        <TableData data={survey.category} />
+                        <TableData data={survey.start_date.split(" ")[0]} />
+                        <TableData data={survey.end_date.split(" ")[0]} />
+                        <TableData data={`${survey.start_date.split(" ")[1]} - ${survey.end_date.split(" ")[1]}`} />
+                        <td> <Actions id={survey.survey_id} /> </td>
+                    </tr>
                 ))
             }
         </tbody>

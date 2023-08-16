@@ -7,7 +7,6 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
 
     console.log(surveyData);
 
-    // TODO: put this is localStorage
     const fetchCategories = async () => {
         const response = await makeRequest('survey/get-all-category', 'GET');
         setCategories(response.categoryList);
@@ -43,25 +42,26 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
 
     return (
         <>
-            <div className="grid gap-5 grid-rows-2 grid-cols-3">
+            <h1 className='heading'> Create New Survey </h1>
+            <div className="grid gap-5 grid-rows-2 grid-cols-3 mb-8">
                 <label>
-                    Scheduled Start Date
+                    Scheduled Start Date *
                     <input type="datetime-local" min={today} name="startDate" className="w-full input-primary" onChange={handleInputChange} required />
                 </label>
                 <label>
-                    Scheduled End Date
+                    Scheduled End Date *
                     <input type="datetime-local" min={today} name="endDate" className="w-full input-primary" onChange={handleInputChange} required />
                 </label>
                 <label>
-                    New Survey Name
+                    New Survey Name *
                     <input className="w-full input-primary" name="surveyTitle" onChange={handleInputChange} required />
                 </label>
                 <label>
-                    Survey Description
+                    Survey Description *
                     <input className="w-full input-primary" name="surveyDescription" onChange={handleInputChange} required />
                 </label>
                 <label>
-                    Select Category
+                    Select Category *
                     <select className="capitalize w-full input-primary bg-white" name="category" onChange={handleInputChange} required >
                         {
                             categories.map((item) => (
@@ -73,8 +73,8 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
                     </select>
                 </label>
                 <label>
-                    Loyalty Points
-                    <input placeholder="25" name="loyaltyPoint" onChange={handleInputChange} className="w-full input-primary" />
+                    Loyalty Points *
+                    <input name="loyaltyPoint" onChange={handleInputChange} className="w-full input-primary" />
                 </label>
             </div>
             <button className="btn-primary w-fit" onClick={handleSubmit}> Create </button>

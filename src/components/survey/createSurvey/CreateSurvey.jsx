@@ -7,10 +7,10 @@ export default function CreateSurvey() {
     const [isSurveyCreate, setIsSurveyCreate] = useState(false);
 
     return (
-        <div className="flex flex-col gap-12">
+        <>
             {
                 !isSurveyCreate ? <Form setSurveyId={setSurveyId} setIsSurveyCreate={setIsSurveyCreate} /> : <Question surveyId={surveyId} />
             }
-        </div>
+        </>
     );
 }

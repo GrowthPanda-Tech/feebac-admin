@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import makeRequest from '../../utils/makeRequest';
-import TableHeader from './TableHeader';
+import TableHead from '../TableHead';
 import TableBody from './TableBody';
 
 function Button({ type, setUrl, isActive, onClick }) {
@@ -44,8 +44,6 @@ export default function Survey() {
         fetchSurveyData();
     }, [url]);
 
-    console.log(surveyData);
-
     return (
         <>
             <Link to={'/survey/create'} className='w-fit'>
@@ -55,13 +53,13 @@ export default function Survey() {
                 </button>
             </Link>
 
-            <h1 className='page-heading mb-9'> Survey List </h1>
+            <h1 className='heading'> Survey List </h1>
 
             <ButtonComponent setUrl={setUrl} />
 
             {/* Table */}
             <table className="table-fixed w-full bg-white rounded-xl mt-8 text-center">
-                <TableHeader columns={columns} />
+                <TableHead headers={columns} />
                 <TableBody data={surveyData} />
             </table>
         </>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import makeRequest from "../../../utils/makeRequest";
+import { useEffect } from "react";
 
 export default function Question({surveyId}) {
     //TODO: can i minimise the use of these
@@ -9,6 +10,13 @@ export default function Question({surveyId}) {
         'surveyId': surveyId,
         'questionType': 2,
     });
+
+    const [surveyTitle, setSurveyTitle] = useState();
+
+    const getSurveyData = async () => {
+        const response = await makeRequest(`survey/show-survey?sid=${surveyId}`)
+        setSurveyTitle(response.surveyInfo.survey_title);
+    }
 
     const arrangeOptions = (updatedOptions) => {
         let questionValue = {};
@@ -50,10 +58,19 @@ export default function Question({surveyId}) {
         alert(response.message);
     }
 
+    useEffect(() =>{
+        getSurveyData();
+    },[])
+
     console.log(questionData);
+    console.log(surveyTitle);
 
     return (
         <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+                <h1 className='heading'> {surveyTitle} </h1>
+                <button className="btn-primary w-fit" onClick={handlePublish}> Publish </button>
+            </div>
             <label>
                 <span className="font-bold"> Question {questionNumber} : </span>
                 <input type="text" className="w-full mb-4 input-primary" name="questionTitle" onChange={handleInputChange} />
@@ -76,7 +93,7 @@ export default function Question({surveyId}) {
                             <div key={index} className='mt-2 flex items-center justify-between'>
                                 <input
                                     type="text"
-                                    className="w-full input-primary border-secondary border-2"
+                                    className="w-full input-primary"
                                     name="questionValue"
                                     value={option}
                                     onChange={(e) => handleOptionChange(e, index)}
@@ -94,7 +111,6 @@ export default function Question({surveyId}) {
             </div>
             <div className="flex gap-4">
                 <button className="btn-primary w-fit" onClick={handleQuestionSubmit}> Submit </button>
-                <button className="btn-secondary w-fit" onClick={handlePublish}> Publish </button>
             </div>
         </div>
     );

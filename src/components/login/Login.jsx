@@ -1,31 +1,12 @@
 import { useState } from 'react';
+import OtpField from './OtpField';
 import loginBanner from '../../assets/loginBanner.png';
 import makeRequest from '../../utils/makeRequest';
-
-function OtpField({ quantity, inputData, inputOnChange }) {
-    const list = [];
-    for (let i = 0; i < quantity; i++) {
-        list.push(
-            <input
-                type='text'
-                maxLength={1}
-                id={i + 1}
-                key={i + 1}
-                name={`i-${i}`}
-                value={inputData[`i-${i}`]}
-                onChange={inputOnChange}
-                className='w-1/4 login-input text-center'
-                required
-            />
-        )
-    }
-    return <> {list} </>;
-}
 
 function LargeBtn({ name, disabled }) {
     return (
         <button
-            className='bg-primary disabled:bg-accent disabled:cursor-not-allowed hover:bg-accent text-white py-6 text-xl rounded-3xl'
+            className='bg-primary disabled:bg-accent disabled:cursor-not-allowed hover:bg-accent text-white py-6 text-xl rounded-3xl font-semibold'
             disabled={disabled}>
             {name}
         </button>

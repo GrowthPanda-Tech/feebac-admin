@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
+import { Editor } from '@tinymce/tinymce-react';
 import makeRequest from "../../utils/makeRequest";
 
 function Select({ label, name, onChange, items }) {
     return (
         <label className="flex flex-col">
             <span className="font-semibold mb-2"> {label} </span>
-            <select name={name} className="capitalize input-article" onChange={onChange}>
+            <select name={name} className="capitalize input-article border-none" onChange={onChange}>
                 {
                     items.map((item) => (
                         <option key={item.category_id} value={item.category_id}>
@@ -22,40 +23,23 @@ function Input({ label, name,  onChange }) {
     return (
         <label className="flex flex-col">
             <span className="font-semibold mb-2"> {label} </span>
-            <input name={name} onChange={onChange} className="input-article" />
+            <input name={name} onChange={onChange} className="input-article border-none" />
         </label>
     );
 }
 
-export default function ContentForm({ handleImageChange }) {
-    const [articleData, setArticleData] = useState({ category: '1', articleImg: null, });
+export default function ContentForm({ handleInputChange, handleImageChange, handleEditorChange, handleSubmit }) {
     const [categories, setCategories] = useState([]);
+    const tinyApi = import.meta.env.TINY_API;
 
     const getCategories = async () => {
         const response = await makeRequest('survey/get-all-category', 'GET');
         setCategories(response.categoryList);
     }
 
-    const handleInputChange = (e) => setArticleData({...articleData, [e.target.name]: e.target.value});
-
-    const handleSubmit = async (e) => {
-        const formData = new FormData();
-        formData.append('articleTitle', articleData.articleTitle);
-        formData.append('articleDesctiption', articleData.articleDescription);
-        formData.append('articleContent', articleData.articleContent);
-        formData.append('category', articleData.category);
-        formData.append('articleImg', articleData.articleImg, articleData.articleImg.name);
-
-        const response = await formSubmit(e, 'site-admin/create-article', 'POST', formData);
-
-        response.isSuccess ? alert('Article saved to draft') : alert(response.message);
-    }
-
     useEffect(() => {
         getCategories();
     },[])
-
-    console.log(categories);
 
     return (
         <div className="flex flex-col gap-4">
@@ -67,19 +51,41 @@ export default function ContentForm({ handleImageChange }) {
                     <Select label={'Category'} name={'category'} onChange={handleInputChange} items={categories} />
                 </div>
             </div>
-            <Input label={'Description'} name={'articleTitle'} onChange={handleInputChange} />
+            <Input label={'Description'} name={'articleDescription'} onChange={handleInputChange} />
 
             <label className="flex flex-col">
                 <span className="font-semibold mb-2"> Image (Optional) </span>
-                <input name='articleImg' type="file" accept="image/*" className="input-article" onChange={handleImageChange} />
+                <input name='articleImg' type="file" accept="image/*" className="input-article border-none" onChange={handleImageChange} />
             </label>
+
+            {/* <label className="flex flex-col"> */}
+            {/*     <span className="font-semibold mb-2"> Content </span> */}
+            {/*     <textarea name='articleContent' className="h-64 py-8 input-article" onChange={(e) => handleInputChange(e)} /> */}
+            {/* </label> */}
 
             <label className="flex flex-col">
                 <span className="font-semibold mb-2"> Content </span>
-                <textarea name='articleContent' className="h-64 py-8 input-article" onChange={(e) => handleInputChange(e)} />
+                <Editor
+                    apiKey={tinyApi}
+                    onEditorChange={handleEditorChange}
+                    init={{
+                        height: 500,
+                        menubar: false,
+                        plugins: [
+                            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                            'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                        ],
+                        toolbar: 'undo redo | blocks | ' +
+                            'bold italic forecolor | image | alignleft aligncenter ' +
+                            'alignright alignjustify | bullist numlist outdent indent | ' +
+                            'removeformat | help',
+                        // content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                    }}
+                />
             </label>
 
-            <button className="btn-primary w-fit" onChange={handleSubmit}>
+            <button className="btn-primary w-fit" onClick={handleSubmit}>
                 <i className="fa-solid fa-floppy-disk mr-2"></i>
                 Save Draft
             </button>

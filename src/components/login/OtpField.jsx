@@ -29,7 +29,7 @@ export default function OtpField({ quantity, inputData, inputOnChange }) {
                 value={inputData[`i-${index}`] || ''}
                 onChange={(event) => handleInputChange(event, index)}
                 onKeyDown={(event) => handleKeyDown(event, index)}
-                className="w-1/4 login-input text-center"
+                className="w-1/4 login-input px-0 text-center"
                 ref={inputRefs[index]}
                 required
             />

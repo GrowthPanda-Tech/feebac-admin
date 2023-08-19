@@ -85,7 +85,7 @@ export default function Login() {
 
                 <form className='flex flex-col gap-6' onSubmit={handleVerify}>
                     <div className='flex gap-4'>
-                        <OtpField quantity={4} inputData={inputData} inputOnChange={inputOnChange} />
+                        <OtpField quantity={6} inputData={inputData} inputOnChange={inputOnChange} />
                     </div>
                     <LargeBtn name={'LOGIN'} />
                 </form>

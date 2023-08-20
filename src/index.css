@@ -13,6 +13,18 @@
         @apply border-2 border-accent rounded-3xl py-6 px-12 text-xl;
     }
 
+    .input-primary {
+        @apply border border-lighest-grey rounded-xl p-4 font-normal mt-2
+    }
+
+    .input-article {
+        @apply border-2 border-accent py-3 px-8 rounded-xl bg-white
+    }
+
+    .heading {
+        @apply text-2xl font-semibold mb-8
+    }
+
     .btn {
         @apply px-8 py-3 rounded-xl flex items-center gap-2 font-semibold
     }
@@ -25,16 +37,8 @@
         @apply bg-light-grey text-dark-grey btn;
     }
 
-    .input-primary {
-        @apply border border-lighest-grey rounded-xl p-4 font-normal mt-2
-    }
-
-    .input-article {
-        @apply border-2 border-accent py-3 px-8 rounded-xl bg-white
-    }
-
-    .heading {
-        @apply text-2xl font-semibold mb-8
+    .table {
+        @apply table-fixed w-full bg-white rounded-xl text-center
     }
 }
 

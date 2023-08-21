@@ -29,8 +29,8 @@ export default function Content() {
     return (
         <>
             {/* Top Row */}
-            <div className="flex w-full justify-between items-center">
-                <h1 className="heading"> Articles List </h1>
+            <div className="flex w-full justify-between items-center mb-8">
+                <h1 className="heading mb-0"> Articles List </h1>
                 <Link to={"create"}>
                     <button className="btn-primary">
                         <i className="fa-solid fa-plus"></i>
@@ -40,12 +40,12 @@ export default function Content() {
             </div>
 
             {/* Table */}
-            <table className='table-fixed w-full bg-white rounded-xl mt-8 text-center'>
+            <table className="table">
                 <TableHead headers={headers} />
 
                 <tbody className="text-lg">
                     {
-                        articleList.map((article, index) => (
+                        articleList.slice(0).reverse().map((article, index) => (
                             <tr key={article.article_id}>
                                 <TableData data={index + 1} />
                                 <TableData data={article.article_title} />

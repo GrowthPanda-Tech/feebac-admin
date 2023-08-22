@@ -52,23 +52,29 @@ function FilterSubSection({ filterName, filterData }) {
                         //     placeholder={`Enter ${data.key_name}`}
                         //     className="input-primary"
                         // />
-                        data.is_select ? 
-                            <div className="flex flex-col">
-                                {
-                                    data.options.map((option) => (
-                                        <label>
-                                            <input type="checkbox" value={option} />
-                                            <span> {option} </span>
-                                        </label>
-                                    ))
-                                }
-                            </div>
-                        :
-                            <input 
-                                min={data.options[0]}
-                                max={data.options[data.options.length - 1]}
-                                type="range"
-                            />
+                        <div className="w-1/2">
+                            {
+                                data.is_select ? 
+                                <div className="flex flex-col">
+                                    {
+                                        data.options.map((option) => (
+                                            <label>
+                                                <input type="checkbox" value={option} />
+                                                <span> {option} </span>
+                                            </label>
+                                        ))
+                                    }
+                                </div>
+                                :
+                                <input 
+                                    min={data.options[0]}
+                                    max={data.options[data.options.length - 1]}
+                                    type="range"
+                                    className="w-full"
+                                    onChange={(event) => console.log(event.target.value)}
+                                />
+                            }
+                        </div>
                     )
                 ))
             }

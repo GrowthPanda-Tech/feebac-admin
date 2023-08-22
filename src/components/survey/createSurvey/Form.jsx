@@ -2,18 +2,15 @@ import { useState, useEffect } from "react";
 import makeRequest from "../../../utils/makeRequest";
 
 export default function Form({ setSurveyId, setIsSurveyCreate }) {
+    const today = new Date().toISOString().slice(0, 16);
+
     const [categories, setCategories] = useState([]);
     const [surveyData, setSurveyData] = useState({category: '1'});
 
-    console.log(surveyData);
-
-    const fetchCategories = async () => {
+    const getCategories = async () => {
         const response = await makeRequest('survey/get-all-category', 'GET');
-        setCategories(response.categoryList);
+        response.isSuccess ? setCategories(response.categoryList) : alert(response.message);
     }
-    useEffect(() => {
-        fetchCategories();
-    }, []);
 
     const handleInputChange = (e) => {
         if (e.target.name === "startDate" || e.target.name === "endDate") {
@@ -34,15 +31,17 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
             setSurveyId(response.surveyId);
             setIsSurveyCreate(response.isSuccess);
         } 
-
-        return;
     }
 
-    const today = new Date().toISOString().slice(0, 16);
+    useEffect(() => {
+        getCategories();
+    }, []);
 
     return (
         <>
             <h1 className='heading'> Create New Survey </h1>
+
+            {/* TODO: refactor this */}
             <div className="grid gap-5 grid-rows-2 grid-cols-3 mb-8">
                 <label>
                     Scheduled Start Date *

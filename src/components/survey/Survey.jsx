@@ -58,7 +58,7 @@ export default function Survey() {
             <ButtonComponent setUrl={setUrl} />
 
             {/* Table */}
-            <table className="table-fixed w-full bg-white rounded-xl mt-8 text-center">
+            <table className="table mt-8">
                 <TableHead headers={columns} />
                 <TableBody data={surveyData} />
             </table>

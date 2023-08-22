@@ -35,7 +35,6 @@ export default function CategoryForm({setIsShowForm}) {
         response.isSuccess ? alert("Category added") : alert(response.message);
     }
 
-    console.log(categoryInfo);
     return (
         <div className='bg-white rounded-xl mb-8 p-10 flex gap-11'>
             <div className='w-1/5'>
@@ -52,7 +51,7 @@ export default function CategoryForm({setIsShowForm}) {
                         <input
                             type='file'
                             className='input-primary'
-                            accept='.jpg, .png'
+                            accept='image/*'
                             name='categoryImg'
                             onChange={onChange}
                         />

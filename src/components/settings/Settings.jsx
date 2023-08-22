@@ -10,10 +10,7 @@ export default function Settings() {
 
     const getCategoryInfo = async () => {
         const response = await makeRequest('site-admin/get-all-category', 'GET');
-        if (!response.isSuccess) {
-            return;
-        }
-        setCategoryInfo(response.categoryList);
+        response.isSuccess ? setCategoryInfo(response.categoryList) : alert(response.message);
     }
 
     useEffect(() => {

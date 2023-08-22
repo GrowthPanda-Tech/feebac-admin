@@ -19,7 +19,7 @@ export default function CategoryCard({ name, img, id, isActive, setCategoryEditI
     }
 
     return (
-        <div className={`flex flex-col shadow-lg rounded-xl relative bg-white ${cardStatus ? 'opacity-100' : 'opacity-50'}`}>
+        <div className={`flex flex-col shadow-md rounded-xl relative bg-white ${cardStatus ? 'opacity-100' : 'opacity-50'}`}>
             <div className="z-10 absolute right-0 mr-3 mt-3">
                 <button onClick={handleStatus}>
                     <i className={`fa-solid fa-${cardStatus ? 'ban' : 'check'}`}></i>

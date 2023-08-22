@@ -68,7 +68,7 @@ export default function Question({surveyId}) {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-                <h1 className='heading'> {surveyTitle} </h1>
+                <h1 className='heading mb-0'> {surveyTitle} </h1>
                 <button className="btn-primary w-fit" onClick={handlePublish}> Publish </button>
             </div>
             <label>

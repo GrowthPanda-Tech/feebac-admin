@@ -10,15 +10,18 @@ function Actions({ id }) {
 
     return (
         <div className="flex justify-evenly">
-            <Link to={`details/${id}`}>
-                <i className="fa-solid fa-square-poll-horizontal"></i>
-            </Link>
-            <Link to={`edit/${id}`}>
-                <i className="fa-solid fa-pen-to-square"></i>
-            </Link>
-            <button onClick={handleStatusToggle}>
-                <i className='fa-solid fa-lock'></i>
+            <button className="btn-secondary">
+                <Link to={`details/${id}`}>
+                    <i className="fa-solid fa-square-poll-horizontal mr-4"></i>
+                    Result
+                </Link>
             </button>
+            {/* <Link to={`edit/${id}`}> */}
+            {/*     <i className="fa-solid fa-pen-to-square"></i> */}
+            {/* </Link> */}
+            {/* <button onClick={handleStatusToggle}> */}
+            {/*     <i className='fa-solid fa-lock'></i> */}
+            {/* </button> */}
         </div>
     );
 }
@@ -31,7 +34,7 @@ export default function TableBody({data}) {
                     <tr>
                         <TableData data={index + 1} />
                         <TableData data={survey.survey_title} />
-                        <TableData data={survey.category} />
+                        <TableData data={survey.category} capitalize={true} />
                         <TableData data={survey.start_date.split(" ")[0]} />
                         <TableData data={survey.end_date.split(" ")[0]} />
                         <TableData data={`${survey.start_date.split(" ")[1]} - ${survey.end_date.split(" ")[1]}`} />

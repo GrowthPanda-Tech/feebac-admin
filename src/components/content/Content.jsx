@@ -5,19 +5,15 @@ import TableHead from "../TableHead";
 import TableData from "../TableData";
 
 export default function Content() {
-    const [articleList, setArticleList] = useState([]);
     const headers = ["No.", "Name", "Status", "Category", "Creation Date", " "];
+    const [articleList, setArticleList] = useState([]);
 
-    async function getArticleList() {
+    const getArticleList = async () => {
         const response = await makeRequest('site-admin/get-article-list', 'GET');
-        if (!response.isSuccess) {
-            alert(response.message);
-            return;
-        }
-        setArticleList(response.data);
+        response.isSuccess ? setArticleList(response.data) : alert(response.message);
     } 
 
-    async function handlePublish(articleId) {
+    const handlePublish = async (articleId) => {
         const response = await makeRequest('article/toggle-article-status', 'PATCH', {articleId: articleId});
         alert(response.message);
     }

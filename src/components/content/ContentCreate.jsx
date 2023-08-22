@@ -7,24 +7,26 @@ export default function ContentCreate() {
     const [articleData, setArticleData] = useState({ category: '1', articleImg: null, });
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
 
-    const handleInputChange = (e) => setArticleData({...articleData, [e.target.name]: e.target.value});
+    const handleChange = (event) => {
+        if (event.target.name === 'articleImg') {
+            const file = event.target.files[0];
+            setArticleData({...articleData, [event.target.name]: file});
 
-    console.log(articleData);
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => setImgPreview(reader.result);
+                reader.readAsDataURL(file);
+            }
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        setArticleData({...articleData, [e.target.name]: file});
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => setImgPreview(reader.result);
-            reader.readAsDataURL(file);
+            return;
         }
+
+        setArticleData({...articleData, [event.target.name]: event.target.value})
     }
 
-    const handleEditorChange = (content, editor) => setArticleData({ ...articleData, article_content: content });
+    const handleEditorChange = (content) => setArticleData({ ...articleData, article_content: content });
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (event) => {
         const formData = new FormData();
         formData.append('articleTitle', articleData.article_title);
         formData.append('articleDesctiption', articleData.article_desctiption);
@@ -32,7 +34,7 @@ export default function ContentCreate() {
         formData.append('category', articleData.category);
         articleData.articleImg && formData.append('articleImg', articleData.articleImg, articleData.articleImg.name);
 
-        const response = await formSubmit(e, 'site-admin/create-article', 'POST', formData);
+        const response = await formSubmit(event, 'site-admin/create-article', 'POST', formData);
         alert(response.message);
     }
 
@@ -43,8 +45,7 @@ export default function ContentCreate() {
                 <div className="w-3/4">
                     <ContentForm
                         articleData={articleData}
-                        handleInputChange={handleInputChange}
-                        handleImageChange={handleImageChange}
+                        handleChange={handleChange}
                         handleEditorChange={handleEditorChange}
                     />
                     <button className="btn-primary w-fit mt-8" onClick={handleSubmit}>

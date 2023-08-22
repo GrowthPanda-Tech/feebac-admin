@@ -8,30 +8,41 @@ import defaultImgPreview from "../../assets/defaultImgPreview.png";
 export default function ContentEdit() {
     const { slug } = useParams();
     const baseUrl = import.meta.env.VITE_BACKEND_URL;
+
     const [articleData, setArticleData] = useState({ category: { category_id: null }, });
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
+    const [imgUpdate, setImgUpdate] = useState({
+        isUpdateImage: false,
+        articleImg: null,
+    });
 
     const getArticleInfo = async () => {
         const response = await makeRequest(`site-admin/show-article-info?articleId=${slug}`, 'GET');
         response.isSuccess ? setArticleData(response.articleInfo) : alert(response.message);
     }
 
-    const handleInputChange = (e) => setArticleData({...articleData, [e.target.name]: e.target.value});
+    const handleChange = (event) => {
+        if (event.target.name === 'articleImg') {
+            const file = event.target.files[0];
+            setImgUpdate({
+                ...imgUpdate,
+                isUpdateImage: true,
+                articleImg: file,
+            });
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        setArticleData({...articleData, [e.target.name]: file});
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                setImgPreview(reader.result);
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => setImgPreview(reader.result);
+                reader.readAsDataURL(file);
             }
-            reader.readAsDataURL(file);
+
+            return;
         }
+
+        setArticleData({...articleData, [event.target.name]: event.target.value})
     }
 
-    const handleEditorChange = (content, editor) => setArticleData({ ...articleData, article_content: content });
+    const handleEditorChange = (content) => setArticleData({ ...articleData, article_content: content });
 
     const handleSubmit = async (event) => {
         const formData = new FormData();
@@ -40,8 +51,8 @@ export default function ContentEdit() {
         formData.append('articleDesctiption', articleData.article_desctiption);
         formData.append('articleContent', articleData.article_content);
         formData.append('category', articleData.category);
-        formData.append('isUpdateImage', false);
-        // formData.append('articleImg', updateImg.imgFile);
+        formData.append('isUpdateImage', imgUpdate.isUpdateImage);
+        formData.append('articleImg', imgUpdate.articleImg, imgUpdate.articleImg.name);
 
         const response = await formSubmit(event, '/site-admin/update-article', 'PUT', formData)
         response.isSuccess ? alert('Article Edited') : alert(response.message);
@@ -49,6 +60,7 @@ export default function ContentEdit() {
 
     useEffect(() => {
         getArticleInfo();
+        setImgPreview(baseUrl + articleData.image_url);
     }, []);
 
     return (
@@ -58,8 +70,7 @@ export default function ContentEdit() {
                 <div className="w-3/4">
                     <ContentForm
                         articleData={articleData}
-                        handleInputChange={handleInputChange}
-                        handleImageChange={handleImageChange}
+                        handleChange={handleChange}
                         handleEditorChange={handleEditorChange}
                     />
 
@@ -70,7 +81,7 @@ export default function ContentEdit() {
                 </div>
 
                 <div className="w-1/4 h-60 p-4 rounded-xl bg-white flex items-center justify-center">
-                    <img src={imgPreview} className="max-h-full max-w-full" />
+                    <img src={articleData.image_url && baseUrl + articleData.image_url} className="max-h-full max-w-full" />
                 </div>
             </div>
         </>

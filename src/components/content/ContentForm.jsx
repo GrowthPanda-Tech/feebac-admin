@@ -33,8 +33,8 @@ function Input({ label, name, value, onChange }) {
     );
 }
 
-export default function ContentForm({ articleData, handleInputChange, handleImageChange, handleEditorChange }) {
-    const tinyApi = import.meta.env.TINY_API;
+export default function ContentForm({ articleData, handleChange, handleEditorChange }) {
+    const tinyApi = import.meta.env.VITE_TINY_API_KEY;
     const [categories, setCategories] = useState([]);
 
     const getCategories = async () => {
@@ -54,14 +54,14 @@ export default function ContentForm({ articleData, handleInputChange, handleImag
                         label={'Title'}
                         name={'article_title'}
                         value={articleData ? articleData.article_title : ''}
-                        onChange={handleInputChange}
+                        onChange={handleChange}
                     />
                 </div>
                 <div className="w-1/2">
                     <Select
                         label={'Category'}
                         name={'category'}
-                        onChange={handleInputChange}
+                        onChange={handleChange}
                         items={categories}
                         selectedItem={articleData ? articleData.category.category_id : null}
                     />
@@ -71,12 +71,12 @@ export default function ContentForm({ articleData, handleInputChange, handleImag
                 label={'Description'}
                 name={'article_desctiption'}
                 value={articleData ? articleData.article_desctiption : ''}
-                onChange={handleInputChange}
+                onChange={handleChange}
             />
 
             <label className="flex flex-col">
                 <span className="font-semibold mb-2"> Image (Optional) </span>
-                <input name='articleImg' type="file" accept="image/*" className="input-article border-none" onChange={handleImageChange} />
+                <input name='articleImg' type="file" accept="image/*" className="input-article border-none" onChange={handleChange} />
             </label>
 
             <label className="flex flex-col">
@@ -84,7 +84,7 @@ export default function ContentForm({ articleData, handleInputChange, handleImag
                 <Editor
                     apiKey={tinyApi}
                     onEditorChange={handleEditorChange}
-                    // initialValue={articleData && articleData.article_content}
+                    value={articleData.article_content}
                     init={{
                         height: 500,
                         menubar: false,

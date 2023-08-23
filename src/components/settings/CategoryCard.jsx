@@ -14,20 +14,13 @@ export default function CategoryCard({ name, img, id, isActive, setCategoryEditI
         setCardStatus(!cardStatus);
     }
 
-    const handleEdit = () => {
-        console.log('Edit btn clicked');
-    }
-
     return (
         <div className={`flex flex-col shadow-md rounded-xl relative bg-white ${cardStatus ? 'opacity-100' : 'opacity-50'}`}>
-            <div className="z-10 absolute right-0 mr-3 mt-3">
-                <button onClick={handleStatus}>
-                    <i className={`fa-solid fa-${cardStatus ? 'ban' : 'check'}`}></i>
-                </button>
-                {/* <button className="ml-2" onClick={handleEdit}> */}
-                {/*     <i className="fa-solid fa-pen-to-square"></i> */}
-                {/* </button> */}
-            </div>
+            {/* <div className="z-10 absolute right-0 mr-3 mt-3"> */}
+            {/*     <button onClick={handleStatus}> */}
+            {/*         <i className={`fa-solid fa-${cardStatus ? 'ban' : 'check'}`}></i> */}
+            {/*     </button> */}
+            {/* </div> */}
 
             <img src={img} className='rounded-xl h-4/5'/>
 

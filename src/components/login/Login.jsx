@@ -83,12 +83,15 @@ export default function Login() {
                     <LargeBtn name={'Send OTP'} disabled={!otpStatus} />
                 </form>
 
-                <form className='flex flex-col gap-6' onSubmit={handleVerify}>
-                    <div className='flex gap-4'>
-                        <OtpField quantity={6} inputData={inputData} inputOnChange={inputOnChange} />
-                    </div>
-                    <LargeBtn name={'LOGIN'} />
-                </form>
+                {
+                    !otpStatus && 
+                        <form className='flex flex-col gap-6' onSubmit={handleVerify}>
+                            <div className='flex gap-4'>
+                                <OtpField quantity={6} inputData={inputData} inputOnChange={inputOnChange} />
+                            </div>
+                            <LargeBtn name={'LOGIN'} />
+                        </form>
+                }
 
                 {/* TODO: fix the shifting of the entire form up due to this */}
                 <div>

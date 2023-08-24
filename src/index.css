@@ -21,6 +21,10 @@
         @apply border-2 border-accent py-3 px-8 rounded-xl bg-white
     }
 
+    .input-settings {
+        @apply bg-white border border-[#C9CED6] rounded-md py-4 px-6
+    }
+
     .heading {
         @apply text-2xl font-semibold mb-8
     }
@@ -30,11 +34,15 @@
     }
 
     .btn-primary {
-        @apply bg-secondary text-white btn;
+        @apply bg-secondary text-white btn hover:bg-accent transition
     }
 
     .btn-secondary {
         @apply bg-light-grey text-dark-grey btn;
+    }
+
+    .btn-action {
+        @apply bg-[#F1F1F1] rounded-md px-8 py-2 hover:bg-secondary hover:text-white transition
     }
 
     .table {

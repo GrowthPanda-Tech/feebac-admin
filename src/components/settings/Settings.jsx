@@ -3,6 +3,8 @@ import CategoryForm from './CategoryForm'
 import Categories from './Categories';
 import makeRequest from '../../utils/makeRequest';
 import Profiles from './filter/Profiles';
+import FilterCreate from './filter/FilterCreate';
+import FilterValCreate from './filter/FilterValCreate';
 
 function Pill({ section, isActive, onClick }) {
     return (
@@ -15,13 +17,27 @@ function Pill({ section, isActive, onClick }) {
 }
 
 export default function Settings() {
+    //TODO: refactor
     const [isShowForm, setIsShowForm] = useState(false);
+    const [isShowFilterCreate, setIsShowFilterCreate] = useState(false);
+    const [isShowFilterValCreate, setIsShowFilterValCreate] = useState(false);
     const [visibleSection, setVisibleSection] = useState('category');
     const [categoryInfo, setCategoryInfo] = useState([]);
 
     const getCategoryInfo = async () => {
         const response = await makeRequest('site-admin/get-all-category', 'GET');
         response.isSuccess ? setCategoryInfo(response.categoryList) : alert(response.message);
+    }
+
+    //TODO: DEFINITELY REFACTOR THIS 
+    const handleShow = (section) => {
+        if (section === 'filter') {
+            setIsShowFilterCreate(true);
+            setIsShowFilterValCreate(false);
+        } else if (section === 'filterVal') {
+            setIsShowFilterCreate(false);
+            setIsShowFilterValCreate(true);
+        }
     }
 
     useEffect(() => {
@@ -37,15 +53,22 @@ export default function Settings() {
                         (
                             <button className='btn-primary' onClick={() => setIsShowForm(true)}>
                                 <i className='fa-solid fa-plus mr-3'></i>
-                                Add New Category
+                                Category
                             </button>
                         )
                         :
                         (
-                            <button className='btn-primary bg-accent'>
-                                <i className='fa-solid fa-plus mr-3'></i>
-                                Add New Filter
-                            </button>
+                            <div className='flex gap-4'>
+                                <button className='btn-primary' onClick={() => handleShow('filter')}>
+                                    <i className='fa-solid fa-plus mr-3'></i>
+                                    Filter Type
+                                </button>
+                                
+                                <button className='btn-primary bg-accent' onClick={() => handleShow('filterVal')}>
+                                    <i className='fa-solid fa-plus mr-3'></i>
+                                    Filter Value
+                                </button>
+                            </div>
                         )
                 }
             </div>
@@ -64,6 +87,8 @@ export default function Settings() {
             </div>
 
             { isShowForm && <CategoryForm setIsShowForm={setIsShowForm} /> }
+            { isShowFilterCreate && <FilterCreate setIsShowFilterCreate={setIsShowFilterCreate} /> }
+            { isShowFilterValCreate && <FilterValCreate setIsShowFilterCreate={setIsShowFilterValCreate} /> }
 
             { visibleSection === 'category' ? <Categories categoryInfo={categoryInfo} /> : <Profiles /> }
         </>

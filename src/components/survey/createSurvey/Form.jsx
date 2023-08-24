@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Filters from './Filters';
+import Filters from './filter/Filters';
 import makeRequest from "../../../utils/makeRequest";
 
 export default function Form({ setSurveyId, setIsSurveyCreate }) {
@@ -7,6 +7,7 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
 
     const [categories, setCategories] = useState([]);
     const [surveyData, setSurveyData] = useState({category: '1'});
+    const [surveyFilters, setSurveyFilters] = useState({});
     const [filters, setFilters] = useState({});
     const [isShowFilter, setIsShowFilter] = useState(false);
 
@@ -32,6 +33,7 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
     }
 
     const handleSubmit = async () => {
+        setSurveyData({...surveyData, target: surveyFilters})
         const response = await makeRequest('site-admin/create-survey', 'POST', surveyData);
         alert(response.message);
 
@@ -86,7 +88,7 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
                 </label>
             </div>
 
-            { isShowFilter && <Filters filters={filters} /> }
+            { isShowFilter && <Filters filters={filters} setSurveyFilters={setSurveyFilters} /> }
 
             <div className="flex gap-4">
                 <button

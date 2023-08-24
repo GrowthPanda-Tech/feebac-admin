@@ -86,9 +86,10 @@ export default function Settings() {
                 />
             </div>
 
-            { isShowForm && <CategoryForm setIsShowForm={setIsShowForm} /> }
-            { isShowFilterCreate && <FilterCreate setIsShowFilterCreate={setIsShowFilterCreate} /> }
-            { isShowFilterValCreate && <FilterValCreate setIsShowFilterCreate={setIsShowFilterValCreate} /> }
+            {/* TODO: find a better way to do this */}
+            { isShowForm && visibleSection === 'category' && <CategoryForm setIsShowForm={setIsShowForm} /> }
+            { isShowFilterCreate && visibleSection === 'filter' && <FilterCreate setIsShowFilterCreate={setIsShowFilterCreate} /> }
+            { isShowFilterValCreate && visibleSection === 'filter' && <FilterValCreate setIsShowFilterCreate={setIsShowFilterValCreate} /> }
 
             { visibleSection === 'category' ? <Categories categoryInfo={categoryInfo} /> : <Profiles /> }
         </>

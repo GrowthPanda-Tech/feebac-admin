@@ -4,7 +4,7 @@ export default function TableHead({headers}) {
             <tr>
                 {
                     headers.map((header, index) => (
-                        <th key={index} className="px-6 py-12"> {header} </th>
+                        <th key={index} className="px-6 py-12 first-of-type:text-start"> {header} </th>
                     ))
                 }
             </tr>

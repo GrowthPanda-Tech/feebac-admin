@@ -5,7 +5,7 @@ import TableHead from "../TableHead";
 import TableData from "../TableData";
 
 export default function Content() {
-    const headers = ["No.", "Name", "Status", "Category", "Creation Date", " "];
+    const headers = ["Name", "Status", "Category", "Creation Date", " "];
     const [articleList, setArticleList] = useState([]);
 
     const getArticleList = async () => {
@@ -43,7 +43,6 @@ export default function Content() {
                     {
                         articleList.slice(0).reverse().map((article, index) => (
                             <tr key={article.article_id}>
-                                <TableData data={index + 1} />
                                 <TableData data={article.article_title} />
 
                                 {/* TODO: make this easier to read */}
@@ -54,14 +53,14 @@ export default function Content() {
                                 <TableData data={article.category} capitalize={true} />
                                 <TableData data={article.created_date.split("T")[0]} />
 
-                                <td className="p-6 flex justify-evenly">
+                                <td className="p-6 flex justify-between">
                                     <Link to={`/content/edit/${article.article_id}`}>
-                                        <button className="btn-secondary">
-                                            <i className="fa-regular fa-pen-to-square"></i>
+                                        <button className="btn-action">
+                                            Edit
                                         </button>
                                     </Link>
-                                    <button onClick={() => handlePublish(article.article_id)} className="btn-secondary">
-                                        <i className="fa-regular fa-newspaper"></i>
+                                    <button onClick={() => handlePublish(article.article_id)} className="btn-action">
+                                        Publish
                                     </button>
                                 </td>
                             </tr>

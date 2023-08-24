@@ -11,7 +11,7 @@ function Button({ type, setUrl, isActive, onClick }) {
     }
 
     return (
-        <button className={`capitalize btn-${isActive ? 'primary' : 'secondary'}`} onClick={handleClick}>
+        <button className={`capitalize ${isActive ? 'pill-primary' : 'pill-secondary'}`} onClick={handleClick}>
             {type}
         </button>
     );
@@ -34,7 +34,7 @@ export default function Survey() {
     const [surveyData, setsurveyData] = useState([]);
     const [url, setUrl] = useState("live");
 
-    const columns = ['No.', 'Survey Name', 'Survey Category', 'Start Date', 'End Date', 'Survey Timings', ' '];
+    const columns = ['Title', 'Category', 'Start Date', 'End Date', 'Timings'];
 
     const fetchSurveyData = async () => {
         const response = await makeRequest(`site-admin/get-all-survey?time=${url}`, 'GET');
@@ -46,14 +46,15 @@ export default function Survey() {
 
     return (
         <>
-            <Link to={'/survey/create'} className='w-fit'>
-                <button className="btn-primary mb-8">
-                    <i className="fa-solid fa-plus"></i>
-                    Create a Survey
-                </button>
-            </Link>
-
-            <h1 className='heading'> Survey List </h1>
+            <div className='flex justify-between items-center mb-8'>
+                <h1 className='heading mb-0'> Survey List </h1>
+                <Link to={'/survey/create'} className='w-fit'>
+                    <button className="btn-primary">
+                        <i className="fa-solid fa-plus"></i>
+                        Create a Survey
+                    </button>
+                </Link>
+            </div>
 
             <ButtonComponent setUrl={setUrl} />
 

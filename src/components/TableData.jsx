@@ -1,7 +1,9 @@
-export default function TableData({ data, capitalize = false }) {
-    const textCapitalize = capitalize ? 'capitalize' : 'normal-case';
-
+export default function TableData({ data, capitalize = false}) {
     return (
-        <td className={`p-6 ${textCapitalize}`}>{data}</td>
+        <td 
+            className=
+            {`py-4 px-8 ${capitalize && 'capitalize'} first-of-type:text-start`}>
+            {data}
+        </td>
     );
 }

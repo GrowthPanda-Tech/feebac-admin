@@ -10,10 +10,10 @@ function Actions({ id }) {
 
     return (
         <div className="flex justify-evenly">
-            <button className="btn-secondary">
+            <button className="btn-action">
                 <Link to={`details/${id}`}>
-                    <i className="fa-solid fa-square-poll-horizontal mr-4"></i>
-                    Result
+                    <i className="fa-solid fa-square-poll-horizontal mr-3"></i>
+                    Results
                 </Link>
             </button>
             {/* <Link to={`edit/${id}`}> */}
@@ -32,12 +32,11 @@ export default function TableBody({data}) {
             {
                 data.map((survey, index) => (
                     <tr>
-                        <TableData data={index + 1} />
                         <TableData data={survey.survey_title} />
                         <TableData data={survey.category} capitalize={true} />
                         <TableData data={survey.start_date.split(" ")[0]} />
                         <TableData data={survey.end_date.split(" ")[0]} />
-                        <TableData data={`${survey.start_date.split(" ")[1]} - ${survey.end_date.split(" ")[1]}`} />
+                        <TableData data={`${survey.start_date.split(" ")[1]} - ${survey.end_date.split(" ")[1]}`} widthMax={true} highlight={true} />
                         <td> <Actions id={survey.survey_id} /> </td>
                     </tr>
                 ))

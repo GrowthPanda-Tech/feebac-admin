@@ -24,7 +24,6 @@ function TableBody({rowData}) {
             {
                 rowData.map((data, index) => (
                     <tr key={index}>
-                        <TableData data={index + 1} />
                         <TableData data={data.user_id.split('-').pop()} />
                         <TableData data={data.gender ? data.gender: '-'} />
                         <TableData data={data.date_of_birth ? calculateAge(data.date_of_birth) : '-'} />
@@ -38,7 +37,7 @@ function TableBody({rowData}) {
 }
 
 export default function User() {
-    const headers = ["No.", "User ID", "Gender", "Age", "Loyalty Points", "Location"];
+    const headers = ["User ID", "Gender", "Age", "Loyalty Points", "Location"];
 
     const [userData, setUserData] = useState([]);
 

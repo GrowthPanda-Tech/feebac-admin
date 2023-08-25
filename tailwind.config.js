@@ -9,6 +9,7 @@ export default {
     theme: {
         fontFamily: {
             'sans': 'Poppins',
+            'mono': 'IBM Plex Mono'
         },
         colors: {
             transparent: 'transparent',

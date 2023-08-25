@@ -20,7 +20,7 @@ export default function Content() {
 
     useEffect(() => {
         getArticleList();
-    }, [])
+    }, [articleList])
 
     return (
         <>
@@ -41,26 +41,26 @@ export default function Content() {
 
                 <tbody className="text-lg">
                     {
-                        articleList.slice(0).reverse().map((article, index) => (
+                        articleList.slice(0).reverse().map((article) => (
                             <tr key={article.article_id}>
-                                <TableData data={article.article_title} />
+                                <TableData data={article.article_title} left truncate />
 
                                 {/* TODO: make this easier to read */}
                                 <td className={`p-6 ${article.is_published ? 'text-green' : 'text-secondary'} font-bold`}>
-                                    {article.is_published ? 'Published' : 'Not published'}
+                                    {article.is_published ? 'Public' : 'Private'}
                                 </td>
 
                                 <TableData data={article.category} capitalize={true} />
                                 <TableData data={article.created_date.split("T")[0]} />
 
-                                <td className="p-6 flex justify-between">
+                                <td className="p-6 flex gap-4">
                                     <Link to={`/content/edit/${article.article_id}`}>
                                         <button className="btn-action">
                                             Edit
                                         </button>
                                     </Link>
                                     <button onClick={() => handlePublish(article.article_id)} className="btn-action">
-                                        Publish
+                                        Toggle
                                     </button>
                                 </td>
                             </tr>

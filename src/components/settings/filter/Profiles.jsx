@@ -12,7 +12,7 @@ export default function Profiles() {
 
     useEffect(() => {
         getProfiles()
-    }, []);
+    }, [profiles]);
 
     return (
         <>

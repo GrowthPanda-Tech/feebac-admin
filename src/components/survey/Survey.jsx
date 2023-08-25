@@ -34,7 +34,7 @@ export default function Survey() {
     const [surveyData, setsurveyData] = useState([]);
     const [url, setUrl] = useState("live");
 
-    const columns = ['Title', 'Category', 'Start Date', 'End Date', 'Timings'];
+    const columns = ['Title', 'Category', 'Start Date', 'End Date', 'Timings', ' '];
 
     const fetchSurveyData = async () => {
         const response = await makeRequest(`site-admin/get-all-survey?time=${url}`, 'GET');

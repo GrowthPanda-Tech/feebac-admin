@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import TableHead from '../TableHead';
 import TableData from '../TableData';
 import makeRequest from '../../utils/makeRequest';
+import { Link } from 'react-router-dom';
 
 function TableBody({rowData}) {
     const calculateAge = (date) => {
@@ -24,7 +25,7 @@ function TableBody({rowData}) {
             {
                 rowData.map((data, index) => (
                     <tr key={index}>
-                        <TableData data={data.user_id.split('-').pop()} />
+                        <TableData data={data.user_id.split('-').pop()} mono={true} />
                         <TableData data={data.gender ? data.gender: '-'} />
                         <TableData data={data.date_of_birth ? calculateAge(data.date_of_birth) : '-'} />
                         <TableData data={data.loyalty_points} />

@@ -3,11 +3,10 @@ import OtpField from './OtpField';
 import loginBanner from '../../assets/loginBanner.png';
 import makeRequest from '../../utils/makeRequest';
 
-function LargeBtn({ name, disabled }) {
+function LargeBtn({ name }) {
     return (
         <button
-            className='bg-primary disabled:bg-accent disabled:cursor-not-allowed hover:bg-accent text-white py-6 text-xl rounded-3xl font-semibold'
-            disabled={disabled}>
+            className='bg-primary transition hover:bg-accent text-white py-6 text-xl rounded-3xl font-semibold'>
             {name}
         </button>
     );
@@ -15,6 +14,7 @@ function LargeBtn({ name, disabled }) {
 
 export default function Login() {
     const [inputData, setInputData] = useState({});
+    console.log(inputData)
 
     const inputOnChange = (e) => setInputData({ ...inputData, [e.target.name]: e.target.value });
 
@@ -22,7 +22,13 @@ export default function Login() {
     const [alertInfo, setAlertInfo] = useState({ message: "", type: null });
     const [otpStatus, setOtpStatus] = useState(true);
 
-    const onChange = (e) => setLoginInfo({ ...loginInfo, [e.target.name]: e.target.value });
+    const handleChange = (event) => {
+        const limit = 10;
+        setLoginInfo({ 
+            ...loginInfo,
+            [event.target.name]: event.target.value.slice(0, limit)
+        });
+    }
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -59,7 +65,7 @@ export default function Login() {
 
     return (
         <div className='flex w-full h-screen p-28 bg-white'>
-            <div className='w-1/2'>
+            <div className='w-1/2 overflow-hidden'>
                 <img src={loginBanner} alt='loading' />
             </div>
 
@@ -75,13 +81,19 @@ export default function Login() {
                         name='mobile'
                         placeholder='Enter mobile number'
                         value={loginInfo.mobile}
-                        onChange={onChange}
+                        onChange={(event) => handleChange(event)}
                         disabled={!otpStatus}
-                        className='login-input disabled:cursor-not-allowed'
+                        className='login-input disabled:cursor-not-allowed disabled:opacity-50'
                         required 
                     />
-                    <LargeBtn name={'Send OTP'} disabled={!otpStatus} />
+                    {otpStatus && <LargeBtn name={'Send OTP'}/>}
                 </form>
+
+                <div>
+                    {alertInfo.message}
+                    {alertInfo.type == 'success' && <i className='fa-solid fa-circle-check ml-2 text-green'></i>}
+                    {alertInfo.type == 'error' && <i className='fa-solid fa-circle-xmark ml-2 text-secondary'></i>}
+                </div>
 
                 {
                     !otpStatus && 
@@ -92,13 +104,6 @@ export default function Login() {
                             <LargeBtn name={'LOGIN'} />
                         </form>
                 }
-
-                {/* TODO: fix the shifting of the entire form up due to this */}
-                <div>
-                    {alertInfo.message}
-                    {alertInfo.type == 'success' && <i className='fa-solid fa-circle-check ml-2 text-green'></i>}
-                    {alertInfo.type == 'error' && <i className='fa-solid fa-circle-xmark ml-2 text-secondary'></i>}
-                </div>
             </div>
         </div>
     );

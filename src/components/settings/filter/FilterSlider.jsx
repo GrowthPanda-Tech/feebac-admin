@@ -5,8 +5,6 @@ export default function FilterSlider({filter}) {
     const [sliderVal, setSliderVal] = useState(filter.options);
     const handleChange = (event, newVal) => setSliderVal(newVal);
 
-    console.log(sliderVal)
-
     return (
         <>
             <span> {sliderVal[0]} - {sliderVal[1]} </span>

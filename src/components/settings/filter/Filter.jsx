@@ -18,9 +18,14 @@ export default function Filter({filter}) {
 
             {
                 isExpand && 
-                <>
-                    {filter.is_select ? <FilterValues filter={filter} /> : <FilterSlider filter={filter} />}
-                </>
+                    <>
+                        {
+                            filter.is_select 
+                                ?
+                                <FilterValues filter={filter} /> :
+                                <FilterSlider filter={filter} />
+                        }
+                    </>
             }
         </div>
     );

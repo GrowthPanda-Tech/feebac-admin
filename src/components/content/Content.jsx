@@ -56,11 +56,11 @@ export default function Content() {
                                 <td className="p-6 flex gap-4">
                                     <Link to={`/content/edit/${article.article_id}`}>
                                         <button className="btn-action">
-                                            Edit
+                                            <i className="fa-solid fa-pen-to-square"></i>
                                         </button>
                                     </Link>
                                     <button onClick={() => handlePublish(article.article_id)} className="btn-action">
-                                        Toggle
+                                        <i className="fa-regular fa-newspaper"></i>
                                     </button>
                                 </td>
                             </tr>

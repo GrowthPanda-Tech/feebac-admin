@@ -55,7 +55,18 @@ export default function User() {
         <>
             <h1 className="heading"> User Information </h1>
             <table className="table-fixed w-full bg-white rounded-xl text-center">
-                <TableHead headers={headers} />
+                <thead className="text-xl">
+                    <tr>
+                        {
+                            headers.map((header, index) => (
+                                <th key={index}
+                                    className="px-4 py-8">
+                                    {header}
+                                </th>
+                            ))
+                        }
+                    </tr>
+                </thead>
                 <TableBody rowData={userData} />
             </table>
         </>

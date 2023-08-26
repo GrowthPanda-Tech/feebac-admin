@@ -63,6 +63,8 @@ export default function ContentEdit() {
         setImgPreview(baseUrl + articleData.image_url);
     }, []);
 
+    console.log(articleData);
+
     return (
         <>
             <h1 className="heading"> Edit Article </h1>
@@ -81,7 +83,7 @@ export default function ContentEdit() {
                 </div>
 
                 <div className="w-1/4 h-60 p-4 rounded-xl bg-white flex items-center justify-center">
-                    <img src={articleData.image_url && baseUrl + articleData.image_url} className="max-h-full max-w-full" />
+                    <img src={articleData.image_url ? baseUrl + articleData.image_url : imgPreview} className="max-h-full max-w-full" />
                 </div>
             </div>
         </>

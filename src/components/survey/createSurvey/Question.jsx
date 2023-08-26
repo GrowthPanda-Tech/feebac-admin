@@ -3,7 +3,7 @@ import makeRequest from "../../../utils/makeRequest";
 import { useEffect } from "react";
 
 export default function Question({surveyId}) {
-    //TODO: can i minimise the use of these
+    //TODO: REFACTOR THIS ASAP
     const [options, setOptions] = useState(['', '']);
     const [questionNumber, setQuestionNumber] = useState(1);
     const [questionData, setQuestionData] = useState({
@@ -12,6 +12,13 @@ export default function Question({surveyId}) {
     });
 
     const [surveyTitle, setSurveyTitle] = useState();
+
+    const [activeButtonIndex, setActiveButtonIndex] = useState(0);
+
+    const setQuestionType = (index, questionType, questionValue = {}) => {
+        setActiveButtonIndex(index);
+        setQuestionData({ ...questionData, questionType, questionValue });
+    };
 
     const getSurveyData = async () => {
         const response = await makeRequest(`survey/show-survey?sid=${surveyId}`)
@@ -62,8 +69,6 @@ export default function Question({surveyId}) {
         getSurveyData();
     },[])
 
-    console.log(questionData);
-    console.log(surveyTitle);
 
     return (
         <div className="flex flex-col gap-4">
@@ -77,9 +82,24 @@ export default function Question({surveyId}) {
             </label>
             <div className="flex justify-between">
                 <div className="flex gap-7">
-                    <button className="btn-secondary" onClick={() => setQuestionData({...questionData, questionType: 1, questionValue: {}})}>Text Answer</button>
-                    <button className="btn-secondary" onClick={() => setQuestionData({...questionData, questionType: 2})}>One Answer</button>
-                    <button className="btn-secondary" onClick={() => setQuestionData({...questionData, questionType: 3})}>Multiple Answer</button>
+                    <button
+                        className={`pill ${activeButtonIndex === 0 ? 'pill-primary' : 'pill-secondary'}`}
+                        onClick={() => setQuestionType(0, 1, {})}
+                    >
+                        Text Answer
+                    </button>
+                    <button
+                        className={`pill ${activeButtonIndex === 1 ? 'pill-primary' : 'pill-secondary'}`}
+                        onClick={() => setQuestionType(1, 2)}
+                    >
+                        One Answer
+                    </button>
+                    <button
+                        className={`pill ${activeButtonIndex === 2 ? 'pill-primary' : 'pill-secondary'}`}
+                        onClick={() => setQuestionType(2, 3)}
+                    >
+                        Multiple Answer
+                    </button>
                 </div>
                 {/* Add options */}
                 <button onClick={() => setOptions([...options, ''])}>

@@ -23,10 +23,17 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
 
     const handleChange = (e) => {
         if (e.target.name === "startDate" || e.target.name === "endDate") {
-            const dateTimeLocal = new Date(e.target.value);
-            const formattedDateTime = dateTimeLocal.toISOString().replace('T', ' ').replace(/-/g, '/').slice(0, 19);
+            const localDateObject = new Date(e.target.value);
 
-            setSurveyData({ ...surveyData, [e.target.name]: formattedDateTime });
+            const utcYear = localDateObject.getUTCFullYear();
+            const utcMonth = localDateObject.getUTCMonth();
+            const utcDay = localDateObject.getUTCDate();
+            const utcHours = localDateObject.getUTCHours();
+            const utcMinutes = localDateObject.getUTCMinutes();
+
+            const formattedOutput = `${utcYear}/${String(utcMonth + 1).padStart(2, '0')}/${String(utcDay).padStart(2, '0')} ${String(utcHours).padStart(2, '0')}:${String(utcMinutes).padStart(2, '0')}:00`;
+
+            setSurveyData({ ...surveyData, [e.target.name]: formattedOutput });
             return;
         }
         setSurveyData({ ...surveyData, [e.target.name]: e.target.value });

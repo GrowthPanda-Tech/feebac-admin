@@ -4,11 +4,11 @@ export default async function makeRequest(route, method, body = null) {
     const req = {
         method,
         headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
+            Accept: "application/json",
+            "Content-Type": "application/json",
             authToken: localStorage.getItem("authToken"),
         },
-    }
+    };
 
     if (body != null) {
         req.body = JSON.stringify(body);

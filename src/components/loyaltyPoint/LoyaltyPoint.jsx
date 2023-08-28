@@ -1,4 +1,3 @@
-const LoyalityPoint = () => {
-}
+const LoyalityPoint = () => {};
 
 export default LoyalityPoint;

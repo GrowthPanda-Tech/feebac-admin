@@ -1,4 +1,5 @@
 # Setup
+
 Make sure you have [Node.js](https://nodejs.org/en/) and [pnpm](https://pnpm.io/installation) installed.  
 Installing node through a package manager like [nvm](https://github.com/nvm-sh/nvm)/[fnm](https://github.com/Schniz/fnm) is highly recommended.
 

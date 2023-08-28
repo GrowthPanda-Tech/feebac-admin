@@ -4,13 +4,16 @@ import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 export default function ContentCreate() {
-    const [articleData, setArticleData] = useState({ category: '1', articleImg: null, });
+    const [articleData, setArticleData] = useState({
+        category: "1",
+        articleImg: null,
+    });
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
 
     const handleChange = (event) => {
-        if (event.target.name === 'articleImg') {
+        if (event.target.name === "articleImg") {
             const file = event.target.files[0];
-            setArticleData({...articleData, [event.target.name]: file});
+            setArticleData({ ...articleData, [event.target.name]: file });
 
             if (file) {
                 const reader = new FileReader();
@@ -21,22 +24,36 @@ export default function ContentCreate() {
             return;
         }
 
-        setArticleData({...articleData, [event.target.name]: event.target.value})
-    }
+        setArticleData({
+            ...articleData,
+            [event.target.name]: event.target.value,
+        });
+    };
 
-    const handleEditorChange = (content) => setArticleData({ ...articleData, article_content: content });
+    const handleEditorChange = (content) =>
+        setArticleData({ ...articleData, article_content: content });
 
     const handleSubmit = async (event) => {
         const formData = new FormData();
-        formData.append('articleTitle', articleData.article_title);
-        formData.append('articleDesctiption', articleData.article_desctiption);
-        formData.append('articleContent', articleData.article_content);
-        formData.append('category', articleData.category);
-        articleData.articleImg && formData.append('articleImg', articleData.articleImg, articleData.articleImg.name);
+        formData.append("articleTitle", articleData.article_title);
+        formData.append("articleDesctiption", articleData.article_desctiption);
+        formData.append("articleContent", articleData.article_content);
+        formData.append("category", articleData.category);
+        articleData.articleImg &&
+            formData.append(
+                "articleImg",
+                articleData.articleImg,
+                articleData.articleImg.name
+            );
 
-        const response = await formSubmit(event, 'site-admin/create-article', 'POST', formData);
+        const response = await formSubmit(
+            event,
+            "site-admin/create-article",
+            "POST",
+            formData
+        );
         alert(response.message);
-    }
+    };
 
     return (
         <>
@@ -48,7 +65,10 @@ export default function ContentCreate() {
                         handleChange={handleChange}
                         handleEditorChange={handleEditorChange}
                     />
-                    <button className="btn-primary w-fit mt-8" onClick={handleSubmit}>
+                    <button
+                        className="btn-primary w-fit mt-8"
+                        onClick={handleSubmit}
+                    >
                         <i className="fa-solid fa-floppy-disk mr-2"></i>
                         Save Draft
                     </button>

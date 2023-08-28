@@ -1,4 +1,3 @@
-const Analytics = () => {
-}
+const Analytics = () => {};
 
 export default Analytics;

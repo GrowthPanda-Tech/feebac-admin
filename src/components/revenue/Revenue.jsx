@@ -1,4 +1,3 @@
-const Revenue = () => {
-}
+const Revenue = () => {};
 
 export default Revenue;

@@ -5,10 +5,10 @@ export default async function formSubmit(event, route, method, body) {
     const req = {
         method,
         headers: {
-            "authToken": localStorage.getItem("authToken"),
+            authToken: localStorage.getItem("authToken"),
         },
         body,
-        redirect: 'follow',
+        redirect: "follow",
     };
 
     const res = await fetch(`${baseUrl}/${route}`, req);

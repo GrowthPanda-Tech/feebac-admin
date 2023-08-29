@@ -1,8 +1,7 @@
 import { useState } from "react";
 import makeRequest from "../../../utils/makeRequest";
-import { useEffect } from "react";
 
-export default function Question({ surveyId }) {
+export default function Question({ surveyId, surveyTitle }) {
     //TODO: REFACTOR THIS ASAP
     const [options, setOptions] = useState(["", ""]);
     const [questionNumber, setQuestionNumber] = useState(1);
@@ -11,20 +10,11 @@ export default function Question({ surveyId }) {
         questionType: 2,
     });
 
-    const [surveyTitle, setSurveyTitle] = useState();
-
     const [activeButtonIndex, setActiveButtonIndex] = useState(0);
 
     const setQuestionType = (index, questionType, questionValue = {}) => {
         setActiveButtonIndex(index);
         setQuestionData({ ...questionData, questionType, questionValue });
-    };
-
-    const getSurveyData = async () => {
-        const response = await makeRequest(
-            `survey/show-survey?sid=${surveyId}`
-        );
-        setSurveyTitle(response.surveyInfo.survey_title);
     };
 
     const arrangeOptions = (updatedOptions) => {
@@ -76,17 +66,12 @@ export default function Question({ surveyId }) {
         alert(response.message);
     };
 
-    useEffect(() => {
-        getSurveyData();
-    }, []);
-
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
                 <h1 className="heading mb-0"> {surveyTitle} </h1>
                 <button className="btn-primary w-fit" onClick={handlePublish}>
-                    {" "}
-                    Publish{" "}
+                    Publish Now
                 </button>
             </div>
             <label>
@@ -172,8 +157,7 @@ export default function Question({ surveyId }) {
                     className="btn-primary w-fit"
                     onClick={handleQuestionSubmit}
                 >
-                    {" "}
-                    Submit{" "}
+                    Submit
                 </button>
             </div>
         </div>

@@ -1,15 +1,43 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Filters from "./filter/Filters";
 import makeRequest from "../../../utils/makeRequest";
+import convertToUTC from "../../../utils/convertToUTC";
+import { SurveyContext } from "../../../contexts/SurveyContext";
 
-export default function Form({ setSurveyId, setIsSurveyCreate }) {
-    const today = new Date().toISOString().slice(0, 16);
+const TODAY = new Date().toISOString().slice(0, 16);
 
+function Input({ type = "text", name, onChange }) {
+    return (
+        <input
+            type={type}
+            name={name}
+            className="w-full input-primary"
+            onChange={onChange}
+            required
+        />
+    );
+}
+
+function Label({ name, children }) {
+    return (
+        <label>
+            <span className="font-medium">{name}*</span>
+            {children}
+        </label>
+    );
+}
+
+export default function Form({
+    setSurveyId,
+    setSurveyTitle,
+    setIsSurveyCreate,
+}) {
     const [categories, setCategories] = useState([]);
-    const [surveyData, setSurveyData] = useState({ category: "1" });
     const [surveyFilters, setSurveyFilters] = useState({});
     const [filters, setFilters] = useState({});
     const [isShowFilter, setIsShowFilter] = useState(false);
+
+    const { surveyData, setSurveyData } = useContext(SurveyContext);
 
     const getCategories = async () => {
         const response = await makeRequest("survey/get-all-category", "GET");
@@ -31,21 +59,7 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
     const handleChange = (e) => {
         if (e.target.name === "startDate" || e.target.name === "endDate") {
             const localDateObject = new Date(e.target.value);
-
-            const utcYear = localDateObject.getUTCFullYear();
-            const utcMonth = localDateObject.getUTCMonth();
-            const utcDay = localDateObject.getUTCDate();
-            const utcHours = localDateObject.getUTCHours();
-            const utcMinutes = localDateObject.getUTCMinutes();
-
-            const formattedOutput = `${utcYear}/${String(utcMonth + 1).padStart(
-                2,
-                "0"
-            )}/${String(utcDay).padStart(2, "0")} ${String(utcHours).padStart(
-                2,
-                "0"
-            )}:${String(utcMinutes).padStart(2, "0")}:00`;
-
+            const formattedOutput = convertToUTC(localDateObject);
             setSurveyData({ ...surveyData, [e.target.name]: formattedOutput });
             return;
         }
@@ -63,6 +77,7 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
 
         if (response.isSuccess) {
             setSurveyId(response.surveyId);
+            setSurveyTitle(surveyData.surveyTitle);
             setIsSurveyCreate(response.isSuccess);
         }
     };
@@ -78,48 +93,37 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
 
             {/* TODO: refactor this */}
             <div className="grid gap-5 grid-rows-2 grid-cols-3">
-                <label>
-                    Scheduled Start Date *
+                <Label name={"Scheduled Start Date"}>
                     <input
                         type="datetime-local"
-                        min={today}
+                        min={TODAY}
                         name="startDate"
                         className="w-full input-primary"
                         onChange={handleChange}
                         required
                     />
-                </label>
-                <label>
-                    Scheduled End Date *
+                </Label>
+
+                <Label name={"Scheduled End Date"}>
                     <input
                         type="datetime-local"
-                        min={today}
+                        min={TODAY}
                         name="endDate"
                         className="w-full input-primary"
                         onChange={handleChange}
                         required
                     />
-                </label>
-                <label>
-                    New Survey Name *
-                    <input
-                        className="w-full input-primary"
-                        name="surveyTitle"
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Survey Description *
-                    <input
-                        className="w-full input-primary"
-                        name="surveyDescription"
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Select Category *
+                </Label>
+
+                <Label name={"New Survey Title"}>
+                    <Input name={"surveyTitle"} onChange={handleChange} />
+                </Label>
+
+                <Label name={"Survey Description"}>
+                    <Input name={"surveyDescription"} onChange={handleChange} />
+                </Label>
+
+                <Label name={"Select Category"}>
                     <select
                         className="capitalize w-full input-primary bg-white"
                         name="category"
@@ -135,15 +139,11 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
                             </option>
                         ))}
                     </select>
-                </label>
-                <label>
-                    Loyalty Points *
-                    <input
-                        name="loyaltyPoint"
-                        onChange={handleChange}
-                        className="w-full input-primary"
-                    />
-                </label>
+                </Label>
+
+                <Label name={"Loyalty Points"}>
+                    <Input name={"loyaltyPoint"} onChange={handleChange} />
+                </Label>
             </div>
 
             {isShowFilter && (
@@ -162,8 +162,7 @@ export default function Form({ setSurveyId, setIsSurveyCreate }) {
                     Add Filters
                 </button>
                 <button className="btn-primary w-fit" onClick={handleSubmit}>
-                    {" "}
-                    Create{" "}
+                    Create
                 </button>
             </div>
         </div>

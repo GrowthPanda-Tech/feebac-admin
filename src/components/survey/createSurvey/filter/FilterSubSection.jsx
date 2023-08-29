@@ -1,6 +1,7 @@
-import { useState } from "react";
-import FilterOption from "./FilterOption";
+import { useState, useContext } from "react";
 import { Slider } from "@mui/material";
+import { SurveyContext } from "../../../../contexts/SurveyContext";
+import FilterOption from "./FilterOption";
 
 function FilterSlider({ filter }) {
     const [sliderVal, setSliderVal] = useState(filter.options);
@@ -17,6 +18,8 @@ function FilterSlider({ filter }) {
 
 export default function FilterSubSection({ filterName, filterData }) {
     const [filterValues, setFilterValues] = useState({});
+    const { surveyData, setSurveyData } = useContext(SurveyContext);
+    const [profileData, setprofileData] = useState({});
 
     const handleOptionClick = (index, clicked) => {
         setFilterValues((prevOptions) => ({
@@ -24,6 +27,18 @@ export default function FilterSubSection({ filterName, filterData }) {
             [index]: !clicked,
         }));
     };
+
+    const handleChange = (event) => {
+        let isChecked = event.target.checked;
+        isChecked &&
+            setprofileData({
+                ...profileData,
+                [event.target.name]: [event.target.value],
+            });
+    };
+
+    // console.log(profileData);
+    console.log(filterData);
 
     return (
         <div className="flex flex-col gap-4">
@@ -56,6 +71,7 @@ export default function FilterSubSection({ filterName, filterData }) {
                                                     name={data.key_name}
                                                     type="checkbox"
                                                     value={option}
+                                                    onChange={handleChange}
                                                 />
                                                 <span> {option} </span>
                                             </label>

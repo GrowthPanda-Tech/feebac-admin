@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { CategoryContext } from "../../contexts/CategoryContext";
 import ContentForm from "./ContentForm";
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 export default function ContentCreate() {
+    const { categories } = useContext(CategoryContext);
+
     const [articleData, setArticleData] = useState({
-        category: "1",
+        category: categories[0].category_id,
         articleImg: null,
     });
+    console.log(articleData);
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
 
     const handleChange = (event) => {

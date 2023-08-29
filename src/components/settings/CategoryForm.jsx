@@ -1,15 +1,18 @@
-import { useState } from "react";
-import noImg from "../../assets/noImg.jpg";
+import { useState, useContext } from "react";
+import { CategoryContext } from "../../contexts/CategoryContext";
+import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import formSubmit from "../../utils/formSubmit";
 
 export default function CategoryForm({ setIsShowForm }) {
-    const [categoryInfo, setCategoryInfo] = useState({});
-    const [imgPreview, setImgPreview] = useState(noImg);
+    const { categories, setCategories } = useContext(CategoryContext);
+
+    const [newCategory, setNewCategory] = useState({});
+    const [imgPreview, setImgPreview] = useState(defaultImgPreview);
 
     const onChange = (event) => {
         if (event.target.name === "categoryName") {
-            setCategoryInfo({
-                ...categoryInfo,
+            setNewCategory({
+                ...newCategory,
                 categoryName: event.target.value,
             });
             return;
@@ -17,7 +20,7 @@ export default function CategoryForm({ setIsShowForm }) {
 
         //TODO: can i export this to utils?
         const file = event.target.files[0];
-        setCategoryInfo({ ...categoryInfo, categoryImg: file });
+        setNewCategory({ ...newCategory, categoryImg: file });
 
         if (file) {
             const reader = new FileReader();
@@ -28,34 +31,42 @@ export default function CategoryForm({ setIsShowForm }) {
         }
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (event) => {
         const formdata = new FormData();
-        formdata.append("categoryName", categoryInfo.categoryName);
+        formdata.append("categoryName", newCategory.categoryName);
         formdata.append(
             "categoryImg",
-            categoryInfo.categoryImg,
-            categoryInfo.categoryImg.name
+            newCategory.categoryImg,
+            newCategory.categoryImg.name
         );
 
         const response = await formSubmit(
-            e,
+            event,
             "site-admin/add-category",
             "POST",
             formdata
         );
 
-        response.isSuccess ? alert("Category added") : alert(response.message);
+        if (response.isSuccess) {
+            const newCategories = categories.slice();
+            newCategories.push(response.data);
+            setCategories(newCategories);
+            setIsShowForm(false);
+            return;
+        }
+
+        alert(response.message);
     };
 
     return (
-        <div className="bg-white rounded-xl mb-8 p-10 flex gap-11">
-            <div className="w-1/5">
+        <div className="bg-white rounded-xl mb-8 p-8 flex gap-8">
+            <div className="w-1/5 flex justify-center items-center border rounded-xl">
                 <img src={imgPreview} />
             </div>
             <div className="w-4/5">
                 <form
                     onSubmit={handleSubmit}
-                    className="flex flex-col h-full justify-evenly gap-8"
+                    className="flex flex-col h-full justify-evenly gap-4"
                 >
                     <label className="flex flex-col font-semibold">
                         Enter Category Name *
@@ -68,13 +79,14 @@ export default function CategoryForm({ setIsShowForm }) {
                         />
                     </label>
                     <label className="flex flex-col font-semibold">
-                        Upload Image (JPG/PNG)
+                        Upload Image *
                         <input
                             type="file"
                             className="input-primary"
                             accept="image/*"
                             name="categoryImg"
                             onChange={onChange}
+                            required
                         />
                     </label>
                     <div className="flex gap-4">
@@ -83,8 +95,7 @@ export default function CategoryForm({ setIsShowForm }) {
                             className="btn-secondary"
                             onClick={() => setIsShowForm(false)}
                         >
-                            {" "}
-                            Cancel{" "}
+                            Cancel
                         </button>
                     </div>
                 </form>

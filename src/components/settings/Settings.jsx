@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CategoryForm from "./CategoryForm";
 import Categories from "./Categories";
-import makeRequest from "../../utils/makeRequest";
 import Profiles from "./filter/Profiles";
 import FilterCreate from "./filter/FilterCreate";
 import FilterValCreate from "./filter/FilterValCreate";
@@ -14,7 +13,7 @@ function Pill({ section, isActive, onClick }) {
             }`}
             onClick={onClick}
         >
-            {section} List
+            {section}
         </div>
     );
 }
@@ -25,17 +24,6 @@ export default function Settings() {
     const [isShowFilterCreate, setIsShowFilterCreate] = useState(false);
     const [isShowFilterValCreate, setIsShowFilterValCreate] = useState(false);
     const [visibleSection, setVisibleSection] = useState("category");
-    const [categoryInfo, setCategoryInfo] = useState([]);
-
-    const getCategoryInfo = async () => {
-        const response = await makeRequest(
-            "site-admin/get-all-category",
-            "GET"
-        );
-        response.isSuccess
-            ? setCategoryInfo(response.categoryList)
-            : alert(response.message);
-    };
 
     //TODO: DEFINITELY REFACTOR THIS
     const handleShow = (section) => {
@@ -47,10 +35,6 @@ export default function Settings() {
             setIsShowFilterValCreate(true);
         }
     };
-
-    useEffect(() => {
-        getCategoryInfo();
-    }, []);
 
     return (
         <>
@@ -87,12 +71,12 @@ export default function Settings() {
 
             <div className="flex gap-4 mb-8">
                 <Pill
-                    section={"Category"}
+                    section={"Categories"}
                     isActive={visibleSection === "category"}
                     onClick={() => setVisibleSection("category")}
                 />
                 <Pill
-                    section={"Filter"}
+                    section={"Filters"}
                     isActive={visibleSection === "filter"}
                     onClick={() => setVisibleSection("filter")}
                 />
@@ -111,11 +95,7 @@ export default function Settings() {
                 />
             )}
 
-            {visibleSection === "category" ? (
-                <Categories categoryInfo={categoryInfo} />
-            ) : (
-                <Profiles />
-            )}
+            {visibleSection === "category" ? <Categories /> : <Profiles />}
         </>
     );
 }

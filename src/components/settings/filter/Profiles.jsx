@@ -3,7 +3,7 @@ import makeRequest from "../../../utils/makeRequest";
 import ProfileSubSection from "./ProfileSubSection";
 
 export default function Profiles() {
-    const [profiles, setProfiles] = useState({});
+    const [profiles, setProfiles] = useState([]);
 
     const getProfiles = async () => {
         const response = await makeRequest(
@@ -17,15 +17,15 @@ export default function Profiles() {
 
     useEffect(() => {
         getProfiles();
-    }, [profiles]);
+    }, []);
 
     return (
         <>
-            {Object.keys(profiles).map((key) => (
+            {profiles.map((profile, key) => (
                 <ProfileSubSection
                     key={key}
-                    type={key}
-                    filters={profiles[key]}
+                    type={profile.dataType}
+                    filters={profile.key}
                 />
             ))}
         </>

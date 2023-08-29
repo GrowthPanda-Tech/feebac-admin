@@ -27,9 +27,9 @@ export default function FilterSubSection({ filterName, filterData }) {
 
     return (
         <div className="flex flex-col gap-4">
-            <h1 className="heading mb-0"> {filterName} Filters </h1>
+            <h1 className="heading mb-0"> {filterData.dataType} Filters </h1>
             <div className="flex gap-4">
-                {filterData.map((data, index) => (
+                {filterData.key.map((data, index) => (
                     <FilterOption
                         key={index}
                         name={data.key_name}
@@ -40,20 +40,20 @@ export default function FilterSubSection({ filterName, filterData }) {
             </div>
 
             {/* Render input fields based on selected options */}
-            {filterData.map(
+            {filterData.key.map(
                 (data, index) =>
                     filterValues[index] && (
                         <div className="w-1/2">
                             {data.is_select ? (
                                 <div className="flex gap-8">
                                     <div className="capitalize text-lg font-semibold w-[10vw]">
-                                        {" "}
-                                        {data.key_name}:{" "}
+                                        {data.key_name}:
                                     </div>
                                     <div className="flex flex-col">
                                         {data.options.map((option) => (
                                             <label>
                                                 <input
+                                                    name={data.key_name}
                                                     type="checkbox"
                                                     value={option}
                                                 />
@@ -65,8 +65,7 @@ export default function FilterSubSection({ filterName, filterData }) {
                             ) : (
                                 <div className="flex gap-8 items-center">
                                     <div className="capitalize text-lg font-semibold w-[10vw]">
-                                        {" "}
-                                        {data.key_name}:{" "}
+                                        {data.key_name}:
                                     </div>
                                     <FilterSlider filter={data} />
                                 </div>

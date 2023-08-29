@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import CategoryContextProvider from "./contexts/CategoryContext";
 
 // component imports
 import Header from "./components/header/Header";
@@ -25,7 +26,7 @@ export default function App() {
     return (
         <>
             {isLoggedIn ? (
-                <>
+                <CategoryContextProvider>
                     <Navbar />
                     <div className="ml-80">
                         <Header />
@@ -73,7 +74,7 @@ export default function App() {
                             </Routes>
                         </div>
                     </div>
-                </>
+                </CategoryContextProvider>
             ) : (
                 <Login />
             )}

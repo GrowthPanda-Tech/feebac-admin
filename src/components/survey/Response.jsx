@@ -17,8 +17,10 @@ export default function Response({ index, survey }) {
                         <div className="mt-4 flex justify-between font-bold">
                             {option[1]}
                             <span className="font-normal">
-                                {" "}
-                                {option[2] ? option[2] : 0}%{" "}
+                                {option[2]
+                                    ? parseFloat(option[2]).toFixed(2)
+                                    : 0}
+                                %
                             </span>
                         </div>
 

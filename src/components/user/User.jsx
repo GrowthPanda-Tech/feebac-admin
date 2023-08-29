@@ -1,43 +1,34 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import TableData from "../TableData";
 import makeRequest from "../../utils/makeRequest";
+import calculateAge from "../../utils/calculateAge";
 
 function TableBody({ rowData }) {
-    const calculateAge = (date) => {
-        const birthDate = new Date(date);
-        const currentDate = new Date();
-
-        let roundedAge;
-
-        const ageInMiliSec = currentDate - birthDate;
-        const ageInYears = ageInMiliSec / (365 * 24 * 60 * 60 * 1000);
-        const floorValue = Math.floor(ageInYears);
-
-        floorValue === 0 ? (roundedAge = "-") : (roundedAge = floorValue);
-
-        return roundedAge;
-    };
-
     return (
         <tbody className="text-lg">
-            {rowData.map((data, index) => (
-                <tr key={index}>
-                    <TableData
-                        data={data.user_id.split("-").pop()}
-                        mono={true}
-                    />
-                    <TableData data={data.gender ? data.gender : "-"} />
-                    <TableData
-                        data={
-                            data.date_of_birth
-                                ? calculateAge(data.date_of_birth)
-                                : "-"
-                        }
-                    />
-                    <TableData data={data.loyalty_points} />
-                    <TableData data={data.state ? data.state : "-"} />
-                </tr>
-            ))}
+            {rowData.map((data, index) => {
+                const link = (
+                    <Link to={data.user_id}>
+                        {data.user_id.split("-").pop()}
+                    </Link>
+                );
+                return (
+                    <tr key={index}>
+                        <TableData data={link} mono />
+                        <TableData data={data.gender ? data.gender : "-"} />
+                        <TableData
+                            data={
+                                data.date_of_birth
+                                    ? calculateAge(data.date_of_birth)
+                                    : "-"
+                            }
+                        />
+                        <TableData data={data.loyalty_points} />
+                        <TableData data={data.state ? data.state : "-"} />
+                    </tr>
+                );
+            })}
         </tbody>
     );
 }

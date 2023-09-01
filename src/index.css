@@ -14,7 +14,7 @@
     }
 
     .input-primary {
-        @apply border border-lighest-grey rounded-xl p-4 font-normal mt-2;
+        @apply border border-lighest-grey rounded-xl p-4 font-normal mt-2 outline-2 outline-primary;
     }
 
     .input-article {
@@ -34,7 +34,7 @@
     }
 
     .btn-primary {
-        @apply bg-secondary text-white btn hover:bg-accent transition;
+        @apply bg-secondary text-white btn hover:bg-primary transition;
     }
 
     .btn-secondary {
@@ -67,4 +67,8 @@
     input[type="number"]::-webkit-outer-spin-button {
         @apply appearance-none;
     }
+}
+
+.active {
+    background: #ea525f;
 }

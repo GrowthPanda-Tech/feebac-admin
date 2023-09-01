@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import dashboard from "../../assets/dashboard.svg";
 
 //TODO: this feels illegal
@@ -12,16 +11,17 @@ import revenue from "../../assets/navbar/revenue.png";
 import analytics from "../../assets/navbar/analytics.png";
 import settings from "../../assets/navbar/settings.png";
 
-function NavList({ link, title, isActive, onClick, icon }) {
+function NavList({ link, title, icon }) {
     return (
-        <li className={`${isActive && "bg-secondary"}`} onClick={onClick}>
-            <NavLink to={link}>
-                <div className="px-16 py-4 text-white leading-6 tracking-wide flex items-center gap-8">
-                    <img src={icon} className="w-6" />
-                    <span> {title} </span>
-                </div>
-            </NavLink>
-        </li>
+        <NavLink
+            to={link}
+            className={
+                "px-16 py-4 text-white leading-6 tracking-wide flex items-center gap-8"
+            }
+        >
+            <img src={icon} className="w-6" />
+            <span> {title} </span>
+        </NavLink>
     );
 }
 
@@ -41,27 +41,19 @@ export default function Navbar() {
         { link: "settings", title: "Settings", icon: settings },
     ];
 
-    const path = useLocation();
-    const link = path.pathname.substring(1); //removes the leading '/'
-
-    const [isActive, setIsActive] = useState(link);
-    const handleClick = (link) => setIsActive(link);
-
     return (
         <div className="bg-primary h-screen w-80 fixed">
             <img src={dashboard} className="w-full p-12" />
-            <ul>
+            <>
                 {navItems.map((item, index) => (
                     <NavList
                         key={index}
                         link={item.link}
                         title={item.title}
-                        isActive={isActive === item.link}
-                        onClick={() => handleClick(item.link)}
                         icon={item.icon}
                     />
                 ))}
-            </ul>
+            </>
         </div>
     );
 }

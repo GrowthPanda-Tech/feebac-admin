@@ -6,6 +6,17 @@ import loyaltyImg from "../../assets/loyalty.png";
 
 const TABLEHEADERS = ["Title", "Category", "Start Date", "End Date", "Status"];
 
+function Info({ type, value }) {
+    return (
+        <div className="text-lg font-medium leading-7 flex items-center">
+            <span className="w-20"> {type} : </span>
+            <div className="w-96 ml-4 py-2 px-4 bg-[#FBFBFB] rounded-lg border border-[#A6ACBE]">
+                {value ? value : "-N/A-"}
+            </div>
+        </div>
+    );
+}
+
 export default function UserInfo() {
     const { slug } = useParams();
 
@@ -42,18 +53,16 @@ export default function UserInfo() {
                 <div className="flex justify-between items-center">
                     <div className="flex flex-col gap-4">
                         <h1 className="heading mb-0"> Personal Information </h1>
-                        <div className="text-lg font-medium leading-7">
-                            Gender : {userInfo.gender}
-                        </div>
-                        <div className="text-lg font-medium leading-7">
-                            Age :
-                            {userInfo.date_of_birth
-                                ? calculateAge(userInfo.date_of_birth)
-                                : "-N/A-"}
-                        </div>
-                        <div className="text-lg font-medium leading-7">
-                            State : {userInfo.state}
-                        </div>
+                        <Info type={"Gender"} value={userInfo.gender} />
+                        <Info
+                            type={"Age"}
+                            value={
+                                userInfo.date_of_birth
+                                    ? calculateAge(userInfo.date_of_birth)
+                                    : "-N/A-"
+                            }
+                        />
+                        <Info type={"State"} value={userInfo.state} />
                     </div>
 
                     <div className="flex justify-center items-center w-80 h-60 bg-white rounded-lg shadow border border-grey">

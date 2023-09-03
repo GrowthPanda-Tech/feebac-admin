@@ -1,7 +1,7 @@
 export default async function makeRequest(route, method, body = null) {
     const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
-    const req = {
+    const request = {
         method,
         headers: {
             Accept: "application/json",
@@ -10,12 +10,10 @@ export default async function makeRequest(route, method, body = null) {
         },
     };
 
-    if (body != null) {
-        req.body = JSON.stringify(body);
-    }
+    if (body != null) request.body = JSON.stringify(body);
 
-    const res = await fetch(`${baseUrl}/${route}`, req);
-    const json = await res.json();
+    const response = await fetch(`${baseUrl}/${route}`, request);
+    const json = await response.json();
 
     return json;
 }

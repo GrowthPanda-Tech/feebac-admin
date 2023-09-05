@@ -1,11 +1,8 @@
-import { useState, useContext } from "react";
-import { CategoryContext } from "../../contexts/CategoryContext";
+import { useState } from "react";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import formSubmit from "../../utils/formSubmit";
 
-export default function CategoryForm({ setIsShowForm }) {
-    const { categories, setCategories } = useContext(CategoryContext);
-
+export default function CategoryForm({ setIsShowForm, setCategories }) {
     const [newCategory, setNewCategory] = useState({});
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
 
@@ -47,13 +44,14 @@ export default function CategoryForm({ setIsShowForm }) {
             formdata
         );
 
-        if (response.isSuccess) {
-            const newCategories = categories.slice();
-            newCategories.push(response.data);
-            setCategories(newCategories);
-            setIsShowForm(false);
-            return;
-        }
+        // TODO: Certainly need to use context for this
+        // if (response.isSuccess) {
+        //     const newCategories = categories.slice();
+        //     newCategories.push(response.data);
+        //     setCategories(newCategories);
+        //     setIsShowForm(false);
+        //     return;
+        // }
 
         alert(response.message);
     };

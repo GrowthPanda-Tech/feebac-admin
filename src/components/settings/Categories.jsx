@@ -1,9 +1,25 @@
-import { useContext } from "react";
-import { CategoryContext } from "../../contexts/CategoryContext";
+import { useState, useEffect } from "react";
+import makeRequest from "../../utils/makeRequest";
 
 export default function Categories() {
     const baseUrl = import.meta.env.VITE_BACKEND_URL;
-    const { categories } = useContext(CategoryContext);
+    const [categories, setCategories] = useState([]);
+
+    const getCategories = async () => {
+        try {
+            const response = await makeRequest("site-admin/get-all-category");
+            if (response.isSuccess) {
+                setCategories(response.categoryList);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getCategories();
+    }, []);
+
     return (
         <div className="grid grid-cols-5 gap-12">
             {categories.map((category) => (

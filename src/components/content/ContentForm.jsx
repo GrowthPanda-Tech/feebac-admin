@@ -1,6 +1,6 @@
+import { useState, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import { useContext } from "react";
-import { CategoryContext } from "../../contexts/CategoryContext";
+import makeRequest from "../../utils/makeRequest";
 
 function Select({ label, name, onChange, items, selectedItem }) {
     return (
@@ -51,8 +51,24 @@ export default function ContentForm({
     handleChange,
     handleEditorChange,
 }) {
-    const { categories } = useContext(CategoryContext);
     const tinyApi = import.meta.env.VITE_TINY_API_KEY;
+    const [categories, setCategories] = useState([]);
+
+
+    const getCategories = async () => {
+        try {
+            const response = await makeRequest("site-admin/get-all-category");
+            if (response.isSuccess) {
+                setCategories(response.categoryList);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getCategories();
+    }, []);
 
     return (
         <div className="flex flex-col gap-4">

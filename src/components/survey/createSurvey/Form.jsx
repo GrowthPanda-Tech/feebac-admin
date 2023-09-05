@@ -39,10 +39,11 @@ export default function Form({
     const [surveyData, setSurveyData] = useState([]);
 
     const getCategories = async () => {
-        const response = await makeRequest("survey/get-all-category", "GET");
-        response.isSuccess
-            ? setCategories(response.categoryList)
-            : alert(response.message);
+        const response = await makeRequest(
+            "site-admin/get-all-category",
+            "GET"
+        );
+        response.isSuccess && setCategories(response.categoryList);
     };
 
     const getFilters = async () => {

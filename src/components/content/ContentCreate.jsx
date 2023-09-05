@@ -1,18 +1,18 @@
-import { useState, useContext } from "react";
-import { CategoryContext } from "../../contexts/CategoryContext";
+import { useState, useEffect } from "react";
 import ContentForm from "./ContentForm";
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 export default function ContentCreate() {
-    const { categories } = useContext(CategoryContext);
-
-    const [articleData, setArticleData] = useState({
-        category: categories[0].category_id,
-        articleImg: null,
-    });
-    console.log(articleData);
+    const [categories, setCategories] = useState([]);
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
+
+    const getCategories = async () => {
+        const response = await makeRequest("site-admin/get-all-category");
+        if (response.isSuccess) {
+            setCategories(response.categoryList);
+        }
+    };
 
     const handleChange = (event) => {
         if (event.target.name === "articleImg") {
@@ -58,6 +58,10 @@ export default function ContentCreate() {
         );
         alert(response.message);
     };
+
+    useEffect(() => {
+        getCategories();
+    }, []);
 
     return (
         <>

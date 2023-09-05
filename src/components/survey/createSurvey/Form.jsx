@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Filters from "./filter/Filters";
 import makeRequest from "../../../utils/makeRequest";
 import convertToUTC from "../../../utils/convertToUTC";
+import formSubmit from "../../../utils/formSubmit";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -32,11 +33,10 @@ export default function Form({
     setIsSurveyCreate,
 }) {
     const [categories, setCategories] = useState([]);
-    const [surveyFilters, setSurveyFilters] = useState({});
-    const [filters, setFilters] = useState({});
+    const [filters, setFilters] = useState([]);
     const [isShowFilter, setIsShowFilter] = useState(false);
-
     const [surveyData, setSurveyData] = useState([]);
+    const [profileData, setProfileData] = useState({});
 
     const getCategories = async () => {
         const response = await makeRequest(
@@ -66,12 +66,21 @@ export default function Form({
         setSurveyData({ ...surveyData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async () => {
-        setSurveyData({ ...surveyData, target: surveyFilters });
-        const response = await makeRequest(
+    const handleSubmit = async (event) => {
+        const dataString = JSON.stringify(profileData);
+        const formdata = new FormData();
+
+        for (const [key, value] of Object.entries(surveyData)) {
+            formdata.append(key, value);
+        }
+
+        formdata.append("target", dataString);
+
+        const response = await formSubmit(
+            event,
             "site-admin/create-survey",
             "POST",
-            surveyData
+            formdata
         );
         alert(response.message);
 
@@ -125,9 +134,10 @@ export default function Form({
 
                 <Label name={"Select Category"}>
                     <select
-                        className="capitalize w-full input-primary bg-white"
+                        className="capitalize w-full input-primary bg-white appearance-none"
                         name="category"
                         onChange={handleChange}
+                        placeholder="None"
                         required
                     >
                         {categories.map((item) => (
@@ -142,14 +152,19 @@ export default function Form({
                 </Label>
 
                 <Label name={"Loyalty Points"}>
-                    <Input name={"loyaltyPoint"} onChange={handleChange} />
+                    <Input
+                        type={"number"}
+                        name={"loyaltyPoint"}
+                        onChange={handleChange}
+                    />
                 </Label>
             </div>
 
             {isShowFilter && (
                 <Filters
                     filters={filters}
-                    setSurveyFilters={setSurveyFilters}
+                    profileData={profileData}
+                    setProfileData={setProfileData}
                 />
             )}
 
@@ -158,8 +173,14 @@ export default function Form({
                     className="btn-primary bg-accent w-fit"
                     onClick={() => setIsShowFilter(!isShowFilter)}
                 >
-                    <i className="fa-solid fa-plus"></i>
-                    Add Filters
+                    {!isShowFilter ? (
+                        <>
+                            <i className="fa-solid fa-plus"></i>
+                            Add Filters
+                        </>
+                    ) : (
+                        <>Cancel</>
+                    )}
                 </button>
                 <button className="btn-primary w-fit" onClick={handleSubmit}>
                     Create

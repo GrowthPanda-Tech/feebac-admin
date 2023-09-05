@@ -1,6 +1,5 @@
-import { useState, useContext } from "react";
 import { Slider } from "@mui/material";
-import { SurveyContext } from "../../../../contexts/SurveyContext";
+import { useState } from "react";
 import FilterOption from "./FilterOption";
 
 function FilterSlider({ filter }) {
@@ -18,8 +17,6 @@ function FilterSlider({ filter }) {
 
 export default function FilterSubSection({ filterName, filterData }) {
     const [filterValues, setFilterValues] = useState({});
-    const { surveyData, setSurveyData } = useContext(SurveyContext);
-    const [profileData, setprofileData] = useState({});
 
     const handleOptionClick = (index, clicked) => {
         setFilterValues((prevOptions) => ({

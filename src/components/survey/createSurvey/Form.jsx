@@ -1,8 +1,7 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import Filters from "./filter/Filters";
 import makeRequest from "../../../utils/makeRequest";
 import convertToUTC from "../../../utils/convertToUTC";
-import { SurveyContext } from "../../../contexts/SurveyContext";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -37,7 +36,7 @@ export default function Form({
     const [filters, setFilters] = useState({});
     const [isShowFilter, setIsShowFilter] = useState(false);
 
-    const { surveyData, setSurveyData } = useContext(SurveyContext);
+    const [surveyData, setSurveyData] = useState([]);
 
     const getCategories = async () => {
         const response = await makeRequest("survey/get-all-category", "GET");

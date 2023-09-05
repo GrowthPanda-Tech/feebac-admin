@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Form from "./Form";
 import Question from "./Question";
-import SurveyContextProvider from "../../../contexts/SurveyContext";
 
 export default function CreateSurvey() {
     const [surveyId, setSurveyId] = useState(null);
@@ -11,13 +10,11 @@ export default function CreateSurvey() {
     return (
         <>
             {!isSurveyCreate ? (
-                <SurveyContextProvider>
-                    <Form
-                        setSurveyId={setSurveyId}
-                        setSurveyTitle={setSurveyTitle}
-                        setIsSurveyCreate={setIsSurveyCreate}
-                    />
-                </SurveyContextProvider>
+                <Form
+                    setSurveyId={setSurveyId}
+                    setSurveyTitle={setSurveyTitle}
+                    setIsSurveyCreate={setIsSurveyCreate}
+                />
             ) : (
                 <Question surveyId={surveyId} surveyTitle={surveyTitle} />
             )}

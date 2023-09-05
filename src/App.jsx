@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-import CategoryContextProvider from "./contexts/CategoryContext";
 
 // component imports
 import Header from "./components/header/Header";
@@ -11,7 +10,7 @@ import UserInfo from "./components/user/UserInfo";
 import Survey from "./components/survey/Survey";
 import SurveyInfo from "./components/survey/SurveyInfo";
 import CreateSurvey from "./components/survey/createSurvey/CreateSurvey";
-import SurveyEdit from "./components/survey/editSurvey/SurveyEdit";
+import SurveyReview from "./components/survey/reviewSurvey/SurveyReview";
 import Content from "./components/content/Content";
 import ContentCreate from "./components/content/ContentCreate";
 import ContentEdit from "./components/content/ContentEdit";
@@ -26,11 +25,11 @@ export default function App() {
     return (
         <>
             {isLoggedIn ? (
-                <CategoryContextProvider>
+                <>
                     <Navbar />
                     <div className="ml-80">
                         <Header />
-                        <div className="p-12">
+                        <main className="p-12">
                             <Routes>
                                 <Route path="/" element={<Dashboard />} />
                                 <Route path="user" element={<User />} />
@@ -44,12 +43,12 @@ export default function App() {
                                     element={<CreateSurvey />}
                                 />
                                 <Route
-                                    path="survey/edit/:slug"
-                                    element={<SurveyEdit />}
-                                />
-                                <Route
                                     path="survey/details/:slug"
                                     element={<SurveyInfo />}
+                                />
+                                <Route
+                                    path="survey/review/:slug"
+                                    element={<SurveyReview />}
                                 />
                                 <Route path="content" element={<Content />} />
                                 <Route
@@ -72,9 +71,9 @@ export default function App() {
                                 <Route path="settings" element={<Settings />} />
                                 <Route path="*" element={<PageNotFound />} />
                             </Routes>
-                        </div>
+                        </main>
                     </div>
-                </CategoryContextProvider>
+                </>
             ) : (
                 <Login />
             )}

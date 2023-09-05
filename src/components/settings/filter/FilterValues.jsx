@@ -1,19 +1,39 @@
 import { useState } from "react";
+import makeRequest from "../../../utils/makeRequest";
 
-export default function FilterValues({ filter }) {
-    const [options, setOptions] = useState(filter.options);
+export default function FilterValues({
+    dataTypeId,
+    filterId,
+    isSelect,
+    options,
+    setOptions,
+}) {
     const [addingOption, setAddingOption] = useState(false);
     const [newOption, setNewOption] = useState("");
 
-    const handleOptionRemove = (index) => {
-        const updatedOptions = options.filter((_, i) => i !== index);
-        setOptions(updatedOptions);
+    const handleOptionRemove = async (index) => {
+        const response = await makeRequest(
+            `config/delete-profile-key-option?dataType=${dataTypeId}&key=${filterId}&option=${options[index]}`,
+            "DELETE"
+        );
+        response.isSuccess && setOptions(response.data.options);
     };
 
-    const handleOptionAdd = () => {
-        const updatedOptions = options.slice();
-        updatedOptions.push(newOption);
-        setOptions(updatedOptions);
+    //TODO: find a better way
+    const handleOptionAdd = async () => {
+        const request = {
+            dataType: dataTypeId,
+            key: filterId,
+            newOptions: [newOption],
+        };
+
+        const response = await makeRequest(
+            "config/add-profile-options",
+            "POST",
+            request
+        );
+
+        setOptions(response.data);
     };
 
     const handleKey = (event) => {
@@ -26,43 +46,50 @@ export default function FilterValues({ filter }) {
     };
 
     return (
-        <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-4">
-                {options.map((option, index) => (
-                    <div
-                        key={index}
-                        className="flex justify-between items-center"
-                    >
-                        <span className="text-accent font-medium">
-                            {option}
-                        </span>
-                        <i
-                            className="fa-solid fa-xmark cursor-pointer"
-                            onClick={() => handleOptionRemove(index)}
-                        ></i>
-                    </div>
-                ))}
-            </div>
-            <>
-                {addingOption ? (
-                    <input
-                        className="input-settings"
-                        placeholder="Add a value or press Esc"
-                        type="text"
-                        value={newOption}
-                        onChange={(e) => setNewOption(e.target.value)}
-                        onKeyUp={(event) => handleKey(event)}
-                    />
-                ) : (
-                    <div
-                        className="flex items-center cursor-pointer"
-                        onClick={() => setAddingOption(true)}
-                    >
-                        <i className="fa-solid fa-plus mr-4"></i>
-                        <span> Add More Values </span>
-                    </div>
-                )}
-            </>
-        </div>
+        <>
+            {isSelect ? (
+                <div className="flex flex-col gap-4">
+                    {options.map((option, index) => (
+                        <div
+                            key={index}
+                            className="flex justify-between items-center"
+                        >
+                            <span className="text-accent font-semibold">
+                                {option}
+                            </span>
+                            <i
+                                className="fa-solid fa-xmark cursor-pointer"
+                                onClick={() => handleOptionRemove(index)}
+                            ></i>
+                        </div>
+                    ))}
+
+                    {addingOption ? (
+                        <input
+                            autoFocus
+                            className="input-settings"
+                            placeholder="Add a value or press Esc"
+                            type="text"
+                            value={newOption}
+                            onChange={(e) => setNewOption(e.target.value)}
+                            onKeyUp={(event) => handleKey(event)}
+                        />
+                    ) : (
+                        <div
+                            className="flex items-center cursor-pointer"
+                            onClick={() => setAddingOption(true)}
+                        >
+                            <i className="fa-solid fa-plus mr-4"></i>
+                            <span> Add More Values </span>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div className="flex justify-evenly">
+                    <div>{options[0]}</div>
+                    <div>{options[1]}</div>
+                </div>
+            )}
+        </>
     );
 }

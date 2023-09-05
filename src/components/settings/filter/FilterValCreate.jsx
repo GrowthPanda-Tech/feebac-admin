@@ -14,7 +14,7 @@ export default function FilterValCreate({ setIsShowFilterValCreate }) {
     const [profileTypes, setProfileTypes] = useState([]);
     const [inputValue, setInputValue] = useState("");
     const [profileVals, setProfileVals] = useState({
-        dataType: "1",
+        dataType: 1,
         isSelect: true,
         options: [],
     });
@@ -24,12 +24,16 @@ export default function FilterValCreate({ setIsShowFilterValCreate }) {
             "config/get-profile-data-types",
             "GET"
         );
-        response.isSuccess
-            ? setProfileTypes(response.data)
-            : console.log(response.message);
+
+        if (!response.isSuccess) {
+            alert(response.message);
+            return;
+        }
+
+        setProfileTypes(response.data);
     };
 
-    const handleInputChange = (event) => {
+    const handleChange = (event) => {
         if (event.target.name === "options") {
             const inputValue = event.target.value;
             setInputValue(inputValue);
@@ -65,25 +69,40 @@ export default function FilterValCreate({ setIsShowFilterValCreate }) {
     return (
         <div className="p-10 bg-white rounded-md flex flex-col gap-6 mb-6">
             <Label name={"Choose Profile Type"}>
-                <select
-                    name="dataType"
-                    className="input-settings"
-                    onChange={handleInputChange}
-                >
-                    {profileTypes.map((type) => (
-                        <option value={type.id} key={type.id}>
-                            {type.name}
-                        </option>
-                    ))}
-                </select>
+                <div className="input-settings">
+                    <select
+                        name="dataType"
+                        className="bg-white w-full border-none outline-none"
+                        onChange={handleChange}
+                    >
+                        {profileTypes.map((type) => (
+                            <option value={type.id} key={type.id}>
+                                {type.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </Label>
 
             <Label name={"Filter Name"}>
                 <input
                     name="name"
                     className="input-settings"
-                    onChange={handleInputChange}
+                    onChange={handleChange}
                 />
+            </Label>
+
+            <Label name={"Type"}>
+                <div className="input-settings">
+                    <select
+                        name="isSelect"
+                        className="bg-white w-full border-none outline-none"
+                        onChange={handleChange}
+                    >
+                        <option value={true}>Selection</option>
+                        <option value={false}>Range</option>
+                    </select>
+                </div>
             </Label>
 
             <Label name={"Values"}>
@@ -92,7 +111,7 @@ export default function FilterValCreate({ setIsShowFilterValCreate }) {
                     name="options"
                     value={inputValue}
                     placeholder="Separate out values with commas"
-                    onChange={handleInputChange}
+                    onChange={handleChange}
                 />
             </Label>
 

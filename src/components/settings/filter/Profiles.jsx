@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
+import Filter from "./Filter";
 import makeRequest from "../../../utils/makeRequest";
-import ProfileSubSection from "./ProfileSubSection";
 
 export default function Profiles() {
+    //TODO: Can I cache this?
     const [profiles, setProfiles] = useState([]);
 
     const getProfiles = async () => {
@@ -21,12 +22,22 @@ export default function Profiles() {
 
     return (
         <>
-            {profiles.map((profile, key) => (
-                <ProfileSubSection
-                    key={key}
-                    type={profile.dataType}
-                    filters={profile.key}
-                />
+            {profiles.map((profile) => (
+                <div className="mb-8" key={profile.id}>
+                    <h1 className="text-xl mb-4 font-medium">
+                        {profile.dataType} Filters
+                    </h1>
+
+                    <div className="grid grid-cols-3 gap-8">
+                        {profile.key.map((filter) => (
+                            <Filter
+                                key={filter.id}
+                                dataTypeId={profile.id}
+                                filter={filter}
+                            />
+                        ))}
+                    </div>
+                </div>
             ))}
         </>
     );

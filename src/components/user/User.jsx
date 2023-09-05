@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import TableData from "../TableData";
 import makeRequest from "../../utils/makeRequest";
 import calculateAge from "../../utils/calculateAge";
+import Table from "../table/Table";
+import Thead from "../table/Thead";
 
 function TableBody({ rowData }) {
     return (
@@ -52,18 +54,10 @@ export default function User() {
     return (
         <>
             <h1 className="heading"> User Information </h1>
-            <table className="table-fixed w-full bg-white rounded-xl text-center">
-                <thead className="text-xl">
-                    <tr>
-                        {headers.map((header, index) => (
-                            <th key={index} className="px-4 py-8">
-                                {header}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
+            <Table>
+                <Thead headers={headers} />
                 <TableBody rowData={userData} />
-            </table>
+            </Table>
         </>
     );
 }

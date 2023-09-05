@@ -1,17 +1,9 @@
-export default function TableData({
-    data,
-    left = false,
-    truncate = false,
-    capitalize = false,
-    mono = false,
-}) {
+export default function TableData({ data, left, capitalize, mono }) {
     return (
         <td
             className={`py-6 px-4 ${left && "text-left"} ${
-                truncate && "truncate"
-            } ${capitalize && "capitalize"} ${
-                mono && "font-mono"
-            } whitespace-nowrap`}
+                capitalize && "capitalize"
+            } ${mono && "font-mono"}`}
         >
             {data}
         </td>

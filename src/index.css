@@ -9,6 +9,10 @@
 }
 
 @layer components {
+    .active {
+        @apply bg-secondary;
+    }
+
     .login-input {
         @apply border-2 border-accent rounded-3xl py-6 px-12 text-xl;
     }
@@ -67,8 +71,4 @@
     input[type="number"]::-webkit-outer-spin-button {
         @apply appearance-none;
     }
-}
-
-.active {
-    background: #ea525f;
 }

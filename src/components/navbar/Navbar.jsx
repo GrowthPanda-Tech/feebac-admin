@@ -1,7 +1,6 @@
 import { NavLink } from "react-router-dom";
 import dashboard from "../../assets/dashboard.svg";
 
-//TODO: this feels illegal
 import dashboardIcon from "../../assets/navbar/dashboard.png";
 import user from "../../assets/navbar/user.png";
 import survey from "../../assets/navbar/survey.png";
@@ -12,12 +11,11 @@ import analytics from "../../assets/navbar/analytics.png";
 import settings from "../../assets/navbar/settings.png";
 
 function NavList({ link, title, icon }) {
+    const isActive = ({ isActive }) => (isActive ? "active" : undefined);
     return (
         <NavLink
             to={link}
-            className={
-                "px-16 py-4 text-white leading-6 tracking-wide flex items-center gap-8"
-            }
+            className={`${isActive} px-16 py-4 text-white leading-6 tracking-wide flex items-center gap-8`}
         >
             <img src={icon} className="w-6" />
             <span> {title} </span>

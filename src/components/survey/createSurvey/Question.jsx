@@ -1,5 +1,6 @@
 import { useState } from "react";
 import makeRequest from "../../../utils/makeRequest";
+import { Link } from "react-router-dom";
 
 export default function Question({ surveyId, surveyTitle }) {
     //TODO: REFACTOR THIS ASAP
@@ -10,7 +11,7 @@ export default function Question({ surveyId, surveyTitle }) {
         questionType: 2,
     });
 
-    const [activeButtonIndex, setActiveButtonIndex] = useState(0);
+    const [activeButtonIndex, setActiveButtonIndex] = useState(1);
 
     const setQuestionType = (index, questionType, questionValue = {}) => {
         setActiveButtonIndex(index);
@@ -53,26 +54,43 @@ export default function Question({ surveyId, surveyTitle }) {
         setQuestionNumber(questionNumber + 1);
     };
 
-    const handlePublish = async () => {
-        const body = {
-            surveyId,
-            isStartNow: true,
-        };
-        const response = await makeRequest(
-            "survey/start-survey",
-            "PATCH",
-            body
-        );
-        alert(response.message);
-    };
+    // const handlePublish = async () => {
+    //     const body = {
+    //         surveyId,
+    //         isStartNow: true,
+    //     };
+    //     const response = await makeRequest(
+    //         "survey/start-survey",
+    //         "PATCH",
+    //         body
+    //     );
+    //     alert(response.message);
+    //     location.replace("/survey");
+    // };
 
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
                 <h1 className="heading mb-0"> {surveyTitle} </h1>
-                <button className="btn-primary w-fit" onClick={handlePublish}>
-                    Publish Now
-                </button>
+                <div className="flex gap-4">
+                    <button
+                        className="btn-primary bg-accent w-fit"
+                        onClick={handleQuestionSubmit}
+                    >
+                        Submit Question
+                    </button>
+
+                    {/* <button */}
+                    {/*     className="btn-primary w-fit" */}
+                    {/*     onClick={handlePublish} */}
+                    {/* > */}
+                    {/*     Publish Now */}
+                    {/* </button> */}
+
+                    <Link to={`/survey/review/${surveyId}`}>
+                        <button className="btn-primary w-fit">Review</button>
+                    </Link>
+                </div>
             </div>
             <label>
                 <span className="font-bold"> Question {questionNumber} : </span>
@@ -116,10 +134,6 @@ export default function Question({ surveyId, surveyTitle }) {
                         Multiple Answer
                     </button>
                 </div>
-                {/* Add options */}
-                <button onClick={() => setOptions([...options, ""])}>
-                    <i className="fa-solid fa-plus"></i>
-                </button>
             </div>
             <div className="flex flex-col">
                 {questionData.questionType === 1 ? (
@@ -152,14 +166,13 @@ export default function Question({ surveyId, surveyTitle }) {
                     ))
                 )}
             </div>
-            <div className="flex gap-4">
-                <button
-                    className="btn-primary w-fit"
-                    onClick={handleQuestionSubmit}
-                >
-                    Submit
-                </button>
-            </div>
+            <button
+                onClick={() => setOptions([...options, ""])}
+                className="btn-primary w-fit"
+            >
+                <i className="fa-solid fa-plus"></i>
+                <span>Add Options</span>
+            </button>
         </div>
     );
 }

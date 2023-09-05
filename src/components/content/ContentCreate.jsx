@@ -5,6 +5,7 @@ import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 export default function ContentCreate() {
     const [categories, setCategories] = useState([]);
+    const [articleData, setArticleData] = useState({});
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
 
     const getCategories = async () => {

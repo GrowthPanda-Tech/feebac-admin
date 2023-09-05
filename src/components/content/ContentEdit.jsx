@@ -13,10 +13,7 @@ export default function ContentEdit() {
         category: { category_id: null },
     });
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
-    const [imgUpdate, setImgUpdate] = useState({
-        isUpdateImage: false,
-        articleImg: null,
-    });
+    const [imgUpdate, setImgUpdate] = useState(false);
 
     const getArticleInfo = async () => {
         const response = await makeRequest(
@@ -57,17 +54,20 @@ export default function ContentEdit() {
 
     const handleSubmit = async (event) => {
         const formData = new FormData();
+
         formData.append("articleId", articleData.article_id);
         formData.append("articleTitle", articleData.article_title);
         formData.append("articleDesctiption", articleData.article_desctiption);
         formData.append("articleContent", articleData.article_content);
         formData.append("category", articleData.category);
-        formData.append("isUpdateImage", imgUpdate.isUpdateImage);
-        formData.append(
-            "articleImg",
-            imgUpdate.articleImg,
-            imgUpdate.articleImg.name
-        );
+        formData.append("isUpdateImage", imgUpdate);
+        if (imgUpdate) {
+            formData.append(
+                "articleImg",
+                imgUpdate.articleImg,
+                imgUpdate.articleImg.name
+            );
+        }
 
         const response = await formSubmit(
             event,

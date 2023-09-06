@@ -28,7 +28,7 @@ export default function Profiles() {
                         {profile.dataType} Filters
                     </h1>
 
-                    <div className="grid grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {profile.key.map((filter) => (
                             <Filter
                                 key={filter.id}

@@ -51,7 +51,7 @@ export default function Settings() {
                 ) : (
                     <div className="flex gap-4">
                         <button
-                            className="btn-primary"
+                            className="text-xs md:text-base btn-primary"
                             onClick={() => handleShow("filter")}
                         >
                             <i className="fa-solid fa-plus mr-3"></i>
@@ -59,7 +59,7 @@ export default function Settings() {
                         </button>
 
                         <button
-                            className="btn-primary bg-accent"
+                            className="text-xs md:text-base btn-primary bg-accent"
                             onClick={() => handleShow("filterVal")}
                         >
                             <i className="fa-solid fa-plus mr-3"></i>

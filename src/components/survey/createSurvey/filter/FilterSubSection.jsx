@@ -5,25 +5,31 @@ export default function FilterSubSection({ filterData, setProfileData }) {
     const [filterValues, setFilterValues] = useState({});
 
     const handleOptionClick = (index, clicked) => {
-        setFilterValues((prevOptions) => ({
-            ...prevOptions,
+        setFilterValues((prev) => ({
+            ...prev,
             [index]: !clicked,
         }));
+
+        if (clicked) {
+            setProfileData((prev) => {
+                const { key_name } = filterData.key[index];
+                const { [key_name]: omitKey, ...newProfileData } = prev;
+                return newProfileData;
+            });
+        }
     };
 
     const handleChange = (event) => {
         const { name, value, checked } = event.target;
         if (checked) {
-            setProfileData((prevProfileData) => ({
-                ...prevProfileData,
-                [name]: [...(prevProfileData[name] || []), value],
+            setProfileData((prev) => ({
+                ...prev,
+                [name]: [...(prev[name] || []), value],
             }));
         } else {
-            setProfileData((prevProfileData) => ({
-                ...prevProfileData,
-                [name]: (prevProfileData[name] || []).filter(
-                    (item) => item !== value
-                ),
+            setProfileData((prev) => ({
+                ...prev,
+                [name]: (prev[name] || []).filter((item) => item !== value),
             }));
         }
     };

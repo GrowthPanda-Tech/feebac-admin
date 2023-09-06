@@ -21,7 +21,7 @@ export default function Categories() {
     }, []);
 
     return (
-        <div className="grid grid-cols-5 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-12">
             {categories.map((category) => (
                 <div
                     key={category.category_id}

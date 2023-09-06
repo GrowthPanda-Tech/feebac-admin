@@ -38,8 +38,8 @@ export default function Settings() {
 
     return (
         <>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="heading mb-0">Settings</h1>
+            <div className="md:flex  md:justify-between items-center mb-6">
+                <h1 className="heading mb-1">Settings</h1>
                 {visibleSection === "category" ? (
                     <button
                         className="btn-primary"

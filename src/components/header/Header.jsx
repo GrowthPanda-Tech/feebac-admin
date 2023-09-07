@@ -30,7 +30,7 @@ export default function Header() {
 
     return (
         <header className="flex justify-evenly items-center py-8 bg-white">
-            <div className="bg-background rounded-xl">
+            <div className="hidden md:block bg-background rounded-xl">
                 <i className="fa-solid fa-magnifying-glass ml-3"></i>
                 <input
                     type="text"

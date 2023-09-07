@@ -88,8 +88,8 @@ export default function ContentEdit() {
     return (
         <>
             <h1 className="heading"> Edit Article </h1>
-            <div className="flex gap-8">
-                <div className="w-3/4">
+            <div className="flex flex-col-reverse md:flex-row gap-8">
+                <div className="md:w-3/4">
                     <ContentForm
                         articleData={articleData}
                         handleChange={handleChange}
@@ -105,7 +105,7 @@ export default function ContentEdit() {
                     </button>
                 </div>
 
-                <div className="w-1/4 h-60 p-4 rounded-xl bg-white flex items-center justify-center">
+                <div className="md:w-1/4 h-60 p-4 rounded-xl bg-white flex items-center justify-center">
                     <img
                         src={
                             articleData.image_url

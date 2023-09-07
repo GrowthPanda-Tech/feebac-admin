@@ -38,8 +38,8 @@ export default function Settings() {
 
     return (
         <>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="heading mb-0">Settings</h1>
+            <div className="md:flex  md:justify-between items-center mb-6">
+                <h1 className="heading mb-1">Settings</h1>
                 {visibleSection === "category" ? (
                     <button
                         className="btn-primary"
@@ -51,7 +51,7 @@ export default function Settings() {
                 ) : (
                     <div className="flex gap-4">
                         <button
-                            className="btn-primary"
+                            className="text-xs md:text-base btn-primary"
                             onClick={() => handleShow("filter")}
                         >
                             <i className="fa-solid fa-plus mr-3"></i>
@@ -59,7 +59,7 @@ export default function Settings() {
                         </button>
 
                         <button
-                            className="btn-primary bg-accent"
+                            className="text-xs md:text-base btn-primary bg-accent"
                             onClick={() => handleShow("filterVal")}
                         >
                             <i className="fa-solid fa-plus mr-3"></i>

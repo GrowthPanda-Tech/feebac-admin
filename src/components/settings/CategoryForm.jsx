@@ -57,11 +57,11 @@ export default function CategoryForm({ setIsShowForm, setCategories }) {
     };
 
     return (
-        <div className="bg-white rounded-xl mb-8 p-8 flex gap-8">
-            <div className="w-1/5 flex justify-center items-center border rounded-xl">
+        <div className="bg-white rounded-xl mb-8 p-8 flex flex-col md:flex-row  gap-8">
+            <div className=" w-full md:w-1/5 flex justify-center items-center border rounded-xl">
                 <img src={imgPreview} />
             </div>
-            <div className="w-4/5">
+            <div className="w-full md:w-4/5">
                 <form
                     onSubmit={handleSubmit}
                     className="flex flex-col h-full justify-evenly gap-4"
@@ -87,7 +87,7 @@ export default function CategoryForm({ setIsShowForm, setCategories }) {
                             required
                         />
                     </label>
-                    <div className="flex gap-4">
+                    <div className="flex flex-col md:flex-row gap-4">
                         <button className="btn-primary"> Save </button>
                         <button
                             className="btn-secondary"

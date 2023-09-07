@@ -72,8 +72,8 @@ export default function ContentForm({
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex justify-between gap-8">
-                <div className="w-1/2">
+            <div className="flex flex-col md:flex-row justify-between gap-8">
+                <div className="md:w-1/2">
                     <Input
                         label={"Title"}
                         name={"article_title"}
@@ -81,7 +81,7 @@ export default function ContentForm({
                         onChange={handleChange}
                     />
                 </div>
-                <div className="w-1/2">
+                <div className="md:w-1/2">
                     <Select
                         label={"Category"}
                         name={"category"}

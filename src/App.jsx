@@ -26,10 +26,13 @@ export default function App() {
         <>
             {isLoggedIn ? (
                 <>
-                    <Navbar />
-                    <div className="ml-80">
+                <div className="hidden md:block">
+                <Navbar  />
+                </div>
+                    
+                    <div className="md:ml-80">
                         <Header />
-                        <main className="p-12">
+                        <main className="p-4">
                             <Routes>
                                 <Route path="/" element={<Dashboard />} />
                                 <Route path="user" element={<User />} />

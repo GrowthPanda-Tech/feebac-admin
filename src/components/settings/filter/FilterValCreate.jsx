@@ -47,6 +47,15 @@ export default function FilterValCreate({ setIsShowFilterValCreate }) {
             return;
         }
 
+        if (event.target.name === "isSelect") {
+            setProfileVals({
+                ...profileVals,
+                isSelect: event.target.value === "true" ? true : false,
+            });
+
+            return;
+        }
+
         setProfileVals({
             ...profileVals,
             [event.target.name]: event.target.value,

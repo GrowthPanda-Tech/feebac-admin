@@ -37,6 +37,7 @@ export default function Form({
     const [isShowFilter, setIsShowFilter] = useState(false);
     const [surveyData, setSurveyData] = useState([]);
     const [profileData, setProfileData] = useState({});
+    console.log(profileData, "profiledata");
 
     const getCategories = async () => {
         const response = await makeRequest(

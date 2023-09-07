@@ -1,5 +1,6 @@
 import { useState } from "react";
 import FilterOption from "./FilterOption";
+import FilterSlider from "./FilterSlider";
 
 export default function FilterSubSection({ filterData, setProfileData }) {
     const [filterValues, setFilterValues] = useState({});
@@ -21,6 +22,7 @@ export default function FilterSubSection({ filterData, setProfileData }) {
 
     const handleChange = (event) => {
         const { name, value, checked } = event.target;
+        console.log(name, value, checked);
         if (checked) {
             setProfileData((prev) => ({
                 ...prev,
@@ -92,7 +94,11 @@ export default function FilterSubSection({ filterData, setProfileData }) {
                                         <div className="capitalize text-lg font-semibold w-[10vw]">
                                             {data.key_name}:
                                         </div>
-                                        {/* <FilterSlider filter={data} /> */}
+                                        {console.log(data, "data")}
+                                        <FilterSlider
+                                            filter={data}
+                                            setProfileData={setProfileData}
+                                        />
                                     </div>
                                 )}
                             </>

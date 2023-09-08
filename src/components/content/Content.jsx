@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import makeRequest from "../../utils/makeRequest";
-import TableHead from "../TableHead";
-import TableData from "../TableData";
+import Table from "../table/Table";
+import Thead from "../table/Thead";
+import Tdata from "../table/Tdata";
 
 export default function Content() {
     const headers = ["Name", "Status", "Category", "Creation Date", " "];
@@ -45,74 +46,57 @@ export default function Content() {
             </div>
 
             {/* Table */}
-            <table className="table">
-                {/* <TableHead headers={headers} /> */}
-
-                <thead className="text-xl">
-                    <tr>
-                        {headers.map((header, index) => (
-                            <th
-                                key={index}
-                                className="px-4 py-8 first-of-type:text-left first-of-type:w-1/2"
-                            >
-                                {header}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
+            <Table>
+                <Thead headers={headers} />
 
                 <tbody className="text-lg">
                     {articleList
                         .slice(0)
                         .reverse()
                         .map((article) => (
-                            <tr key={article.article_id}>
-                                {/* <TableData data={article.article_title} left truncate /> */}
-                                <td className="p-4 text-left truncate">
+                            <tr
+                                key={article.article_id}
+                                className="border-b border-b-light-grey hover:bg-[#F8F8F8]"
+                            >
+                                <Tdata left truncate>
                                     {article.article_title}
-                                </td>
+                                </Tdata>
 
-                                {/* TODO: make this easier to read */}
-                                <td
-                                    className={`p-4 ${
-                                        article.is_published
-                                            ? "text-green"
-                                            : "text-secondary"
-                                    } font-bold`}
-                                >
+                                <Tdata>
                                     {article.is_published
                                         ? "Public"
                                         : "Private"}
-                                </td>
+                                </Tdata>
 
-                                <TableData
-                                    data={article.category}
-                                    capitalize={true}
-                                />
-                                <TableData
-                                    data={article.created_date.split("T")[0]}
-                                />
+                                <Tdata capitalize>{article.category}</Tdata>
+                                <Tdata>
+                                    {article.created_date.split("T")[0]}
+                                </Tdata>
 
-                                <td className="p-4 flex justify-evenly">
-                                    <Link
-                                        to={`/content/edit/${article.article_id}`}
-                                    >
-                                        <button>
-                                            <i className="fa-solid fa-pen-to-square"></i>
+                                <Tdata>
+                                    <div className="flex justify-evenly">
+                                        <Link
+                                            to={`/content/edit/${article.article_id}`}
+                                        >
+                                            <button>
+                                                <i className="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                        </Link>
+                                        <button
+                                            onClick={() =>
+                                                handlePublish(
+                                                    article.article_id
+                                                )
+                                            }
+                                        >
+                                            <i className="fa-regular fa-newspaper"></i>
                                         </button>
-                                    </Link>
-                                    <button
-                                        onClick={() =>
-                                            handlePublish(article.article_id)
-                                        }
-                                    >
-                                        <i className="fa-regular fa-newspaper"></i>
-                                    </button>
-                                </td>
+                                    </div>
+                                </Tdata>
                             </tr>
                         ))}
                 </tbody>
-            </table>
+            </Table>
         </>
     );
 }

@@ -1,42 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import TableData from "../TableData";
 import makeRequest from "../../utils/makeRequest";
-import calculateAge from "../../utils/calculateAge";
 import Table from "../table/Table";
 import Thead from "../table/Thead";
-
-function TableBody({ rowData }) {
-    return (
-        <tbody className="text-lg">
-            {rowData.map((data, index) => {
-                const link = (
-                    <Link to={data.user_id}>
-                        {data.user_id.split("-").pop()}
-                    </Link>
-                );
-                return (
-                    <tr key={index}>
-                        <TableData data={link} mono />
-                        <TableData data={data.gender ? data.gender : "-"} />
-                        <TableData
-                            data={
-                                data.date_of_birth
-                                    ? calculateAge(data.date_of_birth)
-                                    : "-"
-                            }
-                        />
-                        <TableData data={data.loyalty_points} />
-                        <TableData data={data.state ? data.state : "-"} />
-                    </tr>
-                );
-            })}
-        </tbody>
-    );
-}
+import Tdata from "../table/Tdata";
 
 export default function User() {
-    const headers = ["User ID", "Gender", "Age", "Loyalty Points", "Location"];
+    const headers = [
+        "User ID",
+        "Gender",
+        "Loyalty Points",
+        "Location",
+        "Actions",
+    ];
 
     const [userData, setUserData] = useState([]);
 
@@ -56,7 +32,24 @@ export default function User() {
             <h1 className="heading"> User Information </h1>
             <Table>
                 <Thead headers={headers} />
-                <TableBody rowData={userData} />
+                <tbody className="text-lg">
+                    {userData.map((data, index) => (
+                        <tr
+                            key={index}
+                            className="border-b border-b-light-grey hover:bg-[#F8F8F8]"
+                        >
+                            <Tdata mono>{data.user_id.split("-").pop()}</Tdata>
+                            <Tdata>{data.gender ? data.gender : "-"}</Tdata>
+                            <Tdata>{data.loyalty_points} </Tdata>
+                            <Tdata>{data.state ? data.state : "-"}</Tdata>
+                            <Tdata>
+                                <Link to={data.user_id}>
+                                    <i className="fa-solid fa-circle-info text-2xl text-accent"></i>
+                                </Link>
+                            </Tdata>
+                        </tr>
+                    ))}
+                </tbody>
             </Table>
         </>
     );

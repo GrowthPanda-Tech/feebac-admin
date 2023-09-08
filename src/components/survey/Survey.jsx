@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import makeRequest from "../../utils/makeRequest";
-import TableHead from "../TableHead";
+import Thead from "../table/Thead";
 import TableBody from "./TableBody";
 
 function Button({ type, setUrl, isActive, onClick }) {
@@ -54,7 +54,7 @@ export default function Survey() {
     const [surveyData, setsurveyData] = useState([]);
     const [url, setUrl] = useState("live");
 
-    const columns = [
+    const headers = [
         "Title",
         "Category",
         "Start Date",
@@ -90,7 +90,7 @@ export default function Survey() {
 
             {/* Table */}
             <table className="table mt-8">
-                <TableHead headers={columns} />
+                <Thead headers={headers} />
                 <TableBody data={surveyData} />
             </table>
         </>

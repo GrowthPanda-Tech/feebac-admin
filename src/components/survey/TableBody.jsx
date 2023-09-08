@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import makeRequest from "../../utils/makeRequest";
-import TableData from "../TableData";
+import Tdata from "../table/Tdata";
 
 function Actions({ id }) {
     const handleStatusToggle = async () => {
@@ -35,20 +35,22 @@ export default function TableBody({ data }) {
     return (
         <tbody className="text-lg">
             {data.map((survey, index) => (
-                <tr key={index}>
-                    <TableData data={survey.survey_title} left />
-                    <TableData data={survey.category} capitalize />
-                    <TableData data={survey.start_date.split(" ")[0]} mono />
-                    <TableData data={survey.end_date.split(" ")[0]} mono />
-                    <TableData
-                        data={`${survey.start_date.split(" ")[1]} - ${
+                <tr
+                    key={index}
+                    className="border-b border-b-light-grey hover:bg-[#F8F8F8]"
+                >
+                    <Tdata left> {survey.survey_title} </Tdata>
+                    <Tdata capitalize> {survey.category} </Tdata>
+                    <Tdata mono> {survey.start_date.split(" ")[0]} </Tdata>
+                    <Tdata mono> {survey.end_date.split(" ")[0]} </Tdata>
+                    <Tdata mono>
+                        {`${survey.start_date.split(" ")[1]} - ${
                             survey.end_date.split(" ")[1]
                         }`}
-                        mono
-                    />
-                    <td>
+                    </Tdata>
+                    <Tdata>
                         <Actions id={survey.survey_id} />
-                    </td>
+                    </Tdata>
                 </tr>
             ))}
         </tbody>

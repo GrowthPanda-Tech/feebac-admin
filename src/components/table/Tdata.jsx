@@ -1,11 +1,11 @@
-export default function TableData({ data, left, capitalize, mono }) {
+export default function Tdata({ children, left, capitalize, mono }) {
     return (
         <td
             className={`py-6 px-4 ${left && "text-left"} ${
                 capitalize && "capitalize"
             } ${mono && "font-mono"}`}
         >
-            {data}
+            {children}
         </td>
     );
 }

@@ -15,7 +15,11 @@ export default function Header() {
                     <div className="text-grey">Admin</div>
                 </div>
                 <img
-                    src={baseUrl + userInfo.profile_pic}
+                    src={
+                        userInfo.profile_pic
+                            ? baseUrl + userInfo.profile_pic
+                            : defaultUser
+                    }
                     className="h-10 w-10 rounded-full"
                     alt={defaultUser}
                 />

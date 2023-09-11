@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import makeRequest from "../../../utils/makeRequest";
 import { Link } from "react-router-dom";
 
 export default function Question({ surveyId, surveyTitle }) {
-    //TODO: REFACTOR THIS ASAP
     const [options, setOptions] = useState(["", ""]);
     const [questionNumber, setQuestionNumber] = useState(1);
     const [questionData, setQuestionData] = useState({
@@ -12,6 +11,16 @@ export default function Question({ surveyId, surveyTitle }) {
     });
 
     const [activeButtonIndex, setActiveButtonIndex] = useState(1);
+    const [filters, setFilters] = useState([]);
+    const [isDisabled, setIsDisabled] = useState(true);
+
+    const getFilters = async () => {
+        const response = await makeRequest(
+            "config/get-profile-key-value",
+            "GET"
+        );
+        setFilters(response.data[2].key);
+    };
 
     const setQuestionType = (index, questionType, questionValue = {}) => {
         setActiveButtonIndex(index);
@@ -34,7 +43,6 @@ export default function Question({ surveyId, surveyTitle }) {
         updatedOptions[index] = e.target.value;
         setOptions(updatedOptions);
 
-        //does this hamper performance
         arrangeOptions(updatedOptions);
     };
 
@@ -54,19 +62,25 @@ export default function Question({ surveyId, surveyTitle }) {
         setQuestionNumber(questionNumber + 1);
     };
 
-    // const handlePublish = async () => {
-    //     const body = {
-    //         surveyId,
-    //         isStartNow: true,
-    //     };
-    //     const response = await makeRequest(
-    //         "survey/start-survey",
-    //         "PATCH",
-    //         body
-    //     );
-    //     alert(response.message);
-    //     location.replace("/survey");
-    // };
+    const handlePublish = async () => {
+        const body = {
+            surveyId,
+            isStartNow: true,
+        };
+        const response = await makeRequest(
+            "survey/start-survey",
+            "PATCH",
+            body
+        );
+        alert(response.message);
+        location.replace("/survey");
+    };
+
+    useEffect(() => {
+        getFilters();
+    }, []);
+
+    console.log(questionData);
 
     return (
         <div className="flex flex-col gap-4">
@@ -80,16 +94,16 @@ export default function Question({ surveyId, surveyTitle }) {
                         Submit Question
                     </button>
 
-                    {/* <button */}
-                    {/*     className="btn-primary w-fit" */}
-                    {/*     onClick={handlePublish} */}
-                    {/* > */}
-                    {/*     Publish Now */}
-                    {/* </button> */}
+                    <button
+                        className="btn-primary w-fit"
+                        onClick={handlePublish}
+                    >
+                        Publish Now
+                    </button>
 
-                    <Link to={`/survey/review/${surveyId}`}>
-                        <button className="btn-primary w-fit">Review</button>
-                    </Link>
+                    {/* <Link to={`/survey/review/${surveyId}`}> */}
+                    {/*     <button className="btn-primary w-fit">Review</button> */}
+                    {/* </Link> */}
                 </div>
             </div>
             <label>
@@ -101,7 +115,7 @@ export default function Question({ surveyId, surveyTitle }) {
                     onChange={handleInputChange}
                 />
             </label>
-            <div className="flex justify-between">
+            <div className="flex w-full justify-between">
                 <div className="flex gap-7">
                     <button
                         className={`pill ${
@@ -133,6 +147,29 @@ export default function Question({ surveyId, surveyTitle }) {
                     >
                         Multiple Answer
                     </button>
+                </div>
+                <div>
+                    <input
+                        type="checkbox"
+                        onClick={() => setIsDisabled(!isDisabled)}
+                    />
+                    <select
+                        className=""
+                        disabled={isDisabled}
+                        name="profileField"
+                        onChange={(e) =>
+                            setQuestionData({
+                                ...questionData,
+                                [e.target.name]: e.target.value,
+                            })
+                        }
+                    >
+                        {filters.map((filter) => (
+                            <option key={filter.id} value={filter.id}>
+                                {filter.key_name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             </div>
             <div className="flex flex-col">

@@ -5,6 +5,7 @@ import Table from "../table/Table";
 import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
+import MyResponsiveBar from "./Databar";
 
 function Button({ type, setUrl, isActive, onClick }) {
     const handleClick = () => {
@@ -78,6 +79,35 @@ export default function Survey() {
 
     return (
         <div className="flex flex-col gap-8">
+            <div className="w-full flex justify-between">
+                <div className="w-1/2 flex flex-col ">
+                    <h2 className="heading mb-0">Survey Response Metrics</h2>
+                    <div className="bg-[#EA525F] mt-6 p-10 mr-6 rounded-lg items-center w-full flex flex-col text-white">
+                        <div className="flex flex-col text-center w-full">
+                            <h2 className="text-5xl p-2">5,000</h2>
+                            <h3 className="text-2xl">Total Response</h3>
+                        </div>
+                        <div className="flex justify-between p-4 mx-auto text-center divide-x w-full">
+                            <div className="w-full">
+                                <h3 className="text-2xl">5hr</h3>
+                                <h3>Average Time</h3>
+                            </div>
+                            <div className="w-full">
+                                <h3 className="text-2xl">75%</h3>
+                                <h3>Completion Rate</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="w-1/2 flex flex-col">
+                    <h2 className="heading mb-0">
+                        Audience Demographic By Gender
+                        <div className="h-[40vh]">
+                            <MyResponsiveBar />
+                        </div>
+                    </h2>
+                </div>
+            </div>
             <div className="flex justify-between items-center">
                 <h1 className="heading mb-0"> Survey List </h1>
                 <Link to={"/survey/create"} className="w-fit">
@@ -116,9 +146,9 @@ export default function Survey() {
                                         <Link to={`details/${survey_id}`}>
                                             <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
                                         </Link>
-                                        {/* <Link to={`review/${survey_id}`}> */}
-                                        {/*     <i className="fa-solid fa-pen-to-square text-xl"></i> */}
-                                        {/* </Link> */}
+                                        <Link to={`review/${survey_id}`}>
+                                            <i className="fa-solid fa-pen-to-square text-xl"></i>
+                                        </Link>
                                     </div>
                                 </Tdata>
                             </Trow>

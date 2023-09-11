@@ -9,6 +9,7 @@ import loyalty from "../../assets/navbar/loyalty.png";
 import revenue from "../../assets/navbar/revenue.png";
 import analytics from "../../assets/navbar/analytics.png";
 import settings from "../../assets/navbar/settings.png";
+import logout from "../../assets/navbar/logout.png";
 
 function NavList({ link, title, icon }) {
     const isActive = ({ isActive }) => (isActive ? "active" : undefined);
@@ -39,8 +40,14 @@ export default function Navbar() {
         { link: "settings", title: "Settings", icon: settings },
     ];
 
+    const handleLogout = () => {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userInfo");
+        location.replace("/");
+    };
+
     return (
-        <div className=" bg-primary h-screen w-80 fixed">
+        <div className="bg-primary h-screen w-80 fixed">
             <img src={dashboard} className="w-full p-12" />
             <>
                 {navItems.map((item, index) => (
@@ -52,6 +59,13 @@ export default function Navbar() {
                     />
                 ))}
             </>
+            <div
+                className="leading-6 tracking-wide flex items-center gap-8 bg-secondary hover:bg-accent cursor-pointer transition absolute bottom-0 mb-14 px-16 py-4 text-white w-full"
+                onClick={handleLogout}
+            >
+                <img src={logout} className="w-6" />
+                Logout
+            </div>
         </div>
     );
 }

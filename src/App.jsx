@@ -19,6 +19,7 @@ import Revenue from "./components/revenue/Revenue";
 import Analytics from "./components/analytics/Analytics";
 import Settings from "./components/settings/Settings";
 import PageNotFound from "./components/pageNotFound/PageNotFound";
+import ProfileUpdate from "./components/header/ProfileUpdate";
 
 export default function App() {
     const isLoggedIn = localStorage.getItem("authToken") != null;
@@ -72,6 +73,10 @@ export default function App() {
                                 />
                                 <Route path="settings" element={<Settings />} />
                                 <Route path="*" element={<PageNotFound />} />
+                                <Route
+                                    path="profile-update"
+                                    element={<ProfileUpdate />}
+                                />
                             </Routes>
                         </main>
                     </div>

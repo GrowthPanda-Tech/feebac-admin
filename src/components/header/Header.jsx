@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import defaultUser from "../../assets/defaultUser.png";
 
 export default function Header() {
@@ -14,15 +15,17 @@ export default function Header() {
                     {/* TODO: Dynamic user role */}
                     <div className="text-grey">Admin</div>
                 </div>
-                <img
-                    src={
-                        userInfo.profile_pic
-                            ? baseUrl + userInfo.profile_pic
-                            : defaultUser
-                    }
-                    className="h-10 w-10 rounded-full"
-                    alt={defaultUser}
-                />
+                <Link to={"profile-update"}>
+                    <img
+                        src={
+                            userInfo.profile_pic
+                                ? baseUrl + userInfo.profile_pic
+                                : defaultUser
+                        }
+                        className="h-10 w-10 rounded-full"
+                        alt={defaultUser}
+                    />
+                </Link>
             </div>
         </header>
     );

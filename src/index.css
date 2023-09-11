@@ -72,3 +72,9 @@
         @apply appearance-none;
     }
 }
+
+.update-user {
+    background-color: rgba(0, 0, 0, 0.148);
+    backdrop-filter: blur(2px);
+    z-index: 100;
+}

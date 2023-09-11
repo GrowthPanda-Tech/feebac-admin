@@ -13,21 +13,22 @@ function LargeBtn({ name }) {
 
 export default function Login() {
     const [inputData, setInputData] = useState({});
-    console.log(inputData);
-
-    const inputOnChange = (e) =>
-        setInputData({ ...inputData, [e.target.name]: e.target.value });
-
     const [loginInfo, setLoginInfo] = useState({ mobile: "", otp: "" });
     const [alertInfo, setAlertInfo] = useState({ message: "", type: null });
     const [otpStatus, setOtpStatus] = useState(true);
 
     const handleChange = (event) => {
-        const limit = 10;
-        setLoginInfo({
-            ...loginInfo,
-            [event.target.name]: event.target.value.slice(0, limit),
-        });
+        if (event.target.name === "mobile") {
+            setLoginInfo({
+                ...loginInfo,
+                [event.target.name]: event.target.value.slice(0, 10),
+            });
+        } else {
+            setInputData({
+                ...inputData,
+                [event.target.name]: event.target.value.slice(0, 1),
+            });
+        }
     };
 
     const handleLogin = async (e) => {
@@ -104,7 +105,7 @@ export default function Login() {
                         name="mobile"
                         placeholder="Enter mobile number"
                         value={loginInfo.mobile}
-                        onChange={(event) => handleChange(event)}
+                        onChange={(event) => handleChange(event, 10)}
                         disabled={!otpStatus}
                         className="login-input disabled:cursor-not-allowed disabled:opacity-50"
                         required
@@ -131,7 +132,7 @@ export default function Login() {
                             <OtpField
                                 quantity={6}
                                 inputData={inputData}
-                                inputOnChange={inputOnChange}
+                                inputOnChange={handleChange}
                             />
                         </div>
                         <LargeBtn name={"LOGIN"} />

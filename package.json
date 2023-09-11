@@ -11,6 +11,9 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@nivo/core": "^0.83.0",
+        "@nivo/geo": "^0.83.0",
+        "@nivo/pie": "^0.83.0",
         "@tinymce/tinymce-react": "^4.3.0",
         "multi-range-slider-react": "^2.0.3",
         "react": "^18.2.0",

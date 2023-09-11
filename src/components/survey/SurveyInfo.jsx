@@ -19,7 +19,6 @@ export default function SurveyInfo() {
             "GET"
         );
         setSurveyInfo(response);
-        console.log(response);
     }
     useEffect(() => {
         getSurveyData();
@@ -37,9 +36,9 @@ export default function SurveyInfo() {
                 </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {surveyInfo.data.map((survey, index) => (
-                    <Response key={index} index={index} survey={survey} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
+                {surveyInfo.data.map((question, index) => (
+                    <Response key={index} index={index} question={question} />
                 ))}
             </div>
         </>

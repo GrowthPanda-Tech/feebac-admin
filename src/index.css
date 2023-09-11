@@ -71,4 +71,16 @@
     input[type="number"]::-webkit-outer-spin-button {
         @apply appearance-none;
     }
+
+    ::-webkit-scrollbar {
+        @apply w-2 rounded-xl;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-white p-2;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-light-grey rounded-xl;
+    }
 }

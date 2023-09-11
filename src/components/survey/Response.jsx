@@ -1,26 +1,22 @@
-export default function Response({ index, survey }) {
+export default function Response({ index, question }) {
     const type =
-        survey.questionType === "radio" ? "Single-choice" : "Multi-choice";
+        question.questionType === "radio" ? "Single-choice" : "Multi-choice";
 
     return (
         <div className="flex flex-col gap-4">
             <div className="text-secondary font-semibold">
                 Question {index + 1} ({type})
             </div>
-            <div className="bg-white p-4 rounded-xl shadow-md border border-grey h-full">
+            <div className="bg-white p-8 rounded-xl shadow-lg max-h-80 overflow-y-scroll">
                 <div className="text-lg font-semibold leading-snug mb-8">
-                    {" "}
-                    {survey.questionTitle}{" "}
+                    {question.questionTitle}
                 </div>
-                {survey.options.map((option, index) => (
-                    <div key={index}>
+                {question.options.map((option, index) => (
+                    <div key={index} className="flex flex-col gap-2">
                         <div className="mt-4 flex justify-between font-bold">
                             {option[1]}
                             <span className="font-normal">
-                                {option[2]
-                                    ? parseFloat(option[2]).toFixed(2)
-                                    : 0}
-                                %
+                                {option[2] ? option[2][1] : 0}%
                             </span>
                         </div>
 
@@ -29,10 +25,17 @@ export default function Response({ index, survey }) {
                             className="h-2 bg-secondary rounded-full"
                             style={{
                                 width: `${
-                                    option[2] ? Math.floor(option[2]) : 0
+                                    option[2] ? Math.floor(option[2][1]) : 0
                                 }%`,
                             }}
-                        ></div>
+                        />
+
+                        {option[2] && option[2][0] > 0 && (
+                            <div className="italic">
+                                {option[2][0]} Response
+                                {option[2][0] != 1 ? "s" : ""}
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>

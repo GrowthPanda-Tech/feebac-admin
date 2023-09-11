@@ -5,6 +5,7 @@ import calculateAge from "../../utils/calculateAge";
 import loyaltyImg from "../../assets/loyalty.png";
 import Table from "../table/Table";
 import Thead from "../table/Thead";
+import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 
 function Input({ value }) {
@@ -113,10 +114,7 @@ export default function UserInfo() {
 
                         <tbody>
                             {surveyList.map((survey) => (
-                                <tr
-                                    key={survey.survey_id}
-                                    className="border-b border-b-light-grey hover:bg-[#F8F8F8]"
-                                >
+                                <Trow key={survey.survey_id}>
                                     <Tdata left>{survey.survey_title}</Tdata>
                                     <Tdata capitalize>{survey.category}</Tdata>
                                     <Tdata mono>{survey.start_date}</Tdata>
@@ -126,7 +124,7 @@ export default function UserInfo() {
                                             ? "Completed"
                                             : "Incomplete"}
                                     </Tdata>
-                                </tr>
+                                </Trow>
                             ))}
                         </tbody>
                     </Table>

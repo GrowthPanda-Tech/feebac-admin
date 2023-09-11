@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import makeRequest from "../../utils/makeRequest";
 import Table from "../table/Table";
 import Thead from "../table/Thead";
+import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 
 export default function Content() {
-    const headers = ["Name", "Status", "Category", "Creation Date", " "];
+    const headers = ["Name", "Status", "Category", "Creation Date", "Actions"];
     const [articleList, setArticleList] = useState([]);
 
     const getArticleList = async () => {
@@ -33,9 +34,8 @@ export default function Content() {
     }, []);
 
     return (
-        <>
-            {/* Top Row */}
-            <div className="flex w-full justify-between items-center mb-8">
+        <div className="flex flex-col gap-8">
+            <div className="flex w-full justify-between items-center">
                 <h1 className="heading mb-0"> Articles List </h1>
                 <Link to={"create"}>
                     <button className="btn-primary">
@@ -45,58 +45,55 @@ export default function Content() {
                 </Link>
             </div>
 
-            {/* Table */}
             <Table>
                 <Thead headers={headers} />
 
-                <tbody className="text-lg">
+                <tbody>
                     {articleList
                         .slice(0)
                         .reverse()
-                        .map((article) => (
-                            <tr
-                                key={article.article_id}
-                                className="border-b border-b-light-grey hover:bg-[#F8F8F8]"
-                            >
-                                <Tdata left truncate>
-                                    {article.article_title}
-                                </Tdata>
+                        .map(
+                            ({
+                                article_id,
+                                article_title,
+                                is_published,
+                                category,
+                                created_date,
+                            }) => (
+                                <Trow key={article_id}>
+                                    <Tdata left>{article_title}</Tdata>
 
-                                <Tdata>
-                                    {article.is_published
-                                        ? "Public"
-                                        : "Private"}
-                                </Tdata>
+                                    <Tdata>
+                                        {is_published ? "Public" : "Private"}
+                                    </Tdata>
 
-                                <Tdata capitalize>{article.category}</Tdata>
-                                <Tdata>
-                                    {article.created_date.split("T")[0]}
-                                </Tdata>
+                                    <Tdata capitalize>{category}</Tdata>
 
-                                <Tdata>
-                                    <div className="flex justify-evenly">
-                                        <Link
-                                            to={`/content/edit/${article.article_id}`}
-                                        >
-                                            <button>
-                                                <i className="fa-solid fa-pen-to-square"></i>
+                                    <Tdata>{created_date.split("T")[0]}</Tdata>
+
+                                    <Tdata>
+                                        <div className="flex justify-evenly">
+                                            <Link
+                                                to={`/content/edit/${article_id}`}
+                                            >
+                                                <button>
+                                                    <i className="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                            </Link>
+                                            <button
+                                                onClick={() =>
+                                                    handlePublish(article_id)
+                                                }
+                                            >
+                                                <i className="fa-regular fa-newspaper"></i>
                                             </button>
-                                        </Link>
-                                        <button
-                                            onClick={() =>
-                                                handlePublish(
-                                                    article.article_id
-                                                )
-                                            }
-                                        >
-                                            <i className="fa-regular fa-newspaper"></i>
-                                        </button>
-                                    </div>
-                                </Tdata>
-                            </tr>
-                        ))}
+                                        </div>
+                                    </Tdata>
+                                </Trow>
+                            )
+                        )}
                 </tbody>
             </Table>
-        </>
+        </div>
     );
 }

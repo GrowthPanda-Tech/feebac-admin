@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import makeRequest from "../../utils/makeRequest";
+import Table from "../table/Table";
 import Thead from "../table/Thead";
-import TableBody from "./TableBody";
+import Trow from "../table/Trow";
+import Tdata from "../table/Tdata";
 
 function Button({ type, setUrl, isActive, onClick }) {
     const handleClick = () => {
@@ -60,7 +62,7 @@ export default function Survey() {
         "Start Date",
         "End Date",
         "Timings",
-        " ",
+        "Actions",
     ];
 
     const fetchSurveyData = async () => {
@@ -75,8 +77,8 @@ export default function Survey() {
     }, [url]);
 
     return (
-        <>
-            <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col gap-8">
+            <div className="flex justify-between items-center">
                 <h1 className="heading mb-0"> Survey List </h1>
                 <Link to={"/survey/create"} className="w-fit">
                     <button className="btn-primary">
@@ -88,11 +90,42 @@ export default function Survey() {
 
             <ButtonComponent setUrl={setUrl} />
 
-            {/* Table */}
-            <table className="table mt-8">
+            <Table>
                 <Thead headers={headers} />
-                <TableBody data={surveyData} />
-            </table>
-        </>
+                <tbody>
+                    {surveyData.map(
+                        ({
+                            survey_id,
+                            survey_title,
+                            category,
+                            start_date,
+                            end_date,
+                        }) => (
+                            <Trow key={survey_id}>
+                                <Tdata left> {survey_title} </Tdata>
+                                <Tdata capitalize> {category} </Tdata>
+                                <Tdata mono>{start_date.split(" ")[0]}</Tdata>
+                                <Tdata mono>{end_date.split(" ")[0]}</Tdata>
+                                <Tdata mono>
+                                    {`${start_date.split(" ")[1]} - ${
+                                        end_date.split(" ")[1]
+                                    }`}
+                                </Tdata>
+                                <Tdata>
+                                    <div className="flex justify-evenly">
+                                        <Link to={`details/${survey_id}`}>
+                                            <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
+                                        </Link>
+                                        {/* <Link to={`review/${survey_id}`}> */}
+                                        {/*     <i className="fa-solid fa-pen-to-square text-xl"></i> */}
+                                        {/* </Link> */}
+                                    </div>
+                                </Tdata>
+                            </Trow>
+                        )
+                    )}
+                </tbody>
+            </Table>
+        </div>
     );
 }

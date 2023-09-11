@@ -21,10 +21,18 @@ export default function SurveyReview() {
 
     useEffect(() => {
         getData();
-    }, []);
+    }, [slug]);
+
+    console.log(surveyInfo);
 
     return (
         <div className="flex flex-col gap-10">
+            {surveyInfo && (
+                <div>
+                    <p>{surveyInfo?.survey_description}</p>
+                </div>
+            )}
+
             {/* <SurveyDetails info={surveyInfo} /> */}
             {/* <QuestionList info={questionList} /> */}
         </div>

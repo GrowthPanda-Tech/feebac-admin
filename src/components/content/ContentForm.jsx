@@ -51,9 +51,9 @@ export default function ContentForm({
     handleChange,
     handleEditorChange,
 }) {
+    console.log(handleChange);
     const tinyApi = import.meta.env.VITE_TINY_API_KEY;
     const [categories, setCategories] = useState([]);
-
 
     const getCategories = async () => {
         try {

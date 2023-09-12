@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Form from "./Form";
+import CreateForm from "./CreateForm";
 import Question from "./Question";
 
 export default function CreateSurvey() {
@@ -10,7 +10,7 @@ export default function CreateSurvey() {
     return (
         <>
             {!isSurveyCreate ? (
-                <Form
+                <CreateForm
                     setSurveyId={setSurveyId}
                     setSurveyTitle={setSurveyTitle}
                     setIsSurveyCreate={setIsSurveyCreate}

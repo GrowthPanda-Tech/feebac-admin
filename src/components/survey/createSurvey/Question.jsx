@@ -1,6 +1,20 @@
 import { useState, useEffect } from "react";
 import makeRequest from "../../../utils/makeRequest";
 import { Link } from "react-router-dom";
+import downArrow from "../../../assets/iconamoon_arrow-down-2-light.svg";
+
+function Input({ type, name, value, onChange, disabled }) {
+    return (
+        <input
+            type={type}
+            name={name}
+            value={value}
+            onChange={onChange}
+            className="w-full bg-background py-5 px-8 rounded-md disabled:cursor-not-allowed"
+            disabled={disabled}
+        />
+    );
+}
 
 export default function Question({ surveyId, surveyTitle }) {
     const [options, setOptions] = useState(["", ""]);
@@ -13,6 +27,8 @@ export default function Question({ surveyId, surveyTitle }) {
     const [activeButtonIndex, setActiveButtonIndex] = useState(1);
     const [filters, setFilters] = useState([]);
     const [isDisabled, setIsDisabled] = useState(true);
+
+    const [questions, setQuestions] = useState([]);
 
     const getFilters = async () => {
         const response = await makeRequest(
@@ -59,6 +75,14 @@ export default function Question({ surveyId, surveyTitle }) {
             questionData
         );
         alert(response.message);
+
+        questions.push(questionData);
+
+        setOptions(["", ""]);
+        setQuestionData({
+            surveyId: surveyId,
+            questionType: 2,
+        });
         setQuestionNumber(questionNumber + 1);
     };
 
@@ -80,20 +104,13 @@ export default function Question({ surveyId, surveyTitle }) {
         getFilters();
     }, []);
 
-    console.log(questionData);
+    console.log(filters);
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-12">
             <div className="flex items-center justify-between">
                 <h1 className="heading mb-0"> {surveyTitle} </h1>
                 <div className="flex gap-4">
-                    <button
-                        className="btn-primary bg-accent w-fit"
-                        onClick={handleQuestionSubmit}
-                    >
-                        Submit Question
-                    </button>
-
                     <button
                         className="btn-primary w-fit"
                         onClick={handlePublish}
@@ -106,110 +123,196 @@ export default function Question({ surveyId, surveyTitle }) {
                     {/* </Link> */}
                 </div>
             </div>
-            <label>
-                <span className="font-bold"> Question {questionNumber} : </span>
-                <input
-                    type="text"
-                    className="w-full mb-4 input-primary"
-                    name="questionTitle"
-                    onChange={handleInputChange}
-                />
-            </label>
-            <div className="flex w-full justify-between">
-                <div className="flex gap-7">
-                    <button
-                        className={`pill ${
-                            activeButtonIndex === 0
-                                ? "pill-primary"
-                                : "pill-secondary"
-                        }`}
-                        onClick={() => setQuestionType(0, 1, {})}
-                    >
-                        Text Answer
-                    </button>
-                    <button
-                        className={`pill ${
-                            activeButtonIndex === 1
-                                ? "pill-primary"
-                                : "pill-secondary"
-                        }`}
-                        onClick={() => setQuestionType(1, 2)}
-                    >
-                        One Answer
-                    </button>
-                    <button
-                        className={`pill ${
-                            activeButtonIndex === 2
-                                ? "pill-primary"
-                                : "pill-secondary"
-                        }`}
-                        onClick={() => setQuestionType(2, 3)}
-                    >
-                        Multiple Answer
-                    </button>
-                </div>
-                <div>
-                    <input
-                        type="checkbox"
-                        onClick={() => setIsDisabled(!isDisabled)}
-                    />
-                    <select
-                        className=""
-                        disabled={isDisabled}
-                        name="profileField"
-                        onChange={(e) =>
-                            setQuestionData({
-                                ...questionData,
-                                [e.target.name]: e.target.value,
-                            })
-                        }
-                    >
-                        {filters.map((filter) => (
-                            <option key={filter.id} value={filter.id}>
-                                {filter.key_name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            </div>
-            <div className="flex flex-col">
-                {questionData.questionType === 1 ? (
-                    <></>
-                ) : (
-                    options.map((option, index) => (
-                        <div
-                            key={index}
-                            className="mt-2 flex items-center justify-between"
-                        >
-                            <input
-                                type="text"
-                                className="w-full input-primary"
-                                name="questionValue"
-                                value={option}
-                                onChange={(e) => handleOptionChange(e, index)}
-                            />
 
-                            {options.length <= 2 ? (
-                                <></>
-                            ) : (
-                                <button
-                                    className="ml-6"
-                                    onClick={() => handleRemoveOption(index)}
-                                >
-                                    <i className="fa-regular fa-trash-can text-xl text-black"></i>
-                                </button>
+            <div className="flex flex-col gap-12">
+                {questions.map((question, index) => (
+                    <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8">
+                        <span className="font-bold">
+                            Question {index + 1} :
+                        </span>
+                        <Input
+                            type={"text"}
+                            value={question.questionTitle}
+                            disabled
+                        />
+                        <div className="flex flex-col gap-4">
+                            {Object.values(question.questionValue).map(
+                                (value, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex items-center gap-4"
+                                    >
+                                        {question.questionType === 2 ? (
+                                            <input
+                                                type="radio"
+                                                className="w-4 h-4"
+                                                disabled
+                                            />
+                                        ) : question.questionType === 3 ? (
+                                            <input
+                                                type="checkbox"
+                                                className="w-4 h-4"
+                                                disabled
+                                            />
+                                        ) : (
+                                            <></>
+                                        )}
+                                        <Input value={value} disabled />
+                                    </div>
+                                )
                             )}
                         </div>
-                    ))
-                )}
+                    </div>
+                ))}
             </div>
-            <button
-                onClick={() => setOptions([...options, ""])}
-                className="btn-primary w-fit"
-            >
-                <i className="fa-solid fa-plus"></i>
-                <span>Add Options</span>
-            </button>
+
+            <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8">
+                <label className="flex flex-col gap-2">
+                    <span className="font-bold">
+                        Question {questionNumber} :
+                    </span>
+                    <Input
+                        type={"text"}
+                        name={"questionTitle"}
+                        onChange={handleInputChange}
+                    />
+                </label>
+                <div className="flex w-full items-center justify-between">
+                    <div className="flex gap-7 h-fit">
+                        <button
+                            className={`pill ${
+                                activeButtonIndex === 0
+                                    ? "pill-primary"
+                                    : "pill-secondary"
+                            }`}
+                            onClick={() => setQuestionType(0, 1, {})}
+                        >
+                            Text Answer
+                        </button>
+                        <button
+                            className={`pill ${
+                                activeButtonIndex === 1
+                                    ? "pill-primary"
+                                    : "pill-secondary"
+                            }`}
+                            onClick={() => setQuestionType(1, 2)}
+                        >
+                            One Answer
+                        </button>
+                        <button
+                            className={`pill ${
+                                activeButtonIndex === 2
+                                    ? "pill-primary"
+                                    : "pill-secondary"
+                            }`}
+                            onClick={() => setQuestionType(2, 3)}
+                        >
+                            Multiple Answer
+                        </button>
+                        <button
+                            className={`pill ${
+                                activeButtonIndex === 3
+                                    ? "pill-primary"
+                                    : "pill-secondary"
+                            }`}
+                            onClick={() => setQuestionType(3, 4)}
+                        >
+                            Yes/No Answer
+                        </button>
+                    </div>
+                    <div className="flex items-center gap-6">
+                        <input
+                            type="checkbox"
+                            className="h-6 w-6"
+                            onClick={() => setIsDisabled(!isDisabled)}
+                        />
+                        <div
+                            className={`flex bg-background p-4 rounded-md border border-[#C9C9C9] ${
+                                isDisabled && "opacity-50"
+                            }`}
+                        >
+                            <select
+                                className="appearance-none outline-none"
+                                disabled={isDisabled}
+                                name="profileField"
+                                onChange={(e) =>
+                                    setQuestionData({
+                                        ...questionData,
+                                        [e.target.name]: e.target.value,
+                                    })
+                                }
+                            >
+                                {filters.map((filter) => (
+                                    <option key={filter.id} value={filter.id}>
+                                        {filter.key_name}
+                                    </option>
+                                ))}
+                            </select>
+                            <span>
+                                <img src={downArrow} />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex flex-col gap-4">
+                    {questionData.questionType === 1 ? (
+                        <></>
+                    ) : questionData.questionType === 4 ? (
+                        <>
+                            <Input type={"text"} value={"Yes"} disabled />
+                            <Input type={"text"} value={"No"} disabled />
+                        </>
+                    ) : (
+                        options.map((option, index) => (
+                            <div
+                                key={index}
+                                className="flex items-center justify-between"
+                            >
+                                <Input
+                                    type={"text"}
+                                    name={"questionValue"}
+                                    value={option}
+                                    onChange={(event) =>
+                                        handleOptionChange(event, index)
+                                    }
+                                />
+
+                                {options.length <= 2 ? (
+                                    <></>
+                                ) : (
+                                    <button
+                                        className="ml-6"
+                                        onClick={() =>
+                                            handleRemoveOption(index)
+                                        }
+                                    >
+                                        <i className="fa-regular fa-trash-can text-xl text-black"></i>
+                                    </button>
+                                )}
+                            </div>
+                        ))
+                    )}
+                </div>
+                <div className="flex justify-between">
+                    {questionData.questionType !== 1 &&
+                    questionData.questionType !== 4 ? (
+                        <button
+                            onClick={() => setOptions([...options, ""])}
+                            className="btn-primary bg-white text-black hover:bg-secondary hover:text-white border border-grey w-fit"
+                        >
+                            <i className="fa-solid fa-plus"></i>
+                            <span>Add Options</span>
+                        </button>
+                    ) : null}
+
+                    <button
+                        className="btn-primary w-fit"
+                        onClick={handleQuestionSubmit}
+                    >
+                        Save
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }

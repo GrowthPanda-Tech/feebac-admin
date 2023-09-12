@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import ProfileForm from "./ProfileForm";
 
 function ProfileUpdate() {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     const baseUrl = import.meta.env.VITE_BACKEND_URL;
     const [userData, setUserData] = useState();
     const [show, setShow] = useState(false);
@@ -25,7 +24,6 @@ function ProfileUpdate() {
     useEffect(() => {
         getAdminInfo();
     }, []);
-    console.log(userData);
 
     return (
         <>
@@ -84,6 +82,18 @@ function ProfileUpdate() {
                                         className="border-1  rounded-r px-4 py-2 w-full"
                                         type="email"
                                         value={userData && userData.email}
+                                    />
+                                </div>
+                                <div className="pb-4">
+                                    <label className="font-semibold text-gray-700 block pb-1">
+                                        Phone
+                                    </label>
+                                    <input
+                                        name="phone"
+                                        disabled
+                                        className="border-1  rounded-r px-4 py-2 w-full"
+                                        type="number"
+                                        value={userData && userData.mobile}
                                     />
                                 </div>
                                 <div className="pb-4 flex font-semibold justify-between">

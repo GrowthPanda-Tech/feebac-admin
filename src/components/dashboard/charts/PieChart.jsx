@@ -2,7 +2,6 @@ import React from "react";
 import { ResponsivePie } from "@nivo/pie";
 // import { mockPieData as data } from "../charts/mockData";
 function PieChart({ value }) {
-    console.log(value);
     return (
         <>
             <div className="flex  flex-col m-2 bg-white">

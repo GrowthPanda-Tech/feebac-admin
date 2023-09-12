@@ -26,6 +26,7 @@ export default function ContentEdit() {
     };
 
     const handleChange = (event) => {
+        console.log(event.target.name);
         if (event.target.name === "articleImg") {
             const file = event.target.files[0];
             setImgUpdate({
@@ -47,6 +48,12 @@ export default function ContentEdit() {
             ...articleData,
             [event.target.name]: event.target.value,
         });
+        console.log(
+            setArticleData({
+                ...articleData,
+                [event.target.name]: event.target.value,
+            })
+        );
     };
 
     const handleEditorChange = (content) =>

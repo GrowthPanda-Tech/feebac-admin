@@ -1,12 +1,29 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import makeRequest from "../../../utils/makeRequest";
-import SurveyDetails from "./SurveyDetails.jsx";
+import ReviewCard from "./ReviewCard";
+
+function InputHeading({ title, value }) {
+    return (
+        <div className="grid grid-cols-2 md:w-3/4">
+            <h1 className=" text-xl font-semibold">{title} : </h1>
+            <span className="text-xl font-semibold">{value}</span>
+        </div>
+    );
+}
 
 export default function SurveyReview() {
+    const splitDate = (data) => {
+        let arr = data;
+        console.log(arr);
+        const NewDate = arr.split("");
+        return NewDate;
+    };
     const { slug } = useParams();
     const [surveyInfo, setSurveyInfo] = useState({});
     const [questionList, setQuestionList] = useState([]);
+    const [surveyId, setSurveyId] = useState(surveyInfo.survey_id);
+    console.log(surveyId);
 
     const getData = async () => {
         const response = await makeRequest(
@@ -16,25 +33,84 @@ export default function SurveyReview() {
         if (response.isSuccess) {
             setSurveyInfo(response.surveyInfo);
             setQuestionList(response.questionList);
+            setSurveyId(response.surveyInfo.survey_id);
         }
+    };
+
+    const handlePublish = async () => {
+        const body = {
+            surveyId,
+            isStartNow: true,
+        };
+        const response = await makeRequest(
+            "survey/start-survey",
+            "PATCH",
+            body
+        );
+        alert(response.message);
+        // location.replace("/survey");
     };
 
     useEffect(() => {
         getData();
     }, [slug]);
 
-    console.log(surveyInfo);
+    console.log(surveyInfo, questionList);
 
     return (
-        <div className="flex flex-col gap-10">
+        <>
+            <div className="flex flex-row-reverse justify-between w-full ">
+                {surveyInfo && (
+                    <div>
+                        <button
+                            className="btn-primary w-fit"
+                            onClick={handlePublish}
+                        >
+                            Publish Now
+                        </button>
+                    </div>
+                )}
+
+                <div className="flex flex-col md:w-1/2 gap-6">
+                    {surveyInfo && (
+                        <div className="">
+                            <InputHeading
+                                title={"Survey Title"}
+                                value={surveyInfo?.survey_title}
+                            />
+                            <InputHeading
+                                title={"Start Date & Time"}
+                                value={surveyInfo.created_date}
+                            />
+                            <InputHeading
+                                title={"End Date & Time"}
+                                value={surveyInfo.end_date}
+                            />
+                            <InputHeading
+                                title={"Total Question"}
+                                value={surveyInfo?.totalQuestions}
+                            />
+                        </div>
+                    )}
+
+                    <div className="flex w-full">
+                        <p>{surveyInfo && surveyInfo.survey_description}</p>
+                    </div>
+                </div>
+            </div>
+
             {surveyInfo && (
-                <div>
-                    <p>{surveyInfo?.survey_description}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
+                    {questionList &&
+                        questionList.map((question, index) => (
+                            <ReviewCard
+                                key={index}
+                                index={index}
+                                question={question}
+                            />
+                        ))}
                 </div>
             )}
-
-            {/* <SurveyDetails info={surveyInfo} /> */}
-            {/* <QuestionList info={questionList} /> */}
-        </div>
+        </>
     );
 }

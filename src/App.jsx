@@ -20,6 +20,7 @@ import Analytics from "./components/analytics/Analytics";
 import Settings from "./components/settings/Settings";
 import PageNotFound from "./components/pageNotFound/PageNotFound";
 import ProfileUpdate from "./components/header/ProfileUpdate";
+import AddQuestions from "./components/survey/createSurvey/AddQuestions";
 
 export default function App() {
     const isLoggedIn = localStorage.getItem("authToken") != null;
@@ -44,6 +45,10 @@ export default function App() {
                                 <Route
                                     path="survey/create"
                                     element={<CreateSurvey />}
+                                />
+                                <Route
+                                    path="survey/create/add-questions/:slug"
+                                    element={<AddQuestions />}
                                 />
                                 <Route
                                     path="survey/details/:slug"

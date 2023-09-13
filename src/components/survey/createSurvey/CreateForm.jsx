@@ -3,6 +3,8 @@ import Filters from "./filter/Filters";
 import makeRequest from "../../../utils/makeRequest";
 import convertToUTC from "../../../utils/convertToUTC";
 import formSubmit from "../../../utils/formSubmit";
+import AddQuestions from "./AddQuestions";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -27,11 +29,12 @@ function Label({ name, children }) {
     );
 }
 
-export default function CreateForm({
-    setSurveyId,
-    setSurveyTitle,
-    setIsSurveyCreate,
-}) {
+export default function CreateForm() {
+    const navigate = useNavigate();
+    const { slug } = useParams();
+    const [surveyId, setSurveyId] = useState();
+    const [surveyTitle, setSurveyTitle] = useState();
+    const [isSurveyCreate, setIsSurveyCreate] = useState(false);
     const [categories, setCategories] = useState([]);
     const [filters, setFilters] = useState([]);
     const [isShowFilter, setIsShowFilter] = useState(false);
@@ -90,6 +93,22 @@ export default function CreateForm({
             setIsSurveyCreate(response.isSuccess);
         }
     };
+
+    {
+        isSurveyCreate &&
+            setTimeout(() => {
+                navigate(`/survey/create/add-questions/${surveyId}`, {
+                    state: {
+                        surveyId: surveyId,
+                        surveyTitle: surveyTitle,
+                    },
+                });
+                setIsSurveyCreate(false);
+            }, 1000);
+    }
+
+    console.log(surveyId);
+    console.log(isSurveyCreate);
 
     useEffect(() => {
         getCategories();

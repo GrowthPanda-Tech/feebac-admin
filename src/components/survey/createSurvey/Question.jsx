@@ -104,66 +104,70 @@ export default function Question({ surveyId, surveyTitle }) {
         getFilters();
     }, []);
 
-    console.log(filters);
+    console.log(questions);
 
     return (
-        <div className="flex flex-col gap-12">
+        <div className="flex flex-col gap-10">
             <div className="flex items-center justify-between">
                 <h1 className="heading mb-0"> {surveyTitle} </h1>
                 <div className="flex gap-4">
-                    <button
+                    {/* <button
                         className="btn-primary w-fit"
                         onClick={handlePublish}
                     >
                         Publish Now
-                    </button>
+                    </button> */}
 
-                    {/* <Link to={`/survey/review/${surveyId}`}> */}
-                    {/*     <button className="btn-primary w-fit">Review</button> */}
-                    {/* </Link> */}
+                    <Link to={`/survey/review/${surveyId}`}>
+                        <button className="btn-primary w-fit">Review</button>
+                    </Link>
                 </div>
             </div>
 
             <div className="flex flex-col gap-12">
-                {questions.map((question, index) => (
-                    <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8">
-                        <span className="font-bold">
-                            Question {index + 1} :
-                        </span>
-                        <Input
-                            type={"text"}
-                            value={question.questionTitle}
-                            disabled
-                        />
-                        <div className="flex flex-col gap-4">
-                            {Object.values(question.questionValue).map(
-                                (value, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex items-center gap-4"
-                                    >
-                                        {question.questionType === 2 ? (
-                                            <input
-                                                type="radio"
-                                                className="w-4 h-4"
-                                                disabled
-                                            />
-                                        ) : question.questionType === 3 ? (
-                                            <input
-                                                type="checkbox"
-                                                className="w-4 h-4"
-                                                disabled
-                                            />
-                                        ) : (
-                                            <></>
-                                        )}
-                                        <Input value={value} disabled />
-                                    </div>
-                                )
-                            )}
+                {questions &&
+                    questions.map((question, index) => (
+                        <div
+                            key={index}
+                            className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8"
+                        >
+                            <span className="font-bold">
+                                Question {index + 1} :
+                            </span>
+                            <Input
+                                type={"text"}
+                                value={question.questionTitle}
+                                disabled
+                            />
+                            <div className="flex flex-col gap-4">
+                                {Object.values(question.questionValue).map(
+                                    (value, index) => (
+                                        <div
+                                            key={index}
+                                            className="flex items-center gap-4"
+                                        >
+                                            {question.questionType === 2 ? (
+                                                <input
+                                                    type="radio"
+                                                    className="w-4 h-4"
+                                                    disabled
+                                                />
+                                            ) : question.questionType === 3 ? (
+                                                <input
+                                                    type="checkbox"
+                                                    className="w-4 h-4"
+                                                    disabled
+                                                />
+                                            ) : (
+                                                <></>
+                                            )}
+                                            <Input value={value} disabled />
+                                        </div>
+                                    )
+                                )}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
             </div>
 
             <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8">

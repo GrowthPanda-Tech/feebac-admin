@@ -1,9 +1,7 @@
-import { React, useState } from "react";
+import { useState, useEffect } from "react";
 import MultiRangeSlider from "multi-range-slider-react";
-import { useEffect } from "react";
 
 export default function FilterSlider({ filter, setProfileData }) {
-    console.log(filter?.key_name);
     const [minValue, setMinValue] = useState(filter && filter?.options[0]);
     const [maxValue, setMaxValue] = useState(filter && filter?.options[1]);
     const handleInput = (e) => {

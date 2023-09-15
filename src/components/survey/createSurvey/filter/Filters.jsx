@@ -1,7 +1,6 @@
 import FilterSubSection from "./FilterSubSection";
 
-export default function Filters({ filters, profileData, setProfileData }) {
-    console.log(profileData);
+export default function Filters({ filters, setProfileData }) {
     return (
         <div className="flex flex-col gap-8">
             {filters.map((filter, key) => (
@@ -9,7 +8,6 @@ export default function Filters({ filters, profileData, setProfileData }) {
                     key={key}
                     filterName={key}
                     filterData={filter}
-                    profileData={profileData}
                     setProfileData={setProfileData}
                 />
             ))}

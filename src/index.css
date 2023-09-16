@@ -49,20 +49,12 @@
         @apply bg-[#F1F1F1] rounded-md px-8 py-2 hover:bg-secondary hover:text-white transition;
     }
 
-    .table {
-        @apply table-fixed w-full bg-white rounded-xl text-center;
-    }
-
     .pill-primary {
         @apply py-2 px-6 bg-white border border-black rounded-xl;
     }
 
     .pill-secondary {
         @apply py-2 px-6 bg-[#C9CED6] text-[#858585] rounded-xl;
-    }
-
-    .table-first-of-type {
-        @apply first-of-type:text-start first-of-type:text-ellipsis first-of-type:overflow-hidden;
     }
 }
 

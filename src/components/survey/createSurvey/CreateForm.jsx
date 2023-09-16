@@ -6,13 +6,48 @@ import formSubmit from "../../../utils/formSubmit";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
-function Input({ type = "text", name, onChange }) {
+function UserCount({ type, count }) {
+    return (
+        <div className="flex gap-4 items-center">
+            <span className="font-medium text-xl">
+                {type === "total"
+                    ? "Total Registered Users"
+                    : type === "filter"
+                    ? "Filtered Users"
+                    : null}
+                :
+            </span>
+            <span
+                className={`${
+                    type === "filter" ? "bg-secondary text-white" : "bg-white"
+                } font-medium py-2 px-5 rounded-md`}
+            >
+                {count}
+            </span>
+        </div>
+    );
+}
+
+function Select({ name, onChange, children }) {
+    return (
+        <select
+            name={name}
+            onChange={onChange}
+            className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3 capitalize"
+        >
+            {children}
+        </select>
+    );
+}
+
+function Input({ type, min, name, onChange }) {
     return (
         <input
             type={type}
+            min={min}
             name={name}
-            className="w-full input-primary"
             onChange={onChange}
+            className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3"
             required
         />
     );
@@ -20,7 +55,7 @@ function Input({ type = "text", name, onChange }) {
 
 function Label({ name, children }) {
     return (
-        <label>
+        <label className="flex items-center gap-2">
             <span className="font-medium">{name}*</span>
             {children}
         </label>
@@ -37,6 +72,8 @@ export default function CreateForm({
     const [isShowFilter, setIsShowFilter] = useState(false);
     const [surveyData, setSurveyData] = useState([]);
     const [profileData, setProfileData] = useState({});
+    const [userCount, setUserCount] = useState(0);
+    const [filterdUserCount, setFilteredUserCount] = useState(0);
 
     const getCategories = async () => {
         const response = await makeRequest(
@@ -54,6 +91,23 @@ export default function CreateForm({
         response.isSuccess
             ? setFilters(response.data)
             : alert(response.message);
+    };
+
+    const getUserCount = async () => {
+        const response = await makeRequest(
+            "site-admin/get-target-profile-count?target={}",
+            "GET"
+        );
+        setUserCount(response.data);
+    };
+
+    const getFilterCount = async () => {
+        const filterCount = JSON.stringify(profileData);
+        const response = await makeRequest(
+            `site-admin/get-target-profile-count?target=${filterCount}`,
+            "GET"
+        );
+        setFilteredUserCount(response.data);
     };
 
     const handleChange = (e) => {
@@ -94,37 +148,33 @@ export default function CreateForm({
     useEffect(() => {
         getCategories();
         getFilters();
+        getUserCount();
     }, []);
 
     return (
         <div className="flex flex-col gap-8">
             <h1 className="heading mb-0"> Create New Survey </h1>
 
-            {/* TODO: refactor this */}
-            <div className="grid gap-5 grid-rows-2 grid-cols-3">
-                <Label name={"Scheduled Start Date"}>
-                    <input
-                        type="datetime-local"
+            <div className="grid grid-cols-3 gap-8 ">
+                <Label name={"Start Date"}>
+                    <Input
+                        type={"datetime-local"}
                         min={TODAY}
-                        name="startDate"
-                        className="w-full input-primary"
+                        name={"startDate"}
                         onChange={handleChange}
-                        required
                     />
                 </Label>
 
-                <Label name={"Scheduled End Date"}>
-                    <input
-                        type="datetime-local"
+                <Label name={"End Date"}>
+                    <Input
+                        type={"datetime-local"}
                         min={TODAY}
-                        name="endDate"
-                        className="w-full input-primary"
+                        name={"endDate"}
                         onChange={handleChange}
-                        required
                     />
                 </Label>
 
-                <Label name={"New Survey Title"}>
+                <Label name={"Survey Title"}>
                     <Input name={"surveyTitle"} onChange={handleChange} />
                 </Label>
 
@@ -132,14 +182,9 @@ export default function CreateForm({
                     <Input name={"surveyDescription"} onChange={handleChange} />
                 </Label>
 
-                <Label name={"Select Category"}>
-                    <select
-                        className="capitalize w-full input-primary bg-white appearance-none"
-                        name="category"
-                        onChange={handleChange}
-                        placeholder="None"
-                        required
-                    >
+                <Label name={"Select Research Category"}>
+                    <Select name={"category"} onChange={handleChange}>
+                        <option value={null}>-- Categories --</option>
                         {categories.map((item) => (
                             <option
                                 key={item.category_id}
@@ -148,10 +193,10 @@ export default function CreateForm({
                                 {item.category_name}
                             </option>
                         ))}
-                    </select>
+                    </Select>
                 </Label>
 
-                <Label name={"Loyalty Points"}>
+                <Label name={"Loyalty Points Per Use"}>
                     <Input
                         type={"number"}
                         name={"loyaltyPoint"}
@@ -160,28 +205,37 @@ export default function CreateForm({
                 </Label>
             </div>
 
+            <div className="flex gap-16">
+                <UserCount type={"total"} count={userCount} />
+                <UserCount type={"filter"} count={filterdUserCount} />
+            </div>
+
             {isShowFilter && (
                 <Filters
                     filters={filters}
                     profileData={profileData}
                     setProfileData={setProfileData}
+                    setFilteredUserCount={setFilteredUserCount}
                 />
             )}
 
             <div className="flex gap-4">
-                <button
-                    className="btn-primary bg-accent w-fit"
-                    onClick={() => setIsShowFilter(!isShowFilter)}
-                >
-                    {!isShowFilter ? (
-                        <>
-                            <i className="fa-solid fa-plus"></i>
-                            Add Filters
-                        </>
-                    ) : (
-                        <>Cancel</>
-                    )}
-                </button>
+                {!isShowFilter ? (
+                    <button
+                        className="btn-primary bg-accent w-fit"
+                        onClick={() => setIsShowFilter(true)}
+                    >
+                        <i className="fa-solid fa-plus"></i>
+                        Add Filters
+                    </button>
+                ) : (
+                    <button
+                        className="btn-primary bg-accent w-fit"
+                        onClick={() => getFilterCount()}
+                    >
+                        Confirm Filters
+                    </button>
+                )}
                 <button className="btn-primary w-fit" onClick={handleSubmit}>
                     Create
                 </button>

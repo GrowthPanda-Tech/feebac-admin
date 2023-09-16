@@ -7,7 +7,7 @@ export default function Response({ index, question }) {
             <div className="text-secondary font-semibold">
                 Question {index + 1} ({type})
             </div>
-            <div className="bg-white p-8 rounded-xl shadow-lg max-h-80 overflow-y-scroll">
+            <div className="bg-white p-8 rounded-xl shadow-lg h-full">
                 <div className="text-lg font-semibold leading-snug mb-8">
                     {question.questionTitle}
                 </div>

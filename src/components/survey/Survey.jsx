@@ -79,21 +79,21 @@ export default function Survey() {
 
     return (
         <div className="flex flex-col gap-8">
-            <div className="w-full flex justify-between">
+            <div className="w-full gap-20 flex justify-between">
                 <div className="w-1/2 flex flex-col ">
                     <h2 className="heading mb-0">Survey Response Metrics</h2>
-                    <div className="bg-[#EA525F] mt-6 p-10 mr-6 rounded-lg items-center w-full flex flex-col text-white">
+                    <div className="bg-[#EA525F] mt-6 p-10 rounded-lg items-center w-full flex flex-col gap-16 text-white">
                         <div className="flex flex-col text-center w-full">
-                            <h2 className="text-5xl p-2">5,000</h2>
+                            <h2 className="text-5xl p-2">0</h2>
                             <h3 className="text-2xl">Total Response</h3>
                         </div>
                         <div className="flex justify-between p-4 mx-auto text-center divide-x w-full">
                             <div className="w-full">
-                                <h3 className="text-2xl">5hr</h3>
+                                <h3 className="text-2xl">0hr</h3>
                                 <h3>Average Time</h3>
                             </div>
                             <div className="w-full">
-                                <h3 className="text-2xl">75%</h3>
+                                <h3 className="text-2xl">0%</h3>
                                 <h3>Completion Rate</h3>
                             </div>
                         </div>

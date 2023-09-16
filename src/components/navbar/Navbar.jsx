@@ -47,9 +47,9 @@ export default function Navbar() {
     };
 
     return (
-        <div className="bg-primary h-screen w-80 fixed">
-            <img src={dashboard} className="w-full p-12" />
-            <>
+        <div className="bg-primary h-screen w-80 fixed flex flex-col justify-between">
+            <div>
+                <img src={dashboard} className="w-full p-12" />
                 {navItems.map((item, index) => (
                     <NavList
                         key={index}
@@ -58,9 +58,9 @@ export default function Navbar() {
                         icon={item.icon}
                     />
                 ))}
-            </>
+            </div>
             <div
-                className="leading-6 tracking-wide flex items-center gap-8 bg-secondary hover:bg-accent cursor-pointer transition absolute bottom-0 mb-14 px-16 py-4 text-white w-full"
+                className="leading-6 tracking-wide flex items-center gap-8 bg-secondary hover:bg-accent cursor-pointer transition px-16 py-4 mb-12 text-white w-full"
                 onClick={handleLogout}
             >
                 <img src={logout} className="w-6" />

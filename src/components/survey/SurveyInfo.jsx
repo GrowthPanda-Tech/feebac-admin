@@ -31,7 +31,7 @@ export default function SurveyInfo() {
                     {surveyInfo.surveyData.survey_title}
                 </h1>
                 <span className="text-[#A43948] font-semibold">
-                    {surveyInfo.surveyData.total_response} Response
+                    {surveyInfo.surveyData.total_response} Complete Response
                     {surveyInfo.surveyData.total_response != 1 ? "s" : ""}
                 </span>
             </div>

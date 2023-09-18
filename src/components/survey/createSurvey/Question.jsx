@@ -86,19 +86,19 @@ export default function Question({ surveyId, surveyTitle }) {
         setQuestionNumber(questionNumber + 1);
     };
 
-    const handlePublish = async () => {
-        const body = {
-            surveyId,
-            isStartNow: true,
-        };
-        const response = await makeRequest(
-            "survey/start-survey",
-            "PATCH",
-            body
-        );
-        alert(response.message);
-        location.replace("/survey");
-    };
+    // const handlePublish = async () => {
+    //     const body = {
+    //         surveyId,
+    //         isStartNow: true,
+    //     };
+    //     const response = await makeRequest(
+    //         "survey/start-survey",
+    //         "PATCH",
+    //         body
+    //     );
+    //     alert(response.message);
+    //     location.replace("/survey");
+    // };
 
     useEffect(() => {
         getFilters();

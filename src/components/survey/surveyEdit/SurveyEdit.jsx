@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import makeRequest from "../../../utils/makeRequest";
-import ReviewCard from "./ReviewCard";
+import ReviewCard from "../reviewSurvey/ReviewCard";
 
 function InputHeading({ title, value }) {
     return (
@@ -12,7 +12,7 @@ function InputHeading({ title, value }) {
     );
 }
 
-export default function SurveyReview() {
+export default function SurveyEdit() {
     const splitDate = (data) => {
         let arr = data;
         console.log(arr);
@@ -23,6 +23,7 @@ export default function SurveyReview() {
     const [surveyInfo, setSurveyInfo] = useState({});
     const [questionList, setQuestionList] = useState([]);
     const [surveyId, setSurveyId] = useState(surveyInfo.survey_id);
+
     console.log(surveyId);
 
     const getData = async () => {
@@ -37,19 +38,19 @@ export default function SurveyReview() {
         }
     };
 
-    const handlePublish = async () => {
-        const body = {
-            surveyId,
-            isStartNow: true,
-        };
-        const response = await makeRequest(
-            "survey/start-survey",
-            "PATCH",
-            body
-        );
-        alert(response.message);
-        // location.replace("/survey");
-    };
+    // const handlePublish = async () => {
+    //     const body = {
+    //         surveyId,
+    //         isStartNow: true,
+    //     };
+    //     const response = await makeRequest(
+    //         "survey/start-survey",
+    //         "PATCH",
+    //         body
+    //     );
+    //     alert(response.message);
+    //     // location.replace("/survey");
+    // };
 
     useEffect(() => {
         getData();
@@ -57,18 +58,7 @@ export default function SurveyReview() {
 
     return (
         <>
-            <div className="flex flex-row-reverse justify-between w-full ">
-                {surveyInfo && (
-                    <div>
-                        <button
-                            className="btn-primary w-fit"
-                            onClick={handlePublish}
-                        >
-                            Publish Now
-                        </button>
-                    </div>
-                )}
-
+            <div className="flex ">
                 <div className="flex flex-col md:w-1/2 gap-6">
                     {surveyInfo && (
                         <div className="">
@@ -76,6 +66,7 @@ export default function SurveyReview() {
                                 title={"Survey Title"}
                                 value={surveyInfo?.survey_title}
                             />
+
                             <InputHeading
                                 title={"Start Date & Time"}
                                 value={surveyInfo.created_date}
@@ -105,8 +96,8 @@ export default function SurveyReview() {
                                 key={index}
                                 index={index}
                                 question={question}
-                                isEdit={false}
-                                surveyId={surveyId}
+                                isEdit={true}
+                                surveyId={surveyInfo.surveyId}
                             />
                         ))}
                 </div>

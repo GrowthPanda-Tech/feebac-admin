@@ -1,4 +1,9 @@
-export default function ReviewCard({ index, question }) {
+import { useState } from "react";
+import EditPop from "../surveyEdit/EditPop";
+
+export default function ReviewCard({ index, question, isEdit, surveyId }) {
+    const [editPop, setEditPop] = useState(false);
+
     let type;
     if (question.question_type.type_name === "radio") {
         type = "Single-Choice";
@@ -7,11 +12,21 @@ export default function ReviewCard({ index, question }) {
     else if (question.question_type.type_name === "yes-no") {
         type = "Yes-No";
     } else type = "text";
+    console.log(question);
     return (
         <>
             <div className="p-4">
-                <div className="text-secondary mb-6 font-semibold">
+                <div className="text-secondary mb-6  justify-between w-full flex font-semibold">
                     Question {index + 1} ({type})
+                    {isEdit && (
+                        <button
+                            onClick={() => {
+                                setEditPop(!false);
+                            }}
+                        >
+                            Edit
+                        </button>
+                    )}
                 </div>
                 <div className="flex rounded-lg  bg-white h-full shadow-xl p-8 flex-col">
                     <div className="flex items-center mb-3">
@@ -29,19 +44,19 @@ export default function ReviewCard({ index, question }) {
                                     <div className="mt-4 flex justify-between font-bold">
                                         {option}
                                     </div>
-
-                                    {option[2] && option[2][0] > 0 && (
-                                        <div className="italic">
-                                            {option[2][0]} Response
-                                            {option[2][0] != 1 ? "s" : ""}
-                                        </div>
-                                    )}
                                 </div>
                             )
                         )}
                     </div>
                 </div>
             </div>
+            {editPop && (
+                <EditPop
+                    question={question}
+                    setEditPop={setEditPop}
+                    type={type}
+                />
+            )}
         </>
     );
 }

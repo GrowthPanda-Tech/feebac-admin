@@ -146,7 +146,7 @@ export default function Survey() {
                                         <Link to={`details/${survey_id}`}>
                                             <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
                                         </Link>
-                                        <Link to={`review/${survey_id}`}>
+                                        <Link to={`edit-survey/${survey_id}`}>
                                             <i className="fa-solid fa-pen-to-square text-xl"></i>
                                         </Link>
                                     </div>

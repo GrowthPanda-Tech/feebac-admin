@@ -12,7 +12,7 @@ export default function ReviewCard({ index, question, isEdit, surveyId }) {
     else if (question.question_type.type_name === "yes-no") {
         type = "Yes-No";
     } else type = "text";
-    console.log(question);
+    console.log(index);
     return (
         <>
             <div className="p-4">
@@ -55,6 +55,8 @@ export default function ReviewCard({ index, question, isEdit, surveyId }) {
                     question={question}
                     setEditPop={setEditPop}
                     type={type}
+                    surveyId={surveyId}
+                    questionNo={index}
                 />
             )}
         </>

@@ -32,6 +32,7 @@ export default function SurveyEdit() {
             "GET"
         );
         if (response.isSuccess) {
+            console.log(response);
             setSurveyInfo(response.surveyInfo);
             setQuestionList(response.questionList);
             setSurveyId(response.surveyInfo.survey_id);
@@ -55,6 +56,7 @@ export default function SurveyEdit() {
     useEffect(() => {
         getData();
     }, [slug]);
+    console.log(questionList);
 
     return (
         <>
@@ -97,7 +99,7 @@ export default function SurveyEdit() {
                                 index={index}
                                 question={question}
                                 isEdit={true}
-                                surveyId={surveyInfo.surveyId}
+                                surveyId={surveyId}
                             />
                         ))}
                 </div>

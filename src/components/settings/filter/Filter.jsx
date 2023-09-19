@@ -1,33 +1,33 @@
 import { useState } from "react";
 import FilterValues from "./FilterValues";
-import FilterSlider from "./FilterSlider";
 
-export default function Filter({filter}) {
+export default function Filter({ dataTypeId, filter }) {
     const [isExpand, setIsExpand] = useState(false);
+    const [options, setOptions] = useState(filter.options);
 
     return (
-        <div
-            className='h-fit bg-white py-6 px-8 flex gap-4 flex-col rounded-md' >
+        <div className="h-fit bg-white py-6 px-8 flex gap-4 flex-col rounded-md border border-[#DDD]">
             <div className="flex items-center justify-between">
-                <span className="font-semibold text-lg capitalize"> {filter.key_name} </span>
+                <span className="font-medium text-lg capitalize">
+                    {filter.key_name}
+                </span>
                 <i
                     onClick={() => setIsExpand(!isExpand)}
-                    className={`fa-solid fa-angles-${!isExpand ? 'down' : 'up'} cursor-pointer`}>
-                </i>
+                    className={`fa-solid fa-angles-${
+                        !isExpand ? "down" : "up"
+                    } cursor-pointer`}
+                ></i>
             </div>
 
-            {
-                isExpand && 
-                    <>
-                        {
-                            filter.is_select 
-                                ?
-                                <FilterValues filter={filter} /> :
-                                <FilterSlider filter={filter} />
-                        }
-                    </>
-            }
+            {isExpand && (
+                <FilterValues
+                    dataTypeId={dataTypeId}
+                    filterId={filter.id}
+                    isSelect={filter.is_select}
+                    options={options}
+                    setOptions={setOptions}
+                />
+            )}
         </div>
     );
 }
-

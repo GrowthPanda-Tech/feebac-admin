@@ -7,13 +7,16 @@
         "dev": "vite",
         "build": "vite build",
         "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+        "format": "prettier . --write",
         "preview": "vite preview"
     },
     "dependencies": {
-        "@emotion/react": "^11.11.1",
-        "@emotion/styled": "^11.11.0",
-        "@mui/material": "^5.14.5",
+        "@nivo/bar": "^0.83.0",
+        "@nivo/core": "^0.83.0",
+        "@nivo/geo": "^0.83.0",
+        "@nivo/pie": "^0.83.0",
         "@tinymce/tinymce-react": "^4.3.0",
+        "multi-range-slider-react": "^2.0.3",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.12.0"
@@ -28,6 +31,7 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.3.4",
         "postcss": "^8.4.25",
+        "prettier": "3.0.2",
         "tailwindcss": "^3.3.2",
         "vite": "^4.3.9"
     }

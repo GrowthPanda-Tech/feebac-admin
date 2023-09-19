@@ -12,7 +12,7 @@ export default function OtpField({ quantity, inputData, inputOnChange }) {
     };
 
     const handleKeyUp = (event, index) => {
-        if (event.key === 'Backspace' && index > 0) {
+        if (event.key === "Backspace" && index > 0) {
             inputRefs[index - 1].current.focus();
         }
     };
@@ -24,7 +24,7 @@ export default function OtpField({ quantity, inputData, inputOnChange }) {
                 id={index + 1}
                 key={index + 1}
                 name={`i-${index}`}
-                value={inputData[`i-${index}`] || ''}
+                value={inputData[`i-${index}`] || ""}
                 onChange={(event) => handleInputChange(event, index)}
                 onKeyUp={(event) => handleKeyUp(event, index)}
                 className="w-1/4 login-input px-0 text-center"

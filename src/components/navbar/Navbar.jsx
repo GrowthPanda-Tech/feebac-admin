@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import dashboard from "../../assets/dashboard.svg"
+import { NavLink } from "react-router-dom";
+import dashboard from "../../assets/dashboard.svg";
 
-//TODO: this feels illegal
 import dashboardIcon from "../../assets/navbar/dashboard.png";
 import user from "../../assets/navbar/user.png";
 import survey from "../../assets/navbar/survey.png";
@@ -11,56 +9,63 @@ import loyalty from "../../assets/navbar/loyalty.png";
 import revenue from "../../assets/navbar/revenue.png";
 import analytics from "../../assets/navbar/analytics.png";
 import settings from "../../assets/navbar/settings.png";
+import logout from "../../assets/navbar/logout.png";
 
-
-function NavList({ link, title, isActive, onClick, icon }) {
+function NavList({ link, title, icon }) {
+    const isActive = ({ isActive }) => (isActive ? "active" : undefined);
     return (
-        <li className={ `${isActive ? 'bg-secondary': ''}`} onClick={onClick}>
-            <NavLink to={link}>
-                <div className="px-16 py-4 text-white leading-6 tracking-wide flex items-center gap-8">
-                    <img src={icon} className="w-6" />
-                    <span> {title} </span>
-                </div>
-            </NavLink>
-        </li>
+        <NavLink
+            to={link}
+            className={`${isActive} px-16 py-4 text-white leading-6 tracking-wide flex items-center gap-8`}
+        >
+            <img src={icon} className="w-6" />
+            <span> {title} </span>
+        </NavLink>
     );
 }
 
 export default function Navbar() {
     const navItems = [
-        { link: '/', title: 'Dashboard', icon: dashboardIcon },
-        { link: 'user', title: 'User Management', icon: user },
-        { link: 'survey', title: 'Survey Management', icon: survey },
-        { link: 'content', title: 'Content Management', icon: content },
-        { link: 'loyalty-point', title: 'Loyalty Point Management', icon: loyalty },
-        { link: 'revenue', title: 'Revenue Management', icon: revenue },
-        { link: 'analytics', title: 'Analytics', icon: analytics },
-        { link: 'settings', title: 'Settings', icon: settings },
+        { link: "/", title: "Dashboard", icon: dashboardIcon },
+        { link: "user", title: "User Management", icon: user },
+        { link: "survey", title: "Survey Management", icon: survey },
+        { link: "content", title: "Content Management", icon: content },
+        {
+            link: "loyalty-point",
+            title: "Loyalty Point Management",
+            icon: loyalty,
+        },
+        { link: "revenue", title: "Revenue Management", icon: revenue },
+        { link: "analytics", title: "Analytics", icon: analytics },
+        { link: "settings", title: "Settings", icon: settings },
     ];
 
-    const path = useLocation();
-    const link = path.pathname.substring(1); //removes the leading '/'
-
-    const [isActive, setIsActive] = useState(link);
-    const handleClick = (link) => setIsActive(link);
+    const handleLogout = () => {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userInfo");
+        location.replace("/");
+    };
 
     return (
-        <div className="bg-primary h-screen w-80 fixed">
-            <img src={dashboard} className="w-full p-12" />
-            <ul>
-                {
-                    navItems.map((item, index) => (
-                        <NavList 
-                            key={index}
-                            link={item.link}
-                            title={item.title}
-                            isActive={isActive === item.link}
-                            onClick={() => handleClick(item.link)}
-                            icon={item.icon}
-                        />
-                    ))
-                }
-            </ul>
+        <div className="bg-primary h-screen w-80 fixed flex flex-col justify-between">
+            <div>
+                <img src={dashboard} className="w-full p-12" />
+                {navItems.map((item, index) => (
+                    <NavList
+                        key={index}
+                        link={item.link}
+                        title={item.title}
+                        icon={item.icon}
+                    />
+                ))}
+            </div>
+            <div
+                className="leading-6 tracking-wide flex items-center gap-8 bg-secondary hover:bg-accent cursor-pointer transition px-16 py-4 mb-12 text-white w-full"
+                onClick={handleLogout}
+            >
+                <img src={logout} className="w-6" />
+                Logout
+            </div>
         </div>
     );
 }

@@ -1,12 +1,11 @@
-import { useState } from 'react';
-import OtpField from './OtpField';
-import loginBanner from '../../assets/loginBanner.png';
-import makeRequest from '../../utils/makeRequest';
+import { useState } from "react";
+import OtpField from "./OtpField";
+import loginBanner from "../../assets/loginBanner.png";
+import makeRequest from "../../utils/makeRequest";
 
 function LargeBtn({ name }) {
     return (
-        <button
-            className='bg-primary transition hover:bg-accent text-white py-6 text-xl rounded-3xl font-semibold'>
+        <button className="bg-primary transition hover:bg-accent text-white py-6 text-xl rounded-3xl font-semibold">
             {name}
         </button>
     );
@@ -14,96 +13,131 @@ function LargeBtn({ name }) {
 
 export default function Login() {
     const [inputData, setInputData] = useState({});
-    console.log(inputData)
-
-    const inputOnChange = (e) => setInputData({ ...inputData, [e.target.name]: e.target.value });
-
     const [loginInfo, setLoginInfo] = useState({ mobile: "", otp: "" });
     const [alertInfo, setAlertInfo] = useState({ message: "", type: null });
     const [otpStatus, setOtpStatus] = useState(true);
 
     const handleChange = (event) => {
-        const limit = 10;
-        setLoginInfo({ 
-            ...loginInfo,
-            [event.target.name]: event.target.value.slice(0, limit)
-        });
-    }
+        if (event.target.name === "mobile") {
+            setLoginInfo({
+                ...loginInfo,
+                [event.target.name]: event.target.value.slice(0, 10),
+            });
+        } else {
+            setInputData({
+                ...inputData,
+                [event.target.name]: event.target.value.slice(0, 1),
+            });
+        }
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
         // validate admin or not
-        const isAdminResponse = await makeRequest(`site-admin/is-admin?mobile=${loginInfo.mobile}`, 'GET');
+        const isAdminResponse = await makeRequest(
+            `site-admin/is-admin?mobile=${loginInfo.mobile}`,
+            "GET"
+        );
 
         if (isAdminResponse.isSuccess && isAdminResponse.isAdmin) {
-            const jsonResponse = await makeRequest('auth/login', 'POST', loginInfo);
-            setAlertInfo({ ...alertInfo, message: "OTP sent", type: "success" });
+            const jsonResponse = await makeRequest(
+                "auth/login",
+                "POST",
+                loginInfo
+            );
+            setAlertInfo({
+                ...alertInfo,
+                message: "OTP sent",
+                type: "success",
+            });
             if (jsonResponse.isSuccess) setOtpStatus(false);
         } else {
-            setAlertInfo({ message: "You are not allowed to login here", type: "error" });
+            setAlertInfo({
+                message: "You are not allowed to login here",
+                type: "error",
+            });
         }
-    }
+    };
 
     const handleVerify = async (e) => {
         e.preventDefault();
 
         let otp = "";
-        Object.values(inputData).forEach(element => {
+        Object.values(inputData).forEach((element) => {
             otp += element;
         });
 
-        const response = await makeRequest('auth/verify-otp', 'POST', { ...loginInfo, otp: otp });
+        const response = await makeRequest("auth/verify-otp", "POST", {
+            ...loginInfo,
+            otp: otp,
+        });
         if (response.isSuccess) {
             localStorage.setItem("authToken", response.authToken);
             localStorage.setItem("userInfo", JSON.stringify(response.userInfo));
             location.replace("/");
         } else {
-            setAlertInfo({ ...setAlertInfo, message: "OTP not matched.", type: "error" });
+            setAlertInfo({
+                ...setAlertInfo,
+                message: "OTP not matched.",
+                type: "error",
+            });
         }
-    }
+    };
 
     return (
-        <div className='flex w-full h-screen p-28 bg-white'>
-            <div className='w-1/2 overflow-hidden'>
-                <img src={loginBanner} alt='loading' />
+        <div className="flex w-full h-screen p-28 bg-white">
+            <div className="w-1/2 overflow-hidden">
+                <img src={loginBanner} alt="loading" />
             </div>
 
             {/* Separation bar */}
-            <div className='w-0.5 bg-black'></div>
+            <div className="w-0.5 bg-black"></div>
 
-            <div className='w-1/2 flex flex-col px-16 gap-6 justify-center'>
-                <div className='text-secondary text-3xl font-bold'>Login as Admin</div>
+            <div className="w-1/2 flex flex-col px-16 gap-6 justify-center">
+                <div className="text-secondary text-3xl font-bold">
+                    Login as Admin
+                </div>
 
-                <form className='flex flex-col gap-6' onSubmit={handleLogin}>
+                <form className="flex flex-col gap-6" onSubmit={handleLogin}>
                     <input
-                        type='number'
-                        name='mobile'
-                        placeholder='Enter mobile number'
+                        type="number"
+                        name="mobile"
+                        placeholder="Enter mobile number"
                         value={loginInfo.mobile}
-                        onChange={(event) => handleChange(event)}
+                        onChange={(event) => handleChange(event, 10)}
                         disabled={!otpStatus}
-                        className='login-input disabled:cursor-not-allowed disabled:opacity-50'
-                        required 
+                        className="login-input disabled:cursor-not-allowed disabled:opacity-50"
+                        required
                     />
-                    {otpStatus && <LargeBtn name={'Send OTP'}/>}
+                    {otpStatus && <LargeBtn name={"Send OTP"} />}
                 </form>
 
                 <div>
                     {alertInfo.message}
-                    {alertInfo.type == 'success' && <i className='fa-solid fa-circle-check ml-2 text-green'></i>}
-                    {alertInfo.type == 'error' && <i className='fa-solid fa-circle-xmark ml-2 text-secondary'></i>}
+                    {alertInfo.type == "success" && (
+                        <i className="fa-solid fa-circle-check ml-2 text-green"></i>
+                    )}
+                    {alertInfo.type == "error" && (
+                        <i className="fa-solid fa-circle-xmark ml-2 text-secondary"></i>
+                    )}
                 </div>
 
-                {
-                    !otpStatus && 
-                        <form className='flex flex-col gap-6' onSubmit={handleVerify}>
-                            <div className='flex gap-4'>
-                                <OtpField quantity={6} inputData={inputData} inputOnChange={inputOnChange} />
-                            </div>
-                            <LargeBtn name={'LOGIN'} />
-                        </form>
-                }
+                {!otpStatus && (
+                    <form
+                        className="flex flex-col gap-6"
+                        onSubmit={handleVerify}
+                    >
+                        <div className="flex gap-4">
+                            <OtpField
+                                quantity={6}
+                                inputData={inputData}
+                                inputOnChange={handleChange}
+                            />
+                        </div>
+                        <LargeBtn name={"LOGIN"} />
+                    </form>
+                )}
             </div>
         </div>
     );

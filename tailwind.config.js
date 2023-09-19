@@ -8,23 +8,23 @@ export default {
     ],
     theme: {
         fontFamily: {
-            'sans': 'Poppins',
-            'mono': 'IBM Plex Mono'
+            sans: "Poppins",
+            mono: "IBM Plex Mono",
         },
         colors: {
-            transparent: 'transparent',
-            current: 'currentColor',
-            'white': '#FFFFFF',
-            'black': '#000000',
-            'grey' : '#A6ACBE',
-            'lighest-grey': '#C9CED6',
-            'light-grey': '#D9D9D9',
-            'dark-grey': '#5C5C5C',
-            'green': '#00BA00',
-            'background': '#EFEFEF',
-            'primary': '#A43948',
-            'secondary': '#EA525F',
-            'accent': '#EA8552',
+            //TODO: Redefine these
+            white: "#FFFFFF",
+            black: "#000000",
+            primary: "#A43948",
+            secondary: "#EA525F",
+            tertiary: "#EA8552",
+            grey: "#A6ACBE",
+            "lighest-grey": "#C9CED6",
+            "light-grey": "#D9D9D9",
+            "dark-grey": "#5C5C5C",
+            green: "#00BA00",
+            background: "#EFEFEF",
+            accent: "#EA8552",
         },
     },
-}
+};

@@ -1,23 +1,43 @@
 import { useState, useEffect } from "react";
+import Filter from "./Filter";
 import makeRequest from "../../../utils/makeRequest";
-import ProfileSubSection from "./ProfileSubSection";
 
 export default function Profiles() {
-    const [profiles, setProfiles] = useState({});
-    
+    //TODO: Can I cache this?
+    const [profiles, setProfiles] = useState([]);
+
     const getProfiles = async () => {
-        const response = await makeRequest('config/get-profile-key-value', 'GET');
-        response.isSuccess ? setProfiles(response.data) : alert(response.message);
-    }
+        const response = await makeRequest(
+            "config/get-profile-key-value",
+            "GET"
+        );
+        response.isSuccess
+            ? setProfiles(response.data)
+            : alert(response.message);
+    };
 
     useEffect(() => {
-        getProfiles()
-    }, [profiles]);
+        getProfiles();
+    }, []);
 
     return (
         <>
-            {Object.keys(profiles).map((key) => (
-                <ProfileSubSection key={key} type={key} filters={profiles[key]} />
+            {profiles.map((profile) => (
+                <div className="mb-8" key={profile.id}>
+                    <h1 className="text-xl mb-4 font-medium">
+                        {profile.dataType} Filters
+                    </h1>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {profile.key.map((filter) => (
+                            <Filter
+                                key={filter.id}
+                                dataTypeId={profile.id}
+                                filter={filter}
+                            />
+                        ))}
+                    </div>
+                </div>
             ))}
         </>
     );

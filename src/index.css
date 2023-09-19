@@ -9,32 +9,36 @@
 }
 
 @layer components {
+    .active {
+        @apply bg-secondary;
+    }
+
     .login-input {
         @apply border-2 border-accent rounded-3xl py-6 px-12 text-xl;
     }
 
     .input-primary {
-        @apply border border-lighest-grey rounded-xl p-4 font-normal mt-2
+        @apply border border-lighest-grey rounded-xl p-4 font-normal mt-2 outline-2 outline-primary;
     }
 
     .input-article {
-        @apply border-2 border-accent py-3 px-8 rounded-xl bg-white
+        @apply border-2 border-accent py-3 px-8 rounded-xl bg-white;
     }
 
     .input-settings {
-        @apply bg-white border border-[#C9CED6] rounded-md py-4 px-6
+        @apply bg-white border border-[#C9CED6] rounded-md py-4 px-6;
     }
 
     .heading {
-        @apply text-2xl font-semibold mb-8
+        @apply text-2xl font-semibold mb-8;
     }
 
     .btn {
-        @apply px-8 py-3 rounded-xl flex items-center gap-2 font-semibold
+        @apply px-8 py-3 rounded-xl flex items-center gap-2 font-semibold;
     }
 
     .btn-primary {
-        @apply bg-secondary text-white btn hover:bg-accent transition
+        @apply bg-secondary text-white btn hover:bg-primary transition;
     }
 
     .btn-secondary {
@@ -42,23 +46,15 @@
     }
 
     .btn-action {
-        @apply bg-[#F1F1F1] rounded-md px-8 py-2 hover:bg-secondary hover:text-white transition
-    }
-
-    .table {
-        @apply table-fixed w-full bg-white rounded-xl text-center
+        @apply bg-[#F1F1F1] rounded-md px-8 py-2 hover:bg-secondary hover:text-white transition;
     }
 
     .pill-primary {
-        @apply py-2 px-6 bg-white border border-black rounded-xl
+        @apply py-2 px-6 bg-white border border-black rounded-xl;
     }
 
     .pill-secondary {
-        @apply py-2 px-6 bg-[#C9CED6] text-[#858585] rounded-xl
-    }
-
-    .table-first-of-type {
-        @apply first-of-type:text-start first-of-type:text-ellipsis first-of-type:overflow-hidden
+        @apply py-2 px-6 bg-[#C9CED6] text-[#858585] rounded-xl;
     }
 }
 
@@ -67,4 +63,22 @@
     input[type="number"]::-webkit-outer-spin-button {
         @apply appearance-none;
     }
+
+    ::-webkit-scrollbar {
+        @apply w-2 rounded-xl;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-white p-2;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-light-grey rounded-xl;
+    }
+}
+
+.update-user {
+    background-color: rgba(0, 0, 0, 0.148);
+    backdrop-filter: blur(2px);
+    z-index: 100;
 }

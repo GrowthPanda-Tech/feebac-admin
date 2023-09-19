@@ -1,15 +1,15 @@
-import pageNotFoundImage from '../../assets/pageNotFound.png';
-import { Link } from 'react-router-dom';
+import pageNotFoundImage from "../../assets/pageNotFound.png";
+import { Link } from "react-router-dom";
 
 export default function PageNotFound() {
-    return (
-        <div className=''>
-            {/* <img src={pageNotFoundImage} className='w-2/6' alt="Page not found" /> */}
-            {/* <Link to="/"> */}
-            {/*     <button className='px-14 py-3 bg-[#EA525F] text-white font-semibold shadow-md'> */}
-            {/*         Go to dashboard */}
-            {/*     </button> */}
-            {/* </Link> */}
-        </div>
-    )
+    return <>
+    <div className="flex flex-col justify-center h-auto items-center">
+        <img className="h-auto md:h-[70vh]" src={pageNotFoundImage} alt="page" />
+        <Link to="/" className="btn-primary drop-shadow-md">
+            Go to Dashboard
+        </Link>
+
+    </div>
+  
+    </>;
 }

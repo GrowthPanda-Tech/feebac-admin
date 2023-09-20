@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import makeRequest from "../../../utils/makeRequest";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import downArrow from "../../../assets/iconamoon_arrow-down-2-light.svg";
 
 function Input({ type, name, value, onChange }) {
-    console.log(value);
     return (
         <input
             type={type}
@@ -21,16 +20,22 @@ export default function EditQuestion({
     questions,
     questionNo,
     setEditPop,
+    setQuestionList,
+    questionList,
 }) {
-    const [options, setOptions] = useState(["", ""]);
+    const apiOptions = Object.values(questions[0].question_values);
+    const { slug } = useParams();
+    const [options, setOptions] = useState(apiOptions);
     const [questionNumber, setQuestionNumber] = useState(questionNo + 1);
-    const [questionData, setQuestionData] = useState({
+    const [updatedQuestionData, setUpdatedQuestionData] = useState({
         surveyId: surveyId,
+        questionId: questions[0].question_id,
         questionType: questions[0]?.question_type?.type_id,
         questionTitle: questions[0]?.question_title,
+        questionValue: questions[0].question_values,
     });
     const [activeButtonIndex, setActiveButtonIndex] = useState(
-        questionData.questionType - 1
+        updatedQuestionData.questionType - 1
     );
     const [filters, setFilters] = useState([]);
     const [isDisabled, setIsDisabled] = useState(true);
@@ -43,9 +48,17 @@ export default function EditQuestion({
         setFilters(response.data[2].key);
     };
 
-    const setQuestionType = (index, questionType, questionValue = {}) => {
+    const setQuestionType = (
+        index,
+        questionType,
+        questionValue = updatedQuestionData.questionValue
+    ) => {
         setActiveButtonIndex(index);
-        setQuestionData({ ...questionData, questionType, questionValue });
+        setUpdatedQuestionData({
+            ...updatedQuestionData,
+            questionType,
+            questionValue,
+        });
     };
 
     const arrangeOptions = (updatedOptions) => {
@@ -53,11 +66,14 @@ export default function EditQuestion({
         for (let i = 0; i < updatedOptions.length; i++) {
             questionValue[(i + 1).toString()] = updatedOptions[i];
         }
-        setQuestionData({ ...questionData, questionValue });
+        setUpdatedQuestionData({ ...updatedQuestionData, questionValue });
     };
 
     const handleInputChange = (e) =>
-        setQuestionData({ ...questionData, [e.target.name]: e.target.value });
+        setUpdatedQuestionData({
+            ...updatedQuestionData,
+            [e.target.name]: e.target.value,
+        });
 
     const handleOptionChange = (e, index) => {
         const updatedOptions = [...options];
@@ -75,31 +91,57 @@ export default function EditQuestion({
 
     const handleQuestionSubmit = async () => {
         const response = await makeRequest(
-            "survey/add-question",
-            "POST",
-            questionData
+            "survey/update-question",
+            "PUT",
+            updatedQuestionData
         );
         alert(response.message);
 
-        questions.push(questionData);
+        // questions.push(updatedQuestionData);
 
         setOptions(["", ""]);
-        setQuestionData({
+        setUpdatedQuestionData({
             surveyId: surveyId,
             questionType: 2,
         });
-        setQuestionNumber(questionNumber + 1);
+        setEditPop(false);
+
+        if (response.isSuccess) {
+            const getData = async () => {
+                const response = await makeRequest(
+                    `survey/show-survey?sid=${slug}`,
+                    "GET"
+                );
+                if (response.isSuccess) {
+                    setQuestionList(response.questionList);
+                }
+            };
+            getData();
+            // let updatedArray = [];
+            // let newResponse = response.question;
+            // const updatedObject = {
+            //     ...questionList[questionNo],
+            //     question: newResponse,
+            // };
+            // updatedArray = [
+            //     ...questionList.slice(0, questionNo),
+            //     updatedObject,
+            //     ...questionList.slice(questionNo + 1),
+            // ];
+
+            // console.log(updatedArray);
+
+            // // setQuestionList((prev) => [
+            // //     ...prev,
+            // //     ...prev.splice(questionNo, 1, newResponse),
+            // // ]);
+        }
     };
-    const apiOptions = Object.values(questions[0].question_values);
     useEffect(() => {
         getFilters();
         setOptions(apiOptions);
     }, []);
-    console.log(options);
-
-    console.log(questions);
-    console.log(questions[0].question_title);
-    console.log(questionData);
+    console.log(updatedQuestionData);
 
     return (
         <div className="flex flex-col gap-10">
@@ -123,7 +165,11 @@ export default function EditQuestion({
                         type={"text"}
                         name={"questionTitle"}
                         onChange={handleInputChange}
-                        value={questionData ? questionData.questionTitle : ""}
+                        value={
+                            updatedQuestionData
+                                ? updatedQuestionData.questionTitle
+                                : ""
+                        }
                     />
                 </label>
                 <div className="flex w-full items-center justify-between">
@@ -169,7 +215,7 @@ export default function EditQuestion({
                             Yes/No Answer
                         </button>
                     </div>
-                    <div className="flex items-center gap-6">
+                    {/* <div className="flex items-center gap-6">
                         <input
                             type="checkbox"
                             className="h-6 w-6"
@@ -185,8 +231,8 @@ export default function EditQuestion({
                                 disabled={isDisabled}
                                 name="profileField"
                                 onChange={(e) =>
-                                    setQuestionData({
-                                        ...questionData,
+                                    setUpdatedQuestionData({
+                                        ...updatedQuestionData,
                                         [e.target.name]: e.target.value,
                                     })
                                 }
@@ -201,12 +247,12 @@ export default function EditQuestion({
                                 <img src={downArrow} />
                             </span>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="flex flex-col gap-4">
-                    {questionData.questionType === 1 ? (
+                    {updatedQuestionData.questionType === 1 ? (
                         <></>
-                    ) : questionData.questionType === 4 ? (
+                    ) : updatedQuestionData.questionType === 4 ? (
                         <>
                             <Input type={"text"} value={"Yes"} disabled />
                             <Input type={"text"} value={"No"} disabled />
@@ -243,8 +289,8 @@ export default function EditQuestion({
                     )}
                 </div>
                 <div className="flex justify-between">
-                    {questionData.questionType !== 1 &&
-                    questionData.questionType !== 4 ? (
+                    {updatedQuestionData.questionType !== 1 &&
+                    updatedQuestionData.questionType !== 4 ? (
                         <button
                             onClick={() => setOptions([...options, ""])}
                             className="btn-primary bg-white text-black hover:bg-secondary hover:text-white border border-grey w-fit"

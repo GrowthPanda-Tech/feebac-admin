@@ -24,15 +24,12 @@ export default function SurveyEdit() {
     const [questionList, setQuestionList] = useState([]);
     const [surveyId, setSurveyId] = useState(surveyInfo.survey_id);
 
-    console.log(surveyId);
-
     const getData = async () => {
         const response = await makeRequest(
             `survey/show-survey?sid=${slug}`,
             "GET"
         );
         if (response.isSuccess) {
-            console.log(response);
             setSurveyInfo(response.surveyInfo);
             setQuestionList(response.questionList);
             setSurveyId(response.surveyInfo.survey_id);
@@ -56,7 +53,6 @@ export default function SurveyEdit() {
     useEffect(() => {
         getData();
     }, [slug]);
-    console.log(questionList);
 
     return (
         <>
@@ -100,6 +96,8 @@ export default function SurveyEdit() {
                                 question={question}
                                 isEdit={true}
                                 surveyId={surveyId}
+                                setQuestionList={setQuestionList}
+                                questionList={questionList}
                             />
                         ))}
                 </div>

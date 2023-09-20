@@ -1,7 +1,14 @@
 import { useState } from "react";
 import EditPop from "../surveyEdit/EditPop";
 
-export default function ReviewCard({ index, question, isEdit, surveyId }) {
+export default function ReviewCard({
+    index,
+    question,
+    isEdit,
+    surveyId,
+    setQuestionList,
+    questionList,
+}) {
     const [editPop, setEditPop] = useState(false);
 
     let type;
@@ -12,7 +19,6 @@ export default function ReviewCard({ index, question, isEdit, surveyId }) {
     else if (question.question_type.type_name === "yes-no") {
         type = "Yes-No";
     } else type = "text";
-    console.log(index);
     return (
         <>
             <div className="p-4">
@@ -57,6 +63,8 @@ export default function ReviewCard({ index, question, isEdit, surveyId }) {
                     type={type}
                     surveyId={surveyId}
                     questionNo={index}
+                    setQuestionList={setQuestionList}
+                    questionList={questionList}
                 />
             )}
         </>

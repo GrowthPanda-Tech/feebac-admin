@@ -2,7 +2,15 @@ import React from "react";
 import EditQuestion from "./editQuestion";
 import { useState } from "react";
 
-function EditPop({ question, type, setEditPop, surveyId, questionNo }) {
+function EditPop({
+    question,
+    type,
+    setEditPop,
+    surveyId,
+    questionNo,
+    setQuestionList,
+    questionList,
+}) {
     const [editQuestion, setEditQuestion] = useState([question]);
     console.log(type, surveyId);
     console.log(editQuestion);
@@ -15,6 +23,7 @@ function EditPop({ question, type, setEditPop, surveyId, questionNo }) {
                     questions={editQuestion}
                     questionNo={questionNo}
                     setEditPop={setEditPop}
+                    setQuestionList={setQuestionList}
                 />
             </div>
         </div>

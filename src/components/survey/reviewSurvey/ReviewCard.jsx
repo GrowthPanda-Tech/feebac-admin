@@ -8,6 +8,7 @@ export default function ReviewCard({
     surveyId,
     setQuestionList,
     questionList,
+    setSurveyInfo,
 }) {
     const [editPop, setEditPop] = useState(false);
 
@@ -65,6 +66,7 @@ export default function ReviewCard({
                     questionNo={index}
                     setQuestionList={setQuestionList}
                     questionList={questionList}
+                    setSurveyInfo={setSurveyInfo}
                 />
             )}
         </>

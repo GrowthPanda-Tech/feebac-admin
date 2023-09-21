@@ -65,7 +65,11 @@ function Label({ name, children }) {
     );
 }
 
-export default function EditSurveyForm({ setSurveyEditPop, surveyInfo }) {
+export default function EditSurveyForm({
+    setSurveyEditPop,
+    surveyInfo,
+    setSurveyInfo,
+}) {
     const navigate = useNavigate();
     const { slug } = useParams();
     const [surveyId, setSurveyId] = useState(surveyInfo.surveyId);
@@ -75,12 +79,14 @@ export default function EditSurveyForm({ setSurveyEditPop, surveyInfo }) {
     const [filters, setFilters] = useState([]);
     const [isShowFilter, setIsShowFilter] = useState(false);
     const [surveyData, setSurveyData] = useState({
+        surveyId: surveyInfo?.survey_id,
         surveyTitle: surveyInfo?.survey_title,
         startDate: surveyInfo?.created_date,
         endDate: surveyInfo?.end_date,
         loyaltyPoint: surveyInfo?.loyalty_point,
         surveyDescription: surveyInfo?.survey_description,
         category: surveyInfo?.category.category_id,
+        isUpdateImage: false,
     });
     const [profileData, setProfileData] = useState({});
     console.log(surveyData);
@@ -116,16 +122,26 @@ export default function EditSurveyForm({ setSurveyEditPop, surveyInfo }) {
 
         const response = await formSubmit(
             event,
-            "site-admin/create-survey",
-            "POST",
+            "site-admin/update-survey",
+            "PUT",
             formdata
         );
         alert(response.message);
 
         if (response.isSuccess) {
-            setSurveyId(response.surveyId);
-            setSurveyTitle(surveyData.surveyTitle);
-            setIsSurveyCreate(response.isSuccess);
+            const getData = async () => {
+                const response = await makeRequest(
+                    `survey/show-survey?sid=${slug}`,
+                    "GET"
+                );
+                if (response.isSuccess) {
+                    // setQuestionList(response.questionList);
+                    setSurveyInfo(response.surveyInfo);
+                }
+            };
+            getData();
+
+            setSurveyEditPop(false);
         }
     };
 

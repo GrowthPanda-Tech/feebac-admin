@@ -5,6 +5,7 @@ function AddMoreQuestionPop({
     surveyInfo,
     setQuestionAddPop,
     setQuestionList,
+    setSurveyInfo,
 }) {
     return (
         <div className="fixed top-0 left-0 w-full flex justify-center items-center update-user h-[100vh] ">
@@ -13,6 +14,7 @@ function AddMoreQuestionPop({
                 surveyTitle={surveyInfo?.survey_title}
                 editAdd={true}
                 surveyInfo={surveyInfo}
+                setSurveyInfo={setSurveyInfo}
                 setQuestionAddPop={setQuestionAddPop}
                 setQuestionList={setQuestionList}
             />

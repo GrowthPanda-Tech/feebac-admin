@@ -22,6 +22,7 @@ export default function EditQuestion({
     setEditPop,
     setQuestionList,
     questionList,
+    setSurveyInfo,
 }) {
     const apiOptions = Object.values(questions[0].question_values);
     const { slug } = useParams();
@@ -112,6 +113,7 @@ export default function EditQuestion({
                 );
                 if (response.isSuccess) {
                     setQuestionList(response.questionList);
+                    setSurveyInfo(response.surveyInfo);
                 }
             };
             getData();

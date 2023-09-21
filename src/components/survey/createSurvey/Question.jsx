@@ -23,6 +23,7 @@ export default function Question({
     surveyInfo,
     setQuestionAddPop,
     setQuestionList,
+    setSurveyInfo,
 }) {
     const { slug } = useParams();
 
@@ -95,6 +96,7 @@ export default function Question({
                     );
                     if (response.isSuccess) {
                         setQuestionList(response.questionList);
+                        setSurveyInfo(response.surveyInfo);
                     }
                 };
                 getData();

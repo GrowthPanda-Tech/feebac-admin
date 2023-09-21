@@ -4,6 +4,7 @@ import makeRequest from "../../../utils/makeRequest";
 import ReviewCard from "../reviewSurvey/ReviewCard";
 import EditSurveyDetails from "./EditSurveyDetails";
 import AddMoreQuestionPop from "./AddMoreQuestionPop";
+import ToggleButton from "./ToogleButton";
 
 function InputHeading({ title, value }) {
     return (
@@ -43,7 +44,7 @@ export default function SurveyEdit() {
 
     return (
         <>
-            {surveyInfo && !surveyInfo.is_public ? (
+            {surveyInfo && (
                 <div className="flex justify-between ">
                     <div className="flex flex-col md:w-1/2 gap-6">
                         {surveyInfo && (
@@ -73,6 +74,10 @@ export default function SurveyEdit() {
                         </div>
                     </div>
                     <div className="flex items-center flex-col gap-4">
+                        <ToggleButton
+                            surveyInfo={surveyInfo}
+                            surveyId={surveyId}
+                        />
                         <button
                             className="btn-primary "
                             onClick={() => {
@@ -91,11 +96,9 @@ export default function SurveyEdit() {
                         </button>
                     </div>
                 </div>
-            ) : (
-                "You can't Edit Public Survey"
             )}
 
-            {surveyInfo && !surveyInfo.is_public ? (
+            {surveyInfo && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
                     {questionList &&
                         questionList.map((question, index) => (
@@ -105,19 +108,19 @@ export default function SurveyEdit() {
                                 question={question}
                                 isEdit={true}
                                 surveyId={surveyId}
+                                setSurveyInfo={setSurveyInfo}
                                 setQuestionList={setQuestionList}
                                 questionList={questionList}
                             />
                         ))}
                 </div>
-            ) : (
-                ""
             )}
             {questionAddPop && (
                 <AddMoreQuestionPop
                     setQuestionList={setQuestionList}
                     surveyInfo={surveyInfo}
                     setQuestionAddPop={setQuestionAddPop}
+                    setSurveyInfo={setSurveyInfo}
                 />
             )}
             {surveyEditPop && (

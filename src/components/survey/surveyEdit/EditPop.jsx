@@ -10,6 +10,7 @@ function EditPop({
     questionNo,
     setQuestionList,
     questionList,
+    setSurveyInfo,
 }) {
     const [editQuestion, setEditQuestion] = useState([question]);
     console.log(type, surveyId);
@@ -24,6 +25,7 @@ function EditPop({
                     questionNo={questionNo}
                     setEditPop={setEditPop}
                     setQuestionList={setQuestionList}
+                    setSurveyInfo={setSurveyInfo}
                 />
             </div>
         </div>

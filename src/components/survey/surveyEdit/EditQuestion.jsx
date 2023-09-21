@@ -97,8 +97,6 @@ export default function EditQuestion({
         );
         alert(response.message);
 
-        // questions.push(updatedQuestionData);
-
         setOptions(["", ""]);
         setUpdatedQuestionData({
             surveyId: surveyId,
@@ -117,24 +115,6 @@ export default function EditQuestion({
                 }
             };
             getData();
-            // let updatedArray = [];
-            // let newResponse = response.question;
-            // const updatedObject = {
-            //     ...questionList[questionNo],
-            //     question: newResponse,
-            // };
-            // updatedArray = [
-            //     ...questionList.slice(0, questionNo),
-            //     updatedObject,
-            //     ...questionList.slice(questionNo + 1),
-            // ];
-
-            // console.log(updatedArray);
-
-            // // setQuestionList((prev) => [
-            // //     ...prev,
-            // //     ...prev.splice(questionNo, 1, newResponse),
-            // // ]);
         }
     };
     useEffect(() => {
@@ -215,39 +195,6 @@ export default function EditQuestion({
                             Yes/No Answer
                         </button>
                     </div>
-                    {/* <div className="flex items-center gap-6">
-                        <input
-                            type="checkbox"
-                            className="h-6 w-6"
-                            onClick={() => setIsDisabled(!isDisabled)}
-                        />
-                        <div
-                            className={`flex bg-background p-4 rounded-md border border-[#C9C9C9] ${
-                                isDisabled && "opacity-50"
-                            }`}
-                        >
-                            <select
-                                className="appearance-none outline-none"
-                                disabled={isDisabled}
-                                name="profileField"
-                                onChange={(e) =>
-                                    setUpdatedQuestionData({
-                                        ...updatedQuestionData,
-                                        [e.target.name]: e.target.value,
-                                    })
-                                }
-                            >
-                                {filters.map((filter) => (
-                                    <option key={filter.id} value={filter.id}>
-                                        {filter.key_name}
-                                    </option>
-                                ))}
-                            </select>
-                            <span>
-                                <img src={downArrow} />
-                            </span>
-                        </div>
-                    </div> */}
                 </div>
                 <div className="flex flex-col gap-4">
                     {updatedQuestionData.questionType === 1 ? (

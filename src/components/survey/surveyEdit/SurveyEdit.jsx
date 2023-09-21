@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import makeRequest from "../../../utils/makeRequest";
 import ReviewCard from "../reviewSurvey/ReviewCard";
+import EditSurveyDetails from "./EditSurveyDetails";
+import AddMoreQuestionPop from "./AddMoreQuestionPop";
 
 function InputHeading({ title, value }) {
     return (
@@ -13,16 +15,12 @@ function InputHeading({ title, value }) {
 }
 
 export default function SurveyEdit() {
-    const splitDate = (data) => {
-        let arr = data;
-        console.log(arr);
-        const NewDate = arr.split("");
-        return NewDate;
-    };
     const { slug } = useParams();
     const [surveyInfo, setSurveyInfo] = useState({});
     const [questionList, setQuestionList] = useState([]);
     const [surveyId, setSurveyId] = useState(surveyInfo.survey_id);
+    const [surveyEditPop, setSurveyEditPop] = useState(false);
+    const [questionAddPop, setQuestionAddPop] = useState(false);
 
     const getData = async () => {
         const response = await makeRequest(
@@ -36,57 +34,68 @@ export default function SurveyEdit() {
         }
     };
 
-    // const handlePublish = async () => {
-    //     const body = {
-    //         surveyId,
-    //         isStartNow: true,
-    //     };
-    //     const response = await makeRequest(
-    //         "survey/start-survey",
-    //         "PATCH",
-    //         body
-    //     );
-    //     alert(response.message);
-    //     // location.replace("/survey");
-    // };
-
     useEffect(() => {
         getData();
     }, [slug]);
 
+    console.log(surveyInfo.is_public);
+    console.log(surveyInfo);
+
     return (
         <>
-            <div className="flex ">
-                <div className="flex flex-col md:w-1/2 gap-6">
-                    {surveyInfo && (
-                        <div className="">
-                            <InputHeading
-                                title={"Survey Title"}
-                                value={surveyInfo?.survey_title}
-                            />
+            {surveyInfo && !surveyInfo.is_public ? (
+                <div className="flex justify-between ">
+                    <div className="flex flex-col md:w-1/2 gap-6">
+                        {surveyInfo && (
+                            <div className="">
+                                <InputHeading
+                                    title={"Survey Title"}
+                                    value={surveyInfo?.survey_title}
+                                />
 
-                            <InputHeading
-                                title={"Start Date & Time"}
-                                value={surveyInfo.created_date}
-                            />
-                            <InputHeading
-                                title={"End Date & Time"}
-                                value={surveyInfo.end_date}
-                            />
-                            <InputHeading
-                                title={"Total Question"}
-                                value={surveyInfo?.totalQuestions}
-                            />
+                                <InputHeading
+                                    title={"Start Date & Time"}
+                                    value={surveyInfo.created_date}
+                                />
+                                <InputHeading
+                                    title={"End Date & Time"}
+                                    value={surveyInfo.end_date}
+                                />
+                                <InputHeading
+                                    title={"Total Question"}
+                                    value={surveyInfo?.totalQuestions}
+                                />
+                            </div>
+                        )}
+
+                        <div className="flex w-full">
+                            <p>{surveyInfo && surveyInfo.survey_description}</p>
                         </div>
-                    )}
-
-                    <div className="flex w-full">
-                        <p>{surveyInfo && surveyInfo.survey_description}</p>
+                    </div>
+                    <div className="flex items-center flex-col gap-4">
+                        <button
+                            className="btn-primary "
+                            onClick={() => {
+                                setSurveyEditPop(true);
+                            }}
+                        >
+                            Edit Survey Details
+                        </button>
+                        <button
+                            className="btn-primary "
+                            onClick={() => {
+                                setQuestionAddPop(true);
+                            }}
+                        >
+                            Add New Question?
+                        </button>
                     </div>
                 </div>
-            </div>
+            ) : (
+                "You can't Edit Public Survey"
+            )}
 
-            {surveyInfo && (
+            {surveyInfo && !surveyInfo.is_public ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
                     {questionList &&
                         questionList.map((question, index) => (
@@ -101,6 +110,22 @@ export default function SurveyEdit() {
                             />
                         ))}
                 </div>
+            ) : (
+                ""
+            )}
+            {questionAddPop && (
+                <AddMoreQuestionPop
+                    setQuestionList={setQuestionList}
+                    surveyInfo={surveyInfo}
+                    setQuestionAddPop={setQuestionAddPop}
+                />
+            )}
+            {surveyEditPop && (
+                <EditSurveyDetails
+                    surveyInfo={surveyInfo}
+                    setSurveyEditPop={setSurveyEditPop}
+                    setSurveyInfo={setSurveyInfo}
+                />
             )}
         </>
     );

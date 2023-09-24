@@ -13,10 +13,12 @@ export default function Response({ index, question }) {
                 </div>
                 {question.options.map((option, index) => (
                     <div key={index} className="flex flex-col gap-2">
-                        <div className="mt-4 flex justify-between font-bold">
-                            {option[1]}
-                            <span className="font-normal">
-                                {option[2] ? option[2][1] : 0}%
+                        <div className="mt-4 flex gap-2 justify-between">
+                            <span className="font-semibold">
+                                {index + 1}. {option[1]}
+                            </span>
+                            <span>
+                                {option[2] ? `${option[2][1].toFixed(0)}%` : ""}
                             </span>
                         </div>
 
@@ -31,7 +33,7 @@ export default function Response({ index, question }) {
                         />
 
                         {option[2] && option[2][0] > 0 && (
-                            <div className="italic">
+                            <div className="italic text-sm">
                                 {option[2][0]} Response
                                 {option[2][0] != 1 ? "s" : ""}
                             </div>

@@ -2,7 +2,10 @@ import { useState } from "react";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import formSubmit from "../../utils/formSubmit";
 
-export default function CategoryForm({ setIsShowForm, setCategories }) {
+export default function CategoryForm({
+    setIsShowCategoryCreate,
+    setCategories,
+}) {
     const [newCategory, setNewCategory] = useState({});
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
 
@@ -91,7 +94,7 @@ export default function CategoryForm({ setIsShowForm, setCategories }) {
                         <button className="btn-primary"> Save </button>
                         <button
                             className="btn-secondary"
-                            onClick={() => setIsShowForm(false)}
+                            onClick={() => setIsShowCategoryCreate(false)}
                         >
                             Cancel
                         </button>

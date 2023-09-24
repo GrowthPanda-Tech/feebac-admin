@@ -19,7 +19,6 @@ export default function FilterValues({
         response.isSuccess && setOptions(response.data.options);
     };
 
-    //TODO: find a better way
     const handleOptionAdd = async () => {
         const request = {
             dataType: dataTypeId,

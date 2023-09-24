@@ -2,27 +2,22 @@ import { useState, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import makeRequest from "../../utils/makeRequest";
 
+const TINY_API_KEY = import.meta.env.VITE_TINY_API_KEY;
+
 function Select({ label, name, onChange, items, selectedItem }) {
     return (
         <label className="flex flex-col">
             <span className="font-semibold mb-2"> {label} </span>
             <select
                 name={name}
+                value={selectedItem}
                 className="capitalize input-article border-none"
                 onChange={onChange}
+                required
             >
                 {items.map((item) => {
-                    const value = selectedItem
-                        ? selectedItem
-                        : item.category_id;
-                    const selected = selectedItem === item.category_id;
-
                     return (
-                        <option
-                            key={item.category_id}
-                            value={value}
-                            selected={selected}
-                        >
+                        <option key={item.category_id} value={item.category_id}>
                             {item.category_name}
                         </option>
                     );
@@ -41,6 +36,7 @@ function Input({ label, name, value, onChange }) {
                 value={value}
                 onChange={onChange}
                 className="input-article border-none"
+                required
             />
         </label>
     );
@@ -51,8 +47,6 @@ export default function ContentForm({
     handleChange,
     handleEditorChange,
 }) {
-    console.log(handleChange);
-    const tinyApi = import.meta.env.VITE_TINY_API_KEY;
     const [categories, setCategories] = useState([]);
 
     const getCategories = async () => {
@@ -62,7 +56,7 @@ export default function ContentForm({
                 setCategories(response.categoryList);
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
@@ -71,13 +65,13 @@ export default function ContentForm({
     }, []);
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-6">
             <div className="flex flex-col md:flex-row justify-between gap-8">
                 <div className="md:w-1/2">
                     <Input
                         label={"Title"}
                         name={"article_title"}
-                        value={articleData ? articleData.article_title : ""}
+                        value={articleData ? articleData.article_title : null}
                         onChange={handleChange}
                     />
                 </div>
@@ -98,7 +92,7 @@ export default function ContentForm({
             <Input
                 label={"Description"}
                 name={"article_desctiption"}
-                value={articleData ? articleData.article_desctiption : ""}
+                value={articleData ? articleData.article_desctiption : null}
                 onChange={handleChange}
             />
 
@@ -116,9 +110,13 @@ export default function ContentForm({
             <label className="flex flex-col">
                 <span className="font-semibold mb-2"> Content </span>
                 <Editor
-                    apiKey={tinyApi}
+                    apiKey={TINY_API_KEY}
                     onEditorChange={handleEditorChange}
-                    value={articleData.article_content}
+                    value={
+                        articleData.article_content
+                            ? articleData.article_content
+                            : null
+                    }
                     init={{
                         height: 500,
                         menubar: false,

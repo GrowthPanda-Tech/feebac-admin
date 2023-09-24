@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ContentForm from "./ContentForm";
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
+import PageTitle from "../PageTitle";
 
 export default function ContentCreate() {
+    const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
     const [articleData, setArticleData] = useState({
         category: {
@@ -62,6 +65,9 @@ export default function ContentCreate() {
             formData
         );
         alert(response.message);
+        if (response.isSuccess) {
+            navigate("/content");
+        }
     };
 
     useEffect(() => {
@@ -69,28 +75,27 @@ export default function ContentCreate() {
     }, []);
 
     return (
-        <>
-            <h1 className="heading"> Create New Article </h1>
+        <div className="flex flex-col gap-8">
+            <PageTitle name={"Create New Article"} />
             <div className="flex gap-8">
                 <div className="w-3/4">
-                    <ContentForm
-                        articleData={articleData}
-                        handleChange={handleChange}
-                        handleEditorChange={handleEditorChange}
-                    />
-                    <button
-                        className="btn-primary w-fit mt-8"
-                        onClick={handleSubmit}
-                    >
-                        <i className="fa-solid fa-floppy-disk mr-2"></i>
-                        Save Draft
-                    </button>
+                    <form onSubmit={handleSubmit}>
+                        <ContentForm
+                            articleData={articleData}
+                            handleChange={handleChange}
+                            handleEditorChange={handleEditorChange}
+                        />
+                        <button className="btn-primary w-fit mt-8">
+                            <i className="fa-solid fa-floppy-disk mr-2"></i>
+                            Save Draft
+                        </button>
+                    </form>
                 </div>
 
                 <div className="w-1/4 h-60 p-4 rounded-xl bg-white flex items-center justify-center">
                     <img src={imgPreview} className="max-h-full max-w-full" />
                 </div>
             </div>
-        </>
+        </div>
     );
 }

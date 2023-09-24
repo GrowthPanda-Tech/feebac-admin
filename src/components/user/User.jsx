@@ -1,49 +1,82 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import makeRequest from "../../utils/makeRequest";
+import PageTitle from "../PageTitle";
 import Table from "../table/Table";
 import Trow from "../table/Trow";
 import Thead from "../table/Thead";
 import Tdata from "../table/Tdata";
 
-export default function User() {
-    const headers = [
-        "User ID",
-        "Gender",
-        "Loyalty Points",
-        "Location",
-        "Actions",
-    ];
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+const HEADERS = ["User ID", "Gender", "Loyalty Points", "Location", "Actions"];
 
+export default function User() {
     const [userData, setUserData] = useState([]);
 
-    const getUserData = async () => {
-        const response = await makeRequest("site-admin/get-all-user", "GET");
-        response.isSuccess
-            ? setUserData(response.data)
-            : alert(response.message);
-    };
-
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        const request = {
+            headers: {
+                authToken: localStorage.getItem("authToken"),
+            },
+            signal,
+        };
+
+        async function getUserData() {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/site-admin/get-all-user`,
+                    request
+                );
+
+                if (response.status >= 500) {
+                    throw new Error(response.status);
+                }
+
+                const json = await response.json();
+
+                if (!json.isSuccess) {
+                    throw new Error(json.message);
+                }
+
+                setUserData(json.data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
         getUserData();
+
+        return () => {
+            controller.abort();
+        };
     }, []);
 
+    console.log(userData);
+
     return (
-        <>
-            <h1 className="heading"> User Information </h1>
+        <div className="flex flex-col gap-8">
+            <PageTitle name={"User Information"} />
             <Table>
-                <Thead headers={headers} />
+                <Thead headers={HEADERS} />
                 <tbody>
                     {userData.map(
-                        ({ user_id, gender, loyalty_points, state }) => (
+                        ({ user_id, gender, loyalty_points, state, city }) => (
                             <Trow key={user_id}>
                                 <Tdata mono>{user_id.split("-").pop()}</Tdata>
                                 <Tdata>{gender ? gender : "-"}</Tdata>
                                 <Tdata>{loyalty_points} </Tdata>
-                                <Tdata>{state ? state : "-"}</Tdata>
+                                <Tdata>
+                                    {state && city
+                                        ? `${city}, ${state}`
+                                        : state
+                                        ? state
+                                        : "-"}
+                                </Tdata>
                                 <Tdata>
                                     <Link to={user_id}>
-                                        <i className="fa-solid fa-circle-info text-2xl text-accent"></i>
+                                        <i className="fa-solid fa-info"></i>
                                     </Link>
                                 </Tdata>
                             </Trow>
@@ -51,6 +84,6 @@ export default function User() {
                     )}
                 </tbody>
             </Table>
-        </>
+        </div>
     );
 }

@@ -1,19 +1,25 @@
-import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import ContentForm from "./ContentForm";
 import makeRequest from "../../utils/makeRequest";
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
+import PageTitle from "../PageTitle";
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function ContentEdit() {
     const { slug } = useParams();
-    const baseUrl = import.meta.env.VITE_BACKEND_URL;
+    const navigate = useNavigate();
 
     const [articleData, setArticleData] = useState({
         category: { category_id: null },
     });
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
-    const [imgUpdate, setImgUpdate] = useState(false);
+    const [imgUpdate, setImgUpdate] = useState({
+        isUpdate: false,
+        articleImg: null,
+    });
 
     const getArticleInfo = async () => {
         const response = await makeRequest(
@@ -26,14 +32,9 @@ export default function ContentEdit() {
     };
 
     const handleChange = (event) => {
-        console.log(event.target.name);
         if (event.target.name === "articleImg") {
             const file = event.target.files[0];
-            setImgUpdate({
-                ...imgUpdate,
-                isUpdateImage: true,
-                articleImg: file,
-            });
+            setImgUpdate({ isUpdate: true, articleImg: file });
 
             if (file) {
                 const reader = new FileReader();
@@ -48,12 +49,6 @@ export default function ContentEdit() {
             ...articleData,
             [event.target.name]: event.target.value,
         });
-        console.log(
-            setArticleData({
-                ...articleData,
-                [event.target.name]: event.target.value,
-            })
-        );
     };
 
     const handleEditorChange = (content) =>
@@ -67,8 +62,9 @@ export default function ContentEdit() {
         formData.append("articleDesctiption", articleData.article_desctiption);
         formData.append("articleContent", articleData.article_content);
         formData.append("category", articleData.category);
-        formData.append("isUpdateImage", imgUpdate);
-        if (imgUpdate) {
+        formData.append("isUpdateImage", imgUpdate.isUpdate);
+
+        if (imgUpdate.isUpdate) {
             formData.append(
                 "articleImg",
                 imgUpdate.articleImg,
@@ -82,19 +78,21 @@ export default function ContentEdit() {
             "PUT",
             formData
         );
-        response.isSuccess ? alert("Article Edited") : alert(response.message);
+
+        alert(response.message);
+
+        if (response.isSuccess) {
+            navigate("/content");
+        }
     };
 
     useEffect(() => {
         getArticleInfo();
-        setImgPreview(baseUrl + articleData.image_url);
     }, []);
 
-    console.log(articleData);
-
     return (
-        <>
-            <h1 className="heading"> Edit Article </h1>
+        <div className="flex flex-col gap-8">
+            <PageTitle name={"Edit Article"} />
             <div className="flex flex-col-reverse md:flex-row gap-8">
                 <div className="md:w-3/4">
                     <ContentForm
@@ -116,13 +114,13 @@ export default function ContentEdit() {
                     <img
                         src={
                             articleData.image_url
-                                ? baseUrl + articleData.image_url
+                                ? BASE_URL + articleData.image_url
                                 : imgPreview
                         }
                         className="max-h-full max-w-full"
                     />
                 </div>
             </div>
-        </>
+        </div>
     );
 }

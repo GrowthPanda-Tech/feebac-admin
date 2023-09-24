@@ -7,6 +7,9 @@ import Table from "../table/Table";
 import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
+import PageTitle from "../PageTitle";
+
+const HEADERS = ["Title", "Category", "Start Date", "End Date", "Status"];
 
 function Input({ value }) {
     return (
@@ -29,37 +32,38 @@ function Label({ name, children }) {
 
 export default function UserInfo() {
     const { slug } = useParams();
-    const headers = ["Title", "Category", "Start Date", "End Date", "Status"];
 
     const [userInfo, setUserInfo] = useState({});
     const [surveyList, setSurveyList] = useState([]);
 
-    const getUserInfo = async () => {
-        try {
-            const response = await makeRequest(
-                `site-admin/get-user-info?userId=${slug}`,
-                "GET"
-            );
-            if (response.isSuccess) {
-                setUserInfo(response.data.userInfo);
-                setSurveyList(response.data.surveyList);
-            }
-        } catch (error) {
-            // TODO: Handle error more intelligently
-            console.error(error);
-        }
-    };
-
-    console.log(surveyList);
-
     useEffect(() => {
+        let ignore = false;
+
+        async function getUserInfo() {
+            try {
+                const response = await makeRequest(
+                    `site-admin/get-user-info?userId=${slug}`
+                );
+                if (!response.isSuccess) {
+                    throw new Error(response.message);
+                }
+                if (!ignore) {
+                    setUserInfo(response.data.userInfo);
+                    setSurveyList(response.data.surveyList);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
         getUserInfo();
+
+        return () => (ignore = true);
     }, []);
 
-    //TODO: Refactor
     return (
         <>
-            <h1 className="heading text-secondary border-b border-b-light-grey pb-8">
+            <h1 className="text-2xl font-semibold mb-8 text-secondary border-b border-b-light-grey pb-8">
                 {slug}
             </h1>
 
@@ -67,7 +71,7 @@ export default function UserInfo() {
                 <div className="flex justify-between">
                     {/* Info card */}
                     <div className="flex flex-col gap-6 bg-white rounded-xl p-10 w-8/12">
-                        <h1 className="heading mb-0"> Personal Information </h1>
+                        <PageTitle name={"Personal Information"} />
                         <Label name={"Gender"}>
                             <Input value={userInfo.gender} />
                         </Label>
@@ -104,14 +108,13 @@ export default function UserInfo() {
                 {/* Participated Surveys Table */}
                 <div className="bg-white rounded-xl">
                     <div className="p-7 text-xl font-semibold border-b border-b-light-grey flex gap-4">
-                        <span>No. of Participated Surveys</span>
+                        <PageTitle name={"Participated Surveys"} />
                         <span className="bg-secondary rounded-full text-white w-8 h-8 flex items-center justify-center">
                             {surveyList.length}
                         </span>
                     </div>
                     <Table>
-                        <Thead headers={headers} />
-
+                        <Thead headers={HEADERS} />
                         <tbody>
                             {surveyList.map((survey) => (
                                 <Trow key={survey.survey_id}>

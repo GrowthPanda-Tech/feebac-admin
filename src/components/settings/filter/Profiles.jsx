@@ -1,44 +1,11 @@
-import { useState, useEffect } from "react";
 import Filter from "./Filter";
-import makeRequest from "../../../utils/makeRequest";
 
-export default function Profiles() {
-    //TODO: Can I cache this?
-    const [profiles, setProfiles] = useState([]);
-
-    const getProfiles = async () => {
-        const response = await makeRequest(
-            "config/get-profile-key-value",
-            "GET"
-        );
-        response.isSuccess
-            ? setProfiles(response.data)
-            : alert(response.message);
-    };
-
-    useEffect(() => {
-        getProfiles();
-    }, []);
-
+export default function Profiles({ tertiaryKeys }) {
     return (
-        <>
-            {profiles.map((profile) => (
-                <div className="mb-8" key={profile.id}>
-                    <h1 className="text-xl mb-4 font-medium">
-                        {profile.dataType} Filters
-                    </h1>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {profile.key.map((filter) => (
-                            <Filter
-                                key={filter.id}
-                                dataTypeId={profile.id}
-                                filter={filter}
-                            />
-                        ))}
-                    </div>
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {tertiaryKeys.map((filter) => (
+                <Filter key={filter.id} dataTypeId={6} filter={filter} />
             ))}
-        </>
+        </div>
     );
 }

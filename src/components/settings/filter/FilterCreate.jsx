@@ -1,32 +1,66 @@
-import { useState } from "react";
-import makeRequest from "../../../utils/makeRequest";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-export default function FilterCreate({ setIsShowFilterCreate }) {
-    const [filterType, setFilterType] = useState({});
+function Label({ name, children }) {
+    return (
+        <label className="flex flex-col">
+            <span className="font-medium text-lg mb-2"> {name} </span>
+            {children}
+        </label>
+    );
+}
 
-    const onChange = (event) => setFilterType({ name: event.target.value });
-
+export default function FilterCreate({
+    filterVals,
+    setFilterVals,
+    setTertiaryKeys,
+    setIsShowFilterCreate,
+}) {
     const handleSubmit = async () => {
-        const response = await makeRequest(
-            "config/add-data-type",
-            "POST",
-            filterType
-        );
-        alert(response.message);
-        response.isSuccess && setIsShowFilterCreate(false);
+        const request = {
+            method: "POST",
+            headers: {
+                authToken: localStorage.getItem("authToken"),
+            },
+            body: JSON.stringify(filterVals),
+        };
+
+        try {
+            const response = await fetch(
+                `${BASE_URL}/config/add-profile-key-value`,
+                request
+            );
+
+            if (response.status >= 500) {
+                throw new Error(response.status);
+            }
+
+            const json = await response.json();
+
+            if (!json.isSuccess) {
+                throw new Error(json.message);
+            }
+
+            setIsShowFilterCreate(false);
+            setTertiaryKeys((prev) => [...prev, json.data]);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
-        <div className="p-10 bg-white rounded-md flex flex-col gap-6 mb-6">
-            <label className="flex flex-col">
-                <span className="heading mb-4 text-lg">
-                    Profile type (Primary, Secondary, etc..)
-                </span>
+        <div className="p-10 bg-white rounded-md flex flex-col gap-6">
+            <Label name={"Filter Name"}>
                 <input
-                    onChange={onChange}
-                    className="border border-[#C9CED6] rounded-md py-4 px-6"
+                    name="name"
+                    className="input-settings"
+                    onChange={(event) =>
+                        setFilterVals({
+                            ...filterVals,
+                            name: event.target.value,
+                        })
+                    }
                 />
-            </label>
+            </Label>
 
             <div className="flex gap-4">
                 <button className="btn-primary" onClick={handleSubmit}>

@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import makeRequest from "../../utils/makeRequest";
+
 import Table from "../table/Table";
 import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import MyResponsiveBar from "./Databar";
+import PageTitle from "../PageTitle";
 
-function Button({ type, setUrl, isActive, onClick }) {
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+const HEADERS = ["Title", "Category", "Start Date", "End Date", "Actions"];
+
+function Button({ type, setStatus, isActive, onClick }) {
     const handleClick = () => {
-        setUrl(type);
+        setStatus(type);
         onClick();
     };
 
@@ -25,7 +30,7 @@ function Button({ type, setUrl, isActive, onClick }) {
     );
 }
 
-function ButtonComponent({ setUrl }) {
+function ButtonComponent({ setStatus }) {
     const [activeButton, setactiveButton] = useState(1);
     const handleClick = (buttonId) => setactiveButton(buttonId);
 
@@ -33,19 +38,19 @@ function ButtonComponent({ setUrl }) {
         <div className="flex gap-4">
             <Button
                 type={"live"}
-                setUrl={setUrl}
+                setStatus={setStatus}
                 isActive={activeButton === 1}
                 onClick={() => handleClick(1)}
             />
             <Button
                 type={"upcoming"}
-                setUrl={setUrl}
+                setStatus={setStatus}
                 isActive={activeButton === 2}
                 onClick={() => handleClick(2)}
             />
             <Button
                 type={"expired"}
-                setUrl={setUrl}
+                setStatus={setStatus}
                 isActive={activeButton === 3}
                 onClick={() => handleClick(3)}
             />
@@ -55,33 +60,58 @@ function ButtonComponent({ setUrl }) {
 
 export default function Survey() {
     const [surveyData, setsurveyData] = useState([]);
-    const [url, setUrl] = useState("live");
+    const [status, setStatus] = useState("live");
 
-    const headers = [
-        "Title",
-        "Category",
-        "Start Date",
-        "End Date",
-        "Timings",
-        "Actions",
-    ];
-
-    const fetchSurveyData = async () => {
-        const response = await makeRequest(
-            `site-admin/get-all-survey?time=${url}`,
-            "GET"
-        );
-        setsurveyData(response.data);
+    const convertToLocal = (date) => {
+        const dateObj = new Date(`${date} UTC`);
+        return dateObj.toLocaleString();
     };
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        const request = {
+            signal,
+            headers: {
+                authToken: localStorage.getItem("authToken"),
+            },
+        };
+
+        async function fetchSurveyData() {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/site-admin/get-all-survey?time=${status}`,
+                    request
+                );
+
+                if (!response.ok) {
+                    throw new Error(response.status);
+                }
+
+                const json = await response.json();
+
+                if (!json.isSuccess) {
+                    throw new Error(json.message);
+                }
+
+                setsurveyData(json.data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
         fetchSurveyData();
-    }, [url]);
+
+        return () => {
+            controller.abort();
+        };
+    }, [status]);
 
     return (
         <div className="flex flex-col gap-8">
             <div className="w-full gap-20 flex justify-between">
                 <div className="w-1/2 flex flex-col ">
-                    <h2 className="heading mb-0">Survey Response Metrics</h2>
+                    <PageTitle name={"Survey Response Metrics"} />
                     <div className="bg-[#EA525F] mt-6 p-10 rounded-lg items-center w-full flex flex-col gap-16 text-white">
                         <div className="flex flex-col text-center w-full">
                             <h2 className="text-5xl p-2">0</h2>
@@ -100,16 +130,13 @@ export default function Survey() {
                     </div>
                 </div>
                 <div className="w-1/2 flex flex-col">
-                    <h2 className="heading mb-0">
-                        Audience Demographic By Gender
-                        <div className="h-[40vh]">
-                            <MyResponsiveBar />
-                        </div>
-                    </h2>
+                    <PageTitle name={"Audience Demographic By Gender"} />
+                    <MyResponsiveBar />
                 </div>
             </div>
+
             <div className="flex justify-between items-center">
-                <h1 className="heading mb-0"> Survey List </h1>
+                <PageTitle name={"Survey List"} />
                 <Link to={"/survey/create"} className="w-fit">
                     <button className="btn-primary">
                         <i className="fa-solid fa-plus"></i>
@@ -118,10 +145,10 @@ export default function Survey() {
                 </Link>
             </div>
 
-            <ButtonComponent setUrl={setUrl} />
+            <ButtonComponent setStatus={setStatus} />
 
             <Table>
-                <Thead headers={headers} />
+                <Thead headers={HEADERS} />
                 <tbody>
                     {surveyData.map(
                         ({
@@ -134,21 +161,16 @@ export default function Survey() {
                             <Trow key={survey_id}>
                                 <Tdata left> {survey_title} </Tdata>
                                 <Tdata capitalize> {category} </Tdata>
-                                <Tdata mono>{start_date.split(" ")[0]}</Tdata>
-                                <Tdata mono>{end_date.split(" ")[0]}</Tdata>
-                                <Tdata mono>
-                                    {`${start_date.split(" ")[1]} - ${
-                                        end_date.split(" ")[1]
-                                    }`}
-                                </Tdata>
+                                <Tdata mono>{convertToLocal(start_date)}</Tdata>
+                                <Tdata mono>{convertToLocal(end_date)}</Tdata>
                                 <Tdata>
-                                    <div className="flex justify-evenly">
+                                    <div className="flex justify-center gap-6 text-xl">
                                         <Link to={`details/${survey_id}`}>
-                                            <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
+                                            <i className="fa-solid fa-square-poll-horizontal"></i>
                                         </Link>
-                                        <Link to={`edit-survey/${survey_id}`}>
-                                            <i className="fa-solid fa-pen-to-square text-xl"></i>
-                                        </Link>
+                                        {/* <Link to={`review/${survey_id}`}> */}
+                                        {/*     <i className="fa-solid fa-pen-to-square"></i> */}
+                                        {/* </Link> */}
                                     </div>
                                 </Tdata>
                             </Trow>

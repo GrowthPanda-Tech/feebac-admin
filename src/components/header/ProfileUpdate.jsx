@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import ProfileForm from "./ProfileForm";
 
 function ProfileUpdate() {
-    const baseUrl = import.meta.env.VITE_BACKEND_URL;
+    const baseUrl = import.meta.env.VITE_BASE_URL;
     const [userData, setUserData] = useState();
     const [show, setShow] = useState(false);
     const getAdminInfo = async () => {

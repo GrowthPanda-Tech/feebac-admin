@@ -17,7 +17,6 @@ function ToggleButton({ surveyInfo, surveyId }) {
             "PATCH",
             body
         );
-        alert(response.message);
         if (response.isSuccess) setIsPublic(!isPublic);
     };
 

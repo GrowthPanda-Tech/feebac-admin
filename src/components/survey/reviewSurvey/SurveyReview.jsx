@@ -48,7 +48,7 @@ export default function SurveyReview() {
             body
         );
         alert(response.message);
-        // location.replace("/survey");
+        location.replace("/survey");
     };
 
     const handlePublic = async () => {

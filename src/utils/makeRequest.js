@@ -1,5 +1,5 @@
 export default async function makeRequest(route, method, body = null) {
-    const baseUrl = import.meta.env.VITE_BACKEND_URL;
+    const baseUrl = import.meta.env.VITE_BASE_URL;
 
     const request = {
         method,

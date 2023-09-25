@@ -1,6 +1,6 @@
 export default async function formSubmit(event, route, method, body) {
     event.preventDefault();
-    const baseUrl = import.meta.env.VITE_BACKEND_URL;
+    const baseUrl = import.meta.env.VITE_BASE_URL;
 
     const req = {
         method,

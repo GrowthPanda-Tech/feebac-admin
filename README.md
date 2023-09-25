@@ -20,7 +20,7 @@ Create an api key for [TinyMCE](https://www.tiny.cloud/auth/signup/) editor.
 Create a .env file in the project root and add the following to it
 
 ```bash
-VITE_BACKEND_URL=your_server_url
+VITE_BASE_URL=your_server_url
 VITE_TINY_API_KEY=your_tiny_api_key
 ```
 

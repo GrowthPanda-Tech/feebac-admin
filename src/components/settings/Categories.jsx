@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import makeRequest from "../../utils/makeRequest";
 
 export default function Categories() {
-    const baseUrl = import.meta.env.VITE_BACKEND_URL;
+    const baseUrl = import.meta.env.VITE_BASE_URL;
     const [categories, setCategories] = useState([]);
 
     const getCategories = async () => {

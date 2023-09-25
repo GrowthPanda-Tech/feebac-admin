@@ -24,7 +24,7 @@ function InputForm({ label, name, value, onChange }) {
 function ProfileForm({ setShow, show, userData, setUserData }) {
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
     const [imgUpdate, setImgUpdate] = useState();
-    const baseUrl = import.meta.env.VITE_BACKEND_URL;
+    const baseUrl = import.meta.env.VITE_BASE_URL;
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     const [updatedData, setUpdatedData] = useState({ ...userData });
     const [isUpdateImage, setIsUpdateImage] = useState(false);

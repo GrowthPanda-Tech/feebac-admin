@@ -5,7 +5,7 @@ import makeRequest from "../../utils/makeRequest";
 
 export default function Header() {
     const [userInfo, setUserInfo] = useState();
-    const baseUrl = import.meta.env.VITE_BACKEND_URL;
+    const baseUrl = import.meta.env.VITE_BASE_URL;
     const getAdminInfo = async () => {
         try {
             const response = await makeRequest(`profile/`, "GET");

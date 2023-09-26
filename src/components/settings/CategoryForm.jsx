@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { CategoryContext } from "../../contexts/CategoryContext";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import formSubmit from "../../utils/formSubmit";
 
-export default function CategoryForm({
-    setIsShowCategoryCreate,
-    setCategories,
-}) {
+export default function CategoryForm({ setIsShowCategoryCreate }) {
     const [newCategory, setNewCategory] = useState({});
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
+
+    const { categories, setCategories } = useContext(CategoryContext);
 
     const onChange = (event) => {
         if (event.target.name === "categoryName") {
@@ -47,16 +47,15 @@ export default function CategoryForm({
             formdata
         );
 
-        // TODO: Certainly need to use context for this
-        // if (response.isSuccess) {
-        //     const newCategories = categories.slice();
-        //     newCategories.push(response.data);
-        //     setCategories(newCategories);
-        //     setIsShowForm(false);
-        //     return;
-        // }
-
         alert(response.message);
+
+        if (response.isSuccess) {
+            const newCategories = categories.slice();
+            newCategories.push(response.data);
+            setCategories(newCategories);
+            setIsShowCategoryCreate(false);
+            return;
+        }
     };
 
     return (

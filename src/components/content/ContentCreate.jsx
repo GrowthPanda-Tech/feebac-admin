@@ -1,27 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ContentForm from "./ContentForm";
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
+import ContentForm from "./ContentForm";
 import PageTitle from "../PageTitle";
 import AlertComponent from "../AlertComponent/AlertComponent";
 
 export default function ContentCreate() {
     const navigate = useNavigate();
-    const [categories, setCategories] = useState([]);
     const [articleData, setArticleData] = useState({
         category: {
             category_id: null,
         },
     });
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
-
-    const getCategories = async () => {
-        const response = await makeRequest("site-admin/get-all-category");
-        if (response.isSuccess) {
-            setCategories(response.categoryList);
-        }
-    };
 
     const handleChange = (event) => {
         if (event.target.name === "articleImg") {
@@ -80,10 +72,6 @@ export default function ContentCreate() {
             AlertComponent("error", error);
         }
     };
-
-    useEffect(() => {
-        getCategories();
-    }, []);
 
     return (
         <div className="flex flex-col gap-8">

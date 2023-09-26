@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { CategoryContext } from "../../contexts/CategoryContext";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import formSubmit from "../../utils/formSubmit";
 import AlertComponent from "../AlertComponent/AlertComponent";
 
-export default function CategoryForm({
-    setIsShowCategoryCreate,
-    setCategories,
-}) {
+export default function CategoryForm({ setIsShowCategoryCreate }) {
     const [newCategory, setNewCategory] = useState({});
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
+
+    const { categories, setCategories } = useContext(CategoryContext);
 
     const onChange = (event) => {
         if (event.target.name === "categoryName") {
@@ -48,20 +48,19 @@ export default function CategoryForm({
                 "POST",
                 formdata
             );
-            if (response.isSuccess) AlertComponent("success", response);
+            if (response.isSuccess){ 
+              AlertComponent("success", response);
+              const newCategories = categories.slice();
+              newCategories.push(response.data);
+              setCategories(newCategories);
+              setIsShowCategoryCreate(false);
+              return;
+            }
             else AlertComponent("failed", response);
         } catch (error) {
             AlertComponent("error", error);
         }
-
-        // TODO: Certainly need to use context for this
-        // if (response.isSuccess) {
-        //     const newCategories = categories.slice();
-        //     newCategories.push(response.data);
-        //     setCategories(newCategories);
-        //     setIsShowForm(false);
-        //     return;
-        // }
+          
     };
 
     return (

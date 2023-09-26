@@ -1,6 +1,7 @@
 import { useState } from "react";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import formSubmit from "../../utils/formSubmit";
+import AlertComponent from "../AlertComponent/AlertComponent";
 
 export default function CategoryForm({
     setIsShowCategoryCreate,
@@ -32,20 +33,26 @@ export default function CategoryForm({
     };
 
     const handleSubmit = async (event) => {
-        const formdata = new FormData();
-        formdata.append("categoryName", newCategory.categoryName);
-        formdata.append(
-            "categoryImg",
-            newCategory.categoryImg,
-            newCategory.categoryImg.name
-        );
+        try {
+            const formdata = new FormData();
+            formdata.append("categoryName", newCategory.categoryName);
+            formdata.append(
+                "categoryImg",
+                newCategory.categoryImg,
+                newCategory.categoryImg.name
+            );
 
-        const response = await formSubmit(
-            event,
-            "site-admin/add-category",
-            "POST",
-            formdata
-        );
+            const response = await formSubmit(
+                event,
+                "site-admin/add-category",
+                "POST",
+                formdata
+            );
+            if (response.isSuccess) AlertComponent("success", response);
+            else AlertComponent("failed", response);
+        } catch (error) {
+            AlertComponent("error", error);
+        }
 
         // TODO: Certainly need to use context for this
         // if (response.isSuccess) {
@@ -55,8 +62,6 @@ export default function CategoryForm({
         //     setIsShowForm(false);
         //     return;
         // }
-
-        alert(response.message);
     };
 
     return (

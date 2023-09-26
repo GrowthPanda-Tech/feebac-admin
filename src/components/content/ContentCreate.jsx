@@ -4,6 +4,7 @@ import ContentForm from "./ContentForm";
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import PageTitle from "../PageTitle";
+import AlertComponent from "../AlertComponent/AlertComponent";
 
 export default function ContentCreate() {
     const navigate = useNavigate();
@@ -46,27 +47,37 @@ export default function ContentCreate() {
         setArticleData({ ...articleData, article_content: content });
 
     const handleSubmit = async (event) => {
-        const formData = new FormData();
-        formData.append("articleTitle", articleData.article_title);
-        formData.append("articleDesctiption", articleData.article_desctiption);
-        formData.append("articleContent", articleData.article_content);
-        formData.append("category", articleData.category);
-        articleData.articleImg &&
+        try {
+            const formData = new FormData();
+            formData.append("articleTitle", articleData.article_title);
             formData.append(
-                "articleImg",
-                articleData.articleImg,
-                articleData.articleImg.name
+                "articleDesctiption",
+                articleData.article_desctiption
+            );
+            formData.append("articleContent", articleData.article_content);
+            formData.append("category", articleData.category);
+            articleData.articleImg &&
+                formData.append(
+                    "articleImg",
+                    articleData.articleImg,
+                    articleData.articleImg.name
+                );
+
+            const response = await formSubmit(
+                event,
+                "site-admin/create-article",
+                "POST",
+                formData
             );
 
-        const response = await formSubmit(
-            event,
-            "site-admin/create-article",
-            "POST",
-            formData
-        );
-        alert(response.message);
-        if (response.isSuccess) {
-            navigate("/content");
+            if (response.isSuccess) {
+                AlertComponent("success", response);
+                setTimeout(() => {
+                    navigate("/content");
+                }, 3200);
+            } else AlertComponent("failed", response);
+        } catch (error) {
+            AlertComponent("error", error);
         }
     };
 

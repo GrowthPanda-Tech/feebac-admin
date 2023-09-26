@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import makeRequest from "../../../utils/makeRequest";
 import { useParams } from "react-router-dom";
 import downArrow from "../../../assets/iconamoon_arrow-down-2-light.svg";
+import AlertComponent from "../../AlertComponent/AlertComponent";
 
 function Input({ type, name, value, onChange }) {
     return (
@@ -91,32 +92,38 @@ export default function EditQuestion({
     };
 
     const handleQuestionSubmit = async () => {
-        const response = await makeRequest(
-            "survey/update-question",
-            "PUT",
-            updatedQuestionData
-        );
-        alert(response.message);
+        try {
+            const response = await makeRequest(
+                "survey/update-question",
+                "PUT",
+                updatedQuestionData
+            );
+            setOptions(["", ""]);
+            setUpdatedQuestionData({
+                surveyId: surveyId,
+                questionType: 2,
+            });
+            setEditPop(false);
 
-        setOptions(["", ""]);
-        setUpdatedQuestionData({
-            surveyId: surveyId,
-            questionType: 2,
-        });
-        setEditPop(false);
-
-        if (response.isSuccess) {
-            const getData = async () => {
-                const response = await makeRequest(
-                    `survey/show-survey?sid=${slug}`,
-                    "GET"
-                );
-                if (response.isSuccess) {
-                    setQuestionList(response.questionList);
-                    setSurveyInfo(response.surveyInfo);
-                }
-            };
-            getData();
+            if (response.isSuccess) {
+                AlertComponent("success", response);
+                const getData = async () => {
+                    const response = await makeRequest(
+                        `survey/show-survey?sid=${slug}`,
+                        "GET"
+                    );
+                    if (response.isSuccess) {
+                        setQuestionList(response.questionList);
+                        setSurveyInfo(response.surveyInfo);
+                    }
+                };
+                getData();
+            } else {
+                AlertComponent("failed", response);
+            }
+        } catch (error) {
+            if (error >= 500)
+                AlertComponent("error", "", "Server Error Try Again Later");
         }
     };
     useEffect(() => {

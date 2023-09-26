@@ -1,3 +1,5 @@
+import AlertComponent from "../../AlertComponent/AlertComponent";
+
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function Label({ name, children }) {
@@ -35,6 +37,7 @@ export default function FilterCreate({
             }
 
             const json = await response.json();
+            console.log(json);
 
             if (!json.isSuccess) {
                 throw new Error(json.message);
@@ -43,7 +46,7 @@ export default function FilterCreate({
             setIsShowFilterCreate(false);
             setTertiaryKeys((prev) => [...prev, json.data]);
         } catch (error) {
-            console.error(error);
+            AlertComponent("error", error);
         }
     };
 

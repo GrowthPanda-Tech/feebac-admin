@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 // import { questionReducer, INIT_STATE } from "../../../reducers/questionReducer";
 import makeRequest from "../../../utils/makeRequest";
 import PageTitle from "../../PageTitle";
+import AlertComponent from "../../AlertComponent/AlertComponent";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -195,12 +196,15 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                 "POST",
                 questionData
             );
-
-            if (!response.isSuccess) {
-                throw new Error(response.message);
+            console.log(response);
+            if (response.isSuccess) {
+                AlertComponent("success", response);
+            } else {
+                AlertComponent("failed", response);
             }
         } catch (error) {
-            console.error(error);
+            if (error >= 500) console.log("hii");
+            AlertComponent("error", {}, "something has gone wrong");
         }
 
         setOptions(initOptions);

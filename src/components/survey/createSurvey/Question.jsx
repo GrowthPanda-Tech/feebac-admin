@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import makeRequest from "../../../utils/makeRequest";
 import { Link, useParams } from "react-router-dom";
 import downArrow from "../../../assets/iconamoon_arrow-down-2-light.svg";
+import AlertComponent from "../../AlertComponent/AlertComponent";
 
 function Input({ type, name, value, onChange, disabled }) {
     return (
@@ -82,42 +83,51 @@ export default function Question({
 
     const handleQuestionSubmit = async () => {
         if (editAdd) {
-            const response = await makeRequest(
-                "survey/add-question",
-                "POST",
-                questionData
-            );
-            alert(response.message);
-            if (response.isSuccess) {
-                const getData = async () => {
-                    const response = await makeRequest(
-                        `survey/show-survey?sid=${slug}`,
-                        "GET"
-                    );
-                    if (response.isSuccess) {
-                        setQuestionList(response.questionList);
-                        setSurveyInfo(response.surveyInfo);
-                    }
-                };
-                getData();
+            try {
+                const response = await makeRequest(
+                    "survey/add-question",
+                    "POST",
+                    questionData
+                );
+                if (response.isSuccess) {
+                    AlertComponent("success", response);
+                    const getData = async () => {
+                        const response = await makeRequest(
+                            `survey/show-survey?sid=${slug}`,
+                            "GET"
+                        );
+                        if (response.isSuccess) {
+                            setQuestionList(response.questionList);
+                            setSurveyInfo(response.surveyInfo);
+                        }
+                    };
+                    getData();
+                } else AlertComponent("failed", response);
+
+                setQuestionAddPop(false);
+            } catch (error) {
+                AlertComponent("error", "", "Server Error");
             }
-            setQuestionAddPop(false);
         } else {
-            const response = await makeRequest(
-                "survey/add-question",
-                "POST",
-                questionData
-            );
-            alert(response.message);
+            try {
+                const response = await makeRequest(
+                    "survey/add-question",
+                    "POST",
+                    questionData
+                );
+                alert(response.message);
 
-            questions.push(questionData);
+                questions.push(questionData);
 
-            setOptions(["", ""]);
-            setQuestionData({
-                surveyId: surveyId,
-                questionType: 2,
-            });
-            setQuestionNumber(questionNumber + 1);
+                setOptions(["", ""]);
+                setQuestionData({
+                    surveyId: surveyId,
+                    questionType: 2,
+                });
+                setQuestionNumber(questionNumber + 1);
+            } catch (error) {
+                AlertComponent("error", "", "Server Error");
+            }
         }
     };
 

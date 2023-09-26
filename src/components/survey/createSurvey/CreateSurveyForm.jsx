@@ -4,6 +4,8 @@ import makeRequest from "../../../utils/makeRequest";
 import convertToUTC from "../../../utils/convertToUTC";
 import formSubmit from "../../../utils/formSubmit";
 import PageTitle from "../../PageTitle";
+import { useContext } from "react";
+import { CategoryContext } from "../../../contexts/CategoryContext";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -68,7 +70,6 @@ export default function CreateSurveyForm({
     setSurveyTitle,
     setIsSurveyCreate,
 }) {
-    const [categories, setCategories] = useState([]);
     const [filters, setFilters] = useState([]);
     const [isShowFilter, setIsShowFilter] = useState(false);
     const [surveyData, setSurveyData] = useState([]);
@@ -76,13 +77,7 @@ export default function CreateSurveyForm({
     const [userCount, setUserCount] = useState(0);
     const [filterdUserCount, setFilteredUserCount] = useState(0);
 
-    const getCategories = async () => {
-        const response = await makeRequest(
-            "site-admin/get-all-category",
-            "GET"
-        );
-        response.isSuccess && setCategories(response.categoryList);
-    };
+    const { categories } = useContext(CategoryContext);
 
     const getFilters = async () => {
         const response = await makeRequest(
@@ -147,7 +142,6 @@ export default function CreateSurveyForm({
     };
 
     useEffect(() => {
-        getCategories();
         getFilters();
         getUserCount();
     }, []);

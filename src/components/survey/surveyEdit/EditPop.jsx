@@ -1,5 +1,5 @@
 import React from "react";
-import EditQuestion from "./editQuestion";
+import EditQuestion from "./EditQuestion";
 import { useState } from "react";
 
 function EditPop({

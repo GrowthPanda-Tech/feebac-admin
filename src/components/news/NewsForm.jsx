@@ -69,7 +69,7 @@ export default function NewsForm({ newsData, handleChange }) {
             </label>
 
             <label className="flex flex-col">
-                <span className="font-semibold mb-2"> Image (Optional) </span>
+                <span className="font-semibold mb-2"> Image </span>
                 <input
                     name="newsImage"
                     type="file"

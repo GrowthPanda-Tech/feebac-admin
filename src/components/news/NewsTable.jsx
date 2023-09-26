@@ -69,7 +69,7 @@ export default function NewsTable() {
                             <Tdata mono>{news.createDate.split(" ")[0]}</Tdata>
                             <Tdata>
                                 <div className="flex justify-center gap-5">
-                                    <Link to={news.newsUrl}>
+                                    <Link to={news.newsUrl} target="_blank">
                                         <img src={link} />
                                     </Link>
                                     <Link to={"edit"}>

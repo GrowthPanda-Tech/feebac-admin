@@ -1,50 +1,32 @@
-export const PieData = [
+export const UserData = [
     {
-        name: "Survey Data",
-        color: "red_blue",
-        data: [
-            {
-                id: "Public Survey",
-                label: "Public Survey",
-                value: 0,
-            },
-            {
-                id: "Total Survey",
-                label: "Total Survey",
-                value: 100,
-            },
-        ],
+        id: 1,
+        year: 2016,
+        userGain: 80000,
+        userLost: 823,
     },
     {
-        name: "loyalty Point Data",
-        color: "blue_purple",
-        data: [
-            {
-                id: "Total Loyalty Point",
-                label: "Total Loyalty Point",
-                value: 0,
-            },
-            {
-                id: "Used Loyalty Point",
-                label: "Used Loyalty Point",
-                value: 100,
-            },
-        ],
+        id: 2,
+        year: 2017,
+        userGain: 45677,
+        userLost: 345,
     },
     {
-        name: "Article Data",
-        color: "yellow_orange_brown",
-        data: [
-            {
-                id: "Public Articles",
-                label: "Public Articles",
-                value: 0,
-            },
-            {
-                id: "Total Articles",
-                label: "Total Articles",
-                value: 100,
-            },
-        ],
+        id: 3,
+        year: 2018,
+        userGain: 78888,
+        userLost: 555,
+    },
+    {
+        id: 4,
+        year: 2019,
+        userGain: 90000,
+        userLost: 4555,
+    },
+    {
+        id: 5,
+        year: 2020,
+        userGain: 4300,
+        userLost: 234,
     },
 ];

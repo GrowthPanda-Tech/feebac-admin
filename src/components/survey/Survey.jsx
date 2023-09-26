@@ -129,10 +129,10 @@ export default function Survey() {
                         </div>
                     </div>
                 </div>
-                <div className="w-1/2 flex flex-col">
+                {/* <div className="w-1/2 flex flex-col">
                     <PageTitle name={"Audience Demographic By Gender"} />
                     <MyResponsiveBar />
-                </div>
+                </div> */}
             </div>
 
             <div className="flex justify-between items-center">

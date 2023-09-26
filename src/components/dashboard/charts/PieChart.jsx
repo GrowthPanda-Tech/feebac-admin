@@ -1,57 +1,31 @@
 import React from "react";
-import { ResponsivePie } from "@nivo/pie";
-// import { mockPieData as data } from "../charts/mockData";
-function PieChart({ value }) {
+import { Doughnut } from "react-chartjs-2";
+import { Chart as chartJS } from "chart.js/auto";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+
+function PieChart({ chartData }) {
+    let option = {
+        plugins: {
+            legend: {
+                position: "right",
+                labels: {
+                    usePointStyle: true,
+                    pointStyle: "circle",
+                },
+            },
+        },
+    };
+
+    console.log(chartData.datasets[0].label);
     return (
-        <>
-            <div className="flex  flex-col m-2 bg-white">
-                <h1 className="text-2xl p-6 capitalize">{value.name}</h1>
-                <ResponsivePie
-                    data={value.data}
-                    margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-                    innerRadius={0.5}
-                    padAngle={0.7}
-                    cornerRadius={3}
-                    activeOuterRadiusOffset={8}
-                    borderWidth={1}
-                    colors={{ scheme: value.color }}
-                    borderColor={{
-                        from: "color",
-                        modifiers: [["darker", 0.2]],
-                    }}
-                    arcLinkLabelsSkipAngle={10}
-                    arcLinkLabelsTextColor="#333333"
-                    arcLinkLabelsThickness={2}
-                    arcLinkLabelsColor={{ from: "color" }}
-                    arcLabelsSkipAngle={10}
-                    arcLabelsTextColor={{
-                        from: "color",
-                        modifiers: [["darker", 2]],
-                    }}
-                    defs={[
-                        {
-                            id: "dots",
-                            type: "patternDots",
-                            background: "inherit",
-                            color: "rgba(255, 255, 255, 0.3)",
-                            size: 4,
-                            padding: 1,
-                            stagger: true,
-                        },
-                        {
-                            id: "lines",
-                            type: "patternLines",
-                            background: "inherit",
-                            color: "rgba(255, 255, 255, 0.3)",
-                            rotation: -45,
-                            lineWidth: 6,
-                            spacing: 10,
-                        },
-                    ]}
-                    legends={[]}
-                />
+        <div className="flex flex-col">
+            <h1 className="text-2xl font-semibold p-8">
+                {chartData.datasets[0].label}
+            </h1>
+            <div className=" w-96">
+                <Doughnut data={chartData} options={option} />
             </div>
-        </>
+        </div>
     );
 }
 

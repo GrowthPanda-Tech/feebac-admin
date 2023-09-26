@@ -42,7 +42,7 @@ function ProfileUpdate() {
                             </span>
                             <div className="w-full p-8 mx-2 flex justify-center">
                                 <img
-                                    className="rounded-full border-double border-4 border-[#A43948]"
+                                    className="rounded-full border-double h-56 w-56 border-4 border-[#A43948]"
                                     src={baseUrl + userData.profile_pic}
                                     alt=""
                                 />

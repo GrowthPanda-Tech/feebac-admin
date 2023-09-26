@@ -29,7 +29,7 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
     const [updatedData, setUpdatedData] = useState({ ...userData });
     const [isUpdateImage, setIsUpdateImage] = useState(false);
 
-    const handleSubmit = async (event) => {
+    const handleImageSubmit = async (event) => {
         if (isUpdateImage) {
             const formData = new FormData();
             formData.append("userImage", imgUpdate.userImage);
@@ -41,7 +41,11 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
                 formData
             );
             alert(res.message);
+            setIsUpdateImage(!isUpdateImage);
         }
+    };
+
+    const handleSubmit = async (event) => {
         delete updatedData.mobile;
         delete updatedData.profile_pic;
         delete updatedData.total_followers;
@@ -94,16 +98,19 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
     console.log(isUpdateImage);
     return (
         <div className="fixed top-0 left-0 w-full flex justify-center items-center update-user h-[100vh] ">
-            <div className="flex bg-white justify-around w-6/12">
-                <div className="flex-col justify-between mt-8 h-96 w-96 items-center p-8 mx-2 flex ">
-                    <img
-                        src={
-                            isUpdateImage
-                                ? imgPreview
-                                : baseUrl + updatedData.profile_pic
-                        }
-                        className="rounded-full border-double border-4 border-[#A43948]"
-                    />
+            <div className="flex bg-white justify-around p-10 w-[80%] rounded-lg">
+                <div className="flex-col justify-between mt-8 h-96 w-96 items-center  mx-2 flex ">
+                    <div className="h-20vh">
+                        <img
+                            src={
+                                isUpdateImage
+                                    ? imgPreview
+                                    : baseUrl + updatedData.profile_pic
+                            }
+                            className="rounded-full border-double  h-96 w-96 border-4 border-[#A43948]"
+                        />
+                    </div>
+
                     <label className="flex flex-col">
                         <span className="font-semibold mb-2">Change Image</span>
                         <input
@@ -114,6 +121,14 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
                             onChange={handleChange}
                         />
                     </label>
+                    {isUpdateImage && (
+                        <button
+                            className="btn-primary"
+                            onClick={handleImageSubmit}
+                        >
+                            Save Image
+                        </button>
+                    )}
                 </div>
                 <div className="bg-white p-5">
                     <h3 className="font-seminold text-2xl mb-4">

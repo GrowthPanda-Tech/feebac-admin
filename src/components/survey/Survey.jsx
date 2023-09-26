@@ -164,13 +164,19 @@ export default function Survey() {
                                 <Tdata mono>{convertToLocal(start_date)}</Tdata>
                                 <Tdata mono>{convertToLocal(end_date)}</Tdata>
                                 <Tdata>
-                                    <div className="flex justify-center gap-6 text-xl">
+                                    <div className="flex justify-evenly">
                                         <Link to={`details/${survey_id}`}>
-                                            <i className="fa-solid fa-square-poll-horizontal"></i>
+                                            <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
                                         </Link>
-                                        {/* <Link to={`review/${survey_id}`}> */}
-                                        {/*     <i className="fa-solid fa-pen-to-square"></i> */}
-                                        {/* </Link> */}
+                                        {status == "upcoming" ? (
+                                            <Link
+                                                to={`edit-survey/${survey_id}`}
+                                            >
+                                                <i className="fa-solid fa-pen-to-square text-xl"></i>
+                                            </Link>
+                                        ) : (
+                                            ""
+                                        )}
                                     </div>
                                 </Tdata>
                             </Trow>

@@ -48,7 +48,20 @@ export default function SurveyReview() {
             body
         );
         alert(response.message);
-        // location.replace("/survey");
+        location.replace("/survey");
+    };
+
+    const handlePublic = async () => {
+        const body = {
+            surveyId,
+        };
+        const response = await makeRequest(
+            "/survey/toggle-survey-status",
+            "PATCH",
+            body
+        );
+        alert(response.message);
+        if (response.isSuccess) location.replace("/survey");
     };
 
     useEffect(() => {
@@ -59,12 +72,18 @@ export default function SurveyReview() {
         <>
             <div className="flex flex-row-reverse justify-between w-full ">
                 {surveyInfo && (
-                    <div>
+                    <div className="flex flex-col gap-6">
                         <button
                             className="btn-primary w-fit"
                             onClick={handlePublish}
                         >
                             Publish Now
+                        </button>
+                        <button
+                            className="btn-primary w-fit"
+                            onClick={handlePublic}
+                        >
+                            Publish At Schedule Time
                         </button>
                     </div>
                 )}

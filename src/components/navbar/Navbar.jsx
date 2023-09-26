@@ -30,6 +30,7 @@ export default function Navbar() {
         { link: "user", title: "User Management", icon: user },
         { link: "survey", title: "Survey Management", icon: survey },
         { link: "content", title: "Content Management", icon: content },
+        { link: "news", title: "News Management", icon: content },
         {
             link: "loyalty-point",
             title: "Loyalty Point Management",

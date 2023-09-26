@@ -14,6 +14,9 @@ import SurveyReview from "./components/survey/reviewSurvey/SurveyReview";
 import Content from "./components/content/Content";
 import ContentCreate from "./components/content/ContentCreate";
 import ContentEdit from "./components/content/ContentEdit";
+import NewsTable from "./components/news/NewsTable";
+import NewsCreate from "./components/news/NewsCreate";
+import NewsEdit from "./components/news/NewsEdit";
 import LoyaltyPoint from "./components/loyaltyPoint/LoyaltyPoint";
 import Revenue from "./components/revenue/Revenue";
 import Analytics from "./components/analytics/Analytics";
@@ -71,6 +74,15 @@ export default function App() {
                                 <Route
                                     path="content/edit/:slug"
                                     element={<ContentEdit />}
+                                />
+                                <Route path="news" element={<NewsTable />} />
+                                <Route
+                                    path="news/create"
+                                    element={<NewsCreate />}
+                                />
+                                <Route
+                                    path="news/edit"
+                                    element={<NewsEdit />}
                                 />
                                 <Route
                                     path="loyalty-point"

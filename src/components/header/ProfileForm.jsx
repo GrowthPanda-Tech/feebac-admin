@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import formSubmit from "../../utils/formSubmit";
 import makeRequest from "../../utils/makeRequest";
+import AlertComponent from "../AlertComponent/AlertComponent";
 
 function InputForm({ label, name, value, onChange }) {
     return (
@@ -40,36 +41,53 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
                 "POST",
                 formData
             );
-            alert(res.message);
+            if (res.isSuccess) {
+                let custom = {
+                    message: "Profile Pic Updated Successfully ",
+                };
+                AlertComponent("success", custom);
+            }
             setIsUpdateImage(!isUpdateImage);
         }
     };
 
     const handleSubmit = async (event) => {
-        delete updatedData.mobile;
-        delete updatedData.profile_pic;
-        delete updatedData.total_followers;
-        delete updatedData.total_followings;
-        delete updatedData.loyalty_points;
-        delete updatedData.interest;
+        try {
+            delete updatedData.mobile;
+            delete updatedData.profile_pic;
+            delete updatedData.total_followers;
+            delete updatedData.total_followings;
+            delete updatedData.loyalty_points;
+            delete updatedData.interest;
 
-        const response = await makeRequest(
-            "profile/update-profile",
-            "PUT",
-            updatedData
-        );
-        if (response.success) {
-            localStorage.removeItem(
-                "userInfo",
-                JSON.stringify(response.userInfo)
+            const response = await makeRequest(
+                "profile/update-profile",
+                "PUT",
+                updatedData
             );
-            localStorage.setItem("userInfo", JSON.stringify(response.userInfo));
-        }
-
-        alert(response.message);
-        location.replace("/");
+            if (response.isSuccess) {
+                let custom = {
+                    message: "User Profile Updated Successfully ",
+                };
+                AlertComponent("success", custom);
+                localStorage.removeItem(
+                    "userInfo",
+                    JSON.stringify(response.userInfo)
+                );
+                localStorage.setItem(
+                    "userInfo",
+                    JSON.stringify(response.userInfo)
+                );
+                setTimeout(() => {
+                    location.replace("/profile-update");
+                    setShow(!show);
+                }, 3000);
+            } else {
+                AlertComponent("failed", response);
+            }
+        } catch (error) {}
     };
-    console.log(userInfo, "update");
+
     const handleChange = (event) => {
         if (event.target.name === "userImage") {
             setIsUpdateImage(true);
@@ -95,7 +113,6 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
             [event.target.name]: event.target.value,
         });
     };
-    console.log(isUpdateImage);
     return (
         <div className="fixed top-0 left-0 w-full flex justify-center items-center update-user h-[100vh] ">
             <div className="flex bg-white justify-around p-10 w-[80%] rounded-lg">

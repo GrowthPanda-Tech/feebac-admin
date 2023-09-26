@@ -3,6 +3,7 @@ import PieChart from "./charts/PieChart";
 import { UserData } from "./charts/mockData";
 // import GeoLoaction from "./charts/GeoLoaction";
 import makeRequest from "../../utils/makeRequest";
+import AlertComponent from "../AlertComponent/AlertComponent";
 
 // function addValue(lowerValue, upperValue, name) {
 //     for (let i in PieData) {
@@ -71,7 +72,7 @@ function Dashboard() {
         );
         response.isSuccess
             ? setAdminData(response.data)
-            : alert(response.message);
+            : AlertComponent("error", response.message);
         // if (adminData?.length != 0) {
         //     console.log(Object.values(adminData?.surveyData));
         // }

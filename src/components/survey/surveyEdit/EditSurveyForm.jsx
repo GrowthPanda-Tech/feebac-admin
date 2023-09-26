@@ -4,6 +4,7 @@ import makeRequest from "../../../utils/makeRequest";
 import convertToUTC from "../../../utils/convertToUTC";
 import formSubmit from "../../../utils/formSubmit";
 import { useNavigate, useParams } from "react-router-dom";
+import AlertComponent from "../../AlertComponent/AlertComponent";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -111,37 +112,42 @@ export default function EditSurveyForm({
     };
 
     const handleSubmit = async (event) => {
-        const dataString = JSON.stringify(profileData);
-        const formdata = new FormData();
+        try {
+            const dataString = JSON.stringify(profileData);
+            const formdata = new FormData();
 
-        for (const [key, value] of Object.entries(surveyData)) {
-            formdata.append(key, value);
-        }
+            for (const [key, value] of Object.entries(surveyData)) {
+                formdata.append(key, value);
+            }
 
-        formdata.append("target", dataString);
+            formdata.append("target", dataString);
 
-        const response = await formSubmit(
-            event,
-            "site-admin/update-survey",
-            "PUT",
-            formdata
-        );
-        alert(response.message);
+            const response = await formSubmit(
+                event,
+                "site-admin/update-survey",
+                "PUT",
+                formdata
+            );
+            // alert(response.message);
 
-        if (response.isSuccess) {
-            const getData = async () => {
-                const response = await makeRequest(
-                    `survey/show-survey?sid=${slug}`,
-                    "GET"
-                );
-                if (response.isSuccess) {
-                    // setQuestionList(response.questionList);
-                    setSurveyInfo(response.surveyInfo);
-                }
-            };
-            getData();
+            if (response.isSuccess) {
+                AlertComponent("success", response);
+                const getData = async () => {
+                    const response = await makeRequest(
+                        `survey/show-survey?sid=${slug}`,
+                        "GET"
+                    );
+                    if (response.isSuccess) {
+                        // setQuestionList(response.questionList);
+                        setSurveyInfo(response.surveyInfo);
+                    }
+                };
+                getData();
 
-            setSurveyEditPop(false);
+                setSurveyEditPop(false);
+            } else AlertComponent("failed", response);
+        } catch (error) {
+            AlertComponent("error", "", "Please Enter Valid Value");
         }
     };
 

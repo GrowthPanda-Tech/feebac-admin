@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { CategoryContext } from "../../contexts/CategoryContext";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import formSubmit from "../../utils/formSubmit";
+import AlertComponent from "../AlertComponent/AlertComponent";
 
 export default function CategoryForm({ setIsShowCategoryCreate }) {
     const [newCategory, setNewCategory] = useState({});
@@ -32,30 +33,34 @@ export default function CategoryForm({ setIsShowCategoryCreate }) {
     };
 
     const handleSubmit = async (event) => {
-        const formdata = new FormData();
-        formdata.append("categoryName", newCategory.categoryName);
-        formdata.append(
-            "categoryImg",
-            newCategory.categoryImg,
-            newCategory.categoryImg.name
-        );
+        try {
+            const formdata = new FormData();
+            formdata.append("categoryName", newCategory.categoryName);
+            formdata.append(
+                "categoryImg",
+                newCategory.categoryImg,
+                newCategory.categoryImg.name
+            );
 
-        const response = await formSubmit(
-            event,
-            "site-admin/add-category",
-            "POST",
-            formdata
-        );
-
-        alert(response.message);
-
-        if (response.isSuccess) {
-            const newCategories = categories.slice();
-            newCategories.push(response.data);
-            setCategories(newCategories);
-            setIsShowCategoryCreate(false);
-            return;
+            const response = await formSubmit(
+                event,
+                "site-admin/add-category",
+                "POST",
+                formdata
+            );
+            if (response.isSuccess){ 
+              AlertComponent("success", response);
+              const newCategories = categories.slice();
+              newCategories.push(response.data);
+              setCategories(newCategories);
+              setIsShowCategoryCreate(false);
+              return;
+            }
+            else AlertComponent("failed", response);
+        } catch (error) {
+            AlertComponent("error", error);
         }
+          
     };
 
     return (

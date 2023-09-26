@@ -5,6 +5,7 @@ import makeRequest from "../../utils/makeRequest";
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import PageTitle from "../PageTitle";
+import AlertComponent from "../AlertComponent/AlertComponent";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -55,34 +56,41 @@ export default function ContentEdit() {
         setArticleData({ ...articleData, article_content: content });
 
     const handleSubmit = async (event) => {
-        const formData = new FormData();
-
-        formData.append("articleId", articleData.article_id);
-        formData.append("articleTitle", articleData.article_title);
-        formData.append("articleDesctiption", articleData.article_desctiption);
-        formData.append("articleContent", articleData.article_content);
-        formData.append("category", articleData.category);
-        formData.append("isUpdateImage", imgUpdate.isUpdate);
-
-        if (imgUpdate.isUpdate) {
+        try {
+            const formData = new FormData();
+            formData.append("articleId", articleData.article_id);
+            formData.append("articleTitle", articleData.article_title);
             formData.append(
-                "articleImg",
-                imgUpdate.articleImg,
-                imgUpdate.articleImg.name
+                "articleDesctiption",
+                articleData.article_desctiption
             );
-        }
+            formData.append("articleContent", articleData.article_content);
+            formData.append("category", articleData.category);
+            formData.append("isUpdateImage", imgUpdate.isUpdate);
 
-        const response = await formSubmit(
-            event,
-            "/site-admin/update-article",
-            "PUT",
-            formData
-        );
+            if (imgUpdate.isUpdate) {
+                formData.append(
+                    "articleImg",
+                    imgUpdate.articleImg,
+                    imgUpdate.articleImg.name
+                );
+            }
 
-        alert(response.message);
+            const response = await formSubmit(
+                event,
+                "/site-admin/update-article",
+                "PUT",
+                formData
+            );
 
-        if (response.isSuccess) {
-            navigate("/content");
+            if (response.isSuccess) {
+                AlertComponent("success", response);
+                setTimeout(() => {
+                    navigate("/content");
+                }, 3200);
+            } else AlertComponent("failed", response);
+        } catch (error) {
+            AlertComponent("error", error);
         }
     };
 

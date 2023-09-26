@@ -4,8 +4,12 @@ import makeRequest from "../../../utils/makeRequest";
 import convertToUTC from "../../../utils/convertToUTC";
 import formSubmit from "../../../utils/formSubmit";
 import PageTitle from "../../PageTitle";
+
+import AlertComponent from "../../AlertComponent/AlertComponent";
+
 import { useContext } from "react";
 import { CategoryContext } from "../../../contexts/CategoryContext";
+
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -86,7 +90,7 @@ export default function CreateSurveyForm({
         );
         response.isSuccess
             ? setFilters(response.data)
-            : alert(response.message);
+            : AlertComponent("failed", response);
     };
 
     const getUserCount = async () => {
@@ -117,27 +121,35 @@ export default function CreateSurveyForm({
     };
 
     const handleSubmit = async (event) => {
-        const dataString = JSON.stringify(profileData);
-        const formdata = new FormData();
+        try {
+            const dataString = JSON.stringify(profileData);
+            const formdata = new FormData();
 
-        for (const [key, value] of Object.entries(surveyData)) {
-            formdata.append(key, value);
-        }
+            for (const [key, value] of Object.entries(surveyData)) {
+                formdata.append(key, value);
+            }
 
-        formdata.append("target", dataString);
+            formdata.append("target", dataString);
 
-        const response = await formSubmit(
-            event,
-            "site-admin/create-survey",
-            "POST",
-            formdata
-        );
-        alert(response.message);
+            const response = await formSubmit(
+                event,
+                "site-admin/create-survey",
+                "POST",
+                formdata
+            );
 
-        if (response.isSuccess) {
-            setSurveyId(response.surveyId);
-            setSurveyTitle(surveyData.surveyTitle);
-            setIsSurveyCreate(response.isSuccess);
+            if (response.isSuccess) {
+                AlertComponent("success", response);
+                setSurveyId(response.surveyId);
+                setSurveyTitle(surveyData.surveyTitle);
+                setIsSurveyCreate(response.isSuccess);
+            } else {
+                AlertComponent("failed", response);
+            }
+        } catch (error) {
+            console.log(error);
+            if (error >= 500) console.log("hii");
+            AlertComponent("error", "", "Please Enter Valid Value");
         }
     };
 

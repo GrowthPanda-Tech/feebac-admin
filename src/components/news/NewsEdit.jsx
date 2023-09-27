@@ -1,17 +1,20 @@
-import { React, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
+
+//components
 import NewsForm from "./NewsForm";
-import { useEffect } from "react";
 import PageTitle from "../PageTitle";
 import AlertComponent from "../AlertComponent/AlertComponent";
-import formSubmit from "../../utils/formSubmit";
+
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function NewsEdit() {
-    const { slug } = useParams();
     const location = useLocation();
     const { from } = location.state;
+
     const [newsData, setNewsData] = useState({});
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
     const [imgUpdate, setImgUpdate] = useState(false);
@@ -49,7 +52,15 @@ function NewsEdit() {
     };
 
     useEffect(() => {
-        setNewsData(from);
+        let ignore = false;
+
+        if (!ignore) {
+            setNewsData(from);
+        }
+
+        return () => {
+            ignore = true;
+        };
     }, []);
 
     const handleSubmit = async (event) => {

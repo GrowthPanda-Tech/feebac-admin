@@ -12,11 +12,13 @@ import Tdata from "../table/Tdata";
 //assets
 import link from "../../assets/link.svg";
 import edit from "../../assets/edit.svg";
+import NewsDelPop from "./NewsDelPop";
 
 const HEADERS = ["Name", "Category", "Date", "Actions"];
 
 export default function NewsTable() {
     const [newsList, setNewsList] = useState([]);
+    const [delPop, setDelPop] = useState(false);
 
     useEffect(() => {
         let ignore = false;
@@ -80,6 +82,14 @@ export default function NewsTable() {
                                     >
                                         <img src={edit} />
                                     </Link>
+                                    <button onClick={() => setDelPop(true)}>
+                                        dele
+                                    </button>
+                                    <NewsDelPop
+                                        data={news.id}
+                                        delPop={delPop}
+                                        setDelPop={setDelPop}
+                                    />
                                 </div>
                             </Tdata>
                         </Trow>

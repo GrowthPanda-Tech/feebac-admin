@@ -18,7 +18,6 @@ export default function CategoryContextProvider({ children }) {
             console.error(error);
         }
     };
-
     useEffect(() => {
         getCategories();
     }, []);

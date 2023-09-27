@@ -45,7 +45,7 @@ export default function NewsTable() {
         return () => {
             ignore = true;
         };
-    });
+    }, []);
 
     return (
         <div className="flex flex-col gap-8">
@@ -72,7 +72,12 @@ export default function NewsTable() {
                                     <Link to={news.newsUrl} target="_blank">
                                         <img src={link} />
                                     </Link>
-                                    <Link to={"edit"}>
+                                    <Link
+                                        to={`edit/${news.id}`}
+                                        state={{
+                                            from: news,
+                                        }}
+                                    >
                                         <img src={edit} />
                                     </Link>
                                 </div>

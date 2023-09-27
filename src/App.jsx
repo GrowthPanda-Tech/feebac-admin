@@ -81,7 +81,7 @@ export default function App() {
                                     element={<NewsCreate />}
                                 />
                                 <Route
-                                    path="news/edit"
+                                    path="news/edit/:slug"
                                     element={<NewsEdit />}
                                 />
                                 <Route

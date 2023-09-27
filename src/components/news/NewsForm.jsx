@@ -26,6 +26,7 @@ function Select({ label, name, value, onChange, items }) {
 
 export default function NewsForm({ newsData, handleChange }) {
     const { categories } = useContext(CategoryContext);
+    console.log(newsData);
 
     return (
         <div className="flex flex-col justify-between gap-8">
@@ -36,6 +37,7 @@ export default function NewsForm({ newsData, handleChange }) {
                         <input
                             name="title"
                             className="py-3 px-8 rounded-xl bg-white"
+                            value={newsData ? newsData.title : ""}
                             onChange={handleChange}
                             required
                         />
@@ -63,6 +65,7 @@ export default function NewsForm({ newsData, handleChange }) {
                     placeholder="https://example.com"
                     pattern="https://.*"
                     className="py-3 px-8 rounded-xl bg-white"
+                    value={newsData ? newsData.newsUrl : ""}
                     onChange={handleChange}
                     required
                 />
@@ -76,7 +79,6 @@ export default function NewsForm({ newsData, handleChange }) {
                     accept="image/*"
                     className="py-3 px-8 rounded-xl bg-white"
                     onChange={handleChange}
-                    required
                 />
             </label>
             <label className="flex flex-col">
@@ -88,7 +90,7 @@ export default function NewsForm({ newsData, handleChange }) {
                     label={"Description"}
                     name={"description"}
                     rows={10}
-                    // value={newsData ? newsData.news_desctiption : null}
+                    value={newsData ? newsData.description : ""}
                     onChange={handleChange}
                     required
                 />

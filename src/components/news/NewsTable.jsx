@@ -14,6 +14,7 @@ import NewsDelPop from "./NewsDelPop";
 import link from "../../assets/link.svg";
 import edit from "../../assets/edit.svg";
 import delIcon from "../../assets/delete.svg";
+import AlertComponent from "../AlertComponent/AlertComponent";
 
 const HEADERS = ["Name", "Category", "Date", "Actions"];
 
@@ -37,18 +38,21 @@ export default function NewsTable() {
                 "DELETE"
             );
 
-            if (!response.isSuccess) {
+            console.log(response);
+
+            if (response.isSuccess) {
+                AlertComponent("success", response);
+                const updatedList = newsList.filter(
+                    (_, index) => index != delInfo.idx
+                );
+                setNewsList(updatedList);
+                setDelPop(false);
+            } else {
+                AlertComponent("failed", response);
                 throw new Error(response.message);
             }
-
-            const updatedList = newsList.filter(
-                (_, index) => index != delInfo.idx
-            );
-            setNewsList(updatedList);
-
-            setDelPop(false);
         } catch (error) {
-            console.error(error);
+            AlertComponent("error", "", error);
         }
     };
 

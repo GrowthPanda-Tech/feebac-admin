@@ -46,7 +46,7 @@ export default function FilterCreate({
             setIsShowFilterCreate(false);
             setTertiaryKeys((prev) => [...prev, json.data]);
         } catch (error) {
-            AlertComponent("error", error);
+            AlertComponent("error", "", error);
         }
     };
 

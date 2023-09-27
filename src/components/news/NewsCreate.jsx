@@ -4,6 +4,7 @@ import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import NewsForm from "./NewsForm";
 import PageTitle from "../PageTitle";
+import AlertComponent from "../AlertComponent/AlertComponent";
 
 export default function NewsCreate() {
     const navigate = useNavigate();
@@ -62,14 +63,20 @@ export default function NewsCreate() {
                 formdata
             );
 
-            if (!response.isSuccess) {
+            if (response.isSuccess) {
+                AlertComponent("success", response);
+                setTimeout(() => {
+                    navigate("/news");
+                }, 2000);
+            } else {
+                AlertComponent("failed", response);
                 throw new Error(response.message);
             }
 
-            alert(response.message);
-            navigate("/news");
+            // alert(response.message);
         } catch (error) {
-            alert(error);
+            console.log(error);
+            AlertComponent("error", "", error.message);
         }
     };
 

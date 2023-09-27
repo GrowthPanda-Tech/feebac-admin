@@ -48,19 +48,17 @@ export default function CategoryForm({ setIsShowCategoryCreate }) {
                 "POST",
                 formdata
             );
-            if (response.isSuccess){ 
-              AlertComponent("success", response);
-              const newCategories = categories.slice();
-              newCategories.push(response.data);
-              setCategories(newCategories);
-              setIsShowCategoryCreate(false);
-              return;
-            }
-            else AlertComponent("failed", response);
+            if (response.isSuccess) {
+                AlertComponent("success", response);
+                const newCategories = categories.slice();
+                newCategories.push(response.data);
+                setCategories(newCategories);
+                setIsShowCategoryCreate(false);
+                return;
+            } else AlertComponent("failed", response);
         } catch (error) {
-            AlertComponent("error", error);
+            AlertComponent("error", "", error);
         }
-          
     };
 
     return (

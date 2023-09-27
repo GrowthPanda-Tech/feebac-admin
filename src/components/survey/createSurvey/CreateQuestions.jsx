@@ -204,7 +204,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             }
         } catch (error) {
             if (error >= 500) console.log("hii");
-            AlertComponent("error", {}, "something has gone wrong");
+            AlertComponent("error", "", "something has gone wrong");
         }
 
         setOptions(initOptions);

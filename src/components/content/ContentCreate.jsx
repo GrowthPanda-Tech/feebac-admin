@@ -69,7 +69,7 @@ export default function ContentCreate() {
                 }, 3200);
             } else AlertComponent("failed", response);
         } catch (error) {
-            AlertComponent("error", error);
+            AlertComponent("error", "", error);
         }
     };
 

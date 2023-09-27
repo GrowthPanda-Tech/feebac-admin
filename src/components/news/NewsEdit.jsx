@@ -8,11 +8,13 @@ import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import NewsForm from "./NewsForm";
 import PageTitle from "../PageTitle";
 import AlertComponent from "../AlertComponent/AlertComponent";
+import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function NewsEdit() {
     const location = useLocation();
+    const navigate = useNavigate();
     const { from } = location.state;
 
     const [newsData, setNewsData] = useState({});
@@ -90,14 +92,14 @@ function NewsEdit() {
 
             if (response.isSuccess) {
                 AlertComponent("success", response);
-                // setTimeout(() => {
-                //     navigate("/news");
-                // }, 3100);
+                setTimeout(() => {
+                    navigate("/news");
+                }, 1000);
             } else {
                 AlertComponent("failed", response);
             }
         } catch (error) {
-            AlertComponent("error", error);
+            AlertComponent("error", "", error);
         }
     };
 

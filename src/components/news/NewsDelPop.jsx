@@ -1,7 +1,6 @@
 import React from "react";
 
-function NewsDelPop({ delPop, setDelPop, data }) {
-    console.log(data);
+function NewsDelPop({ delPop, setDelPop, handleDelete }) {
     return (
         <div
             className={`fixed top-0 left-0 w-full flex justify-center items-center update-user  h-[100vh] ${
@@ -24,7 +23,7 @@ function NewsDelPop({ delPop, setDelPop, data }) {
                     </button>
                     <button
                         className="bg-[#E85C53] text-white p-2 mt-5 rounded-sm"
-                        onClick={""}
+                        onClick={handleDelete}
                     >
                         Delete
                     </button>

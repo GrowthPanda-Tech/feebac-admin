@@ -26,7 +26,17 @@ function Select({ label, name, value, onChange, items }) {
 
 export default function NewsForm({ newsData, handleChange }) {
     const { categories } = useContext(CategoryContext);
-    console.log(newsData);
+
+    let newsCat;
+
+    if (newsData) {
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[i];
+            if (category.category_name === newsData.category) {
+                newsCat = category.category_id;
+            }
+        }
+    }
 
     return (
         <div className="flex flex-col justify-between gap-8">
@@ -47,11 +57,7 @@ export default function NewsForm({ newsData, handleChange }) {
                     <Select
                         label={"Category"}
                         name={"category"}
-                        // value={
-                        //     newsData.category.category_id
-                        //         ? newsData.category.category_id
-                        //         : ""
-                        // }
+                        value={newsData ? newsCat : categories[0].category_id}
                         onChange={handleChange}
                         items={categories}
                     />

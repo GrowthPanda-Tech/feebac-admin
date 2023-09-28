@@ -1,22 +1,8 @@
 import Swal from "sweetalert2";
 
-// function SweetAlert({ data, icon, title }) {
-//     return Swal.fire({
-//         icon: icon,
-//         title: title,
-//         text: data.message,
-//         toast: true,
-//         position: "top-end",
-//         showConfirmButton: false,
-//         timer: 3000,
-//         timerProgressBar: true,
-//     });
-// }
-
 const AlertComponent = (type, data, Text) => {
-    console.log(type, data, Text);
-    try {
-        if (type === "success") {
+    switch (type) {
+        case "success":
             Swal.fire({
                 toast: true,
                 position: "top-end",
@@ -27,7 +13,9 @@ const AlertComponent = (type, data, Text) => {
                 text: data.message,
                 showConfirmButton: false,
             });
-        } else if (type === "failed") {
+            break;
+
+        case "failed":
             Swal.fire({
                 toast: true,
                 position: "top-end",
@@ -38,7 +26,9 @@ const AlertComponent = (type, data, Text) => {
                 text: data.message,
                 showConfirmButton: false,
             });
-        } else if (type === "error") {
+            break;
+
+        case "error":
             Swal.fire({
                 position: "top-end",
                 icon: "error",
@@ -49,7 +39,9 @@ const AlertComponent = (type, data, Text) => {
                 timer: 2000,
                 timerProgressBar: true,
             });
-        } else if (type === "warning") {
+            break;
+
+        case "warning":
             Swal.fire({
                 className: "pop-top",
                 position: "top",
@@ -58,12 +50,14 @@ const AlertComponent = (type, data, Text) => {
                 text: warningText,
                 showConfirmButton: false,
                 width: "40vh",
-                // toast: true,
                 timer: 1500,
                 timerProgressBar: true,
             });
-        }
-    } catch (error) {}
+            break;
+
+        default:
+            break;
+    }
 };
 
 export default AlertComponent;

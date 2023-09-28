@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import makeRequest from "../../utils/makeRequest";
 
 // component imports
 import PageTitle from "../PageTitle";
@@ -7,8 +8,8 @@ import Table from "../table/Table";
 import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
+import AlertComponent from "../AlertComponent/AlertComponent";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
 const HEADERS = ["Name", "Status", "Category", "Creation Date", "Actions"];
 
 export default function Content() {
@@ -20,70 +21,44 @@ export default function Content() {
     };
 
     const handlePublish = async (articleId, index) => {
-        const request = {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                authToken: localStorage.getItem("authToken"),
-            },
-            body: JSON.stringify({ articleId }),
-        };
-
         try {
-            const response = await fetch(
-                `${BASE_URL}/article/toggle-article-status`,
-                request
+            const response = await makeRequest(
+                "article/toggle-article-status",
+                "PATCH",
+                { articleId }
             );
 
-            if (response.status >= 500) {
-                throw new Error(response.status);
-            }
-
-            const json = await response.json();
-
-            if (!json.isSuccess) {
-                throw new Error(json.message);
+            if (!response.isSuccess) {
+                AlertComponent("failed", response);
+                throw new Error(response.message);
             }
 
             const updatedList = [...articleList];
             updatedList[index].is_published = !updatedList[index].is_published;
             setArticleList(updatedList);
+
+            AlertComponent("success", response);
         } catch (error) {
             console.error(error);
         }
     };
 
-    console.log(articleList);
-
     useEffect(() => {
-        const controller = new AbortController();
-        const signal = controller.signal;
-
-        const request = {
-            signal,
-            headers: {
-                authToken: localStorage.getItem("authToken"),
-            },
-        };
+        let ignore = false;
 
         async function getArticleList() {
             try {
-                const response = await fetch(
-                    `${BASE_URL}/site-admin/get-article-list`,
-                    request
+                const response = await makeRequest(
+                    "site-admin/get-article-list"
                 );
 
-                if (!response.ok) {
-                    throw new Error(response.status);
-                }
-
-                const json = await response.json();
-
-                if (!json.isSuccess) {
+                if (!response.isSuccess) {
                     throw new Error(json.message);
                 }
 
-                setArticleList(json.data.toReversed());
+                if (!ignore) {
+                    setArticleList(response.data.toReversed());
+                }
             } catch (error) {
                 console.error(error);
             }
@@ -92,7 +67,7 @@ export default function Content() {
         getArticleList();
 
         return () => {
-            controller.abort();
+            ignore = true;
         };
     }, []);
 

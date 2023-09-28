@@ -1,40 +1,43 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+
 import makeRequest from "../../utils/makeRequest";
-import calculateAge from "../../utils/calculateAge";
 import loyaltyImg from "../../assets/loyalty.png";
+
+//components
 import Table from "../table/Table";
 import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import PageTitle from "../PageTitle";
 
-const HEADERS = ["Title", "Category", "Start Date", "End Date", "Status"];
+const SURVEY_HEADERS = [
+    "Title",
+    "Category",
+    "Start Date",
+    "End Date",
+    "Status",
+];
+const LOYALTY_HEADERS = ["Type", "Date", "Transaction"];
 
-function Input({ value }) {
+function PointStats({ name, value }) {
     return (
-        <input
-            value={value}
-            className="input-primary w-4/5 mt-0 disabled:opacity-70"
-            disabled
-        />
-    );
-}
-
-function Label({ name, children }) {
-    return (
-        <label className="flex gap-4 items-center">
-            <span className="font-medium text-lg w-1/5"> {name}: </span>
-            {children}
-        </label>
+        <div className="flex flex-col items-center bg-secondary text-white text-lg w-1/2 py-6 font-medium rounded-xl">
+            <span> {value} </span>
+            <span> {name} </span>
+        </div>
     );
 }
 
 export default function UserInfo() {
     const { slug } = useParams();
 
-    const [userInfo, setUserInfo] = useState({});
     const [surveyList, setSurveyList] = useState([]);
+    const [transactInfo, setTransactInfo] = useState([]);
+    const [points, setPoints] = useState({
+        totalCredit: 0,
+        totalSpend: 0,
+    });
 
     useEffect(() => {
         let ignore = false;
@@ -44,11 +47,12 @@ export default function UserInfo() {
                 const response = await makeRequest(
                     `site-admin/get-user-info?userId=${slug}`
                 );
+
                 if (!response.isSuccess) {
                     throw new Error(response.message);
                 }
+
                 if (!ignore) {
-                    setUserInfo(response.data.userInfo);
                     setSurveyList(response.data.surveyList);
                 }
             } catch (error) {
@@ -56,9 +60,34 @@ export default function UserInfo() {
             }
         }
 
-        getUserInfo();
+        async function getTransactInfo() {
+            try {
+                const response = await makeRequest(
+                    `loyalty/get-loyalty-transaction?user=${slug}`
+                );
 
-        return () => (ignore = true);
+                if (!response.isSuccess) {
+                    throw new Error(response.message);
+                }
+
+                if (!ignore) {
+                    setTransactInfo(response.data);
+                    setPoints({
+                        totalCredit: response.totalCredit,
+                        totalSpend: response.totalSpend,
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        getUserInfo();
+        getTransactInfo();
+
+        return () => {
+            ignore = true;
+        };
     }, []);
 
     return (
@@ -68,40 +97,56 @@ export default function UserInfo() {
             </h1>
 
             <div className="flex flex-col gap-8">
-                <div className="flex justify-between">
-                    {/* Info card */}
+                <div className="flex h-[40vh] justify-between gap-6">
+                    {/* Transaction Info */}
                     <div className="flex flex-col gap-6 bg-white rounded-xl p-10 w-8/12">
-                        <PageTitle name={"Personal Information"} />
-                        <Label name={"Gender"}>
-                            <Input value={userInfo.gender} />
-                        </Label>
-                        <Label name={"Age"}>
-                            <Input
-                                value={
-                                    userInfo.date_of_birth
-                                        ? calculateAge(userInfo.date_of_birth)
-                                        : "-"
-                                }
-                            />
-                        </Label>
-                        <Label name={"State"}>
-                            <Input
-                                value={userInfo.state ? userInfo.state : "-"}
-                            />
-                        </Label>
+                        <PageTitle name={"Transaction Ledger"} />
+                        <Table>
+                            <Thead headers={LOYALTY_HEADERS} />
+                            <tbody>
+                                {transactInfo.map((transaction) => (
+                                    <Trow key={transaction.id}>
+                                        <Tdata left>{transaction.reason}</Tdata>
+                                        <Tdata mono>
+                                            {transaction.dateTime.split(" ")[0]}
+                                        </Tdata>
+                                        <Tdata>
+                                            {transaction.isCredit ? (
+                                                <div className="text-green">
+                                                    + {transaction.value}
+                                                </div>
+                                            ) : (
+                                                <div className="text-secondary">
+                                                    - {transaction.value}
+                                                </div>
+                                            )}
+                                        </Tdata>
+                                    </Trow>
+                                ))}
+                            </tbody>
+                        </Table>
                     </div>
 
-                    {/* Loyalty point card */}
-                    <div className="flex flex-col justify-center items-center bg-white rounded-xl h-fit py-14 w-3/12">
-                        <img src={loyaltyImg} className="h-12 w-12" />
-                        <span className="text-accent text-3xl font-semibold leading-loose">
-                            {userInfo.loyalty_points
-                                ? userInfo.loyalty_points
-                                : "0"}
-                        </span>
-                        <span className="text-black text-lg font-medium leading-7">
-                            Earned Loyalty Points
-                        </span>
+                    <div className="flex flex-col gap-6 justify-evenly items-center bg-white rounded-xl p-8 w-4/12">
+                        <div className="flex w-full gap-4">
+                            <PointStats
+                                name={"Total Gain"}
+                                value={points.totalCredit}
+                            />
+                            <PointStats
+                                name={"Total Spend"}
+                                value={points.totalSpend}
+                            />
+                        </div>
+                        <div className="flex flex-col justify-center items-center">
+                            <img src={loyaltyImg} className="h-12 w-12" />
+                            <span className="text-accent text-3xl font-semibold leading-loose">
+                                {points.totalCredit - points.totalSpend}
+                            </span>
+                            <span className="text-black text-lg font-medium leading-7">
+                                Remaining Points
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -114,7 +159,7 @@ export default function UserInfo() {
                         </span>
                     </div>
                     <Table>
-                        <Thead headers={HEADERS} />
+                        <Thead headers={SURVEY_HEADERS} />
                         <tbody>
                             {surveyList.map((survey) => (
                                 <Trow key={survey.survey_id}>

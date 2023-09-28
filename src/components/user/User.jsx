@@ -65,7 +65,9 @@ export default function User() {
                         ({ user_id, gender, loyalty_points, state, city }) => (
                             <Trow key={user_id}>
                                 <Tdata mono>{user_id.split("-").pop()}</Tdata>
-                                <Tdata>{gender ? gender : "-"}</Tdata>
+                                <Tdata capitalize>
+                                    {gender ? gender : "-"}
+                                </Tdata>
                                 <Tdata>{loyalty_points} </Tdata>
                                 <Tdata>
                                     {state && city
@@ -76,7 +78,7 @@ export default function User() {
                                 </Tdata>
                                 <Tdata>
                                     <Link to={user_id}>
-                                        <i className="fa-solid fa-info"></i>
+                                        <i className="text-xl fa-solid fa-circle-info"></i>
                                     </Link>
                                 </Tdata>
                             </Trow>

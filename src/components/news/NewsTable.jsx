@@ -9,12 +9,12 @@ import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import NewsDelPop from "./NewsDelPop";
+import AlertComponent from "../AlertComponent/AlertComponent";
 
 //assets
 import link from "../../assets/link.svg";
 import edit from "../../assets/edit.svg";
 import delIcon from "../../assets/delete.svg";
-import AlertComponent from "../AlertComponent/AlertComponent";
 
 const HEADERS = ["Name", "Category", "Date", "Actions"];
 
@@ -37,8 +37,6 @@ export default function NewsTable() {
                 `news/delete-news?id=${delInfo.id}`,
                 "DELETE"
             );
-
-            console.log(response);
 
             if (response.isSuccess) {
                 AlertComponent("success", response);
@@ -106,9 +104,9 @@ export default function NewsTable() {
                             <Tdata capitalize>{news.category}</Tdata>
                             <Tdata mono>{news.createDate.split(" ")[0]}</Tdata>
                             <Tdata>
-                                <div className="flex justify-center gap-5">
+                                <div className="text-xl flex justify-center gap-5">
                                     <Link to={news.newsUrl} target="_blank">
-                                        <img src={link} />
+                                        <i className="fa-solid fa-link"></i>
                                     </Link>
                                     <Link
                                         to={`edit/${news.id}`}
@@ -116,17 +114,14 @@ export default function NewsTable() {
                                             from: news,
                                         }}
                                     >
-                                        <img src={edit} />
+                                        <i className="fa-solid fa-pen-to-square"></i>
                                     </Link>
                                     <button
                                         onClick={() =>
                                             handleDelPop(news.id, index)
                                         }
                                     >
-                                        <img
-                                            className="text-secondary"
-                                            src={delIcon}
-                                        />
+                                        <i className="fa-solid fa-trash"></i>
                                     </button>
                                 </div>
                             </Tdata>

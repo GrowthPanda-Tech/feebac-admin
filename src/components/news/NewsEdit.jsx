@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
@@ -8,7 +8,6 @@ import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import NewsForm from "./NewsForm";
 import PageTitle from "../PageTitle";
 import AlertComponent from "../AlertComponent/AlertComponent";
-import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -66,7 +65,6 @@ function NewsEdit() {
     }, []);
 
     const handleSubmit = async (event) => {
-        console.log("hii");
         const formdata = new FormData();
 
         formdata.append("id", newsData.id);

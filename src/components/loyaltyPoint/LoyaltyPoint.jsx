@@ -21,7 +21,7 @@ function LoyaltyPoint() {
     const [data, setData] = useState();
     const getData = async () => {
         const response = await makeRequest(
-            `loyalty/get-user-loyalty-record`,
+            `loyalty/get-loyalty-transaction`,
             "GET"
         );
         if (response.isSuccess) {
@@ -74,67 +74,82 @@ function LoyaltyPoint() {
 
     return (
         <div className="w-full flex flex-col ">
-            <div className="grid grid-cols-2 gap-8 w-full">
-                <div className="bg-[#EA525F] mt-6 rounded-lg p-8 items-center w-full justify-center flex flex-col text-white">
-                    <div className="flex flex-col text-center w-full">
-                        <h2 className="text-5xl p-8">
-                            {data ? data.totalCredit : ""}
-                        </h2>
+            <div className="w-full flex justify-between gap-6">
+                <div className="w-3/4 h-auto flex flex-col gap-6 ">
+                    <div className="grid grid-cols-2 gap-8 w-full ">
+                        <div className="bg-[#EA525F]  rounded-lg p-8 items-center  justify-center flex flex-col text-white">
+                            <div className="flex flex-col text-center w-full">
+                                <h2 className="text-5xl p-8">
+                                    {data ? data.totalCredit : ""}
+                                </h2>
+                            </div>
+                            <div className="flex justify-between mx-auto text-center">
+                                <h3 className="text-3xl">Total Gain</h3>
+                            </div>
+                        </div>
+                        <div className="bg-[#EA525F]  p-8 rounded-lg items-center justify-center flex flex-col  text-white">
+                            <div className="flex flex-col text-center w-full">
+                                <h2 className="text-5xl p-8">
+                                    {data ? data.totalSpend : ""}
+                                </h2>
+                            </div>
+                            <div className="flex justify-between mx-auto text-center">
+                                <h3 className="text-3xl">Total Spend</h3>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex justify-between mx-auto text-center">
-                        <h3 className="text-3xl">Total Gain</h3>
+                    <div className=" h-[40vh]  overflow-y-scroll ">
+                        <Table>
+                            <Thead headers={HEADERS} />
+                            <tbody>
+                                {loyaltyData &&
+                                    loyaltyData.map(
+                                        ({
+                                            id,
+                                            affectedUser,
+                                            reason,
+                                            value,
+                                            dateTime,
+                                            isCredit,
+                                        }) => (
+                                            <Trow key={id}>
+                                                <Tdata mono>
+                                                    {id.split("-").pop()}
+                                                </Tdata>
+                                                <Tdata mono>
+                                                    {affectedUser
+                                                        .split("-")
+                                                        .pop()}
+                                                </Tdata>
+                                                <Tdata>
+                                                    {reason ? reason : "-"}
+                                                </Tdata>
+                                                <Tdata>
+                                                    {dateTime.trim(" ")}
+                                                </Tdata>
+                                                <Tdata>
+                                                    {isCredit ? (
+                                                        <span className="text-green">
+                                                            + {value}
+                                                        </span>
+                                                    ) : (
+                                                        <span className=" text-secondary">
+                                                            -{value}
+                                                        </span>
+                                                    )}
+                                                </Tdata>
+                                            </Trow>
+                                        )
+                                    )}
+                            </tbody>
+                        </Table>
                     </div>
                 </div>
-                <div className="bg-[#EA525F] mt-6 p-8 rounded-lg items-center w-full justify-center flex flex-col  text-white">
-                    <div className="flex flex-col text-center w-full">
-                        <h2 className="text-5xl p-8">
-                            {data ? data.totalSpend : ""}
-                        </h2>
-                    </div>
-                    <div className="flex justify-between mx-auto text-center">
-                        <h3 className="text-3xl">Total Spend</h3>
-                    </div>
-                </div>
-            </div>
-            <div className="w-full flex justify-between gap-2">
-                <div className="w-3/4 mt-10 h-auto no-scrollbar overflow-y-scroll">
-                    <Table>
-                        <Thead headers={HEADERS} />
-                        <tbody>
-                            {loyaltyData &&
-                                loyaltyData.map(
-                                    ({
-                                        id,
-                                        affectedUser,
-                                        reason,
-                                        value,
-                                        dateTime,
-                                    }) => (
-                                        <Trow key={id}>
-                                            <Tdata mono>
-                                                {id.split("-").pop()}
-                                            </Tdata>
-                                            <Tdata mono>
-                                                {affectedUser.split("-").pop()}
-                                            </Tdata>
-                                            <Tdata>
-                                                {reason ? reason : "-"}
-                                            </Tdata>
-                                            <Tdata>{dateTime.trim(" ")}</Tdata>
-                                            <Tdata>{value}</Tdata>
-                                        </Trow>
-                                    )
-                                )}
-                        </tbody>
-                    </Table>
-                </div>
-                <div className="w-1/4 flex flex-col items-center p-4 mt-10 bg-white">
+                <div className="w-1/4 flex flex-col items-center  rounded-lg p-8 h-fit  bg-white">
                     <h2 className=" text-2xl font-semibold ">
                         Points Statisticts
                     </h2>
-                    <div>
-                        <PieChart chartData={pointsData} option={option} />
-                    </div>
+                    <PieChart chartData={pointsData} option={option} />
                 </div>
             </div>
         </div>

@@ -59,6 +59,18 @@
 }
 
 @layer utilities {
+    @variants responsive {
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    }
+}
+@layer utilities {
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button {
         @apply appearance-none;
@@ -81,4 +93,16 @@
     background-color: rgba(0, 0, 0, 0.148);
     backdrop-filter: blur(2px);
     z-index: 100;
+}
+
+.card-img {
+    background-image: url("../src/assets/couponsbg.png");
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 170px;
+    background-size: contain;
+}
+
+.disable-filter {
+    filter: blur(0px) brightness(35%) contrast(110%);
 }

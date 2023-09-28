@@ -25,6 +25,7 @@ import PageNotFound from "./components/pageNotFound/PageNotFound";
 import ProfileUpdate from "./components/header/ProfileUpdate";
 import AddQuestions from "./components/survey/createSurvey/AddQuestions";
 import SurveyEdit from "./components/survey/surveyEdit/SurveyEdit";
+import Loyalty from "./components/loyaltyPoint/Loyalty";
 
 export default function App() {
     const isLoggedIn = localStorage.getItem("authToken") != null;
@@ -86,7 +87,7 @@ export default function App() {
                                 />
                                 <Route
                                     path="loyalty-point"
-                                    element={<LoyaltyPoint />}
+                                    element={<Loyalty />}
                                 />
                                 <Route path="revenue" element={<Revenue />} />
                                 <Route

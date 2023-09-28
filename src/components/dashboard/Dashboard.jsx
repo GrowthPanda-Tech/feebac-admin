@@ -64,6 +64,17 @@ function Dashboard() {
             },
         ],
     };
+    let option = {
+        plugins: {
+            legend: {
+                position: "right",
+                labels: {
+                    usePointStyle: true,
+                    pointStyle: "circle",
+                },
+            },
+        },
+    };
 
     const getAdminData = async () => {
         const response = await makeRequest(
@@ -90,9 +101,15 @@ function Dashboard() {
                 <h1 className=" text-4xl font-semibold">Dashboard</h1>
             </div>
             <div className="grid grid-cols-3 gap-4  w-full ">
-                {adminData && <PieChart chartData={surveyData} />}
-                {adminData && <PieChart chartData={loyaltyData} />}
-                {adminData && <PieChart chartData={articleData} />}
+                {adminData && (
+                    <PieChart chartData={surveyData} option={option} />
+                )}
+                {adminData && (
+                    <PieChart chartData={loyaltyData} option={option} />
+                )}
+                {adminData && (
+                    <PieChart chartData={articleData} option={option} />
+                )}
                 {/* {PieData.map((item, index) => {
                     return <PieChart key={index} value={item} />;
                 })} */}

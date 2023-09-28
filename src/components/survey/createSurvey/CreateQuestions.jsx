@@ -242,9 +242,11 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             "PATCH",
             body
         );
-        alert(response.message);
         if (response.isSuccess) {
+            AlertComponent("success", response);
             navigate("/survey");
+        } else {
+            AlertComponent("failed", response);
         }
     };
 

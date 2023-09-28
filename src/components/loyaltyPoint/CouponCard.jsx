@@ -1,4 +1,6 @@
-export default function CouponCard({ data }) {
+import CouponToggle from "./CouponToggle";
+
+export default function CouponCard({ data, setCouponsData }) {
     return (
         <>
             <div
@@ -15,9 +17,14 @@ export default function CouponCard({ data }) {
                         data.isActive ? "" : "disable-filter"
                     } `}
                 >
-                    <button className=" absolute top-1 right-2 p-2">
-                        <i className="fa-solid fa-ellipsis-vertical"></i>
-                    </button>
+                    <div className=" absolute top-1 right-2 p-2">
+                        <CouponToggle
+                            couponId={data.id}
+                            couponInfo={data}
+                            setCouponsData={setCouponsData}
+                        />
+                        {/* <i className="fa-solid fa-ellipsis-vertical"></i> */}
+                    </div>
 
                     <div className=" card-img flex items-center justify-center">
                         <img className=" w-52" src={data.imageUrl} alt="" />

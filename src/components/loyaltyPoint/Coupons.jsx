@@ -34,7 +34,11 @@ function Coupons() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
                 {couponData.map((data, index) => (
-                    <CouponCard key={index} data={data} />
+                    <CouponCard
+                        key={index}
+                        data={data}
+                        setCouponsData={setCouponsData}
+                    />
                 ))}
             </div>
 

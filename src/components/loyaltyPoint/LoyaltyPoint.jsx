@@ -29,6 +29,7 @@ function LoyaltyPoint() {
             setData(response);
         }
     };
+
     let option = {
         plugins: {
             legend: {
@@ -66,7 +67,6 @@ function LoyaltyPoint() {
             },
         ],
     };
-    console.log(data);
 
     useEffect(() => {
         getData();
@@ -133,8 +133,8 @@ function LoyaltyPoint() {
                                                             + {value}
                                                         </span>
                                                     ) : (
-                                                        <span className=" text-secondary">
-                                                            -{value}
+                                                        <span className=" text-[#FF0000]">
+                                                            - {value}
                                                         </span>
                                                     )}
                                                 </Tdata>

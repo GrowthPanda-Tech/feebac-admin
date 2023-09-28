@@ -3,19 +3,7 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as chartJS } from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
-function PieChart({ chartData }) {
-    let option = {
-        plugins: {
-            legend: {
-                position: "right",
-                labels: {
-                    usePointStyle: true,
-                    pointStyle: "circle",
-                },
-            },
-        },
-    };
-
+function PieChart({ chartData, option }) {
     console.log(chartData.datasets[0].label);
     return (
         <div className="flex flex-col">

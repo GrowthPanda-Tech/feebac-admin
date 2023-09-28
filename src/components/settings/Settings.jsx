@@ -31,6 +31,8 @@ export default function Settings() {
         options: [],
     });
 
+    console.log(isShowCategoryCreate, isShowFilterCreate, visibleSection);
+
     const handleShow = (section) => {
         if (section === "filter") {
             setIsShowFilterCreate(false);

@@ -15,8 +15,6 @@ function Coupons() {
         }
     };
 
-    console.log(couponData);
-
     useEffect(() => {
         getData();
     }, []);

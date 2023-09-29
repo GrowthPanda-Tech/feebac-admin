@@ -1,8 +1,10 @@
 import { React, useState } from "react";
 import PageTitle from "../PageTitle";
-import convertToUTC from "../../utils/convertToUTC";
 import makeRequest from "../../utils/makeRequest";
 import AlertComponent from "../AlertComponent/AlertComponent";
+import { DateSelect } from "./DateSelect";
+import { TermsAndCondition } from "./TermsAndCondition";
+import { CouponsDetails } from "./CouponsDescription";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -28,15 +30,6 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
     const [addCouponData, setAddCouponData] = useState({});
 
     const handleChange = (e) => {
-        if (e.target.name === "expiredData") {
-            const localDateObject = new Date(e.target.value);
-            const formattedOutput = convertToUTC(localDateObject);
-            setAddCouponData({
-                ...addCouponData,
-                [e.target.name]: formattedOutput,
-            });
-            return;
-        }
         setAddCouponData({ ...addCouponData, [e.target.name]: e.target.value });
     };
 
@@ -67,7 +60,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
         }
     };
     return (
-        <div className="fixed top-0 left-0 w-full flex justify-center items-center update-user h-[100vh] ">
+        <div className="fixed top-0 left-0 w-full flex justify-center overflow-y-scroll items-center update-user h-[100vh] ">
             <div className="bg-white w-[50%] p-5">
                 <PageTitle name={"Add Coupons"} />
                 <InputForm
@@ -103,18 +96,12 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                         required
                     />
                 </label>
-                <label className="flex flex-col pb-6">
-                    <span className="font-semibold mb-2">End Date :</span>
+                <DateSelect setAddCouponData={setAddCouponData} />
 
-                    <input
-                        type={"datetime-local"}
-                        min={TODAY}
-                        name={"expiredData"}
-                        onChange={handleChange}
-                        className="border-2  input-article  rounded-r px-4 py-2  h-fit w-full"
-                        required
-                    />
-                </label>
+                <div className="flex flex-col  justify-between">
+                    <CouponsDetails setAddCouponData={setAddCouponData} />
+                    <TermsAndCondition setAddCouponData={setAddCouponData} />
+                </div>
 
                 <div className=" flex p-3 gap-3">
                     <button className="btn-primary" onClick={handleSubmit}>

@@ -5,6 +5,7 @@ import makeRequest from "../../utils/makeRequest";
 import AlertComponent from "../AlertComponent/AlertComponent";
 import { DateSelect } from "./DateSelect";
 import { TermsAndCondition } from "./TermsAndCondition";
+import { CouponsDetails } from "./CouponsDescription";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -110,9 +111,9 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                     />
                 </label> */}
 
-                <div className="flex justify-between">
+                <div className="flex flex-col  justify-between">
                     <TermsAndCondition setAddCouponData={setAddCouponData} />
-                    <TermsAndCondition setAddCouponData={setAddCouponData} />
+                    <CouponsDetails setAddCouponData={setAddCouponData} />
                 </div>
 
                 <div className=" flex p-3 gap-3">

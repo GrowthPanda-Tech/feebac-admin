@@ -1,15 +1,14 @@
-import { useState, useEffect } from "react";
-import Filters from "./filter/Filters";
+import { useState, useEffect, useContext } from "react";
 import makeRequest from "../../../utils/makeRequest";
 import convertToUTC from "../../../utils/convertToUTC";
 import formSubmit from "../../../utils/formSubmit";
-import PageTitle from "../../PageTitle";
 
+//components
+import Filters from "./filter/Filters";
+import PageTitle from "../../PageTitle";
 import AlertComponent from "../../AlertComponent/AlertComponent";
 
-import { useContext } from "react";
 import { CategoryContext } from "../../../contexts/CategoryContext";
-
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -35,10 +34,11 @@ function UserCount({ type, count }) {
     );
 }
 
-function Select({ name, onChange, children }) {
+function Select({ name, value, onChange, children }) {
     return (
         <select
             name={name}
+            value={value}
             onChange={onChange}
             className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3 capitalize"
         >
@@ -75,7 +75,6 @@ export default function CreateSurveyForm({
     setIsSurveyCreate,
 }) {
     const [filters, setFilters] = useState([]);
-    const [isShowFilter, setIsShowFilter] = useState(false);
     const [surveyData, setSurveyData] = useState([]);
     const [profileData, setProfileData] = useState({});
     const [userCount, setUserCount] = useState(0);
@@ -84,40 +83,66 @@ export default function CreateSurveyForm({
     const { categories } = useContext(CategoryContext);
 
     const getFilters = async () => {
-        const response = await makeRequest(
-            "config/get-profile-key-value",
-            "GET"
-        );
-        response.isSuccess
-            ? setFilters(response.data)
-            : AlertComponent("failed", response);
+        try {
+            const response = await makeRequest("config/get-profile-key-value");
+
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
+
+            setFilters(response.data);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const getUserCount = async () => {
-        const response = await makeRequest(
-            "site-admin/get-target-profile-count?target={}",
-            "GET"
-        );
-        setUserCount(response.data);
+        try {
+            const response = await makeRequest(
+                "site-admin/get-target-profile-count?target={}"
+            );
+
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
+
+            setUserCount(response.data);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const getFilterCount = async () => {
         const filterCount = JSON.stringify(profileData);
-        const response = await makeRequest(
-            `site-admin/get-target-profile-count?target=${filterCount}`,
-            "GET"
-        );
-        setFilteredUserCount(response.data);
+
+        try {
+            const response = await makeRequest(
+                `site-admin/get-target-profile-count?target=${filterCount}`
+            );
+
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
+
+            setFilteredUserCount(response.data);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const handleChange = (e) => {
-        if (e.target.name === "startDate" || e.target.name === "endDate") {
-            const localDateObject = new Date(e.target.value);
+        const name = e.target.name;
+        const value = e.target.value;
+
+        if (name === "startDate" || name === "endDate") {
+            const localDateObject = new Date(value);
             const formattedOutput = convertToUTC(localDateObject);
-            setSurveyData({ ...surveyData, [e.target.name]: formattedOutput });
+
+            setSurveyData({ ...surveyData, [name]: formattedOutput });
+
             return;
         }
-        setSurveyData({ ...surveyData, [e.target.name]: e.target.value });
+        setSurveyData({ ...surveyData, [name]: value });
     };
 
     const handleSubmit = async (event) => {
@@ -140,6 +165,7 @@ export default function CreateSurveyForm({
 
             if (response.isSuccess) {
                 AlertComponent("success", response);
+
                 setSurveyId(response.surveyId);
                 setSurveyTitle(surveyData.surveyTitle);
                 setIsSurveyCreate(response.isSuccess);
@@ -147,8 +173,6 @@ export default function CreateSurveyForm({
                 AlertComponent("failed", response);
             }
         } catch (error) {
-            console.log(error);
-            if (error >= 500) console.log("hii");
             AlertComponent("error", "", "Please Enter Valid Value");
         }
     };
@@ -190,8 +214,11 @@ export default function CreateSurveyForm({
                 </Label>
 
                 <Label name={"Select Research Category"}>
-                    <Select name={"category"} onChange={handleChange}>
-                        <option value={null}>-- Categories --</option>
+                    <Select
+                        name={"category"}
+                        value={categories[0].category_id}
+                        onChange={handleChange}
+                    >
                         {categories.map((item) => (
                             <option
                                 key={item.category_id}
@@ -203,7 +230,7 @@ export default function CreateSurveyForm({
                     </Select>
                 </Label>
 
-                <Label name={"Loyalty Points Per Use"}>
+                <Label name={"Loyalty Points"}>
                     <Input
                         type={"number"}
                         name={"loyaltyPoint"}
@@ -217,7 +244,9 @@ export default function CreateSurveyForm({
                 <UserCount type={"filter"} count={filterdUserCount} />
             </div>
 
-            {isShowFilter && (
+            {filters.length === 0 ? (
+                <div>Looks like there are no filters 😕</div>
+            ) : (
                 <Filters
                     filters={filters}
                     profileData={profileData}
@@ -227,22 +256,15 @@ export default function CreateSurveyForm({
             )}
 
             <div className="flex gap-4">
-                {!isShowFilter ? (
+                {filters.length > 0 ? (
                     <button
                         className="btn-primary bg-accent w-fit"
-                        onClick={() => setIsShowFilter(true)}
+                        onClick={getFilterCount}
                     >
-                        <i className="fa-solid fa-plus"></i>
-                        Add Filters
+                        Get User Count
                     </button>
-                ) : (
-                    <button
-                        className="btn-primary bg-accent w-fit"
-                        onClick={() => getFilterCount()}
-                    >
-                        Confirm Filters
-                    </button>
-                )}
+                ) : null}
+
                 <button className="btn-primary w-fit" onClick={handleSubmit}>
                     Create
                 </button>

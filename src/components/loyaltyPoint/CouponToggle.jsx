@@ -30,7 +30,6 @@ function CouponToggle({ couponInfo, couponId, setCouponsData }) {
         }
     };
 
-    console.log(isActive);
     useEffect(() => {
         setIsActive(couponInfo?.isActive);
     }, [couponInfo]);

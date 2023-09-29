@@ -1,7 +1,9 @@
 import { useState, useContext } from "react";
 import { CategoryContext } from "../../contexts/CategoryContext";
+
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import formSubmit from "../../utils/formSubmit";
+
 import AlertComponent from "../AlertComponent/AlertComponent";
 
 export default function CategoryForm({ setIsShowCategoryCreate }) {
@@ -48,21 +50,26 @@ export default function CategoryForm({ setIsShowCategoryCreate }) {
                 "POST",
                 formdata
             );
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                const newCategories = categories.slice();
-                newCategories.push(response.data);
-                setCategories(newCategories);
-                setIsShowCategoryCreate(false);
+
+            if (!response.isSuccess) {
+                AlertComponent("failed", response);
                 return;
-            } else AlertComponent("failed", response);
+            }
+
+            AlertComponent("success", response);
+
+            const newCategories = categories.slice();
+            newCategories.push(response.data);
+            setCategories(newCategories);
+
+            setIsShowCategoryCreate(false);
         } catch (error) {
-            AlertComponent("error", "", error);
+            AlertComponent("error", error);
         }
     };
 
     return (
-        <div className="bg-white rounded-xl mb-8 p-8 flex flex-col md:flex-row  gap-8">
+        <div className="bg-white rounded-xl mb-8 p-8 flex flex-col md:flex-row gap-8">
             <div className=" w-full md:w-1/5 flex justify-center items-center border rounded-xl">
                 <img src={imgPreview} />
             </div>

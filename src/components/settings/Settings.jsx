@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
+import makeRequest from "../../utils/makeRequest";
+
+//components
 import PageTitle from "../PageTitle";
 import CategoryForm from "./CategoryForm";
 import Categories from "./Categories";
 import Profiles from "./filter/Profiles";
 import FilterCreate from "./filter/FilterCreate";
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function Pill({ section, isActive, onClick }) {
     return (
@@ -31,56 +32,31 @@ export default function Settings() {
         options: [],
     });
 
-    console.log(isShowCategoryCreate, isShowFilterCreate, visibleSection);
-
-    const handleShow = (section) => {
-        if (section === "filter") {
-            setIsShowFilterCreate(false);
-        } else if (section === "filterVal") {
-            setIsShowFilterCreate(true);
-        } else {
-            return;
-        }
-    };
-
-    const getTertiaryKeys = async (request) => {
-        try {
-            const response = await fetch(
-                `${BASE_URL}/config/get-profile-key-value`,
-                request
-            );
-
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-
-            const json = await response.json();
-
-            if (!json.isSuccess) {
-                throw new Error(response.message);
-            }
-
-            setTertiaryKeys(json.data[2].key);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     useEffect(() => {
-        const controller = new AbortController();
-        const signal = controller.signal;
+        let ignore = false;
 
-        const request = {
-            signal,
-            headers: {
-                authToken: localStorage.getItem("authToken"),
-            },
-        };
+        async function getTertiaryKeys() {
+            try {
+                const response = await makeRequest(
+                    `config/get-profile-key-value`
+                );
 
-        getTertiaryKeys(request);
+                if (!response.isSuccess) {
+                    throw new Error(response.message);
+                }
+
+                if (!ignore) {
+                    setTertiaryKeys(response.data[2].key);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        getTertiaryKeys();
 
         return () => {
-            controller.abort();
+            ignore = true;
         };
     }, []);
 
@@ -99,7 +75,7 @@ export default function Settings() {
                 ) : visibleSection === "filter" ? (
                     <button
                         className="btn-primary bg-accent"
-                        onClick={() => handleShow("filterVal")}
+                        onClick={() => setIsShowFilterCreate(true)}
                     >
                         <i className="fa-solid fa-plus"></i>
                         Filter

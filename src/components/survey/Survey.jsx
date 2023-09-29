@@ -5,10 +5,11 @@ import Table from "../table/Table";
 import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
-import MyResponsiveBar from "./Databar";
 import PageTitle from "../PageTitle";
+import makeRequest from "../../utils/makeRequest";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+//assets
+import edit from "../../assets/edit.svg";
 
 const HEADERS = ["Title", "Category", "Start Date", "End Date", "Actions"];
 
@@ -66,35 +67,23 @@ export default function Survey() {
         const dateObj = new Date(`${date} UTC`);
         return dateObj.toLocaleString();
     };
-    useEffect(() => {
-        const controller = new AbortController();
-        const signal = controller.signal;
 
-        const request = {
-            signal,
-            headers: {
-                authToken: localStorage.getItem("authToken"),
-            },
-        };
+    useEffect(() => {
+        let ignore = false;
 
         async function fetchSurveyData() {
             try {
-                const response = await fetch(
-                    `${BASE_URL}/site-admin/get-all-survey?time=${status}`,
-                    request
+                const response = await makeRequest(
+                    `site-admin/get-all-survey?time=${status}`
                 );
 
-                if (!response.ok) {
-                    throw new Error(response.status);
-                }
-
-                const json = await response.json();
-
-                if (!json.isSuccess) {
+                if (!response.isSuccess) {
                     throw new Error(json.message);
                 }
 
-                setsurveyData(json.data);
+                if (!ignore) {
+                    setsurveyData(response.data);
+                }
             } catch (error) {
                 console.error(error);
             }
@@ -103,7 +92,7 @@ export default function Survey() {
         fetchSurveyData();
 
         return () => {
-            controller.abort();
+            ignore = true;
         };
     }, [status]);
 
@@ -161,22 +150,54 @@ export default function Survey() {
                             <Trow key={survey_id}>
                                 <Tdata left> {survey_title} </Tdata>
                                 <Tdata capitalize> {category} </Tdata>
-                                <Tdata mono>{convertToLocal(start_date)}</Tdata>
-                                <Tdata mono>{convertToLocal(end_date)}</Tdata>
+                                <Tdata mono>
+                                    <div className="flex flex-col gap-2">
+                                        <div>
+                                            {
+                                                convertToLocal(
+                                                    start_date
+                                                ).split(",")[0]
+                                            }
+                                        </div>
+                                        <div className="text-sm opacity-50">
+                                            {
+                                                convertToLocal(
+                                                    start_date
+                                                ).split(",")[1]
+                                            }
+                                        </div>
+                                    </div>
+                                </Tdata>
+                                <Tdata mono>
+                                    <div className="flex flex-col gap-2">
+                                        <div>
+                                            {
+                                                convertToLocal(end_date).split(
+                                                    ","
+                                                )[0]
+                                            }
+                                        </div>
+                                        <div className="text-sm opacity-50">
+                                            {
+                                                convertToLocal(end_date).split(
+                                                    ","
+                                                )[1]
+                                            }
+                                        </div>
+                                    </div>
+                                </Tdata>
                                 <Tdata>
-                                    <div className="flex justify-evenly">
+                                    <div className="flex justify-center gap-4">
                                         <Link to={`details/${survey_id}`}>
                                             <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
                                         </Link>
-                                        {status == "upcoming" ? (
+                                        {status === "upcoming" ? (
                                             <Link
                                                 to={`edit-survey/${survey_id}`}
                                             >
                                                 <i className="fa-solid fa-pen-to-square text-xl"></i>
                                             </Link>
-                                        ) : (
-                                            ""
-                                        )}
+                                        ) : null}
                                     </div>
                                 </Tdata>
                             </Trow>

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
+
+//components
 import NewsForm from "./NewsForm";
 import PageTitle from "../PageTitle";
 import AlertComponent from "../AlertComponent/AlertComponent";
@@ -45,15 +47,19 @@ export default function NewsCreate() {
     const handleSubmit = async (event) => {
         const formdata = new FormData();
 
-        formdata.append("title", newsData.title);
-        formdata.append("description", newsData.description);
-        formdata.append("newsUrl", newsData.newsUrl);
-        formdata.append("category", newsData.category);
-        formdata.append(
-            "newsImage",
-            newsData.newsImage,
-            newsData.newsImage.name
-        );
+        for (const [key, value] of Object.entries(newsData)) {
+            if (key === "newsImage") {
+                formdata.append(
+                    "newsImage",
+                    newsData.newsImage,
+                    newsData.newsImage.name
+                );
+
+                continue;
+            }
+
+            formdata.append(key, value);
+        }
 
         try {
             const response = await formSubmit(

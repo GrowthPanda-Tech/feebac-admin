@@ -1,6 +1,7 @@
 import CouponToggle from "./CouponToggle";
 
 export default function CouponCard({ data, setCouponsData }) {
+    console.log(data);
     return (
         <>
             <div
@@ -44,6 +45,12 @@ export default function CouponCard({ data, setCouponsData }) {
                                 <i className="fa-solid fa-coins p-2"></i>
                                 <h2 className=" p-2">{data.value}</h2>
                             </div>
+                            {/* {data.details.map((item, index) => {
+                                return <span key={index}>{item}</span>;
+                            })}
+                            {data.tnc.map((item, index) => {
+                                return <span key={index}>{item}</span>;
+                            })} */}
                         </div>
                     </div>
                 </div>

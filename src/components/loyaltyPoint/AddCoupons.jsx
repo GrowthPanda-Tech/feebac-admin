@@ -1,6 +1,5 @@
 import { React, useState } from "react";
 import PageTitle from "../PageTitle";
-import convertToUTC from "../../utils/convertToUTC";
 import makeRequest from "../../utils/makeRequest";
 import AlertComponent from "../AlertComponent/AlertComponent";
 import { DateSelect } from "./DateSelect";
@@ -98,22 +97,10 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                     />
                 </label>
                 <DateSelect setAddCouponData={setAddCouponData} />
-                {/* <label className="flex flex-col pb-6">
-                    <span className="font-semibold mb-2">End Date :</span>
-
-                    <input
-                        type={"datetime-local"}
-                        min={TODAY}
-                        name={"expiredData"}
-                        onChange={handleChange}
-                        className="border-2  input-article  rounded-r px-4 py-2  h-fit w-full"
-                        required
-                    />
-                </label> */}
 
                 <div className="flex flex-col  justify-between">
-                    <TermsAndCondition setAddCouponData={setAddCouponData} />
                     <CouponsDetails setAddCouponData={setAddCouponData} />
+                    <TermsAndCondition setAddCouponData={setAddCouponData} />
                 </div>
 
                 <div className=" flex p-3 gap-3">

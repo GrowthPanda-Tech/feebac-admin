@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import PageTitle from "../PageTitle";
 import LoyaltyPoint from "./LoyaltyPoint";
 import Coupons from "./Coupons";
+import RedeemRequest from "./RedeemRequest";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -24,7 +25,15 @@ export default function Loyalty() {
     return (
         <div className="flex flex-col gap-6">
             <div className="md:flex md:justify-between items-center">
-                <PageTitle name={"Loyalty & Coupons Metrics"} />
+                <PageTitle
+                    name={
+                        visibleSection === "Points Management"
+                            ? "Points Management"
+                            : visibleSection === "Voucher Management"
+                            ? "Voucher Management"
+                            : "Redeem Request"
+                    }
+                />
             </div>
 
             <div className="flex gap-4">
@@ -38,11 +47,16 @@ export default function Loyalty() {
                     isActive={visibleSection === "Voucher Management"}
                     onClick={() => setVisibleSection("Voucher Management")}
                 />
+                <Pill
+                    section={"Redeem Request"}
+                    isActive={visibleSection === "Redeem Request"}
+                    onClick={() => setVisibleSection("Redeem Request")}
+                />
             </div>
 
             {visibleSection === "Points Management" ? <LoyaltyPoint /> : null}
-
             {visibleSection === "Voucher Management" ? <Coupons /> : null}
+            {visibleSection === "Redeem Request" ? <RedeemRequest /> : null}
         </div>
     );
 }

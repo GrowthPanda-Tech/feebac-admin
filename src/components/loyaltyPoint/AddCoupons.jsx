@@ -105,7 +105,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
 
                 <div className=" flex p-3 gap-3">
                     <button className="btn-primary" onClick={handleSubmit}>
-                        Save Changes
+                        Add Coupons
                     </button>
                     <button
                         onClick={() => {

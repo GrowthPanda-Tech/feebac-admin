@@ -71,14 +71,13 @@ export default function EditSurveyForm({
     surveyInfo,
     setSurveyInfo,
 }) {
-    const navigate = useNavigate();
+    const convertToLocal = (date) => {
+        const dateObj = new Date(`${date} UTC`);
+        return dateObj.toISOString().slice(0, -8);
+    };
+
     const { slug } = useParams();
-    const [surveyId, setSurveyId] = useState(surveyInfo.surveyId);
-    const [surveyTitle, setSurveyTitle] = useState();
-    const [isSurveyCreate, setIsSurveyCreate] = useState(false);
     const [categories, setCategories] = useState([]);
-    const [filters, setFilters] = useState([]);
-    const [isShowFilter, setIsShowFilter] = useState(false);
     const [surveyData, setSurveyData] = useState({
         surveyId: surveyInfo?.survey_id,
         surveyTitle: surveyInfo?.survey_title,
@@ -90,9 +89,9 @@ export default function EditSurveyForm({
         isUpdateImage: false,
     });
     const [profileData, setProfileData] = useState({});
-    console.log(surveyData);
-    console.log(surveyInfo);
-    console.log(surveyData.startDate.split("/").join("-"));
+    // console.log(convertToLocal("2023/10/03 06:05:14"));
+
+    // console.log(surveyData.startDate.split("/").join("-"));
     const getCategories = async () => {
         const response = await makeRequest(
             "site-admin/get-all-category",
@@ -103,9 +102,13 @@ export default function EditSurveyForm({
 
     const handleChange = (e) => {
         if (e.target.name === "startDate" || e.target.name === "endDate") {
+            console.log(e.target.value);
             const localDateObject = new Date(e.target.value);
+            console.log(localDateObject);
             const formattedOutput = convertToUTC(localDateObject);
+            console.log(formattedOutput);
             setSurveyData({ ...surveyData, [e.target.name]: formattedOutput });
+
             return;
         }
         setSurveyData({ ...surveyData, [e.target.name]: e.target.value });
@@ -128,8 +131,6 @@ export default function EditSurveyForm({
                 "PUT",
                 formdata
             );
-            // alert(response.message);
-
             if (response.isSuccess) {
                 AlertComponent("success", response);
                 const getData = async () => {
@@ -138,7 +139,6 @@ export default function EditSurveyForm({
                         "GET"
                     );
                     if (response.isSuccess) {
-                        // setQuestionList(response.questionList);
                         setSurveyInfo(response.surveyInfo);
                     }
                 };
@@ -151,24 +151,12 @@ export default function EditSurveyForm({
         }
     };
 
-    // {
-    //     isSurveyCreate &&
-    //         setTimeout(() => {
-    //             navigate(`/survey/create/add-questions/${surveyId}`, {
-    //                 state: {
-    //                     surveyId: surveyId,
-    //                     surveyTitle: surveyTitle,
-    //                 },
-    //             });
-    //             setIsSurveyCreate(false);
-    //         }, 1000);
-    // }
-
     useEffect(() => {
         getCategories();
     }, []);
 
-    console.log(surveyData.category);
+    // console.log(surveyData.category);
+    convertToLocal(surveyData?.startDate, "startdate");
     return (
         <div className="flex flex-col p-8 gap-8">
             <h1 className="heading mb-0"> Edit Survey Details </h1>
@@ -180,11 +168,11 @@ export default function EditSurveyForm({
                         min={TODAY}
                         value={
                             surveyData
-                                ? surveyData?.startDate
-                                      .replace(/ /g, "T")
-                                      .split("/")
-                                      .join("-")
-                                : ""
+                                ? convertToLocal(surveyData?.startDate)
+                                : //   .replace(/ /g, "T")
+                                  //   .split("/")
+                                  //   .join("-")
+                                  ""
                         }
                         name={"startDate"}
                         onChange={handleChange}

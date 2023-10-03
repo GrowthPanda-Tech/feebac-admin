@@ -49,7 +49,7 @@ export default function Content() {
         async function getArticleList() {
             try {
                 const response = await makeRequest(
-                    "site-admin/get-article-list"
+                    "site-admin/get-article-list?page=1&count=1000"
                 );
 
                 if (!response.isSuccess) {

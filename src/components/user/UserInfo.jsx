@@ -101,30 +101,38 @@ export default function UserInfo() {
                     {/* Transaction Info */}
                     <div className="flex flex-col gap-6 bg-white rounded-xl p-10 w-8/12">
                         <PageTitle name={"Transaction Ledger"} />
-                        <Table>
-                            <Thead headers={LOYALTY_HEADERS} />
-                            <tbody>
-                                {transactInfo.map((transaction) => (
-                                    <Trow key={transaction.id}>
-                                        <Tdata left>{transaction.reason}</Tdata>
-                                        <Tdata mono>
-                                            {transaction.dateTime.split(" ")[0]}
-                                        </Tdata>
-                                        <Tdata>
-                                            {transaction.isCredit ? (
-                                                <div className="text-green">
-                                                    + {transaction.value}
-                                                </div>
-                                            ) : (
-                                                <div className="text-secondary">
-                                                    - {transaction.value}
-                                                </div>
-                                            )}
-                                        </Tdata>
-                                    </Trow>
-                                ))}
-                            </tbody>
-                        </Table>
+                        <div className=" overflow-y-scroll">
+                            <Table>
+                                <Thead headers={LOYALTY_HEADERS} />
+                                <tbody>
+                                    {transactInfo.map((transaction) => (
+                                        <Trow key={transaction.id}>
+                                            <Tdata left>
+                                                {transaction.reason}
+                                            </Tdata>
+                                            <Tdata mono>
+                                                {
+                                                    transaction.dateTime.split(
+                                                        " "
+                                                    )[0]
+                                                }
+                                            </Tdata>
+                                            <Tdata>
+                                                {transaction.isCredit ? (
+                                                    <div className="text-green">
+                                                        + {transaction.value}
+                                                    </div>
+                                                ) : (
+                                                    <div className="text-secondary">
+                                                        - {transaction.value}
+                                                    </div>
+                                                )}
+                                            </Tdata>
+                                        </Trow>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </div>
                     </div>
 
                     <div className="flex flex-col gap-6 justify-evenly items-center bg-white rounded-xl p-8 w-4/12">

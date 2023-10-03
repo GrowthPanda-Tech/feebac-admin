@@ -27,7 +27,7 @@ export default function User() {
         async function getUserData() {
             try {
                 const response = await fetch(
-                    `${BASE_URL}/site-admin/get-all-user`,
+                    `${BASE_URL}/site-admin/get-all-user?page=1&count=1000`,
                     request
                 );
 

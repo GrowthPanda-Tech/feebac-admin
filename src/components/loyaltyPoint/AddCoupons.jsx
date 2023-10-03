@@ -76,7 +76,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                     }}
                 />
                 <InputForm
-                    label={"Voucher Value "}
+                    label={"Coins Requried "}
                     name={"value"}
                     type={"number"}
                     onChange={(e) => {

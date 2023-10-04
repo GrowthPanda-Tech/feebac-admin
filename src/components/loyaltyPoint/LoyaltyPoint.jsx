@@ -30,6 +30,11 @@ function LoyaltyPoint() {
         }
     };
 
+    const convertToLocal = (date) => {
+        const dateObj = new Date(`${date} UTC`);
+        return dateObj.toLocaleString();
+    };
+
     let option = {
         plugins: {
             legend: {
@@ -125,7 +130,22 @@ function LoyaltyPoint() {
                                                     {reason ? reason : "-"}
                                                 </Tdata>
                                                 <Tdata>
-                                                    {dateTime.trim(" ")}
+                                                    <div className="flex flex-col gap-2">
+                                                        <div>
+                                                            {
+                                                                convertToLocal(
+                                                                    dateTime
+                                                                ).split(",")[0]
+                                                            }
+                                                        </div>
+                                                        <div className="text-sm">
+                                                            {
+                                                                convertToLocal(
+                                                                    dateTime
+                                                                ).split(",")[1]
+                                                            }
+                                                        </div>
+                                                    </div>
                                                 </Tdata>
                                                 <Tdata>
                                                     {isCredit ? (

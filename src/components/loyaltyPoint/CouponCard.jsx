@@ -5,7 +5,7 @@ export default function CouponCard({ data, setCouponsData }) {
     return (
         <>
             <div
-                className={` relative flex rounded-lg  bg-white shadow-xl flex-col  `}
+                className={` relative flex   bg-white rounded-xl shadow-xl flex-col  `}
             >
                 {!data.isActive && (
                     <h2 className=" text-2xl text-white z-10 absolute top-[50%]  left-[36%]">
@@ -14,11 +14,11 @@ export default function CouponCard({ data, setCouponsData }) {
                 )}
 
                 <div
-                    className={`bg-white ${
+                    className={`bg rounded-lg ${
                         data.isActive ? "" : "disable-filter"
                     } `}
                 >
-                    <div className=" absolute top-1 right-2 p-2">
+                    <div className="absolute top-1 right-2 p-2">
                         <CouponToggle
                             couponId={data.id}
                             couponInfo={data}

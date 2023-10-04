@@ -4,7 +4,7 @@ import formSubmit from "../../utils/formSubmit";
 import makeRequest from "../../utils/makeRequest";
 import AlertComponent from "../AlertComponent/AlertComponent";
 
-function InputForm({ label, name, value, onChange }) {
+function InputForm({ label, name, value, onChange, type }) {
     return (
         <div className="pb-6">
             <label className="font-semibold text-gray-700 block pb-1">
@@ -29,6 +29,14 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     const [updatedData, setUpdatedData] = useState({ ...userData });
     const [isUpdateImage, setIsUpdateImage] = useState(false);
+    const [isDateChnage, setIsDateChange] = useState(false);
+
+    function convertDateFormat(inputDate) {
+        return inputDate.replace(/\//g, "-");
+    }
+    function convertDate(inputDate) {
+        return inputDate.replace(/-/g, "/");
+    }
 
     const handleImageSubmit = async (event) => {
         if (isUpdateImage) {
@@ -87,6 +95,19 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
             }
         } catch (error) {}
     };
+
+    const dateChangeHandler = (event) => {
+        setIsDateChange(true);
+        let newDate = convertDate(event.target.value);
+        console.log(newDate);
+
+        setUpdatedData({
+            ...updatedData,
+            date_of_birth: newDate,
+        });
+    };
+
+    console.log(updatedData);
 
     const handleChange = (event) => {
         if (event.target.name === "userImage") {
@@ -173,14 +194,7 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
                             handleChange(e);
                         }}
                     />
-                    {/* <InputForm
-                    label={"Mobile No:"}
-                    name={"mobile"}
-                    value={updatedData ? updatedData.mobile : ""}
-                    onChange={(e) => {
-                        handleChange(e);
-                    }}
-                /> */}
+
                     <InputForm
                         label={"City"}
                         name={"city"}
@@ -189,6 +203,39 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
                             handleChange(e);
                         }}
                     />
+                    <InputForm
+                        label={"State"}
+                        name={"state"}
+                        value={updatedData ? updatedData.state : ""}
+                        onChange={(e) => {
+                            handleChange(e);
+                        }}
+                    />
+
+                    <div className="pb-6">
+                        <label className="font-semibold text-gray-700 block pb-1">
+                            Date of Birth
+                        </label>
+                        <div className="flex">
+                            <input
+                                name="date_of_birth"
+                                className="border-2  input-article  rounded-r px-4 py-2 w-full"
+                                value={
+                                    isDateChnage
+                                        ? updatedData
+                                            ? convertDateFormat(
+                                                  updatedData.date_of_birth
+                                              )
+                                            : ""
+                                        : updatedData
+                                        ? updatedData.date_of_birth
+                                        : ""
+                                }
+                                type="date"
+                                onChange={dateChangeHandler}
+                            />
+                        </div>
+                    </div>
                     {/* <InputForm
                         label={"Date Of Birth"}
                         name={"date_of_birth"}

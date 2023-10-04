@@ -11,7 +11,7 @@ function PieChart({ chartData, option, location }) {
             </h1>
             <div
                 className={` ${
-                    location === "loayalty" ? `w-96` : "w-60"
+                    location === "loayalty" ? `w-96` : "w-80"
                 }  mb-10  items-center justify-center flex`}
             >
                 <Doughnut data={chartData} options={option} />

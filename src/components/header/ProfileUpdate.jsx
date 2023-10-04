@@ -25,6 +25,8 @@ function ProfileUpdate() {
         getAdminInfo();
     }, []);
 
+    console.log(userData);
+
     return (
         <>
             <div className="">
@@ -95,6 +97,47 @@ function ProfileUpdate() {
                                         type="number"
                                         value={userData && userData.mobile}
                                     />
+                                </div>
+                                <div className="pb-4">
+                                    <label className="font-semibold text-gray-700 block pb-1">
+                                        Date Of Birth
+                                    </label>
+                                    <input
+                                        name="date_of_birth"
+                                        disabled
+                                        className="border-1  rounded-r px-4 py-2 w-full"
+                                        type="text"
+                                        value={
+                                            userData && userData.date_of_birth
+                                        }
+                                    />
+                                </div>
+
+                                <div className="pb-4 flex justify-between">
+                                    <div className="">
+                                        <label className="font-semibold text-gray-700 block pb-1">
+                                            City
+                                        </label>
+                                        <input
+                                            name="city"
+                                            disabled
+                                            className="border-1  rounded-r py-2 w-full"
+                                            type="text"
+                                            value={userData && userData.city}
+                                        />
+                                    </div>
+                                    <div className="">
+                                        <label className="font-semibold text-end text-gray-700 block pb-1">
+                                            State
+                                        </label>
+                                        <input
+                                            name="state"
+                                            disabled
+                                            className="border-1 text-end rounded-r py-2 w-full"
+                                            type="text"
+                                            value={userData && userData.state}
+                                        />
+                                    </div>
                                 </div>
                                 <div className="pb-4 flex font-semibold justify-between">
                                     <span>

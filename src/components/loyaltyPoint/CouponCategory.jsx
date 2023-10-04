@@ -20,8 +20,6 @@ const CouponCategory = ({ setAddCouponData }) => {
         }
     };
 
-    console.log(options);
-
     useEffect(() => {
         getCouponsCategory();
     }, []);
@@ -35,7 +33,7 @@ const CouponCategory = ({ setAddCouponData }) => {
     };
 
     return (
-        <div className="mb-2 flex items-center justify-between ">
+        <div className="mb-2 flex items-center gap-4">
             <label className="font-semibold mb-2">
                 Select Category for Coupon
             </label>

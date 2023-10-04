@@ -98,11 +98,12 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                     <DateSelect setAddCouponData={setAddCouponData} />
                 </div>
 
-                <div className="flex flex-col justify-between">
+                <div className="flex flex-col gap-4">
                     <CouponsDetails setAddCouponData={setAddCouponData} />
                     <TermsAndCondition setAddCouponData={setAddCouponData} />
                 </div>
-                <div className="flex p-3 gap-3">
+
+                <div className="flex gap-4">
                     <button className="btn-primary" onClick={handleSubmit}>
                         Add Coupons
                     </button>

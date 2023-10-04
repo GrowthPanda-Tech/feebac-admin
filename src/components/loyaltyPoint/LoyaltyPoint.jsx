@@ -85,7 +85,7 @@ function LoyaltyPoint() {
                         <div className="bg-[#EA525F]  rounded-lg p-8 items-center  justify-center flex flex-col text-white">
                             <div className="flex flex-col text-center w-full">
                                 <h2 className="text-5xl p-8">
-                                    {data ? data.totalCredit : ""}
+                                    {data ? data.totalCredit : 0}
                                 </h2>
                             </div>
                             <div className="flex justify-between mx-auto text-center">
@@ -95,7 +95,7 @@ function LoyaltyPoint() {
                         <div className="bg-[#EA525F]  p-8 rounded-lg items-center justify-center flex flex-col  text-white">
                             <div className="flex flex-col text-center w-full">
                                 <h2 className="text-5xl p-8">
-                                    {data ? data.totalSpend : ""}
+                                    {data ? data.totalSpend : 0}
                                 </h2>
                             </div>
                             <div className="flex justify-between mx-auto text-center">

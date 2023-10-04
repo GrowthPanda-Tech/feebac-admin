@@ -26,6 +26,7 @@ import ProfileUpdate from "./components/header/ProfileUpdate";
 import AddQuestions from "./components/survey/createSurvey/AddQuestions";
 import SurveyEdit from "./components/survey/surveyEdit/SurveyEdit";
 import Loyalty from "./components/loyaltyPoint/Loyalty";
+import RedeemInfo from "./components/loyaltyPoint/RedeemInfo";
 
 export default function App() {
     const isLoggedIn = localStorage.getItem("authToken") != null;
@@ -45,6 +46,10 @@ export default function App() {
                                 <Route
                                     path="user/:slug"
                                     element={<UserInfo />}
+                                />
+                                <Route
+                                    path="loyalty-point/redeem/:slug"
+                                    element={<RedeemInfo />}
                                 />
                                 <Route path="survey" element={<Survey />} />
                                 <Route

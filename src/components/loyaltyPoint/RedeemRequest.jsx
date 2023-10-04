@@ -15,7 +15,7 @@ const HEADERS = [
     "Request Id",
     "Coupon Name",
     "User Id",
-    "Req Date",
+    "Request Date",
     "Status",
     "Actions",
 ];
@@ -24,7 +24,7 @@ const APPROVEDHEADERS = [
     "Request Id",
     "Coupon Name",
     "User Id",
-    "Req Date",
+    "Approved Date",
     "Status",
     "Approved By",
 ];
@@ -166,11 +166,11 @@ export default function RedeemRequest() {
                                     {status === "pending" ? (
                                         <Tdata>
                                             <div className="flex justify-center gap-4">
-                                                {/* {status === "pending" ? ( */}
-                                                <Link to={`/`}>
-                                                    <i className="fa-solid fa-thumbs-up"></i>
-                                                </Link>
-                                                {/* // ) : null} */}
+                                                {status === "pending" ? (
+                                                    <Link to={`redeem/${id}`}>
+                                                        <i className="text-xl fa-solid fa-circle-info"></i>
+                                                    </Link>
+                                                ) : null}
                                             </div>
                                         </Tdata>
                                     ) : (

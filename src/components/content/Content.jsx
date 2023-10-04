@@ -71,6 +71,8 @@ export default function Content() {
         };
     }, []);
 
+    console.log(articleList.length);
+
     return (
         <div className="flex flex-col gap-8">
             <div className="flex w-full justify-between items-center">
@@ -83,50 +85,57 @@ export default function Content() {
                 </Link>
             </div>
 
-            <Table>
-                <Thead headers={HEADERS} />
-                <tbody>
-                    {articleList.map(
-                        (
-                            {
-                                article_id,
-                                article_title,
-                                is_published,
-                                category,
-                                created_date,
-                            },
-                            index
-                        ) => (
-                            <Trow key={article_id}>
-                                <Tdata left>{article_title}</Tdata>
-                                <Tdata>
-                                    {is_published ? "Public" : "Private"}
-                                </Tdata>
-                                <Tdata capitalize>{category}</Tdata>
-                                <Tdata>{convertToLocal(created_date)}</Tdata>
-                                <Tdata>
-                                    <div className="flex justify-center gap-4 text-xl">
-                                        <Link
-                                            to={`/content/edit/${article_id}`}
-                                        >
-                                            <button>
-                                                <i className="fa-solid fa-pen-to-square"></i>
+            <div className="h-[69vh] relative overflow-y-scroll bg-white">
+                <Table>
+                    <Thead headers={HEADERS} />
+                    <tbody className="">
+                        {articleList.map(
+                            (
+                                {
+                                    article_id,
+                                    article_title,
+                                    is_published,
+                                    category,
+                                    created_date,
+                                },
+                                index
+                            ) => (
+                                <Trow key={article_id}>
+                                    <Tdata left>{article_title}</Tdata>
+                                    <Tdata>
+                                        {is_published ? "Public" : "Private"}
+                                    </Tdata>
+                                    <Tdata capitalize>{category}</Tdata>
+                                    <Tdata>
+                                        {convertToLocal(created_date)}
+                                    </Tdata>
+                                    <Tdata>
+                                        <div className="flex justify-center gap-4 text-xl">
+                                            <Link
+                                                to={`/content/edit/${article_id}`}
+                                            >
+                                                <button>
+                                                    <i className="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                            </Link>
+                                            <button
+                                                onClick={() =>
+                                                    handlePublish(
+                                                        article_id,
+                                                        index
+                                                    )
+                                                }
+                                            >
+                                                <i className="fa-regular fa-newspaper"></i>
                                             </button>
-                                        </Link>
-                                        <button
-                                            onClick={() =>
-                                                handlePublish(article_id, index)
-                                            }
-                                        >
-                                            <i className="fa-regular fa-newspaper"></i>
-                                        </button>
-                                    </div>
-                                </Tdata>
-                            </Trow>
-                        )
-                    )}
-                </tbody>
-            </Table>
+                                        </div>
+                                    </Tdata>
+                                </Trow>
+                            )
+                        )}
+                    </tbody>
+                </Table>
+            </div>
         </div>
     );
 }

@@ -103,64 +103,61 @@ function LoyaltyPoint() {
                             </div>
                         </div>
                     </div>
-                    <div className=" h-[40vh]  overflow-y-scroll ">
+                    <div className=" h-[40vh]  overflow-y-scroll bg-white ">
                         <Table>
                             <Thead headers={HEADERS} />
-                            <tbody>
-                                {loyaltyData &&
-                                    loyaltyData.map(
-                                        ({
-                                            id,
-                                            affectedUser,
-                                            reason,
-                                            value,
-                                            dateTime,
-                                            isCredit,
-                                        }) => (
-                                            <Trow key={id}>
-                                                <Tdata mono>
-                                                    {id.split("-").pop()}
-                                                </Tdata>
-                                                <Tdata mono>
-                                                    {affectedUser
-                                                        .split("-")
-                                                        .pop()}
-                                                </Tdata>
-                                                <Tdata>
-                                                    {reason ? reason : "-"}
-                                                </Tdata>
-                                                <Tdata>
-                                                    <div className="flex flex-col gap-2">
-                                                        <div>
-                                                            {
-                                                                convertToLocal(
-                                                                    dateTime
-                                                                ).split(",")[0]
-                                                            }
-                                                        </div>
-                                                        <div className="text-sm">
-                                                            {
-                                                                convertToLocal(
-                                                                    dateTime
-                                                                ).split(",")[1]
-                                                            }
-                                                        </div>
+                            <tbody className="">
+                                {loyaltyData.map(
+                                    ({
+                                        id,
+                                        affectedUser,
+                                        reason,
+                                        value,
+                                        dateTime,
+                                        isCredit,
+                                    }) => (
+                                        <Trow key={id}>
+                                            <Tdata mono>
+                                                {id.split("-").pop()}
+                                            </Tdata>
+                                            <Tdata mono>
+                                                {affectedUser.split("-").pop()}
+                                            </Tdata>
+                                            <Tdata>
+                                                {reason ? reason : "-"}
+                                            </Tdata>
+                                            <Tdata>
+                                                <div className="flex flex-col gap-2">
+                                                    <div>
+                                                        {
+                                                            convertToLocal(
+                                                                dateTime
+                                                            ).split(",")[0]
+                                                        }
                                                     </div>
-                                                </Tdata>
-                                                <Tdata>
-                                                    {isCredit ? (
-                                                        <span className="text-green">
-                                                            + {value}
-                                                        </span>
-                                                    ) : (
-                                                        <span className=" text-[#FF0000]">
-                                                            - {value}
-                                                        </span>
-                                                    )}
-                                                </Tdata>
-                                            </Trow>
-                                        )
-                                    )}
+                                                    <div className="text-sm">
+                                                        {
+                                                            convertToLocal(
+                                                                dateTime
+                                                            ).split(",")[1]
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </Tdata>
+                                            <Tdata>
+                                                {isCredit ? (
+                                                    <span className="text-green">
+                                                        + {value}
+                                                    </span>
+                                                ) : (
+                                                    <span className=" text-[#FF0000]">
+                                                        - {value}
+                                                    </span>
+                                                )}
+                                            </Tdata>
+                                        </Trow>
+                                    )
+                                )}
                             </tbody>
                         </Table>
                     </div>
@@ -169,7 +166,11 @@ function LoyaltyPoint() {
                     <h2 className=" text-2xl font-semibold ">
                         Points Statisticts
                     </h2>
-                    <PieChart chartData={pointsData} option={option} />
+                    <PieChart
+                        chartData={pointsData}
+                        option={option}
+                        location={"loayalty"}
+                    />
                 </div>
             </div>
         </div>

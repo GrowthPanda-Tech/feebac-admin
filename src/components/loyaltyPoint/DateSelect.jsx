@@ -67,7 +67,7 @@ export function DateSelect({ setAddCouponData }) {
             <select
                 value={selectedOption}
                 onChange={handleSelectChange}
-                className="px-2 py-2 ml-2 border input-article w-80  rounded-md"
+                className="px-2 py-2 ml-2 border input-article w-40 rounded-md"
             >
                 {generateDateOptions()}
             </select>

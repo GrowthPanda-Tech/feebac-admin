@@ -5,6 +5,8 @@ import AlertComponent from "../AlertComponent/AlertComponent";
 import { DateSelect } from "./DateSelect";
 import { TermsAndCondition } from "./TermsAndCondition";
 import { CouponsDetails } from "./CouponsDescription";
+import MySelect from "./CouponCategory";
+import CouponCategory from "./CouponCategory";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -83,7 +85,6 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                         handleChange(e);
                     }}
                 />
-
                 <label className="flex flex-col pb-6">
                     <span className="font-semibold mb-2">Image link :</span>
                     <input
@@ -96,13 +97,15 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                         required
                     />
                 </label>
-                <DateSelect setAddCouponData={setAddCouponData} />
+                <div className=" grid grid-cols-2 gap-2 w-full ">
+                    <CouponCategory setAddCouponData={setAddCouponData} />
+                    <DateSelect setAddCouponData={setAddCouponData} />
+                </div>
 
                 <div className="flex flex-col  justify-between">
                     <CouponsDetails setAddCouponData={setAddCouponData} />
                     <TermsAndCondition setAddCouponData={setAddCouponData} />
                 </div>
-
                 <div className=" flex p-3 gap-3">
                     <button className="btn-primary" onClick={handleSubmit}>
                         Save Changes

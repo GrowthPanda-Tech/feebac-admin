@@ -50,11 +50,11 @@
     }
 
     .pill-primary {
-        @apply py-2 px-6 bg-white border border-black rounded-xl;
+        @apply py-2 px-6 bg-white border text-[#EA8552] font-semibold border-[#EA8552] rounded-xl;
     }
 
     .pill-secondary {
-        @apply py-2 px-6 bg-[#C9CED6] text-[#858585] rounded-xl;
+        @apply py-2 px-6 bg-white text-[#858585] border border-dark-grey rounded-xl;
     }
 }
 

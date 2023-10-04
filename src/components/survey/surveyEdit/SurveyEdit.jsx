@@ -39,9 +39,6 @@ export default function SurveyEdit() {
         getData();
     }, [slug]);
 
-    console.log(surveyInfo.is_public);
-    console.log(surveyInfo);
-
     return (
         <>
             {surveyInfo && (

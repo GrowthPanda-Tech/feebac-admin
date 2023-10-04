@@ -1,59 +1,47 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import makeRequest from "../../utils/makeRequest";
+
+//components
 import PageTitle from "../PageTitle";
 import Table from "../table/Table";
 import Trow from "../table/Trow";
 import Thead from "../table/Thead";
 import Tdata from "../table/Tdata";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
 const HEADERS = ["User ID", "Gender", "Loyalty Points", "Location", "Actions"];
 
 export default function User() {
     const [userData, setUserData] = useState([]);
 
     useEffect(() => {
-        const controller = new AbortController();
-        const signal = controller.signal;
-
-        const request = {
-            headers: {
-                authToken: localStorage.getItem("authToken"),
-            },
-            signal,
-        };
+        let ignore = false;
 
         async function getUserData() {
             try {
-                const response = await fetch(
-                    `${BASE_URL}/site-admin/get-all-user?page=1&count=1000`,
-                    request
+                const response = await makeRequest(
+                    "site-admin/get-all-user?page=1&count=1000"
                 );
 
-                if (response.status >= 500) {
-                    throw new Error(response.status);
+                if (!response.isSuccess) {
+                    throw new Error(response.message);
                 }
 
-                const json = await response.json();
-
-                if (!json.isSuccess) {
-                    throw new Error(json.message);
+                if (!ignore) {
+                    setUserData(response.data);
                 }
-
-                setUserData(json.data);
             } catch (error) {
                 console.error(error);
             }
         }
+
         getUserData();
 
         return () => {
-            controller.abort();
+            ignore = true;
         };
     }, []);
-
-    console.log(userData);
 
     return (
         <div className="flex flex-col gap-8">

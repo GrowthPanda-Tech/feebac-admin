@@ -135,8 +135,11 @@ export default function CreateSurveyForm({
         const value = e.target.value;
 
         if (name === "startDate" || name === "endDate") {
+            console.log(value);
             const localDateObject = new Date(value);
+            console.log(localDateObject);
             const formattedOutput = convertToUTC(localDateObject);
+            console.log(formattedOutput);
 
             setSurveyData({ ...surveyData, [name]: formattedOutput });
 

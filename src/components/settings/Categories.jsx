@@ -15,7 +15,7 @@ export default function Categories() {
                 >
                     <img
                         src={BASE_URL + category.icon_url}
-                        className="rounded-lg"
+                        className="rounded-lg aspect-square"
                     />
                     <span className="capitalize text-lg font-medium py-3">
                         {category.category_name}

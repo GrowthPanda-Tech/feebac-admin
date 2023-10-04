@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
+import makeRequest from "../../utils/makeRequest";
+
 import PageTitle from "../PageTitle";
 import LoyaltyPoint from "./LoyaltyPoint";
 import Coupons from "./Coupons";
 import RedeemRequest from "./RedeemRequest";
-import makeRequest from "../../utils/makeRequest";
-import { data } from "autoprefixer";
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function Pill({ section, isActive, onClick, lenghth }) {
     return (
@@ -31,8 +29,7 @@ function Pill({ section, isActive, onClick, lenghth }) {
 
 export default function Loyalty() {
     const [visibleSection, setVisibleSection] = useState("Points Management");
-    const [Data, setData] = useState([]);
-    const [lenghth, setLength] = useState("");
+    const [lenghth, setLength] = useState(0);
 
     useEffect(() => {
         let ignore = false;
@@ -48,7 +45,6 @@ export default function Loyalty() {
                 }
 
                 if (!ignore) {
-                    setData(response.data);
                     setLength(response.data.length);
                 }
             } catch (error) {
@@ -62,7 +58,6 @@ export default function Loyalty() {
             ignore = true;
         };
     }, []);
-    console.log(lenghth);
 
     return (
         <div className="flex flex-col gap-6">

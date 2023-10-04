@@ -98,10 +98,10 @@ export default function Survey() {
 
     return (
         <div className="flex flex-col gap-8">
-            <div className="w-full gap-20 flex justify-between">
-                <div className="w-1/2 flex flex-col ">
-                    <PageTitle name={"Survey Response Metrics"} />
-                    <div className="bg-[#EA525F] mt-6 p-10 rounded-lg items-center w-full flex flex-col gap-16 text-white">
+            {/* <div className="w-full gap-20 flex justify-between"> */}
+            {/* <div className="w-1/2 flex flex-col ">
+                    <PageTitle name={"Survey Response Metrics"} /> */}
+            {/* <div className="bg-[#EA525F] mt-6 p-10 rounded-lg items-center w-full flex flex-col gap-16 text-white">
                         <div className="flex flex-col text-center w-full">
                             <h2 className="text-5xl p-2">0</h2>
                             <h3 className="text-2xl">Total Response</h3>
@@ -116,13 +116,9 @@ export default function Survey() {
                                 <h3>Completion Rate</h3>
                             </div>
                         </div>
-                    </div>
-                </div>
-                {/* <div className="w-1/2 flex flex-col">
-                    <PageTitle name={"Audience Demographic By Gender"} />
-                    <MyResponsiveBar />
-                </div> */}
-            </div>
+                    </div> */}
+            {/* </div> */}
+            {/* </div> */}
 
             <div className="flex justify-between items-center">
                 <PageTitle name={"Survey List"} />
@@ -136,75 +132,77 @@ export default function Survey() {
 
             <ButtonComponent setStatus={setStatus} />
 
-            <Table>
-                <Thead headers={HEADERS} />
-                <tbody>
-                    {surveyData.map(
-                        ({
-                            survey_id,
-                            survey_title,
-                            category,
-                            start_date,
-                            end_date,
-                        }) => (
-                            <Trow key={survey_id}>
-                                <Tdata left> {survey_title} </Tdata>
-                                <Tdata capitalize> {category} </Tdata>
-                                <Tdata mono>
-                                    <div className="flex flex-col gap-2">
-                                        <div>
-                                            {
-                                                convertToLocal(
-                                                    start_date
-                                                ).split(",")[0]
-                                            }
+            <div className=" h-[60vh] bg-white overflow-y-scroll">
+                <Table>
+                    <Thead headers={HEADERS} />
+                    <tbody>
+                        {surveyData.map(
+                            ({
+                                survey_id,
+                                survey_title,
+                                category,
+                                start_date,
+                                end_date,
+                            }) => (
+                                <Trow key={survey_id}>
+                                    <Tdata left> {survey_title} </Tdata>
+                                    <Tdata capitalize> {category} </Tdata>
+                                    <Tdata mono>
+                                        <div className="flex flex-col gap-2">
+                                            <div>
+                                                {
+                                                    convertToLocal(
+                                                        start_date
+                                                    ).split(",")[0]
+                                                }
+                                            </div>
+                                            <div className="text-sm">
+                                                {
+                                                    convertToLocal(
+                                                        start_date
+                                                    ).split(",")[1]
+                                                }
+                                            </div>
                                         </div>
-                                        <div className="text-sm opacity-50">
-                                            {
-                                                convertToLocal(
-                                                    start_date
-                                                ).split(",")[1]
-                                            }
+                                    </Tdata>
+                                    <Tdata mono>
+                                        <div className="flex flex-col gap-2">
+                                            <div>
+                                                {
+                                                    convertToLocal(
+                                                        end_date
+                                                    ).split(",")[0]
+                                                }
+                                            </div>
+                                            <div className="text-sm ">
+                                                {
+                                                    convertToLocal(
+                                                        end_date
+                                                    ).split(",")[1]
+                                                }
+                                            </div>
                                         </div>
-                                    </div>
-                                </Tdata>
-                                <Tdata mono>
-                                    <div className="flex flex-col gap-2">
-                                        <div>
-                                            {
-                                                convertToLocal(end_date).split(
-                                                    ","
-                                                )[0]
-                                            }
-                                        </div>
-                                        <div className="text-sm opacity-50">
-                                            {
-                                                convertToLocal(end_date).split(
-                                                    ","
-                                                )[1]
-                                            }
-                                        </div>
-                                    </div>
-                                </Tdata>
-                                <Tdata>
-                                    <div className="flex justify-center gap-4">
-                                        <Link to={`details/${survey_id}`}>
-                                            <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
-                                        </Link>
-                                        {status === "upcoming" ? (
-                                            <Link
-                                                to={`edit-survey/${survey_id}`}
-                                            >
-                                                <i className="fa-solid fa-pen-to-square text-xl"></i>
+                                    </Tdata>
+                                    <Tdata>
+                                        <div className="flex justify-center gap-4">
+                                            <Link to={`details/${survey_id}`}>
+                                                <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
                                             </Link>
-                                        ) : null}
-                                    </div>
-                                </Tdata>
-                            </Trow>
-                        )
-                    )}
-                </tbody>
-            </Table>
+                                            {status === "upcoming" ? (
+                                                <Link
+                                                    to={`edit-survey/${survey_id}`}
+                                                >
+                                                    <i className="fa-solid fa-pen-to-square text-xl"></i>
+                                                </Link>
+                                            ) : null}
+                                        </div>
+                                    </Tdata>
+                                </Trow>
+                            )
+                        )}
+                    </tbody>
+                </Table>
+            </div>
         </div>
     );
 }

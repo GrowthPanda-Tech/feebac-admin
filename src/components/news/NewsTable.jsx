@@ -95,40 +95,44 @@ export default function NewsTable() {
                 </Link>
             </div>
 
-            <Table>
-                <Thead headers={HEADERS} />
-                <tbody>
-                    {newsList.map((news, index) => (
-                        <Trow key={news.id}>
-                            <Tdata left>{news.title}</Tdata>
-                            <Tdata capitalize>{news.category}</Tdata>
-                            <Tdata mono>{news.createDate.split(" ")[0]}</Tdata>
-                            <Tdata>
-                                <div className="text-xl flex justify-center gap-5">
-                                    <Link to={news.newsUrl} target="_blank">
-                                        <i className="fa-solid fa-link"></i>
-                                    </Link>
-                                    <Link
-                                        to={`edit/${news.id}`}
-                                        state={{
-                                            from: news,
-                                        }}
-                                    >
-                                        <i className="fa-solid fa-pen-to-square"></i>
-                                    </Link>
-                                    <button
-                                        onClick={() =>
-                                            handleDelPop(news.id, index)
-                                        }
-                                    >
-                                        <i className="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            </Tdata>
-                        </Trow>
-                    ))}
-                </tbody>
-            </Table>
+            <div className="h-[68vh] bg-white overflow-y-scroll">
+                <Table>
+                    <Thead headers={HEADERS} />
+                    <tbody>
+                        {newsList.map((news, index) => (
+                            <Trow key={news.id}>
+                                <Tdata left>{news.title}</Tdata>
+                                <Tdata capitalize>{news.category}</Tdata>
+                                <Tdata mono>
+                                    {news.createDate.split(" ")[0]}
+                                </Tdata>
+                                <Tdata>
+                                    <div className="text-xl flex justify-center gap-5">
+                                        <Link to={news.newsUrl} target="_blank">
+                                            <i className="fa-solid fa-link"></i>
+                                        </Link>
+                                        <Link
+                                            to={`edit/${news.id}`}
+                                            state={{
+                                                from: news,
+                                            }}
+                                        >
+                                            <i className="fa-solid fa-pen-to-square"></i>
+                                        </Link>
+                                        <button
+                                            onClick={() =>
+                                                handleDelPop(news.id, index)
+                                            }
+                                        >
+                                            <i className="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </Tdata>
+                            </Trow>
+                        ))}
+                    </tbody>
+                </Table>
+            </div>
             <NewsDelPop
                 delPop={delPop}
                 setDelPop={setDelPop}

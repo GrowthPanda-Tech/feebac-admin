@@ -36,8 +36,6 @@ export default function Navbar() {
             title: "Loyalty Point Management",
             icon: loyalty,
         },
-        { link: "revenue", title: "Revenue Management", icon: revenue },
-        { link: "analytics", title: "Analytics", icon: analytics },
         { link: "settings", title: "Settings", icon: settings },
     ];
 

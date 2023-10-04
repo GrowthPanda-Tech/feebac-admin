@@ -46,34 +46,44 @@ export default function User() {
     return (
         <div className="flex flex-col gap-8">
             <PageTitle name={"User Information"} />
-            <Table>
-                <Thead headers={HEADERS} />
-                <tbody>
-                    {userData.map(
-                        ({ user_id, gender, loyalty_points, state, city }) => (
-                            <Trow key={user_id}>
-                                <Tdata mono>{user_id.split("-").pop()}</Tdata>
-                                <Tdata capitalize>
-                                    {gender ? gender : "-"}
-                                </Tdata>
-                                <Tdata>{loyalty_points} </Tdata>
-                                <Tdata>
-                                    {state && city
-                                        ? `${city}, ${state}`
-                                        : state
-                                        ? state
-                                        : "-"}
-                                </Tdata>
-                                <Tdata>
-                                    <Link to={user_id}>
-                                        <i className="text-xl fa-solid fa-circle-info"></i>
-                                    </Link>
-                                </Tdata>
-                            </Trow>
-                        )
-                    )}
-                </tbody>
-            </Table>
+            <div className="h-[70vh] overflow-y-scroll bg-white">
+                <Table>
+                    <Thead headers={HEADERS} />
+                    <tbody>
+                        {userData.map(
+                            ({
+                                user_id,
+                                gender,
+                                loyalty_points,
+                                state,
+                                city,
+                            }) => (
+                                <Trow key={user_id}>
+                                    <Tdata mono>
+                                        {user_id.split("-").pop()}
+                                    </Tdata>
+                                    <Tdata capitalize>
+                                        {gender ? gender : "-"}
+                                    </Tdata>
+                                    <Tdata>{loyalty_points} </Tdata>
+                                    <Tdata>
+                                        {state && city
+                                            ? `${city}, ${state}`
+                                            : state
+                                            ? state
+                                            : "-"}
+                                    </Tdata>
+                                    <Tdata>
+                                        <Link to={user_id}>
+                                            <i className="text-xl fa-solid fa-circle-info"></i>
+                                        </Link>
+                                    </Tdata>
+                                </Trow>
+                            )
+                        )}
+                    </tbody>
+                </Table>
+            </div>
         </div>
     );
 }

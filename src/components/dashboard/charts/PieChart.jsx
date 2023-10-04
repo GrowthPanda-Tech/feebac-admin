@@ -3,14 +3,17 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as chartJS } from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
-function PieChart({ chartData, option }) {
-    console.log(chartData.datasets[0].label);
+function PieChart({ chartData, option, location }) {
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col items-center justify-center">
             <h1 className="text-2xl font-semibold p-8">
                 {chartData.datasets[0].label}
             </h1>
-            <div className=" w-96">
+            <div
+                className={` ${
+                    location === "loayalty" ? `w-96` : "w-60"
+                }  mb-10  items-center justify-center flex`}
+            >
                 <Doughnut data={chartData} options={option} />
             </div>
         </div>

@@ -1,25 +1,16 @@
 import { React, useState, useEffect } from "react";
 import PieChart from "./charts/PieChart";
-import { UserData } from "./charts/mockData";
-// import GeoLoaction from "./charts/GeoLoaction";
 import makeRequest from "../../utils/makeRequest";
 import AlertComponent from "../AlertComponent/AlertComponent";
+import InfoCards from "./InfoCards";
 
-// function addValue(lowerValue, upperValue, name) {
-//     for (let i in PieData) {
-//         if (PieData[i].name === name) {
-//             PieData[i].data[0].value = lowerValue;
-//             PieData[i].data[1].value = upperValue;
-//         }
-//     }
-// }
 function Dashboard() {
     const [adminData, setAdminData] = useState({});
     let surveyData = {
         labels: ["Total Survey", "Public Survey"],
         datasets: [
             {
-                label: "Survey Data",
+                label: "Surveys",
                 data: Object.values(
                     adminData.surveyData ? adminData.surveyData : []
                 ),
@@ -64,10 +55,26 @@ function Dashboard() {
             },
         ],
     };
+    let newsData = {
+        labels: ["Total Articles", "Public Articles"],
+        datasets: [
+            {
+                label: "News",
+                data: Object.values(
+                    adminData?.articleData ? adminData?.articleData : []
+                ),
+                backgroundColor: [
+                    "rgba(164, 57, 72, 1)",
+                    "rgba(234, 82, 95, 1)",
+                ],
+                hoverOffset: 4,
+            },
+        ],
+    };
     let option = {
         plugins: {
             legend: {
-                position: "right",
+                position: "top",
                 labels: {
                     usePointStyle: true,
                     pointStyle: "circle",
@@ -84,37 +91,56 @@ function Dashboard() {
         response.isSuccess
             ? setAdminData(response.data)
             : AlertComponent("error", response.message);
-        // if (adminData?.length != 0) {
-        //     console.log(Object.values(adminData?.surveyData));
-        // }
     };
 
     useEffect(() => {
         getAdminData();
     }, []);
 
-    // console.log(adminData.surveyData);
-    console.log(adminData);
+    console.log(Object.values(adminData));
+
     return (
-        <>
+        <div className="flex flex-col gap-2">
+            <h1 className="text-3xl font-bold">Dashboard</h1>
+            <div className=" flex w-full">
+                <InfoCards
+                    title={"Total User"}
+                    value={adminData ? adminData?.totalUsers : ""}
+                />
+                <InfoCards title={"Active User"} value={5} />
+                <InfoCards
+                    title={"Total Android Download"}
+                    value={
+                        adminData
+                            ? adminData?.downloadData?.totalAndroidDownloads
+                            : ""
+                    }
+                />
+                <InfoCards
+                    title={"Total Ios Download"}
+                    value={
+                        adminData
+                            ? adminData?.downloadData?.totalIOSDownloads
+                            : ""
+                    }
+                />
+            </div>
+
             <div>
-                <h1 className=" text-4xl font-semibold">Dashboard</h1>
+                {/* <h2 className="text-3xl font-semibold mb-2">Statistics</h2> */}
+                <div className="grid grid-cols-3 gap-4 bg-white rounded-lg p-2  w-full ">
+                    {adminData && (
+                        <PieChart chartData={surveyData} option={option} />
+                    )}
+                    {adminData && (
+                        <PieChart chartData={loyaltyData} option={option} />
+                    )}
+                    {adminData && (
+                        <PieChart chartData={articleData} option={option} />
+                    )}
+                </div>
             </div>
-            <div className="grid grid-cols-3 gap-4  w-full ">
-                {adminData && (
-                    <PieChart chartData={surveyData} option={option} />
-                )}
-                {adminData && (
-                    <PieChart chartData={loyaltyData} option={option} />
-                )}
-                {adminData && (
-                    <PieChart chartData={articleData} option={option} />
-                )}
-                {/* {PieData.map((item, index) => {
-                    return <PieChart key={index} value={item} />;
-                })} */}
-            </div>
-            {adminData && (
+            {/* {adminData && (
                 <div className="grid grid-cols-2 h-96">
                     <div className="flex w-full justify-between">
                         <div className="h-32 bg-white w-1/2 m-2 p-5">
@@ -122,7 +148,6 @@ function Dashboard() {
                                 Total User:{adminData?.totalUsers}
                             </h2>
                         </div>
-                        {/* <GeoLoaction /> */}
                         <div className="h-44 bg-white m-2 w-1/2 p-5">
                             <h2 className="text-xl flex flex-col font-bold">
                                 Total Downloads
@@ -140,11 +165,9 @@ function Dashboard() {
                             </h2>
                         </div>
                     </div>
-
-                    {/* <GeoLoaction /> */}
                 </div>
-            )}
-        </>
+            )} */}
+        </div>
     );
 }
 

@@ -151,8 +151,6 @@ export default function Question({
         getFilters();
     }, []);
 
-    console.log(questions);
-
     return (
         <div className="flex flex-col gap-10">
             <div className="flex items-center justify-between">
@@ -224,13 +222,13 @@ export default function Question({
                 </div>
             )}
 
-            <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8">
+            <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8 w-[50vw]">
                 <label className="flex flex-col gap-2">
                     <span className="font-bold">
-                        Question
+                        Question{" "}
                         {editAdd
                             ? surveyInfo?.totalQuestions + 1
-                            : questionNumber}
+                            : questionNumber}{" "}
                         :
                     </span>
                     <Input
@@ -271,59 +269,11 @@ export default function Question({
                         >
                             Multiple Answer
                         </button>
-                        <button
-                            className={`pill ${
-                                activeButtonIndex === 3
-                                    ? "pill-primary"
-                                    : "pill-secondary"
-                            }`}
-                            onClick={() => setQuestionType(3, 4)}
-                        >
-                            Yes/No Answer
-                        </button>
-                    </div>
-                    <div className="flex items-center gap-6">
-                        <input
-                            type="checkbox"
-                            className="h-6 w-6"
-                            onClick={() => setIsDisabled(!isDisabled)}
-                        />
-                        <div
-                            className={`flex bg-background p-4 rounded-md border border-[#C9C9C9] ${
-                                isDisabled && "opacity-50"
-                            }`}
-                        >
-                            <select
-                                className="appearance-none outline-none"
-                                disabled={isDisabled}
-                                name="profileField"
-                                onChange={(e) =>
-                                    setQuestionData({
-                                        ...questionData,
-                                        [e.target.name]: e.target.value,
-                                    })
-                                }
-                            >
-                                {filters.map((filter) => (
-                                    <option key={filter.id} value={filter.id}>
-                                        {filter.key_name}
-                                    </option>
-                                ))}
-                            </select>
-                            <span>
-                                <img src={downArrow} />
-                            </span>
-                        </div>
                     </div>
                 </div>
                 <div className="flex flex-col gap-4">
                     {questionData.questionType === 1 ? (
                         <></>
-                    ) : questionData.questionType === 4 ? (
-                        <>
-                            <Input type={"text"} value={"Yes"} disabled />
-                            <Input type={"text"} value={"No"} disabled />
-                        </>
                     ) : (
                         options.map((option, index) => (
                             <div
@@ -367,22 +317,24 @@ export default function Question({
                         </button>
                     ) : null}
 
-                    <button
-                        className="btn-primary w-fit"
-                        onClick={handleQuestionSubmit}
-                    >
-                        Save
-                    </button>
-                    {editAdd && (
+                    <div className="flex gap-3">
                         <button
-                            className="btn-secondary w-fit"
-                            onClick={() => {
-                                setQuestionAddPop(false);
-                            }}
+                            className="btn-primary w-fit"
+                            onClick={handleQuestionSubmit}
                         >
-                            Cancel
+                            Save
                         </button>
-                    )}
+                        {editAdd && (
+                            <button
+                                className="btn-secondary w-fit"
+                                onClick={() => {
+                                    setQuestionAddPop(false);
+                                }}
+                            >
+                                Cancel
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

@@ -74,7 +74,7 @@ function RedeemInfo() {
             if (response.isSuccess) {
                 AlertComponent("success", response);
                 setTimeout(() => {
-                    navigate("/loyalty-point");
+                    navigate(-1);
                 }, 1500);
             }
             console.log(body);
@@ -105,7 +105,7 @@ function RedeemInfo() {
             <div className="grid grid-cols-2 p-5 gap-10">
                 <div className=" space-y-4">
                     <PageTitle name={"User Details"} />
-                    <div className="flex flex-col gap-6 bg-white rounded-xl h-[40vh] justify-center p-8 w-full">
+                    <div className="flex flex-col gap-4 bg-white rounded-xl h-[40vh] justify-center p-8 w-full">
                         <UserInfo name={"Id"} value={slug} />
                         <UserInfo
                             name={"User Id"}

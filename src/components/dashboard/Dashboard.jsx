@@ -16,7 +16,7 @@ import AlertComponent from "../AlertComponent/AlertComponent";
 function Dashboard() {
     const [adminData, setAdminData] = useState({});
     let surveyData = {
-        labels: ["Public Survey", "Total Survey"],
+        labels: ["Total Survey", "Public Survey"],
         datasets: [
             {
                 label: "Survey Data",
@@ -49,7 +49,7 @@ function Dashboard() {
         ],
     };
     let articleData = {
-        labels: ["Public Articles", "Total Articles"],
+        labels: ["Total Articles", "Public Articles"],
         datasets: [
             {
                 label: "Articles",
@@ -139,9 +139,6 @@ function Dashboard() {
                                 </span>
                             </h2>
                         </div>
-                    </div>
-                    <div className=" bg-white flex justify-between m-2 text-center items-center">
-                        <h2 className=" w-full">Map</h2>
                     </div>
 
                     {/* <GeoLoaction /> */}

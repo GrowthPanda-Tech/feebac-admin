@@ -158,9 +158,15 @@ export default function RedeemRequest() {
                                         </div>
                                     </Tdata>
                                     <Tdata capitalize>
-                                        <span className="text-[#FF0000]">
-                                            {currentStatus}
-                                        </span>
+                                        {status === "pending" ? (
+                                            <span className="text-[#FF0000]">
+                                                {currentStatus}
+                                            </span>
+                                        ) : (
+                                            <span className="text-green">
+                                                {currentStatus}
+                                            </span>
+                                        )}
                                     </Tdata>
 
                                     {status === "pending" ? (
@@ -174,7 +180,18 @@ export default function RedeemRequest() {
                                             </div>
                                         </Tdata>
                                     ) : (
-                                        <Tdata capitalize>{approvedBy} </Tdata>
+                                        <Tdata capitalize>
+                                            <span className="flex justify-evenly">
+                                                {approvedBy
+                                                    ? approvedBy
+                                                          .split("-")
+                                                          .pop()
+                                                    : ""}
+                                                <Link to={`redeem/${id}`}>
+                                                    <i className="text-xl fa-solid fa-circle-info"></i>
+                                                </Link>
+                                            </span>
+                                        </Tdata>
                                     )}
                                 </Trow>
                             )

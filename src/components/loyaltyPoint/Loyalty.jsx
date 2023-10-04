@@ -11,7 +11,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 function Pill({ section, isActive, onClick, lenghth }) {
     return (
         <div
-            className={`cursor-pointer flex items-center justify-center gap-4 ${
+            className={` relative cursor-pointer flex items-center justify-center gap-4 ${
                 isActive ? "pill-primary" : "pill-secondary"
             }`}
             onClick={onClick}
@@ -19,7 +19,7 @@ function Pill({ section, isActive, onClick, lenghth }) {
             {section}
 
             {section === "Redeem Request" ? (
-                <span className="bg-secondary rounded-full text-white w-8 h-8 flex items-center justify-center">
+                <span className=" absolute right-[-16px] top-[-16px] bg-secondary rounded-full text-white w-8 h-8 flex items-center justify-center">
                     {lenghth}
                 </span>
             ) : (
@@ -32,7 +32,7 @@ function Pill({ section, isActive, onClick, lenghth }) {
 export default function Loyalty() {
     const [visibleSection, setVisibleSection] = useState("Points Management");
     const [Data, setData] = useState([]);
-    const [lenghth, setLength] = useState(0);
+    const [lenghth, setLength] = useState("");
 
     useEffect(() => {
         let ignore = false;

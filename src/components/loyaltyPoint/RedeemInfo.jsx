@@ -1,17 +1,22 @@
 import React from "react";
 import PageTitle from "../PageTitle";
-import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import makeRequest from "../../utils/makeRequest";
 import { useState } from "react";
 import { useEffect } from "react";
+import AlertComponent from "../AlertComponent/AlertComponent";
+import { useNavigate } from "react-router-dom";
 function UserInfo({ name, value }) {
     return (
         <div className="flex justify-between">
             <h5 className="mb-2 text-xl font-semibold tracking-tight text-gray-900">
                 {name}
             </h5>
-            <p className="mb-3 font-normal opacity-50 text-gray-700 ">
+            <p
+                className={`mb-3 capitalize font-semibold opacity-50 text-gray-700 ${
+                    value === "pending" ? `text-[#ff0000]` : ""
+                } ${value === "approved" ? `text-green` : ""}`}
+            >
                 {value}
             </p>
         </div>
@@ -21,12 +26,13 @@ function CouponInfo({ name, value }) {
     return (
         <div className="flex justify-between">
             <h5 className="mb-3 font-bold text-xl">{name}</h5>
-            <p className="mb-3 font-normal opacity-50 ">{value}</p>
+            <p className="mb-3 capitalize font-semibold opacity-50 ">{value}</p>
         </div>
     );
 }
 
 function RedeemInfo() {
+    const navigate = useNavigate();
     const { slug } = useParams();
     const [redeemInfo, setRedeemInfo] = useState({
         coupon: {
@@ -34,6 +40,7 @@ function RedeemInfo() {
             expiredData: "",
         },
     });
+    const [message, setMessage] = useState("");
 
     const getRedeemInfo = async () => {
         try {
@@ -49,8 +56,30 @@ function RedeemInfo() {
             console.log(error);
         }
     };
+    const onChangeHandler = (event) => {
+        setMessage(event.target.value);
+    };
 
-    console.log(redeemInfo);
+    const onSubmitHandler = async () => {
+        try {
+            const body = {
+                id: slug,
+                message: message,
+            };
+            const response = await makeRequest(
+                "loyalty/approve-request",
+                "PUT",
+                body
+            );
+            if (response.isSuccess) {
+                AlertComponent("success", response);
+                setTimeout(() => {
+                    navigate("/loyalty-point");
+                }, 1500);
+            }
+            console.log(body);
+        } catch (error) {}
+    };
 
     useEffect(() => {
         getRedeemInfo();
@@ -58,14 +87,21 @@ function RedeemInfo() {
     return (
         <>
             <PageTitle name={"Redeem Information"} />
-            <div className="p-5 flex items-center gap-10  ">
-                <input
-                    className="w-full p-5 rounded-lg"
-                    placeholder="Enter the Requested Code Here..."
-                    type="text"
-                />
-                <button className="btn-primary">Send</button>
-            </div>
+            {redeemInfo.currentStatus === "pending" ? (
+                <div className="p-5 flex items-center gap-10  ">
+                    <input
+                        className="w-full p-5 rounded-lg"
+                        placeholder="Enter the Requested Code Here..."
+                        type="text"
+                        onChange={onChangeHandler}
+                    />
+                    <button className="btn-primary" onClick={onSubmitHandler}>
+                        Send
+                    </button>
+                </div>
+            ) : (
+                ""
+            )}
             <div className="grid grid-cols-2 p-5 gap-10">
                 <div className=" space-y-4">
                     <PageTitle name={"User Details"} />
@@ -83,6 +119,20 @@ function RedeemInfo() {
                             name={"Status"}
                             value={redeemInfo.currentStatus}
                         />
+                        {redeemInfo.currentStatus === "approved" ? (
+                            <>
+                                <UserInfo
+                                    name={"Message"}
+                                    value={redeemInfo.message}
+                                />
+                                <UserInfo
+                                    name={"Approved By"}
+                                    value={redeemInfo.approvedBy}
+                                />
+                            </>
+                        ) : (
+                            ""
+                        )}
                     </div>
                 </div>
                 <div className=" space-y-4">

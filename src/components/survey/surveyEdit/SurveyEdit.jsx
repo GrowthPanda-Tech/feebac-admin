@@ -23,6 +23,11 @@ export default function SurveyEdit() {
     const [surveyEditPop, setSurveyEditPop] = useState(false);
     const [questionAddPop, setQuestionAddPop] = useState(false);
 
+    const convertToLocal = (date) => {
+        const dateObj = new Date(`${date} UTC`);
+        return dateObj.toLocaleString();
+    };
+
     const getData = async () => {
         const response = await makeRequest(
             `survey/show-survey?sid=${slug}`,
@@ -39,6 +44,8 @@ export default function SurveyEdit() {
         getData();
     }, [slug]);
 
+    console.log(surveyInfo);
+
     return (
         <>
             {surveyInfo && (
@@ -53,11 +60,29 @@ export default function SurveyEdit() {
 
                                 <InputHeading
                                     title={"Start Date & Time"}
-                                    value={surveyInfo.created_date}
+                                    value={
+                                        surveyInfo
+                                            ? convertToLocal(
+                                                  surveyInfo.start_date
+                                              ).split(",")[0] +
+                                              convertToLocal(
+                                                  surveyInfo.start_date
+                                              ).split(",")[1]
+                                            : ""
+                                    }
                                 />
                                 <InputHeading
                                     title={"End Date & Time"}
-                                    value={surveyInfo.end_date}
+                                    value={
+                                        surveyInfo
+                                            ? convertToLocal(
+                                                  surveyInfo.end_date
+                                              ).split(",")[0] +
+                                              convertToLocal(
+                                                  surveyInfo.end_date
+                                              ).split(",")[1]
+                                            : ""
+                                    }
                                 />
                                 <InputHeading
                                     title={"Total Question"}

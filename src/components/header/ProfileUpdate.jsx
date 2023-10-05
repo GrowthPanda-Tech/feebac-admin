@@ -69,6 +69,7 @@ function ProfileUpdate() {
                                             value={
                                                 userData &&
                                                 userData.first_name +
+                                                    " " +
                                                     userData.last_name
                                             }
                                         />

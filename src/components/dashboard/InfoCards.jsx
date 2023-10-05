@@ -31,12 +31,18 @@ function InfoCards({ title, value }) {
                                 xlinkHref="#gentle-wave"
                                 x="48"
                                 y="3"
-                                fill="rgba(249, 218, 203, 1)"
+                                fill="rgba(234, 82, 95, 1)"
+                            />
+                            <use
+                                xlinkHref="#gentle-wave"
+                                x="48"
+                                y="5"
+                                fill="rgba(255,255,255,0.3)"
                             />
                             {/* <use
                                 xlinkHref="#gentle-wave"
                                 x="48"
-                                y="5"
+                                y="7"
                                 fill="rgba(255,255,255,0.3)"
                             /> */}
                         </g>

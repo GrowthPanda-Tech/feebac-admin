@@ -41,6 +41,7 @@ const CouponCategory = ({ setAddCouponData }) => {
                 className="px-2 py-2 ml-2 border input-article w-40  rounded-md"
                 value={selectedValue}
                 onChange={handleChange}
+                required
             >
                 <option value="">Select option</option>
                 {options.map((option) => (

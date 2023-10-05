@@ -74,7 +74,7 @@ function Dashboard() {
     let option = {
         plugins: {
             legend: {
-                position: "top",
+                position: "bottom",
                 labels: {
                     usePointStyle: true,
                     pointStyle: "circle",

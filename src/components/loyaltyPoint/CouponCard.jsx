@@ -1,6 +1,10 @@
+import { useState } from "react";
 import CouponToggle from "./CouponToggle";
+import EditCoupons from "./EditCoupons";
 
 export default function CouponCard({ data, setCouponsData }) {
+    const [editPop, setEditPop] = useState(false);
+
     return (
         <>
             <div
@@ -13,6 +17,15 @@ export default function CouponCard({ data, setCouponsData }) {
                         Disabled
                     </h2>
                 )}
+
+                <button
+                    className="absolute top-[-2rem]"
+                    onClick={() => {
+                        setEditPop(true);
+                    }}
+                >
+                    edit
+                </button>
 
                 <div className="rounded-lg">
                     <div className="absolute top-1 right-2 p-2">
@@ -45,6 +58,13 @@ export default function CouponCard({ data, setCouponsData }) {
                     </div>
                 </div>
             </div>
+            {editPop && (
+                <EditCoupons
+                    id={data.id}
+                    setCouponsData={setCouponsData}
+                    setEditPop={setEditPop}
+                />
+            )}
         </>
     );
 }

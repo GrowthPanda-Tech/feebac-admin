@@ -58,6 +58,18 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
                     message: "Profile Pic Updated Successfully ",
                 };
                 AlertComponent("success", custom);
+                const getAdminInfo = async () => {
+                    try {
+                        const response = await makeRequest(`profile/`, "GET");
+                        if (response.isSuccess) {
+                            setUserData(response.userInfo);
+                        }
+                    } catch (error) {
+                        console.error(error);
+                    }
+                };
+
+                getAdminInfo();
             }
             setIsUpdateImage(!isUpdateImage);
         }
@@ -91,10 +103,21 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
                     "userInfo",
                     JSON.stringify(response.userInfo)
                 );
-                setTimeout(() => {
-                    location.replace("/profile-update");
-                    setShow(!show);
-                }, 3000);
+                setShow(!show);
+
+                AlertComponent("success", custom);
+                const getAdminInfo = async () => {
+                    try {
+                        const response = await makeRequest(`profile/`, "GET");
+                        if (response.isSuccess) {
+                            setUserData(response.userInfo);
+                        }
+                    } catch (error) {
+                        console.error(error);
+                    }
+                };
+
+                getAdminInfo();
             } else {
                 AlertComponent("failed", response);
             }

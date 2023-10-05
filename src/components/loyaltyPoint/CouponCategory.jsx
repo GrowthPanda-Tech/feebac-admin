@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import makeRequest from "../../utils/makeRequest";
 
-const CouponCategory = ({ setAddCouponData }) => {
+const CouponCategory = ({ setAddCouponData, isEdit, selectedValueProp }) => {
     const [options, setOptions] = useState([]);
-    const [selectedValue, setSelectedValue] = useState(null);
+    const [selectedValue, setSelectedValue] = useState(selectedValueProp || "");
+
+    console.log(selectedValue);
 
     const getCouponsCategory = async () => {
         try {
@@ -31,6 +33,15 @@ const CouponCategory = ({ setAddCouponData }) => {
             category: event.target.value,
         }));
     };
+    useEffect(() => {
+        const selectedOption = options.find(
+            (option) => option.name === selectedValueProp
+        );
+        let selectedOptions = selectedOption
+            ? selectedOption.id
+            : selectedValueProp;
+        setSelectedValue(selectedOptions);
+    }, [selectedValueProp]);
 
     return (
         <div className="mb-2 flex items-center gap-4">

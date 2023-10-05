@@ -5,9 +5,11 @@ import makeRequest from "../../utils/makeRequest";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProfileForm from "./ProfileForm";
+import { useLocation } from "react-router-dom";
 
 function ProfileUpdate() {
     const baseUrl = import.meta.env.VITE_BASE_URL;
+    const location = useLocation();
     const [userData, setUserData] = useState();
     const [show, setShow] = useState(false);
     const getAdminInfo = async () => {

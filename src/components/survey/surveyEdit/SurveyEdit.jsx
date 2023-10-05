@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+
 import makeRequest from "../../../utils/makeRequest";
+
 import ReviewCard from "../reviewSurvey/ReviewCard";
 import EditSurveyDetails from "./EditSurveyDetails";
 import AddMoreQuestionPop from "./AddMoreQuestionPop";
@@ -22,33 +24,49 @@ export default function SurveyEdit() {
     const [surveyId, setSurveyId] = useState(surveyInfo.survey_id);
     const [surveyEditPop, setSurveyEditPop] = useState(false);
     const [questionAddPop, setQuestionAddPop] = useState(false);
+    const [error, setError] = useState(false);
 
     const convertToLocal = (date) => {
         const dateObj = new Date(`${date} UTC`);
         return dateObj.toLocaleString();
     };
 
-    const getData = async () => {
-        const response = await makeRequest(
-            `survey/show-survey?sid=${slug}`,
-            "GET"
-        );
-        if (response.isSuccess) {
-            setSurveyInfo(response.surveyInfo);
-            setQuestionList(response.questionList);
-            setSurveyId(response.surveyInfo.survey_id);
-        }
-    };
-
     useEffect(() => {
-        getData();
-    }, [slug]);
+        let ignore = false;
 
-    console.log(surveyInfo);
+        const getData = async () => {
+            try {
+                const response = await makeRequest(
+                    `survey/show-survey?sid=${slug}`
+                );
+
+                if (!response.isSuccess) {
+                    throw new Error(response.message);
+                }
+
+                setSurveyInfo(response.surveyInfo);
+                setQuestionList(response.questionList);
+                setSurveyId(response.surveyInfo.survey_id);
+            } catch (error) {
+                console.error(error);
+                setError(true);
+            }
+        };
+
+        getData();
+
+        return () => {
+            ignore = true;
+        };
+    }, []);
 
     return (
         <>
-            {surveyInfo && (
+            {error ? (
+                <div className="flex h-[60vh] font-semibold text-2xl justify-center items-center">
+                    The survey creator has made this Private!!
+                </div>
+            ) : (
                 <div className="flex justify-between ">
                     <div className="flex flex-col md:w-1/2 gap-6">
                         {surveyInfo && (
@@ -120,23 +138,21 @@ export default function SurveyEdit() {
                 </div>
             )}
 
-            {surveyInfo && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
-                    {questionList &&
-                        questionList.map((question, index) => (
-                            <ReviewCard
-                                key={index}
-                                index={index}
-                                question={question}
-                                isEdit={true}
-                                surveyId={surveyId}
-                                setSurveyInfo={setSurveyInfo}
-                                setQuestionList={setQuestionList}
-                                questionList={questionList}
-                            />
-                        ))}
-                </div>
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
+                {questionList &&
+                    questionList.map((question, index) => (
+                        <ReviewCard
+                            key={index}
+                            index={index}
+                            question={question}
+                            isEdit={true}
+                            surveyId={surveyId}
+                            setSurveyInfo={setSurveyInfo}
+                            setQuestionList={setQuestionList}
+                            questionList={questionList}
+                        />
+                    ))}
+            </div>
             {questionAddPop && (
                 <AddMoreQuestionPop
                     setQuestionList={setQuestionList}

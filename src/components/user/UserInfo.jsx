@@ -184,6 +184,11 @@ export default function UserInfo() {
                             ))}
                         </tbody>
                     </Table>
+                    {surveyList.length === 0 ? (
+                        <div className="flex justify-center p-6 opacity-50">
+                            User hasn't participated in any surveys yet
+                        </div>
+                    ) : null}
                 </div>
             </div>
         </>

@@ -1,7 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import makeRequest from "../../../utils/makeRequest";
-import convertToUTC from "../../../utils/convertToUTC";
 import formSubmit from "../../../utils/formSubmit";
+import removeForbiddenChars from "../../../utils/removeForbiddenChars";
+import convertToUTC from "../../../utils/convertToUTC";
 
 //components
 import Filters from "./filter/Filters";
@@ -135,11 +136,8 @@ export default function CreateSurveyForm({
         const value = e.target.value;
 
         if (name === "startDate" || name === "endDate") {
-            console.log(value);
             const localDateObject = new Date(value);
-            console.log(localDateObject);
             const formattedOutput = convertToUTC(localDateObject);
-            console.log(formattedOutput);
 
             setSurveyData({ ...surveyData, [name]: formattedOutput });
 
@@ -234,10 +232,14 @@ export default function CreateSurveyForm({
                 </Label>
 
                 <Label name={"Loyalty Points"}>
-                    <Input
-                        type={"number"}
-                        name={"loyaltyPoint"}
+                    <input
+                        type="number"
+                        name="loyaltyPoint"
                         onChange={handleChange}
+                        onKeyDown={(event) => removeForbiddenChars(event)}
+                        onPaste={(event) => removeForbiddenChars(event)}
+                        className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3"
+                        required
                     />
                 </Label>
             </div>

@@ -1,7 +1,10 @@
 import { useState } from "react";
-import OtpField from "./OtpField";
 import loginBanner from "../../assets/loginBanner.png";
+
 import makeRequest from "../../utils/makeRequest";
+import removeForbiddenChars from "../../utils/removeForbiddenChars";
+
+import OtpField from "./OtpField";
 
 function LargeBtn({ name }) {
     return (
@@ -31,13 +34,33 @@ export default function Login() {
         }
     };
 
+    // const removeForbiddenChars = (event) => {
+    //     const type = event.type;
+    //     const key = event.key;
+    //
+    //     const forbiddenChars = ["e", "E", "+", "-", ".", " "];
+    //
+    //     if (type === "keydown") {
+    //         if (forbiddenChars.includes(key)) {
+    //             event.preventDefault();
+    //         }
+    //
+    //         return;
+    //     }
+    //
+    //     if (type === "paste") {
+    //         event.preventDefault();
+    //
+    //         return;
+    //     }
+    // };
+
     const handleLogin = async (e) => {
         e.preventDefault();
 
         // validate admin or not
         const isAdminResponse = await makeRequest(
-            `site-admin/is-admin?mobile=${loginInfo.mobile}`,
-            "GET"
+            `site-admin/is-admin?mobile=${loginInfo.mobile}`
         );
 
         if (isAdminResponse.isSuccess && isAdminResponse.isAdmin) {
@@ -87,8 +110,12 @@ export default function Login() {
 
     return (
         <div className="flex w-full h-screen p-28 bg-white">
-            <div className="w-1/2 overflow-hidden">
-                <img src={loginBanner} alt="loading" />
+            <div className="w-1/2 aspect-square">
+                <img
+                    src={loginBanner}
+                    className="h-full mx-auto"
+                    alt="loading"
+                />
             </div>
 
             {/* Separation bar */}
@@ -106,6 +133,8 @@ export default function Login() {
                         placeholder="Enter mobile number"
                         value={loginInfo.mobile}
                         onChange={(event) => handleChange(event, 10)}
+                        onKeyDown={(event) => removeForbiddenChars(event)}
+                        onPaste={(event) => removeForbiddenChars(event)}
                         disabled={!otpStatus}
                         className="login-input disabled:cursor-not-allowed disabled:opacity-50"
                         required

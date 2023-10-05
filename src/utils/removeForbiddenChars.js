@@ -9,7 +9,7 @@ export default function removeForbiddenChars(event) {
             event.preventDefault();
         }
 
-        if (key === "ArrowDown" || "ArrowUp") {
+        if (key === "ArrowDown") {
             event.preventDefault();
         }
 

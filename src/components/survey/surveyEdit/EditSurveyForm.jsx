@@ -31,7 +31,6 @@ function UserCount({ type, count }) {
 }
 
 function Select({ name, onChange, children }) {
-    // console.log(children);
     return (
         <select
             name={name}
@@ -71,6 +70,8 @@ export default function EditSurveyForm({
     surveyInfo,
     setSurveyInfo,
 }) {
+    const [isDateChange, setIsDateChange] = useState(false);
+
     const convertToLocal = (date) => {
         const dateObj = new Date(`${date} UTC`);
         return dateObj.toISOString().slice(0, -8);
@@ -104,9 +105,7 @@ export default function EditSurveyForm({
         if (e.target.name === "startDate" || e.target.name === "endDate") {
             console.log(e.target.value);
             const localDateObject = new Date(e.target.value);
-            console.log(localDateObject);
             const formattedOutput = convertToUTC(localDateObject);
-            console.log(formattedOutput);
             setSurveyData({ ...surveyData, [e.target.name]: formattedOutput });
 
             return;
@@ -155,8 +154,8 @@ export default function EditSurveyForm({
         getCategories();
     }, []);
 
-    // console.log(surveyData.category);
-    convertToLocal(surveyData?.startDate, "startdate");
+    console.log(surveyData.startDate);
+
     return (
         <div className="flex flex-col p-8 gap-8">
             <h1 className="heading mb-0"> Edit Survey Details </h1>
@@ -187,11 +186,11 @@ export default function EditSurveyForm({
                         onChange={handleChange}
                         value={
                             surveyData
-                                ? surveyData?.endDate
-                                      .replace(/ /g, "T")
-                                      .split("/")
-                                      .join("-")
-                                : ""
+                                ? convertToLocal(surveyData?.endDate)
+                                : //   .replace(/ /g, "T")
+                                  //   .split("/")
+                                  //   .join("-")
+                                  ""
                         }
                     />
                 </Label>

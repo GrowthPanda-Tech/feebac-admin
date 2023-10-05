@@ -27,7 +27,10 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
     const [imgUpdate, setImgUpdate] = useState();
     const baseUrl = import.meta.env.VITE_BASE_URL;
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    const [updatedData, setUpdatedData] = useState({ ...userData });
+    const [updatedData, setUpdatedData] = useState({
+        ...userData,
+        date_of_birth: convertDate(userData.date_of_birth),
+    });
     const [isUpdateImage, setIsUpdateImage] = useState(false);
     const [isDateChnage, setIsDateChange] = useState(false);
 
@@ -99,15 +102,11 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
     const dateChangeHandler = (event) => {
         setIsDateChange(true);
         let newDate = convertDate(event.target.value);
-        console.log(newDate);
-
         setUpdatedData({
             ...updatedData,
             date_of_birth: newDate,
         });
     };
-
-    console.log(updatedData);
 
     const handleChange = (event) => {
         if (event.target.name === "userImage") {
@@ -228,7 +227,9 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
                                               )
                                             : ""
                                         : updatedData
-                                        ? updatedData.date_of_birth
+                                        ? convertDateFormat(
+                                              updatedData.date_of_birth
+                                          )
                                         : ""
                                 }
                                 type="date"

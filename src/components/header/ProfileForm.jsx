@@ -16,6 +16,7 @@ function InputForm({ label, name, value, onChange, type }) {
                     className="border-2  input-article  rounded-r px-4 py-2 w-full"
                     value={value}
                     onChange={onChange}
+                    required
                 />
             </div>
         </div>
@@ -27,7 +28,10 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
     const [imgUpdate, setImgUpdate] = useState();
     const baseUrl = import.meta.env.VITE_BASE_URL;
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    const [updatedData, setUpdatedData] = useState({ ...userData });
+    const [updatedData, setUpdatedData] = useState({
+        ...userData,
+        date_of_birth: convertDate(userData.date_of_birth),
+    });
     const [isUpdateImage, setIsUpdateImage] = useState(false);
     const [isDateChnage, setIsDateChange] = useState(false);
 
@@ -60,6 +64,7 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
     };
 
     const handleSubmit = async (event) => {
+        event.preventDefault();
         try {
             delete updatedData.mobile;
             delete updatedData.profile_pic;
@@ -99,15 +104,11 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
     const dateChangeHandler = (event) => {
         setIsDateChange(true);
         let newDate = convertDate(event.target.value);
-        console.log(newDate);
-
         setUpdatedData({
             ...updatedData,
             date_of_birth: newDate,
         });
     };
-
-    console.log(updatedData);
 
     const handleChange = (event) => {
         if (event.target.name === "userImage") {
@@ -168,75 +169,79 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
                         </button>
                     )}
                 </div>
-                <div className="bg-white p-5">
-                    <h3 className="font-seminold text-2xl mb-4">
-                        Edit Admin Profile
-                    </h3>
-                    <InputForm
-                        label={"First Name"}
-                        name={"first_name"}
-                        value={updatedData ? updatedData.first_name : ""}
-                        onChange={handleChange}
-                    />
-                    <InputForm
-                        label={"Last Name"}
-                        name={"last_name"}
-                        value={updatedData ? updatedData.last_name : ""}
-                        onChange={(e) => {
-                            handleChange(e);
-                        }}
-                    />
-                    <InputForm
-                        label={"Email"}
-                        name={"email"}
-                        value={updatedData ? updatedData.email : ""}
-                        onChange={(e) => {
-                            handleChange(e);
-                        }}
-                    />
+                <form onSubmit={handleSubmit}>
+                    <div className="bg-white p-5">
+                        <h3 className="font-seminold text-2xl mb-4">
+                            Edit Admin Profile
+                        </h3>
+                        <InputForm
+                            label={"First Name"}
+                            name={"first_name"}
+                            value={updatedData ? updatedData.first_name : ""}
+                            onChange={handleChange}
+                        />
+                        <InputForm
+                            label={"Last Name"}
+                            name={"last_name"}
+                            value={updatedData ? updatedData.last_name : ""}
+                            onChange={(e) => {
+                                handleChange(e);
+                            }}
+                        />
+                        <InputForm
+                            label={"Email"}
+                            name={"email"}
+                            value={updatedData ? updatedData.email : ""}
+                            onChange={(e) => {
+                                handleChange(e);
+                            }}
+                        />
 
-                    <InputForm
-                        label={"City"}
-                        name={"city"}
-                        value={updatedData ? updatedData.city : ""}
-                        onChange={(e) => {
-                            handleChange(e);
-                        }}
-                    />
-                    <InputForm
-                        label={"State"}
-                        name={"state"}
-                        value={updatedData ? updatedData.state : ""}
-                        onChange={(e) => {
-                            handleChange(e);
-                        }}
-                    />
+                        <InputForm
+                            label={"City"}
+                            name={"city"}
+                            value={updatedData ? updatedData.city : ""}
+                            onChange={(e) => {
+                                handleChange(e);
+                            }}
+                        />
+                        <InputForm
+                            label={"State"}
+                            name={"state"}
+                            value={updatedData ? updatedData.state : ""}
+                            onChange={(e) => {
+                                handleChange(e);
+                            }}
+                        />
 
-                    <div className="pb-6">
-                        <label className="font-semibold text-gray-700 block pb-1">
-                            Date of Birth
-                        </label>
-                        <div className="flex">
-                            <input
-                                name="date_of_birth"
-                                className="border-2  input-article  rounded-r px-4 py-2 w-full"
-                                value={
-                                    isDateChnage
-                                        ? updatedData
+                        <div className="pb-6">
+                            <label className="font-semibold text-gray-700 block pb-1">
+                                Date of Birth
+                            </label>
+                            <div className="flex">
+                                <input
+                                    name="date_of_birth"
+                                    className="border-2  input-article  rounded-r px-4 py-2 w-full"
+                                    value={
+                                        isDateChnage
+                                            ? updatedData
+                                                ? convertDateFormat(
+                                                      updatedData.date_of_birth
+                                                  )
+                                                : ""
+                                            : updatedData
                                             ? convertDateFormat(
                                                   updatedData.date_of_birth
                                               )
                                             : ""
-                                        : updatedData
-                                        ? updatedData.date_of_birth
-                                        : ""
-                                }
-                                type="date"
-                                onChange={dateChangeHandler}
-                            />
+                                    }
+                                    type="date"
+                                    onChange={dateChangeHandler}
+                                    required
+                                />
+                            </div>
                         </div>
-                    </div>
-                    {/* <InputForm
+                        {/* <InputForm
                         label={"Date Of Birth"}
                         name={"date_of_birth"}
                         value={updatedData ? updatedData.date_of_birth : ""}
@@ -245,20 +250,21 @@ function ProfileForm({ setShow, show, userData, setUserData }) {
                         }}
                     /> */}
 
-                    <div className=" flex p-3 gap-3">
-                        <button className="btn-primary" onClick={handleSubmit}>
-                            Save Changes
-                        </button>
-                        <button
-                            className="btn-secondary"
-                            onClick={() => {
-                                setShow(!show);
-                            }}
-                        >
-                            cancel
-                        </button>
+                        <div className=" flex p-3 gap-3">
+                            <button className="btn-primary">
+                                Save Changes
+                            </button>
+                            <button
+                                className="btn-secondary"
+                                onClick={() => {
+                                    setShow(!show);
+                                }}
+                            >
+                                cancel
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     );

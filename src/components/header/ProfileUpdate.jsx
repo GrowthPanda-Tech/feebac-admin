@@ -32,8 +32,8 @@ function ProfileUpdate() {
             <div className="">
                 {userData && (
                     <div className=" block md:flex">
-                        <div className="w-full md:w-2/5 p-4 sm:p-6 lg:p-8 bg-white shadow-md">
-                            <div className="flex justify-between">
+                        <div className="w-full items-center justify-center flex flex-col md:w-2/5 p-4 sm:p-6 lg:p-8 bg-white shadow-md">
+                            <div className="flex justify-between items-center">
                                 <span className="text-xl font-semibold block">
                                     Admin Profile
                                 </span>
@@ -69,6 +69,7 @@ function ProfileUpdate() {
                                             value={
                                                 userData &&
                                                 userData.first_name +
+                                                    " " +
                                                     userData.last_name
                                             }
                                         />

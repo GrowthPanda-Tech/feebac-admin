@@ -13,22 +13,26 @@ function formatDate(inputDate) {
     return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 }
 
+const TODAY = new Date().toISOString().slice(0, 16);
+
 export function DateSelect({ setAddCouponData }) {
     let date = new Date();
+    console.log(date, "date new date");
     date.setDate(date.getDate() + 7);
     let todayDate = date.toDateString();
+    console.log(todayDate);
     const [selectedOption, setSelectedOption] = useState();
-
+    console.log(selectedOption);
     const generateDateOptions = () => {
         const today = new Date();
         const options = [
             { label: "1 Week", value: 7 },
             { label: "2 Week", value: 14 },
             { label: "3 Week", value: 21 },
-            { label: "1 Month", value: 30 },
-            { label: "3 Months", value: 90 },
-            { label: "6 Months", value: 180 },
-            { label: "12 Months", value: 360 },
+            { label: "1 Month", value: 31 },
+            { label: "3 Months", value: 92 },
+            { label: "6 Months", value: 183 },
+            { label: "12 Months", value: 366 },
         ];
 
         return options.map((option) => {
@@ -59,6 +63,7 @@ export function DateSelect({ setAddCouponData }) {
             expiredData: event.target.value,
         }));
     };
+
     return (
         <div className="mb-2 flex items-center justify-between ">
             <label className="font-semibold mb-2">
@@ -68,7 +73,9 @@ export function DateSelect({ setAddCouponData }) {
                 value={selectedOption}
                 onChange={handleSelectChange}
                 className="px-2 py-2 ml-2 border input-article w-40 rounded-md"
+                required
             >
+                <option value="">Select Date</option>
                 {generateDateOptions()}
             </select>
         </div>

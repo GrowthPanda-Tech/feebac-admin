@@ -3,14 +3,15 @@ import "./infocard.css";
 
 function InfoCards({ title, value }) {
     return (
-        <div className="p-2">
-            <div className="header rounded-lg bg-primary text-white">
-                <div className="flex flex-col justify-center items-center text-center h-28 ">
-                    <h1 className="text-2xl font-semibold">{title}</h1>
-                    <h1 className="text-2xl font-semibold">{value}</h1>
+        <div className="flex items-center flex-col m-2 mb-4 w-full  text-center">
+            <div className="bg-white relative text-black w-full  rounded-lg">
+                <div className="flex flex-col justify-evenly items-center p-10 text-center h-56 ">
+                    <h1 className="text-xl font-semibold">{title}</h1>
+                    <h1 className="text-5xl text-[#EA8552] font-semibold">
+                        {value}
+                    </h1>
                 </div>
-
-                <div>
+                <div className="absolute bottom-[-1rem] ">
                     <svg
                         className="waves"
                         xmlns="http://www.w3.org/2000/svg"
@@ -29,14 +30,8 @@ function InfoCards({ title, value }) {
                             <use
                                 xlinkHref="#gentle-wave"
                                 x="48"
-                                y="0"
-                                fill="rgba(255,255,255,0.7"
-                            />
-                            <use
-                                xlinkHref="#gentle-wave"
-                                x="48"
                                 y="3"
-                                fill="rgba(255,255,255,0.5)"
+                                fill="rgba(234, 82, 95, 1)"
                             />
                             <use
                                 xlinkHref="#gentle-wave"
@@ -44,12 +39,12 @@ function InfoCards({ title, value }) {
                                 y="5"
                                 fill="rgba(255,255,255,0.3)"
                             />
-                            <use
+                            {/* <use
                                 xlinkHref="#gentle-wave"
                                 x="48"
                                 y="7"
-                                fill="#fff"
-                            />
+                                fill="rgba(255,255,255,0.3)"
+                            /> */}
                         </g>
                     </svg>
                 </div>

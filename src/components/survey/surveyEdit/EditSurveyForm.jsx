@@ -8,30 +8,7 @@ import AlertComponent from "../../AlertComponent/AlertComponent";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
-function UserCount({ type, count }) {
-    return (
-        <div className="flex gap-4 items-center">
-            <span className="font-medium text-xl">
-                {type === "total"
-                    ? "Total Registered Users"
-                    : type === "filter"
-                    ? "Filtered Users"
-                    : null}
-                :
-            </span>
-            <span
-                className={`${
-                    type === "filter" ? "bg-secondary text-white" : "bg-white"
-                } font-medium py-2 px-5 rounded-md`}
-            >
-                {count}
-            </span>
-        </div>
-    );
-}
-
 function Select({ name, onChange, children }) {
-    // console.log(children);
     return (
         <select
             name={name}
@@ -71,9 +48,22 @@ export default function EditSurveyForm({
     surveyInfo,
     setSurveyInfo,
 }) {
+    const [isDateChange, setIsDateChange] = useState(false);
+
+    const convertToCalendarFormat = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = String(date.getSeconds()).padStart(2, "0");
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    };
+
     const convertToLocal = (date) => {
         const dateObj = new Date(`${date} UTC`);
-        return dateObj.toISOString().slice(0, -8);
+        return convertToCalendarFormat(dateObj);
     };
 
     const { slug } = useParams();
@@ -81,15 +71,20 @@ export default function EditSurveyForm({
     const [surveyData, setSurveyData] = useState({
         surveyId: surveyInfo?.survey_id,
         surveyTitle: surveyInfo?.survey_title,
-        startDate: surveyInfo?.created_date,
-        endDate: surveyInfo?.end_date,
+        startDate: convertToLocal(surveyInfo?.start_date),
+        endDate: convertToLocal(surveyInfo?.end_date),
         loyaltyPoint: surveyInfo?.loyalty_point,
         surveyDescription: surveyInfo?.survey_description,
         category: surveyInfo?.category.category_id,
         isUpdateImage: false,
     });
+
     const [profileData, setProfileData] = useState({});
-    // console.log(convertToLocal("2023/10/03 06:05:14"));
+    const [updatedData, setUpdatedData] = useState({
+        ...surveyData,
+        startDate: surveyInfo?.start_date,
+        endDate: surveyInfo?.end_date,
+    });
 
     // console.log(surveyData.startDate.split("/").join("-"));
     const getCategories = async () => {
@@ -99,19 +94,24 @@ export default function EditSurveyForm({
         );
         response.isSuccess && setCategories(response.categoryList);
     };
+    console.log(surveyInfo.startDate);
 
     const handleChange = (e) => {
         if (e.target.name === "startDate" || e.target.name === "endDate") {
+            console.log("hi");
+            setIsDateChange(true);
             console.log(e.target.value);
             const localDateObject = new Date(e.target.value);
-            console.log(localDateObject);
             const formattedOutput = convertToUTC(localDateObject);
             console.log(formattedOutput);
-            setSurveyData({ ...surveyData, [e.target.name]: formattedOutput });
+            setUpdatedData({
+                ...updatedData,
+                [e.target.name]: formattedOutput,
+            });
 
             return;
         }
-        setSurveyData({ ...surveyData, [e.target.name]: e.target.value });
+        setUpdatedData({ ...updatedData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (event) => {
@@ -119,7 +119,7 @@ export default function EditSurveyForm({
             const dataString = JSON.stringify(profileData);
             const formdata = new FormData();
 
-            for (const [key, value] of Object.entries(surveyData)) {
+            for (const [key, value] of Object.entries(updatedData)) {
                 formdata.append(key, value);
             }
 
@@ -151,12 +151,12 @@ export default function EditSurveyForm({
         }
     };
 
+    console.log(updatedData);
+
     useEffect(() => {
         getCategories();
     }, []);
 
-    // console.log(surveyData.category);
-    convertToLocal(surveyData?.startDate, "startdate");
     return (
         <div className="flex flex-col p-8 gap-8">
             <h1 className="heading mb-0"> Edit Survey Details </h1>
@@ -167,12 +167,13 @@ export default function EditSurveyForm({
                         type={"datetime-local"}
                         min={TODAY}
                         value={
-                            surveyData
-                                ? convertToLocal(surveyData?.startDate)
-                                : //   .replace(/ /g, "T")
-                                  //   .split("/")
-                                  //   .join("-")
-                                  ""
+                            !isDateChange
+                                ? surveyData
+                                    ? surveyData.startDate
+                                    : ""
+                                : updatedData
+                                ? convertToLocal(updatedData.startDate)
+                                : ""
                         }
                         name={"startDate"}
                         onChange={handleChange}
@@ -186,11 +187,12 @@ export default function EditSurveyForm({
                         name={"endDate"}
                         onChange={handleChange}
                         value={
-                            surveyData
-                                ? surveyData?.endDate
-                                      .replace(/ /g, "T")
-                                      .split("/")
-                                      .join("-")
+                            !isDateChange
+                                ? surveyData
+                                    ? surveyData.endDate
+                                    : ""
+                                : updatedData
+                                ? convertToLocal(updatedData.endDate)
                                 : ""
                         }
                     />

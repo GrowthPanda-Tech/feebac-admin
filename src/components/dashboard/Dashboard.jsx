@@ -74,7 +74,7 @@ function Dashboard() {
     let option = {
         plugins: {
             legend: {
-                position: "top",
+                position: "bottom",
                 labels: {
                     usePointStyle: true,
                     pointStyle: "circle",
@@ -128,7 +128,7 @@ function Dashboard() {
 
             <div>
                 {/* <h2 className="text-3xl font-semibold mb-2">Statistics</h2> */}
-                <div className="grid grid-cols-3 gap-4 bg-white rounded-lg p-2  w-full ">
+                <div className="grid grid-cols-3 p-6 bg-white mt-5 rounded-lg">
                     {adminData && (
                         <PieChart chartData={surveyData} option={option} />
                     )}

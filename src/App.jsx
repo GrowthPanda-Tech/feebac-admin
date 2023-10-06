@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
-// component imports
+// components
 import Header from "./components/header/Header";
 import Login from "./components/login/Login";
 import Navbar from "./components/navbar/Navbar";
@@ -17,7 +17,6 @@ import ContentEdit from "./components/content/ContentEdit";
 import NewsTable from "./components/news/NewsTable";
 import NewsCreate from "./components/news/NewsCreate";
 import NewsEdit from "./components/news/NewsEdit";
-import LoyaltyPoint from "./components/loyaltyPoint/LoyaltyPoint";
 import Revenue from "./components/revenue/Revenue";
 import Analytics from "./components/analytics/Analytics";
 import Settings from "./components/settings/Settings";
@@ -27,7 +26,10 @@ import AddQuestions from "./components/survey/createSurvey/AddQuestions";
 import SurveyEdit from "./components/survey/surveyEdit/SurveyEdit";
 import Loyalty from "./components/loyaltyPoint/Loyalty";
 import RedeemInfo from "./components/loyaltyPoint/RedeemInfo";
+
+// contexts
 import CategoryContextProvider from "./contexts/CategoryContext";
+import ProfileContextProvider from "./contexts/ProfileContext";
 
 export default function App() {
     const isLoggedIn = localStorage.getItem("authToken") != null;
@@ -40,91 +42,99 @@ export default function App() {
                             <Navbar />
                         </div>
                         <div className="md:ml-80">
-                            <Header />
-                            <main className="p-12">
-                                <Routes>
-                                    <Route path="/" element={<Dashboard />} />
-                                    <Route path="user" element={<User />} />
-                                    <Route
-                                        path="user/:slug"
-                                        element={<UserInfo />}
-                                    />
-                                    <Route
-                                        path="loyalty-point/redeem/:slug"
-                                        element={<RedeemInfo />}
-                                    />
-                                    <Route path="survey" element={<Survey />} />
-                                    <Route
-                                        path="survey/create"
-                                        element={<CreateSurvey />}
-                                    />
-                                    <Route
-                                        path="survey/create/add-questions/:slug"
-                                        element={<AddQuestions />}
-                                    />
-                                    <Route
-                                        path="survey/details/:slug"
-                                        element={<SurveyInfo />}
-                                    />
-                                    <Route
-                                        path="survey/review/:slug"
-                                        element={<SurveyReview />}
-                                    />
-                                    <Route
-                                        path="survey/edit-survey/:slug"
-                                        element={<SurveyEdit />}
-                                    />
-                                    <Route
-                                        path="content"
-                                        element={<Content />}
-                                    />
-                                    <Route
-                                        path="content/create"
-                                        element={<ContentCreate />}
-                                    />
-                                    <Route
-                                        path="content/edit/:slug"
-                                        element={<ContentEdit />}
-                                    />
-                                    <Route
-                                        path="news"
-                                        element={<NewsTable />}
-                                    />
-                                    <Route
-                                        path="news/create"
-                                        element={<NewsCreate />}
-                                    />
-                                    <Route
-                                        path="news/edit/:slug"
-                                        element={<NewsEdit />}
-                                    />
+                            <ProfileContextProvider>
+                                <Header />
+                                <main className="p-12">
+                                    <Routes>
+                                        <Route
+                                            path="/"
+                                            element={<Dashboard />}
+                                        />
+                                        <Route path="user" element={<User />} />
+                                        <Route
+                                            path="user/:slug"
+                                            element={<UserInfo />}
+                                        />
+                                        <Route
+                                            path="loyalty-point/redeem/:slug"
+                                            element={<RedeemInfo />}
+                                        />
+                                        <Route
+                                            path="survey"
+                                            element={<Survey />}
+                                        />
+                                        <Route
+                                            path="survey/create"
+                                            element={<CreateSurvey />}
+                                        />
+                                        <Route
+                                            path="survey/create/add-questions/:slug"
+                                            element={<AddQuestions />}
+                                        />
+                                        <Route
+                                            path="survey/details/:slug"
+                                            element={<SurveyInfo />}
+                                        />
+                                        <Route
+                                            path="survey/review/:slug"
+                                            element={<SurveyReview />}
+                                        />
+                                        <Route
+                                            path="survey/edit-survey/:slug"
+                                            element={<SurveyEdit />}
+                                        />
+                                        <Route
+                                            path="content"
+                                            element={<Content />}
+                                        />
+                                        <Route
+                                            path="content/create"
+                                            element={<ContentCreate />}
+                                        />
+                                        <Route
+                                            path="content/edit/:slug"
+                                            element={<ContentEdit />}
+                                        />
+                                        <Route
+                                            path="news"
+                                            element={<NewsTable />}
+                                        />
+                                        <Route
+                                            path="news/create"
+                                            element={<NewsCreate />}
+                                        />
+                                        <Route
+                                            path="news/edit/:slug"
+                                            element={<NewsEdit />}
+                                        />
 
-                                    <Route
-                                        path="loyalty-point"
-                                        element={<Loyalty />}
-                                    />
-                                    <Route
-                                        path="revenue"
-                                        element={<Revenue />}
-                                    />
-                                    <Route
-                                        path="analytics"
-                                        element={<Analytics />}
-                                    />
-                                    <Route
-                                        path="settings"
-                                        element={<Settings />}
-                                    />
-                                    <Route
-                                        path="*"
-                                        element={<PageNotFound />}
-                                    />
-                                    <Route
-                                        path="profile-update"
-                                        element={<ProfileUpdate />}
-                                    />
-                                </Routes>
-                            </main>
+                                        <Route
+                                            path="loyalty-point"
+                                            element={<Loyalty />}
+                                        />
+                                        <Route
+                                            path="revenue"
+                                            element={<Revenue />}
+                                        />
+                                        <Route
+                                            path="analytics"
+                                            element={<Analytics />}
+                                        />
+                                        <Route
+                                            path="settings"
+                                            element={<Settings />}
+                                        />
+                                        <Route
+                                            path="*"
+                                            element={<PageNotFound />}
+                                        />
+                                        <Route
+                                            path="profile-update"
+                                            element={<ProfileUpdate />}
+                                        />
+                                    </Routes>
+                                </main>
+                            </ProfileContextProvider>
                         </div>
                     </div>
                 </CategoryContextProvider>

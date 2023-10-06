@@ -1,6 +1,10 @@
+import { useState } from "react";
 import CouponToggle from "./CouponToggle";
+import EditCoupons from "./EditCoupons";
 
 export default function CouponCard({ data, setCouponsData }) {
+    const [editPop, setEditPop] = useState(false);
+
     return (
         <>
             <div
@@ -13,6 +17,22 @@ export default function CouponCard({ data, setCouponsData }) {
                         Disabled
                     </h2>
                 )}
+
+                <div class="absolute top-[-2rem] left-3">
+                    <div class="tool-tip-div group">
+                        <button
+                            className=""
+                            onClick={() => {
+                                setEditPop(true);
+                            }}
+                        >
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <span class="tool-tip-span left-0 btn-primary  -top-10 ">
+                            Edit Coupon
+                        </span>
+                    </div>
+                </div>
 
                 <div className="rounded-lg">
                     <div className="absolute top-1 right-2 p-2">
@@ -31,10 +51,22 @@ export default function CouponCard({ data, setCouponsData }) {
                         <h2 className="text-black text-2xl font-semibold">
                             {data.title}
                         </h2>
-                        <h2>{data.description}</h2>
-                        <div className="flex gap-4">
-                            <div>Total Created : {data.totalCount}</div>
-                            <div>Total Redeemed : {data.redeemCount}</div>
+                        <div className="flex flex-grow flex-col gap-1 font-medium">
+                            <h2>{data.description}</h2>
+                            <div className="flex items-center gap-2">
+                                <span>
+                                    Redeemed : {data ? data.redeemCount : ""}
+                                </span>
+                                <span>
+                                    Total : {data ? data.totalCount : ""}
+                                </span>
+                                <span>
+                                    Available :{" "}
+                                    {data
+                                        ? data.totalCount - data.redeemCount
+                                        : ""}
+                                </span>
+                            </div>
                         </div>
                         <div className="flex bg-[#5927E8] w-24 p-2 rounded-full items-center justify-evenly text-white ">
                             <i className="fa-solid fa-coins"></i>
@@ -43,6 +75,13 @@ export default function CouponCard({ data, setCouponsData }) {
                     </div>
                 </div>
             </div>
+            {editPop && (
+                <EditCoupons
+                    id={data.id}
+                    setCouponsData={setCouponsData}
+                    setEditPop={setEditPop}
+                />
+            )}
         </>
     );
 }

@@ -69,6 +69,18 @@ function ProfileForm({ setShow }) {
                     message: "Profile Pic Updated Successfully ",
                 };
                 AlertComponent("success", custom);
+                const getAdminInfo = async () => {
+                    try {
+                        const response = await makeRequest(`profile/`, "GET");
+                        if (response.isSuccess) {
+                            setUserData(response.userInfo);
+                        }
+                    } catch (error) {
+                        console.error(error);
+                    }
+                };
+
+                getAdminInfo();
             }
             setIsUpdateImage(!isUpdateImage);
         }

@@ -185,15 +185,31 @@ export default function Survey() {
                                     </Tdata>
                                     <Tdata>
                                         <div className="flex justify-center gap-4">
-                                            <Link to={`details/${survey_id}`}>
-                                                <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
-                                            </Link>
+                                            <div className="flex justify-center">
+                                                <div class="tool-tip-div group">
+                                                    <Link
+                                                        to={`details/${survey_id}`}
+                                                    >
+                                                        <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
+                                                    </Link>
+                                                    <span class="tool-tip-span -right-[3.4rem]  bg-black -top-12 ">
+                                                        View Response
+                                                    </span>
+                                                </div>
+                                            </div>
                                             {status === "upcoming" ? (
-                                                <Link
-                                                    to={`edit-survey/${survey_id}`}
-                                                >
-                                                    <i className="fa-solid fa-pen-to-square text-xl"></i>
-                                                </Link>
+                                                <div className="flex justify-center">
+                                                    <div class="tool-tip-div group">
+                                                        <Link
+                                                            to={`edit-survey/${survey_id}`}
+                                                        >
+                                                            <i className="fa-solid fa-pen-to-square text-xl"></i>
+                                                        </Link>
+                                                        <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                            Edit Survey
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             ) : null}
                                         </div>
                                     </Tdata>

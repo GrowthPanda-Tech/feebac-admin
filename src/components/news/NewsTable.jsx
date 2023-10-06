@@ -108,24 +108,51 @@ export default function NewsTable() {
                                 </Tdata>
                                 <Tdata>
                                     <div className="text-xl flex justify-center gap-5">
-                                        <Link to={news.newsUrl} target="_blank">
-                                            <i className="fa-solid fa-link"></i>
-                                        </Link>
-                                        <Link
-                                            to={`edit/${news.id}`}
-                                            state={{
-                                                from: news,
-                                            }}
-                                        >
-                                            <i className="fa-solid fa-pen-to-square"></i>
-                                        </Link>
-                                        <button
-                                            onClick={() =>
-                                                handleDelPop(news.id, index)
-                                            }
-                                        >
-                                            <i className="fa-solid fa-trash"></i>
-                                        </button>
+                                        <div className="flex justify-center">
+                                            <div class="tool-tip-div group">
+                                                <Link
+                                                    to={news.newsUrl}
+                                                    target="_blank"
+                                                >
+                                                    <i className="fa-solid fa-link"></i>
+                                                </Link>
+                                                <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                    Visit Link
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <div class="tool-tip-div group">
+                                                <Link
+                                                    to={`edit/${news.id}`}
+                                                    state={{
+                                                        from: news,
+                                                    }}
+                                                >
+                                                    <i className="fa-solid fa-pen-to-square"></i>
+                                                </Link>
+                                                <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                    Edit News
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <div class="tool-tip-div group">
+                                                <button
+                                                    onClick={() =>
+                                                        handleDelPop(
+                                                            news.id,
+                                                            index
+                                                        )
+                                                    }
+                                                >
+                                                    <i className="fa-solid fa-trash"></i>
+                                                </button>
+                                                <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                    Delete News
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </Tdata>
                             </Trow>

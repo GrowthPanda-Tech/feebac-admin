@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { DateSelect } from "./DateSelect";
 import { TermsAndCondition } from "./TermsAndCondition";
 import { CouponsDetails } from "./CouponsDescription";
@@ -8,7 +8,7 @@ import makeRequest from "../../utils/makeRequest";
 import PageTitle from "../PageTitle";
 import AlertComponent from "../AlertComponent/AlertComponent";
 import CouponCategory from "./CouponCategory";
-import removeForbiddenChars from "../../utils/removeForbiddenChars";
+import { useEffect } from "react";
 
 function InputForm({
     label,
@@ -40,31 +40,49 @@ function InputForm({
     );
 }
 
-function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
-    const [addCouponData, setAddCouponData] = useState({});
+function EditCoupons({ setEditPop, setCouponsData, id }) {
+    const [editCouponData, setEditCouponData] = useState({});
     const [options, setOptions] = useState([]);
 
+    function joinArrayWithNewlines(array) {
+        const join = array.join("\n");
+        return join;
+    }
+
     const handleChange = (e) => {
-        if (e.target.name === "description") {
-            setAddCouponData({
-                ...addCouponData,
-                description: "₹" + e.target.value,
-            });
-            return;
-        }
         if (e.target.name === "totalCount") {
-            console.log(parseInt(e.target.value));
-            setAddCouponData({
-                ...addCouponData,
+            setEditCouponData({
+                ...editCouponData,
                 totalCount: parseInt(e.target.value),
             });
             return;
         }
-        setAddCouponData({
-            ...addCouponData,
+        setEditCouponData({
+            ...editCouponData,
             [e.target.name]: e.target.value,
         });
     };
+    function removeCurrencySymbol(inputString) {
+        if (inputString != undefined) return inputString.replace(/₹/g, "");
+    }
+
+    const getCouponDetails = async () => {
+        try {
+            const response = await makeRequest(
+                `/loyalty/get-coupon-details?id=${id}`,
+                "GET"
+            );
+            if (response.isSuccess) {
+                setEditCouponData(response.data);
+                setEditCouponData({
+                    ...response.data,
+                    details: joinArrayWithNewlines(response.data.details),
+                    tnc: joinArrayWithNewlines(response.data.tnc),
+                });
+            }
+        } catch (error) {}
+    };
+
     const getCouponsCategory = async () => {
         try {
             const response = await makeRequest(
@@ -82,14 +100,16 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
 
     useEffect(() => {
         getCouponsCategory();
+        getCouponDetails();
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const response = await makeRequest(
-            "/loyalty/add-coupon",
-            "POST",
-            addCouponData
+            "/loyalty/update-coupon",
+            "PUT",
+            editCouponData
         );
 
         if (response.isSuccess) {
@@ -103,25 +123,34 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                     setCouponsData(response.data);
                 }
             };
-            setShowCouponAddPop(false);
+            setEditPop(false);
             getData();
         } else {
             AlertComponent("failed", response);
         }
+        console.log(editCouponData.description);
     };
     return (
         <div className="fixed top-0 left-0 w-full flex justify-center overflow-y-scroll items-center update-user h-screen">
             <form onSubmit={handleSubmit}>
                 <div className="bg-white w-full flex flex-col p-8 gap-4">
-                    <PageTitle name={"Add Coupons"} />
+                    <PageTitle name={"Edit Coupons"} />
                     <InputForm
                         label={"Title"}
                         name={"title"}
+                        value={editCouponData ? editCouponData.title : ""}
                         onChange={handleChange}
                     />
                     <InputForm
                         label={"Value in ₹"}
                         name={"description"}
+                        value={
+                            editCouponData
+                                ? removeCurrencySymbol(
+                                      editCouponData.description
+                                  )
+                                : ""
+                        }
                         onChange={(e) => {
                             handleChange(e);
                         }}
@@ -133,13 +162,14 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                     <InputForm
                         label={"Points Required"}
                         name={"value"}
+                        value={editCouponData ? editCouponData.value : ""}
                         type={"number"}
                         onChange={(e) => {
                             handleChange(e);
                         }}
+                        min={0}
                         onKeyDown={(e) => removeForbiddenChars(e)}
                         onPaste={(e) => removeForbiddenChars(e)}
-                        min={0}
                     />
                     <label className="flex flex-col pb-6">
                         <span className="font-semibold mb-2">Image link :</span>
@@ -150,10 +180,13 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                             pattern="https://.*"
                             className="border-2 input-article rounded-md px-4 py-2 w-full"
                             onChange={handleChange}
+                            value={
+                                editCouponData ? editCouponData.imageUrl : ""
+                            }
                             required
                         />
                     </label>
-                    <div className="grid grid-cols-2 gap-2 text-center w-full ">
+                    <div className="grid grid-cols-2 gap-2 w-full ">
                         <div className="mb-2 flex items-center  gap-4">
                             <label className="font-semibold">
                                 Enter Total Units
@@ -164,32 +197,45 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                                 onChange={(e) => {
                                     handleChange(e);
                                 }}
+                                value={
+                                    editCouponData
+                                        ? editCouponData.totalCount
+                                        : ""
+                                }
                                 onKeyDown={(e) => removeForbiddenChars(e)}
                                 onPaste={(e) => removeForbiddenChars(e)}
                                 min={1}
                             />
                         </div>
-
                         <CouponCategory
                             options={options}
                             setOptions={setOptions}
-                            setAddCouponData={setAddCouponData}
+                            setAddCouponData={setEditCouponData}
+                            selectedValueProp={
+                                editCouponData ? editCouponData.category : ""
+                            }
                         />
-                        {/* <DateSelect setAddCouponData={setAddCouponData} /> */}
+                        {/* <DateSelect setAddCouponData={setEditCouponData} /> */}
                     </div>
 
                     <div className="flex flex-col gap-4">
-                        <CouponsDetails setCouponData={setAddCouponData} />
-                        <TermsAndCondition setCouponData={setAddCouponData} />
+                        <CouponsDetails
+                            setCouponData={setEditCouponData}
+                            data={editCouponData ? editCouponData.details : ""}
+                        />
+                        <TermsAndCondition
+                            setCouponData={setEditCouponData}
+                            data={editCouponData ? editCouponData.tnc : ""}
+                        />
                     </div>
 
                     <div className="flex gap-4">
                         <button type="submit" className="btn-primary">
-                            Add Coupons
+                            Save Changes
                         </button>
                         <button
                             onClick={() => {
-                                setShowCouponAddPop(false);
+                                setEditPop(false);
                             }}
                             className="btn-secondary"
                         >
@@ -202,4 +248,4 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
     );
 }
 
-export default AddCoupons;
+export default EditCoupons;

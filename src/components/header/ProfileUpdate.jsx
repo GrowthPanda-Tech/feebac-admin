@@ -2,7 +2,6 @@ import { useState, useContext } from "react";
 import { ProfileContext } from "../../contexts/ProfileContext";
 
 import ProfileForm from "./ProfileForm";
-
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function ProfileUpdate() {

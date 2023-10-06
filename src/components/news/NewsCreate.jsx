@@ -35,7 +35,6 @@ export default function NewsCreate() {
 
             return;
         }
-
         setNewsData({ ...newsData, [name]: value });
     };
 

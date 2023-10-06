@@ -165,12 +165,12 @@ function RedeemInfo() {
                                 name={"Coins Requried"}
                                 value={redeemInfo.coupon.value}
                             />
-                            <CouponInfo
+                            {/* <CouponInfo
                                 name={"Expired Date"}
                                 value={
                                     redeemInfo.coupon.expiredData.split(" ")[0]
                                 }
-                            />
+                            /> */}
                         </div>
                     </div>
                 </div>

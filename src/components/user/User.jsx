@@ -74,9 +74,16 @@ export default function User() {
                                             : "-"}
                                     </Tdata>
                                     <Tdata>
-                                        <Link to={user_id}>
-                                            <i className="text-xl fa-solid fa-circle-info"></i>
-                                        </Link>
+                                        <div className="flex justify-center">
+                                            <div class="tool-tip-div group">
+                                                <Link to={user_id}>
+                                                    <i className="text-xl fa-solid fa-circle-info"></i>
+                                                </Link>
+                                                <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                    See User Info
+                                                </span>
+                                            </div>
+                                        </div>
                                     </Tdata>
                                 </Trow>
                             )

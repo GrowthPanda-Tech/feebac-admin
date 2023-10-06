@@ -78,6 +78,7 @@ export default function NewsForm({ newsData, handleChange }) {
                     accept="image/*"
                     className="py-3 px-8 rounded-xl bg-white"
                     onChange={handleChange}
+                    required
                 />
             </label>
             <label className="flex flex-col">

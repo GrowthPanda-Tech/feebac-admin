@@ -13,16 +13,12 @@ function formatDate(inputDate) {
     return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 }
 
-const TODAY = new Date().toISOString().slice(0, 16);
-
 export function DateSelect({ setAddCouponData }) {
     let date = new Date();
     console.log(date, "date new date");
     date.setDate(date.getDate() + 7);
     let todayDate = date.toDateString();
-    console.log(todayDate);
     const [selectedOption, setSelectedOption] = useState();
-    console.log(selectedOption);
     const generateDateOptions = () => {
         const today = new Date();
         const options = [
@@ -81,3 +77,5 @@ export function DateSelect({ setAddCouponData }) {
         </div>
     );
 }
+
+("2023/10/17 00:00:00");

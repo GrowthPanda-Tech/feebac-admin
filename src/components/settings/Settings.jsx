@@ -27,7 +27,7 @@ export default function Settings() {
     const [visibleSection, setVisibleSection] = useState("category");
     const [tertiaryKeys, setTertiaryKeys] = useState([]);
     const [filterVals, setFilterVals] = useState({
-        dataType: 6,
+        dataType: 3,
         isSelect: true,
         options: [],
     });

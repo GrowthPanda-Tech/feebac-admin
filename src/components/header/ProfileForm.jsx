@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 import { ProfileContext } from "../../contexts/ProfileContext";
 
 //assets
@@ -33,6 +33,8 @@ function InputForm({ label, name, value, onChange }) {
 
 function ProfileForm({ setShow }) {
     const { profile, setProfile } = useContext(ProfileContext);
+
+    const fileInpRef = useRef(null);
 
     const [updatedData, setUpdatedData] = useState({
         ...profile,
@@ -151,35 +153,25 @@ function ProfileForm({ setShow }) {
         <div className="fixed top-0 left-0 w-full flex justify-center items-center update-user h-[100vh] ">
             <div className="flex bg-white justify-around p-10 w-[80%] rounded-lg">
                 <div className="flex-col justify-between mt-8 h-96 w-96 items-center  mx-2 flex ">
-                    <div className="h-20vh">
+                    <div>
+                        <input
+                            ref={fileInpRef}
+                            name="userImage"
+                            type="file"
+                            accept="image/*"
+                            className="border-none hidden"
+                            onChange={handleChange}
+                        />
                         <img
                             src={
                                 isUpdateImage
                                     ? imgPreview
                                     : BASE_URL + updatedData.profile_pic
                             }
-                            className="rounded-full border-double  h-96 w-96 border-4 border-[#A43948]"
+                            className="rounded-full border-double  h-96 w-96 border-4 border-[#A43948] cursor-pointer"
+                            onClick={() => fileInpRef.current.click()}
                         />
                     </div>
-
-                    <label className="flex flex-col">
-                        <input
-                            name="userImage"
-                            type="file"
-                            accept="image/*"
-                            className="input-article border-none"
-                            onChange={handleChange}
-                            hidden
-                        />
-                    </label>
-                    {isUpdateImage && (
-                        <button
-                            className="btn-primary"
-                            onClick={handleImageSubmit}
-                        >
-                            Save Image
-                        </button>
-                    )}
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="bg-white p-5">
@@ -259,6 +251,15 @@ function ProfileForm({ setShow }) {
                         </div>
 
                         <div className="flex gap-3">
+                            {isUpdateImage && (
+                                <button
+                                    className="btn-primary w-fit"
+                                    onClick={handleImageSubmit}
+                                >
+                                    Save Image
+                                </button>
+                            )}
+
                             <button className="btn-primary">
                                 Save Changes
                             </button>

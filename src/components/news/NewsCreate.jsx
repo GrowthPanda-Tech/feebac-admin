@@ -12,10 +12,11 @@ import AlertComponent from "../AlertComponent/AlertComponent";
 export default function NewsCreate() {
     const navigate = useNavigate();
     const { categories } = useContext(CategoryContext);
+    const initCat = categories[0]?.category_id ? categories[0].category_id : "";
 
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
     const [newsData, setNewsData] = useState({
-        category: categories[0].category_id,
+        category: initCat,
     });
 
     const handleChange = (event) => {

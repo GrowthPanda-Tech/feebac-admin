@@ -75,13 +75,16 @@ export default function CreateSurveyForm({
     setSurveyTitle,
     setIsSurveyCreate,
 }) {
+    const { categories } = useContext(CategoryContext);
+    const initCat = categories[0]?.category_id ? categories[0].category_id : "";
+
     const [filters, setFilters] = useState([]);
-    const [surveyData, setSurveyData] = useState([]);
+    const [surveyData, setSurveyData] = useState({
+        category: initCat,
+    });
     const [profileData, setProfileData] = useState({});
     const [userCount, setUserCount] = useState(0);
     const [filterdUserCount, setFilteredUserCount] = useState(0);
-
-    const { categories } = useContext(CategoryContext);
 
     const getFilters = async () => {
         try {
@@ -143,6 +146,7 @@ export default function CreateSurveyForm({
 
             return;
         }
+
         setSurveyData({ ...surveyData, [name]: value });
     };
 
@@ -217,7 +221,7 @@ export default function CreateSurveyForm({
                 <Label name={"Select Research Category"}>
                     <Select
                         name={"category"}
-                        value={categories[0].category_id}
+                        value={surveyData.category}
                         onChange={handleChange}
                     >
                         {categories.map((item) => (

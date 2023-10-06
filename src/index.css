@@ -56,6 +56,14 @@
     .pill-secondary {
         @apply py-2 px-6 bg-white text-[#858585] border border-dark-grey rounded-xl;
     }
+
+    .tool-tip-span {
+        @apply pointer-events-none absolute text-sm text-white rounded-lg p-2 w-max opacity-0 transition-opacity group-hover:opacity-100;
+    }
+
+    .tool-tip-div {
+        @apply relative w-max;
+    }
 }
 
 @layer utilities {

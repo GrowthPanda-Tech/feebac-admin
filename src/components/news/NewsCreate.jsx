@@ -29,17 +29,18 @@ export default function NewsCreate() {
 
             return;
         }
+        setNewsData({ ...newsData, name: value });
 
-        if (name === "description") {
-            const maxWords = 60;
-            const words = value.split(" ");
+        // if (name === "description") {
+        //     const maxWords = 60;
+        //     const words = value.split(" ");
 
-            if (words.length <= maxWords) {
-                setNewsData({ ...newsData, description: value });
-            }
+        //     if (words.length <= maxWords) {
 
-            return;
-        }
+        //     }
+
+        //     return;
+        // }
 
         setNewsData({ ...newsData, [name]: value });
     };

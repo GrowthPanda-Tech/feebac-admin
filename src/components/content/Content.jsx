@@ -111,23 +111,37 @@ export default function Content() {
                                     </Tdata>
                                     <Tdata>
                                         <div className="flex justify-center gap-4 text-xl">
-                                            <Link
-                                                to={`/content/edit/${article_id}`}
-                                            >
-                                                <button>
-                                                    <i className="fa-solid fa-pen-to-square"></i>
-                                                </button>
-                                            </Link>
-                                            <button
-                                                onClick={() =>
-                                                    handlePublish(
-                                                        article_id,
-                                                        index
-                                                    )
-                                                }
-                                            >
-                                                <i className="fa-regular fa-newspaper"></i>
-                                            </button>
+                                            <div className="flex justify-center">
+                                                <div class="tool-tip-div group">
+                                                    <Link
+                                                        to={`/content/edit/${article_id}`}
+                                                    >
+                                                        <button>
+                                                            <i className="fa-solid fa-pen-to-square"></i>
+                                                        </button>
+                                                    </Link>
+                                                    <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                        Edit Article
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-center">
+                                                <div class="tool-tip-div group">
+                                                    <button
+                                                        onClick={() =>
+                                                            handlePublish(
+                                                                article_id,
+                                                                index
+                                                            )
+                                                        }
+                                                    >
+                                                        <i className="fa-regular fa-newspaper"></i>
+                                                    </button>
+                                                    <span class="tool-tip-span  -right-[2.8rem] bg-black -top-12 ">
+                                                        Toggle Status
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </Tdata>
                                 </Trow>

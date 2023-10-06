@@ -10,7 +10,16 @@ import AlertComponent from "../AlertComponent/AlertComponent";
 import CouponCategory from "./CouponCategory";
 import { useEffect } from "react";
 
-function InputForm({ label, name, value, onChange, type }) {
+function InputForm({
+    label,
+    name,
+    value,
+    onChange,
+    type,
+    min,
+    onKeyDown,
+    onPaste,
+}) {
     return (
         <div>
             <label className="font-semibold text-gray-700 block pb-1">
@@ -19,9 +28,12 @@ function InputForm({ label, name, value, onChange, type }) {
             <input
                 name={name}
                 type={type}
+                onKeyDown={onKeyDown}
+                onPaste={onPaste}
                 className="border-2 input-article rounded-md px-4 py-2 w-full"
                 value={value}
                 onChange={onChange}
+                min={min}
                 required
             />
         </div>
@@ -30,10 +42,24 @@ function InputForm({ label, name, value, onChange, type }) {
 
 function EditCoupons({ setEditPop, setCouponsData, id }) {
     const [editCouponData, setEditCouponData] = useState({});
+    const [couponsDetails, setCouponsDetails] = useState("");
+    const [couponsTermsCondition, setCouponsTermsCondition] = useState("");
+    console.log(couponsDetails);
 
-    console.log(id);
+    function joinArrayWithNewlines(array) {
+        const values = Object.values(array);
+        return values.join("\n");
+    }
 
     const handleChange = (e) => {
+        if (e.target.name === "totalCount") {
+            console.log(parseInt(e.target.value));
+            setEditCouponData({
+                ...editCouponData,
+                totalCount: parseInt(e.target.value),
+            });
+            return;
+        }
         setEditCouponData({
             ...editCouponData,
             [e.target.name]: e.target.value,
@@ -48,11 +74,13 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
             );
             if (response.isSuccess) {
                 setEditCouponData(response.data);
+                setCouponsDetails(joinArrayWithNewlines(response.data.details));
+                setCouponsTermsCondition(
+                    joinArrayWithNewlines(response.data.tnc)
+                );
             }
         } catch (error) {}
     };
-
-    console.log(editCouponData);
 
     useEffect(() => {
         getCouponDetails();
@@ -82,6 +110,7 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
         } else {
             AlertComponent("failed", response);
         }
+        console.log(couponsDetails);
     };
     return (
         <div className="fixed top-0 left-0 w-full flex justify-center overflow-y-scroll items-center update-user h-screen">
@@ -95,12 +124,16 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
                         onChange={handleChange}
                     />
                     <InputForm
-                        label={"Value"}
+                        label={"Value in ₹"}
                         name={"description"}
                         value={editCouponData ? editCouponData.description : ""}
                         onChange={(e) => {
                             handleChange(e);
                         }}
+                        min={0}
+                        type={"number"}
+                        onKeyDown={(e) => removeForbiddenChars(e)}
+                        onPaste={(e) => removeForbiddenChars(e)}
                     />
                     <InputForm
                         label={"Points Required"}
@@ -110,6 +143,9 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
                         onChange={(e) => {
                             handleChange(e);
                         }}
+                        min={0}
+                        onKeyDown={(e) => removeForbiddenChars(e)}
+                        onPaste={(e) => removeForbiddenChars(e)}
                     />
                     <label className="flex flex-col pb-6">
                         <span className="font-semibold mb-2">Image link :</span>
@@ -127,6 +163,26 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
                         />
                     </label>
                     <div className="grid grid-cols-2 gap-2 w-full ">
+                        <div className="mb-2 flex items-center  gap-4">
+                            <label className="font-semibold">
+                                Enter Total Units
+                            </label>
+                            <InputForm
+                                name={"totalCount"}
+                                type={"number"}
+                                onChange={(e) => {
+                                    handleChange(e);
+                                }}
+                                value={
+                                    editCouponData
+                                        ? editCouponData.totalCount
+                                        : ""
+                                }
+                                onKeyDown={(e) => removeForbiddenChars(e)}
+                                onPaste={(e) => removeForbiddenChars(e)}
+                                min={1}
+                            />
+                        </div>
                         <CouponCategory
                             setAddCouponData={setEditCouponData}
                             selectedValueProp={
@@ -137,9 +193,13 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
                     </div>
 
                     <div className="flex flex-col gap-4">
-                        <CouponsDetails setAddCouponData={setEditCouponData} />
+                        <CouponsDetails
+                            setCouponData={setEditCouponData}
+                            data={couponsDetails}
+                        />
                         <TermsAndCondition
-                            setAddCouponData={setEditCouponData}
+                            setCouponData={setEditCouponData}
+                            data={couponsTermsCondition}
                         />
                     </div>
 

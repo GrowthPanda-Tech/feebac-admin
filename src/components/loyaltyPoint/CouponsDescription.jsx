@@ -1,21 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export function CouponsDetails({ setAddCouponData }) {
+export function CouponsDetails({ setCouponData, data }) {
     const [couponsDetails, setCouponsDetails] = useState("");
+    console.log(data);
 
     const handleKeyPress = (event) => {
         if (event.key === "Enter") {
             event.preventDefault();
             setCouponsDetails((prevText) => prevText + "\n");
-            setAddCouponData((prev) => ({
+            setCouponData((prev) => ({
                 ...prev,
                 details: couponsDetails,
             }));
         }
     };
 
-    console.log();
-
+    useEffect(() => {
+        setCouponsDetails(data);
+    }, [data]);
     return (
         <>
             <label className="font-semibold text-gray-700 flex flex-col pb-1">
@@ -27,7 +29,7 @@ export function CouponsDetails({ setAddCouponData }) {
                     className="border-2  input-article  rounded-lg px-4 py-2 "
                     onChange={(e) => {
                         setCouponsDetails(e.target.value);
-                        setAddCouponData((prev) => ({
+                        setCouponData((prev) => ({
                             ...prev,
                             details: e.target.value,
                         }));

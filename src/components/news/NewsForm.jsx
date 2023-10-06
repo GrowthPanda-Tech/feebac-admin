@@ -85,12 +85,11 @@ export default function NewsForm({ newsData, handleChange }) {
                     accept="image/*"
                     className="py-3 px-8 rounded-xl bg-white"
                     onChange={handleChange}
+                    required
                 />
             </label>
             <label className="flex flex-col">
-                <span className="font-semibold mb-2">
-                    Description (in 60 words)
-                </span>
+                <span className="font-semibold mb-2">Description</span>
                 <textarea
                     className="py-3 px-8 rounded-xl bg-white"
                     label={"Description"}

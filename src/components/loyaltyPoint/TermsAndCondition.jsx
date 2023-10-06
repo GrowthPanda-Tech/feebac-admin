@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export function TermsAndCondition({ setAddCouponData }) {
+export function TermsAndCondition({ setCouponData, data }) {
     const [text, setText] = useState("");
 
     const handleKeyPress = (event) => {
@@ -8,15 +8,16 @@ export function TermsAndCondition({ setAddCouponData }) {
             console.log("hii");
             event.preventDefault();
             setText((prevText) => prevText + "\n");
-            setAddCouponData((prev) => ({
+            setCouponData((prev) => ({
                 ...prev,
                 tnc: text,
             }));
         }
     };
 
-    console.log();
-
+    useEffect(() => {
+        setText(data);
+    }, [data]);
     return (
         <>
             <label className="font-semibold text-gray-700 flex flex-col pb-1">
@@ -28,7 +29,7 @@ export function TermsAndCondition({ setAddCouponData }) {
                     className="border-2  input-article  rounded-lg px-4 py-2 "
                     onChange={(e) => {
                         setText(e.target.value);
-                        setAddCouponData((prev) => ({
+                        setCouponData((prev) => ({
                             ...prev,
                             tnc: e.target.value,
                         }));

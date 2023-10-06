@@ -18,14 +18,21 @@ export default function CouponCard({ data, setCouponsData }) {
                     </h2>
                 )}
 
-                <button
-                    className="absolute top-[-2rem]"
-                    onClick={() => {
-                        setEditPop(true);
-                    }}
-                >
-                    edit
-                </button>
+                <div class="absolute top-[-2rem] left-3">
+                    <div class="tool-tip-div group">
+                        <button
+                            className=""
+                            onClick={() => {
+                                setEditPop(true);
+                            }}
+                        >
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <span class="tool-tip-span left-0 btn-primary  -top-10 ">
+                            Edit Coupon
+                        </span>
+                    </div>
+                </div>
 
                 <div className="rounded-lg">
                     <div className="absolute top-1 right-2 p-2">
@@ -46,10 +53,14 @@ export default function CouponCard({ data, setCouponsData }) {
                         </h2>
                         <div className="flex flex-grow flex-col gap-1 font-medium">
                             <h2>{data.description}</h2>
-                            <span className="flex items-center gap-2">
-                                <i className="fa-regular fa-clock"></i>
-                                <span>{data.expiredData.split(" ")[0]}</span>
-                            </span>
+                            <div className="flex items-center gap-2">
+                                <span>
+                                    Redeemed : {data ? data.redeemCount : ""}
+                                </span>
+                                <span>
+                                    Available {data ? data.totalCount : ""}
+                                </span>
+                            </div>
                         </div>
                         <div className="flex bg-[#5927E8] w-24 p-2 rounded-full items-center justify-evenly text-white ">
                             <i className="fa-solid fa-coins"></i>

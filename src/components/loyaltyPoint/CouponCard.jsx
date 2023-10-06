@@ -31,12 +31,10 @@ export default function CouponCard({ data, setCouponsData }) {
                         <h2 className="text-black text-2xl font-semibold">
                             {data.title}
                         </h2>
-                        <div className="flex flex-grow flex-col gap-1 font-medium">
-                            <h2>{data.description}</h2>
-                            <span className="flex items-center gap-2">
-                                <i className="fa-regular fa-clock"></i>
-                                <span>{data.expiredData.split(" ")[0]}</span>
-                            </span>
+                        <h2>{data.description}</h2>
+                        <div className="flex gap-4">
+                            <div>Total Created : {data.totalCount}</div>
+                            <div>Total Redeemed : {data.redeemCount}</div>
                         </div>
                         <div className="flex bg-[#5927E8] w-24 p-2 rounded-full items-center justify-evenly text-white ">
                             <i className="fa-solid fa-coins"></i>

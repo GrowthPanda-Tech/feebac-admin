@@ -71,8 +71,6 @@ export default function Content() {
         };
     }, []);
 
-    console.log(articleList.length);
-
     return (
         <div className="flex flex-col gap-8">
             <div className="flex w-full justify-between items-center">
@@ -88,7 +86,7 @@ export default function Content() {
             <div className="h-[69vh] relative overflow-y-scroll bg-white">
                 <Table>
                     <Thead headers={HEADERS} />
-                    <tbody className="">
+                    <tbody>
                         {articleList.map(
                             (
                                 {

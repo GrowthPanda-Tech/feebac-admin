@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { CategoryContext } from "../../contexts/CategoryContext";
+
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
+
 import ContentForm from "./ContentForm";
 import PageTitle from "../PageTitle";
 import AlertComponent from "../AlertComponent/AlertComponent";
 
 export default function ContentCreate() {
+    const { categories } = useContext(CategoryContext);
+
     const navigate = useNavigate();
     const [articleData, setArticleData] = useState({
-        category: {
-            category_id: null,
-        },
+        category: categories[0].category_id,
     });
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
 

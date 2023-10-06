@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import ContentForm from "./ContentForm";
+
 import makeRequest from "../../utils/makeRequest";
 import formSubmit from "../../utils/formSubmit";
+
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
+
+import ContentForm from "./ContentForm";
 import PageTitle from "../PageTitle";
 import AlertComponent from "../AlertComponent/AlertComponent";
 
@@ -13,24 +16,12 @@ export default function ContentEdit() {
     const { slug } = useParams();
     const navigate = useNavigate();
 
-    const [articleData, setArticleData] = useState({
-        category: { category_id: null },
-    });
+    const [articleData, setArticleData] = useState({});
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
     const [imgUpdate, setImgUpdate] = useState({
         isUpdate: false,
         articleImg: null,
     });
-
-    const getArticleInfo = async () => {
-        const response = await makeRequest(
-            `site-admin/show-article-info?articleId=${slug}`,
-            "GET"
-        );
-        response.isSuccess
-            ? setArticleData(response.articleInfo)
-            : alert(response.message);
-    };
 
     const handleChange = (event) => {
         if (event.target.name === "articleImg") {
@@ -95,7 +86,35 @@ export default function ContentEdit() {
     };
 
     useEffect(() => {
+        let ignore = false;
+
+        async function getArticleInfo() {
+            try {
+                const response = await makeRequest(
+                    `site-admin/show-article-info?articleId=${slug}`
+                );
+
+                if (!response.isSuccess) {
+                    throw new Error(response.message);
+                }
+
+                if (!ignore) {
+                    const antiAnwarObj = {
+                        ...response.articleInfo,
+                        category: response.articleInfo.category.category_id,
+                    };
+                    setArticleData(antiAnwarObj);
+                }
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
         getArticleInfo();
+
+        return () => {
+            ignore = true;
+        };
     }, []);
 
     return (

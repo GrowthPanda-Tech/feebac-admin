@@ -56,7 +56,7 @@ export default function ContentForm({
                     <Input
                         label={"Title"}
                         name={"article_title"}
-                        value={articleData ? articleData.article_title : null}
+                        value={articleData ? articleData.article_title : ""}
                         onChange={handleChange}
                     />
                 </div>
@@ -68,8 +68,8 @@ export default function ContentForm({
                         items={categories}
                         selectedItem={
                             articleData
-                                ? articleData.category.category_id
-                                : null
+                                ? articleData.category
+                                : categories[0].category_id
                         }
                     />
                 </div>
@@ -77,7 +77,7 @@ export default function ContentForm({
             <Input
                 label={"Description"}
                 name={"article_desctiption"}
-                value={articleData ? articleData.article_desctiption : null}
+                value={articleData ? articleData.article_desctiption : ""}
                 onChange={handleChange}
             />
 
@@ -100,7 +100,7 @@ export default function ContentForm({
                     value={
                         articleData.article_content
                             ? articleData.article_content
-                            : null
+                            : ""
                     }
                     init={{
                         height: 500,

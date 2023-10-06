@@ -21,7 +21,7 @@ export default function FilterValues({
 
     const handleOptionAdd = async () => {
         const request = {
-            dataType: dataTypeId,
+            dataType: 3,
             key: filterId,
             newOptions: [newOption],
         };

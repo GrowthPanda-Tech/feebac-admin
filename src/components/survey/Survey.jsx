@@ -136,86 +136,88 @@ export default function Survey() {
                 <Table>
                     <Thead headers={HEADERS} />
                     <tbody>
-                        {surveyData.map(
-                            ({
-                                survey_id,
-                                survey_title,
-                                category,
-                                start_date,
-                                end_date,
-                            }) => (
-                                <Trow key={survey_id}>
-                                    <Tdata left> {survey_title} </Tdata>
-                                    <Tdata capitalize> {category} </Tdata>
-                                    <Tdata mono>
-                                        <div className="flex flex-col gap-2">
-                                            <div>
-                                                {
-                                                    convertToLocal(
-                                                        start_date
-                                                    ).split(",")[0]
-                                                }
-                                            </div>
-                                            <div className="text-sm">
-                                                {
-                                                    convertToLocal(
-                                                        start_date
-                                                    ).split(",")[1]
-                                                }
-                                            </div>
-                                        </div>
-                                    </Tdata>
-                                    <Tdata mono>
-                                        <div className="flex flex-col gap-2">
-                                            <div>
-                                                {
-                                                    convertToLocal(
-                                                        end_date
-                                                    ).split(",")[0]
-                                                }
-                                            </div>
-                                            <div className="text-sm ">
-                                                {
-                                                    convertToLocal(
-                                                        end_date
-                                                    ).split(",")[1]
-                                                }
-                                            </div>
-                                        </div>
-                                    </Tdata>
-                                    <Tdata>
-                                        <div className="flex justify-center gap-4">
-                                            <div className="flex justify-center">
-                                                <div class="tool-tip-div group">
-                                                    <Link
-                                                        to={`details/${survey_id}`}
-                                                    >
-                                                        <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
-                                                    </Link>
-                                                    <span class="tool-tip-span -right-[3.4rem]  bg-black -top-12 ">
-                                                        View Response
-                                                    </span>
+                        {surveyData
+                            .toReversed()
+                            .map(
+                                ({
+                                    survey_id,
+                                    survey_title,
+                                    category,
+                                    start_date,
+                                    end_date,
+                                }) => (
+                                    <Trow key={survey_id}>
+                                        <Tdata left> {survey_title} </Tdata>
+                                        <Tdata capitalize> {category} </Tdata>
+                                        <Tdata mono>
+                                            <div className="flex flex-col gap-2">
+                                                <div>
+                                                    {
+                                                        convertToLocal(
+                                                            start_date
+                                                        ).split(",")[0]
+                                                    }
+                                                </div>
+                                                <div className="text-sm">
+                                                    {
+                                                        convertToLocal(
+                                                            start_date
+                                                        ).split(",")[1]
+                                                    }
                                                 </div>
                                             </div>
-                                            {status === "upcoming" ? (
+                                        </Tdata>
+                                        <Tdata mono>
+                                            <div className="flex flex-col gap-2">
+                                                <div>
+                                                    {
+                                                        convertToLocal(
+                                                            end_date
+                                                        ).split(",")[0]
+                                                    }
+                                                </div>
+                                                <div className="text-sm ">
+                                                    {
+                                                        convertToLocal(
+                                                            end_date
+                                                        ).split(",")[1]
+                                                    }
+                                                </div>
+                                            </div>
+                                        </Tdata>
+                                        <Tdata>
+                                            <div className="flex justify-center gap-4">
                                                 <div className="flex justify-center">
                                                     <div class="tool-tip-div group">
                                                         <Link
-                                                            to={`edit-survey/${survey_id}`}
+                                                            to={`details/${survey_id}`}
                                                         >
-                                                            <i className="fa-solid fa-pen-to-square text-xl"></i>
+                                                            <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
                                                         </Link>
-                                                        <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
-                                                            Edit Survey
+                                                        <span class="tool-tip-span -right-[3.4rem]  bg-black -top-12 ">
+                                                            View Response
                                                         </span>
                                                     </div>
                                                 </div>
-                                            ) : null}
-                                        </div>
-                                    </Tdata>
-                                </Trow>
-                            )
-                        )}
+                                                {status === "upcoming" ? (
+                                                    <div className="flex justify-center">
+                                                        <div class="tool-tip-div group">
+                                                            <Link
+                                                                to={`edit-survey/${survey_id}`}
+                                                            >
+                                                                <i className="fa-solid fa-pen-to-square text-xl"></i>
+                                                            </Link>
+                                                            <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                                Edit Survey
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                        </Tdata>
+                                    </Trow>
+                                )
+                            )}
                     </tbody>
                 </Table>
             </div>

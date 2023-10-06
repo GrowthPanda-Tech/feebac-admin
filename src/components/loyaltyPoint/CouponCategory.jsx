@@ -8,9 +8,7 @@ const CouponCategory = ({
     isEdit,
     selectedValueProp,
 }) => {
-    const [selectedValue, setSelectedValue] = useState(selectedValueProp || "");
-
-    console.log(selectedValue);
+    const [selectedValue, setSelectedValue] = useState(selectedValueProp);
 
     const handleChange = (event) => {
         setSelectedValue(event.target.value);

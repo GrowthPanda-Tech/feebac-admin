@@ -27,17 +27,6 @@ function Select({ label, name, value, onChange, items }) {
 export default function NewsForm({ newsData, handleChange }) {
     const { categories } = useContext(CategoryContext);
 
-    let newsCat;
-
-    if (newsData) {
-        for (let i = 0; i < categories.length; i++) {
-            const category = categories[i];
-            if (category.category_name === newsData.category) {
-                newsCat = category.category_id;
-            }
-        }
-    }
-
     return (
         <div className="flex flex-col justify-between gap-8">
             <div className="flex gap-6">
@@ -57,7 +46,11 @@ export default function NewsForm({ newsData, handleChange }) {
                     <Select
                         label={"Category"}
                         name={"category"}
-                        value={newsData ? newsCat : categories[0].category_id}
+                        value={
+                            newsData
+                                ? newsData.category
+                                : categories[0].category_id
+                        }
                         onChange={handleChange}
                         items={categories}
                     />
@@ -88,9 +81,7 @@ export default function NewsForm({ newsData, handleChange }) {
                 />
             </label>
             <label className="flex flex-col">
-                <span className="font-semibold mb-2">
-                    Description (in 60 words)
-                </span>
+                <span className="font-semibold mb-2">Description</span>
                 <textarea
                     className="py-3 px-8 rounded-xl bg-white"
                     label={"Description"}

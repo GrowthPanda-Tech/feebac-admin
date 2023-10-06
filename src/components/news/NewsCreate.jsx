@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { CategoryContext } from "../../contexts/CategoryContext";
 import { useNavigate } from "react-router-dom";
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
@@ -10,8 +11,12 @@ import AlertComponent from "../AlertComponent/AlertComponent";
 
 export default function NewsCreate() {
     const navigate = useNavigate();
+    const { categories } = useContext(CategoryContext);
+
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
-    const [newsData, setNewsData] = useState({});
+    const [newsData, setNewsData] = useState({
+        category: categories[0].category_id,
+    });
 
     const handleChange = (event) => {
         const name = event.target.name;
@@ -25,17 +30,6 @@ export default function NewsCreate() {
                 const reader = new FileReader();
                 reader.onload = () => setImgPreview(reader.result);
                 reader.readAsDataURL(file);
-            }
-
-            return;
-        }
-
-        if (name === "description") {
-            const maxWords = 60;
-            const words = value.split(" ");
-
-            if (words.length <= maxWords) {
-                setNewsData({ ...newsData, description: value });
             }
 
             return;

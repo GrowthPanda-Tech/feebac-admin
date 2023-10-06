@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { CategoryContext } from "../../contexts/CategoryContext";
 
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
@@ -15,6 +16,8 @@ function NewsEdit() {
     const location = useLocation();
     const navigate = useNavigate();
     const { from } = location.state;
+
+    const { categories } = useContext(CategoryContext);
 
     const [newsData, setNewsData] = useState({});
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
@@ -38,17 +41,6 @@ function NewsEdit() {
             return;
         }
 
-        if (name === "description") {
-            const maxWords = 60;
-            const words = value.split(" ");
-
-            if (words.length <= maxWords) {
-                setNewsData({ ...newsData, description: value });
-            }
-
-            return;
-        }
-
         setNewsData({ ...newsData, [name]: value });
     };
 
@@ -56,7 +48,14 @@ function NewsEdit() {
         let ignore = false;
 
         if (!ignore) {
-            setNewsData(from);
+            let catId;
+            for (let i = 0; i < categories.length; i++) {
+                const category = categories[i];
+                if (category.category_name === from.category) {
+                    catId = category.category_id;
+                }
+            }
+            setNewsData({ ...from, category: catId });
         }
 
         return () => {
@@ -67,17 +66,18 @@ function NewsEdit() {
     const handleSubmit = async (event) => {
         const formdata = new FormData();
 
-        formdata.append("id", newsData.id);
-        formdata.append("title", newsData.title);
-        formdata.append("description", newsData.description);
-        formdata.append("newsUrl", newsData.newsUrl);
-        formdata.append("category", newsData.category);
-        if (imgUpdate) {
-            formdata.append(
-                "newsImage",
-                newsData.newsImage,
-                newsData.newsImage.name
-            );
+        for (const [key, value] of Object.entries(newsData)) {
+            if (key === "newsImage") {
+                if (imgUpdate) {
+                    formdata.append(
+                        "newsImage",
+                        newsData.newsImage,
+                        newsData.newsImage.name
+                    );
+                }
+                continue;
+            }
+            formdata.append(key, value);
         }
 
         try {

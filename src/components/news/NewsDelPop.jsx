@@ -7,24 +7,21 @@ function NewsDelPop({ delPop, setDelPop, handleDelete }) {
                 !delPop && "hidden"
             }`}
         >
-            <div className="flex flex-col justify-center text-center m-auto md:w-[28%] bg-white p-4 ">
+            <div className="flex flex-col justify-center text-center m-auto md:w-[28%] bg-white p-4 gap-6 rounded-lg">
                 <div className="flex justify-center py-2">
-                    <h2 className=" font-bold">Are you sure?</h2>
+                    <h2 className="text-xl font-bold">Are you sure?</h2>
                 </div>
-                <h3>You are about to delete a News</h3>
+                <h3>This action can't be reversed</h3>
                 <div className="flex item-center justify-center p-2 gap-6">
                     <button
-                        className="bg-[#E85C53] text-white p-2 mt-5 rounded-sm"
+                        className="btn-secondary"
                         onClick={() => {
                             setDelPop(false);
                         }}
                     >
                         Cancel
                     </button>
-                    <button
-                        className="bg-[#E85C53] text-white p-2 mt-5 rounded-sm"
-                        onClick={handleDelete}
-                    >
+                    <button className="btn-primary" onClick={handleDelete}>
                         Delete
                     </button>
                 </div>

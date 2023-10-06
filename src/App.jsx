@@ -36,14 +36,15 @@ export default function App() {
     return (
         <>
             {isLoggedIn ? (
-                <CategoryContextProvider>
-                    <div>
-                        <div className="hidden md:block">
-                            <Navbar />
-                        </div>
-                        <div className="md:ml-80">
-                            <ProfileContextProvider>
-                                <Header />
+                <div>
+                    <div className="hidden md:block">
+                        <Navbar />
+                    </div>
+                    <div className="md:ml-80">
+                        <ProfileContextProvider>
+                            <Header />
+
+                            <CategoryContextProvider>
                                 <main className="p-12">
                                     <Routes>
                                         <Route
@@ -134,10 +135,10 @@ export default function App() {
                                         />
                                     </Routes>
                                 </main>
-                            </ProfileContextProvider>
-                        </div>
+                            </CategoryContextProvider>
+                        </ProfileContextProvider>
                     </div>
-                </CategoryContextProvider>
+                </div>
             ) : (
                 <Login />
             )}

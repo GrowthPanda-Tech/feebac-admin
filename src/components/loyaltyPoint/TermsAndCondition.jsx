@@ -16,6 +16,10 @@ export function TermsAndCondition({ setCouponData, data }) {
     };
 
     useEffect(() => {
+        setCouponData((prev) => ({
+            ...prev,
+            tnc: data,
+        }));
         setText(data);
     }, [data]);
     return (

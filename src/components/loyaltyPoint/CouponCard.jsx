@@ -58,7 +58,13 @@ export default function CouponCard({ data, setCouponsData }) {
                                     Redeemed : {data ? data.redeemCount : ""}
                                 </span>
                                 <span>
-                                    Available {data ? data.totalCount : ""}
+                                    Total : {data ? data.totalCount : ""}
+                                </span>
+                                <span>
+                                    Available :{" "}
+                                    {data
+                                        ? data.totalCount - data.redeemCount
+                                        : ""}
                                 </span>
                             </div>
                         </div>

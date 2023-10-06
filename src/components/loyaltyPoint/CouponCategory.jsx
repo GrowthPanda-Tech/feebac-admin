@@ -1,30 +1,16 @@
 import React, { useState, useEffect } from "react";
 import makeRequest from "../../utils/makeRequest";
 
-const CouponCategory = ({ setAddCouponData, isEdit, selectedValueProp }) => {
-    const [options, setOptions] = useState([]);
+const CouponCategory = ({
+    setAddCouponData,
+    options,
+    setOptions,
+    isEdit,
+    selectedValueProp,
+}) => {
     const [selectedValue, setSelectedValue] = useState(selectedValueProp || "");
 
     console.log(selectedValue);
-
-    const getCouponsCategory = async () => {
-        try {
-            const response = await makeRequest(
-                `/loyalty/get-coupon-category`,
-                "GET"
-            );
-            if (!response.isSuccess) {
-                throw new Error(response.message);
-            }
-            setOptions(response.data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    useEffect(() => {
-        getCouponsCategory();
-    }, []);
 
     const handleChange = (event) => {
         setSelectedValue(event.target.value);
@@ -41,6 +27,12 @@ const CouponCategory = ({ setAddCouponData, isEdit, selectedValueProp }) => {
             ? selectedOption.id
             : selectedValueProp;
         setSelectedValue(selectedOptions);
+        if (selectedOption !== undefined) {
+            setAddCouponData((prev) => ({
+                ...prev,
+                category: selectedOption.id,
+            }));
+        }
     }, [selectedValueProp]);
 
     return (

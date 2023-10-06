@@ -42,18 +42,15 @@ function InputForm({
 
 function EditCoupons({ setEditPop, setCouponsData, id }) {
     const [editCouponData, setEditCouponData] = useState({});
-    const [couponsDetails, setCouponsDetails] = useState("");
-    const [couponsTermsCondition, setCouponsTermsCondition] = useState("");
-    console.log(couponsDetails);
+    const [options, setOptions] = useState([]);
 
     function joinArrayWithNewlines(array) {
-        const values = Object.values(array);
-        return values.join("\n");
+        const join = array.join("\n");
+        return join;
     }
 
     const handleChange = (e) => {
         if (e.target.name === "totalCount") {
-            console.log(parseInt(e.target.value));
             setEditCouponData({
                 ...editCouponData,
                 totalCount: parseInt(e.target.value),
@@ -65,6 +62,9 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
             [e.target.name]: e.target.value,
         });
     };
+    function removeCurrencySymbol(inputString) {
+        if (inputString != undefined) return inputString.replace(/₹/g, "");
+    }
 
     const getCouponDetails = async () => {
         try {
@@ -74,20 +74,38 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
             );
             if (response.isSuccess) {
                 setEditCouponData(response.data);
-                setCouponsDetails(joinArrayWithNewlines(response.data.details));
-                setCouponsTermsCondition(
-                    joinArrayWithNewlines(response.data.tnc)
-                );
+                setEditCouponData({
+                    ...response.data,
+                    details: joinArrayWithNewlines(response.data.details),
+                    tnc: joinArrayWithNewlines(response.data.tnc),
+                });
             }
         } catch (error) {}
     };
 
+    const getCouponsCategory = async () => {
+        try {
+            const response = await makeRequest(
+                `/loyalty/get-coupon-category`,
+                "GET"
+            );
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
+            setOptions(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
+        getCouponsCategory();
         getCouponDetails();
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const response = await makeRequest(
             "/loyalty/update-coupon",
             "PUT",
@@ -110,7 +128,7 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
         } else {
             AlertComponent("failed", response);
         }
-        console.log(couponsDetails);
+        console.log(editCouponData.description);
     };
     return (
         <div className="fixed top-0 left-0 w-full flex justify-center overflow-y-scroll items-center update-user h-screen">
@@ -126,7 +144,13 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
                     <InputForm
                         label={"Value in ₹"}
                         name={"description"}
-                        value={editCouponData ? editCouponData.description : ""}
+                        value={
+                            editCouponData
+                                ? removeCurrencySymbol(
+                                      editCouponData.description
+                                  )
+                                : ""
+                        }
                         onChange={(e) => {
                             handleChange(e);
                         }}
@@ -184,6 +208,8 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
                             />
                         </div>
                         <CouponCategory
+                            options={options}
+                            setOptions={setOptions}
                             setAddCouponData={setEditCouponData}
                             selectedValueProp={
                                 editCouponData ? editCouponData.category : ""
@@ -195,11 +221,11 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
                     <div className="flex flex-col gap-4">
                         <CouponsDetails
                             setCouponData={setEditCouponData}
-                            data={couponsDetails}
+                            data={editCouponData ? editCouponData.details : ""}
                         />
                         <TermsAndCondition
                             setCouponData={setEditCouponData}
-                            data={couponsTermsCondition}
+                            data={editCouponData ? editCouponData.tnc : ""}
                         />
                     </div>
 

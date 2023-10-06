@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 export function CouponsDetails({ setCouponData, data }) {
     const [couponsDetails, setCouponsDetails] = useState("");
-    console.log(data);
 
     const handleKeyPress = (event) => {
         if (event.key === "Enter") {
@@ -17,6 +16,10 @@ export function CouponsDetails({ setCouponData, data }) {
 
     useEffect(() => {
         setCouponsDetails(data);
+        setCouponData((prev) => ({
+            ...prev,
+            details: data,
+        }));
     }, [data]);
     return (
         <>

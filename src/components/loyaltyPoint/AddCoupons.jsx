@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DateSelect } from "./DateSelect";
 import { TermsAndCondition } from "./TermsAndCondition";
 import { CouponsDetails } from "./CouponsDescription";
@@ -42,6 +42,7 @@ function InputForm({
 
 function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
     const [addCouponData, setAddCouponData] = useState({});
+    const [options, setOptions] = useState([]);
 
     const handleChange = (e) => {
         if (e.target.name === "description") {
@@ -64,8 +65,25 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
             [e.target.name]: e.target.value,
         });
     };
+    const getCouponsCategory = async () => {
+        try {
+            const response = await makeRequest(
+                `/loyalty/get-coupon-category`,
+                "GET"
+            );
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
+            setOptions(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
-    console.log(addCouponData);
+    useEffect(() => {
+        getCouponsCategory();
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const response = await makeRequest(
@@ -152,7 +170,11 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                             />
                         </div>
 
-                        <CouponCategory setAddCouponData={setAddCouponData} />
+                        <CouponCategory
+                            options={options}
+                            setOptions={setOptions}
+                            setAddCouponData={setAddCouponData}
+                        />
                         {/* <DateSelect setAddCouponData={setAddCouponData} /> */}
                     </div>
 

@@ -16,7 +16,7 @@ const HEADERS = [
     "Point history",
 ];
 
-function LoyaltyPoint() {
+function LoyaltyPoint({ setLength }) {
     const [loyaltyData, setLoyaltyData] = useState([]);
     const [data, setData] = useState();
     const getData = async () => {
@@ -75,6 +75,34 @@ function LoyaltyPoint() {
 
     useEffect(() => {
         getData();
+    }, []);
+
+    useEffect(() => {
+        let ignore = false;
+
+        async function fetchrRedeemData() {
+            try {
+                const response = await makeRequest(
+                    `/loyalty/get-all-redeem-request?status=pending`
+                );
+
+                if (!response.isSuccess) {
+                    throw new Error(json.message);
+                }
+
+                if (!ignore) {
+                    setLength(response.data.length);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        fetchrRedeemData();
+
+        return () => {
+            ignore = true;
+        };
     }, []);
 
     return (

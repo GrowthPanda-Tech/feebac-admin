@@ -68,14 +68,13 @@ function ButtonComponent({ setStatus }) {
     );
 }
 
-export default function RedeemRequest() {
+export default function RedeemRequest({ setLength }) {
     const [redeemData, setRedeemData] = useState([]);
     const [status, setStatus] = useState("pending");
     const convertToLocal = (date) => {
         const dateObj = new Date(`${date} UTC`);
         return dateObj.toLocaleString();
     };
-    console.log(status);
 
     useEffect(() => {
         let ignore = false;
@@ -108,6 +107,34 @@ export default function RedeemRequest() {
             ignore = true;
         };
     }, [status]);
+
+    useEffect(() => {
+        let ignore = false;
+
+        async function fetchrRedeemData() {
+            try {
+                const response = await makeRequest(
+                    `/loyalty/get-all-redeem-request?status=pending`
+                );
+
+                if (!response.isSuccess) {
+                    throw new Error(json.message);
+                }
+
+                if (!ignore) {
+                    setLength(response.data.length);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        fetchrRedeemData();
+
+        return () => {
+            ignore = true;
+        };
+    }, []);
 
     return (
         <div className="flex flex-col gap-8">
@@ -171,26 +198,47 @@ export default function RedeemRequest() {
 
                                     {status === "pending" ? (
                                         <Tdata>
-                                            <div className="flex justify-center gap-4">
-                                                {status === "pending" ? (
-                                                    <Link to={`redeem/${id}`}>
-                                                        <i className="text-xl fa-solid fa-circle-info"></i>
-                                                    </Link>
-                                                ) : null}
+                                            <div className="flex justify-center">
+                                                <div class="tool-tip-div group">
+                                                    <div className="flex justify-center gap-4">
+                                                        {status ===
+                                                        "pending" ? (
+                                                            <Link
+                                                                to={`redeem/${id}`}
+                                                            >
+                                                                <i className="text-xl fa-solid fa-circle-info"></i>
+                                                            </Link>
+                                                        ) : null}
+                                                    </div>
+                                                    <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                        See Request Info
+                                                    </span>
+                                                </div>
                                             </div>
                                         </Tdata>
                                     ) : (
                                         <Tdata capitalize>
-                                            <span className="flex justify-evenly">
-                                                {approvedBy
-                                                    ? approvedBy
-                                                          .split("-")
-                                                          .pop()
-                                                    : ""}
-                                                <Link to={`redeem/${id}`}>
-                                                    <i className="text-xl fa-solid fa-circle-info"></i>
-                                                </Link>
-                                            </span>
+                                            <div className="flex justify-center gap-2 items-center">
+                                                <span className="">
+                                                    {approvedBy
+                                                        ? approvedBy
+                                                              .split("-")
+                                                              .pop()
+                                                        : ""}
+                                                </span>
+                                                <div class="tool-tip-div group">
+                                                    <span className="flex justify-evenly">
+                                                        <Link
+                                                            to={`redeem/${id}`}
+                                                        >
+                                                            <i className="text-xl fa-solid fa-circle-info"></i>
+                                                        </Link>
+                                                    </span>
+                                                    <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                        See Details
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </Tdata>
                                     )}
                                 </Trow>

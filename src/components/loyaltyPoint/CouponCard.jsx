@@ -28,7 +28,11 @@ export default function CouponCard({ data, setCouponsData }) {
                         >
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
-                        <span class="tool-tip-span left-0 btn-primary  -top-10 ">
+                        <span
+                            class={`tool-tip-span left-0  btn-primary  -top-10  ${
+                                !data.isActive ? `bg-white test` : ""
+                            }`}
+                        >
                             Edit Coupon
                         </span>
                     </div>

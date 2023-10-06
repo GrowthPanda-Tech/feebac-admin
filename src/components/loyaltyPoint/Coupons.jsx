@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import makeRequest from "../../utils/makeRequest";
 import AddCoupons from "./AddCoupons";
-function Coupons() {
+function Coupons({ setLength }) {
     const [couponData, setCouponsData] = useState([]);
     const [showCouponAddPop, setShowCouponAddPop] = useState(false);
 
@@ -17,7 +17,34 @@ function Coupons() {
 
     useEffect(() => {
         getData();
+
+        let ignore = false;
+
+        async function fetchrRedeemData() {
+            try {
+                const response = await makeRequest(
+                    `/loyalty/get-all-redeem-request?status=pending`
+                );
+
+                if (!response.isSuccess) {
+                    throw new Error(json.message);
+                }
+
+                if (!ignore) {
+                    setLength(response.data.length);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        fetchrRedeemData();
+
+        return () => {
+            ignore = true;
+        };
     }, []);
+
     return (
         <>
             <div className=" flex justify-end">

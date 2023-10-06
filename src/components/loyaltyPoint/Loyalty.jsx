@@ -92,9 +92,15 @@ export default function Loyalty() {
                 />
             </div>
 
-            {visibleSection === "Points Management" ? <LoyaltyPoint /> : null}
-            {visibleSection === "Voucher Management" ? <Coupons /> : null}
-            {visibleSection === "Redeem Request" ? <RedeemRequest /> : null}
+            {visibleSection === "Points Management" ? (
+                <LoyaltyPoint setLength={setLength} />
+            ) : null}
+            {visibleSection === "Voucher Management" ? (
+                <Coupons setLength={setLength} />
+            ) : null}
+            {visibleSection === "Redeem Request" ? (
+                <RedeemRequest setLength={setLength} />
+            ) : null}
         </div>
     );
 }

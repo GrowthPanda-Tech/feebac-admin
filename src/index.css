@@ -103,6 +103,11 @@
     z-index: 100;
 }
 
+.test {
+    background-color: rgba(0, 0, 0, 0.027);
+    backdrop-filter: blur(0);
+    z-index: 10000;
+}
 .card-img {
     background-image: url("../src/assets/couponsbg.png");
     background-repeat: no-repeat;

@@ -186,6 +186,7 @@ export default function RedeemRequest() {
                                                     </div>
                                                     <span className="tool-tip-span -right-[4.8rem] bg-black -top-12 ">
                                                         See Redeem Request
+                                                        <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
                                                     </span>
                                                 </div>
                                             </div>
@@ -201,18 +202,23 @@ export default function RedeemRequest() {
                                             </span>
                                         </Tdata>
                                     )}
-                                    <Tdata>
-                                        <div className="flex justify-center">
-                                            <div className="tool-tip-div group">
-                                                <Link to={`redeem/${id}`}>
-                                                    <i className="text-xl fa-solid fa-circle-info"></i>
-                                                </Link>
-                                                <span className="tool-tip-span -right-[3.8rem] bg-black -top-12 ">
-                                                    See Approved Info
-                                                </span>
+                                    {status === "approved" ? (
+                                        <Tdata>
+                                            <div className="flex justify-center">
+                                                <div className="tool-tip-div group">
+                                                    <Link to={`redeem/${id}`}>
+                                                        <i className="text-xl fa-solid fa-circle-info"></i>
+                                                    </Link>
+                                                    <span className="tool-tip-span -right-[3.8rem] bg-black -top-12 ">
+                                                        See Approved Info
+                                                        <span className="tooltip-arrow bottom-[-2px] left-[47%]"></span>
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Tdata>
+                                        </Tdata>
+                                    ) : (
+                                        ""
+                                    )}
                                 </Trow>
                             )
                         )}

@@ -198,6 +198,7 @@ export default function Survey() {
                                                             </Link>
                                                             <span className="tool-tip-span -right-[3.4rem] bg-black -top-12 ">
                                                                 View Response
+                                                                <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
                                                             </span>
                                                         </div>
                                                     </div>
@@ -214,6 +215,7 @@ export default function Survey() {
                                                             </Link>
                                                             <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
                                                                 Edit Survey
+                                                                <span className="tooltip-arrow bottom-[-2px] left-[38%]"></span>
                                                             </span>
                                                         </div>
                                                     </div>

@@ -120,6 +120,7 @@ export default function Content() {
                                                     </Link>
                                                     <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
                                                         Edit Article
+                                                        <span className="tooltip-arrow bottom-[-2px] left-[37%]"></span>
                                                     </span>
                                                 </div>
                                             </div>
@@ -137,6 +138,7 @@ export default function Content() {
                                                     </button>
                                                     <span className="tool-tip-span  -right-[2.8rem] bg-black -top-12 ">
                                                         Toggle Status
+                                                        <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
                                                     </span>
                                                 </div>
                                             </div>

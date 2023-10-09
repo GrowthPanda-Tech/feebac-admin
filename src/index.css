@@ -60,6 +60,9 @@
     .tool-tip-span {
         @apply pointer-events-none absolute z-20 text-sm text-white rounded-lg p-2 w-max opacity-0 transition-opacity group-hover:opacity-100;
     }
+    .triangle {
+        @apply w-0 h-0 border-t-[10px] border-t-[#ffffff] border-b-0 border-[10px] border-solid;
+    }
 
     .tool-tip-div {
         @apply relative w-max;
@@ -111,6 +114,9 @@
     }
     .disable-filter {
         @apply blur-none brightness-[35%] contrast-[110%];
+    }
+    .tooltip-arrow {
+        @apply border-[transparent_transparent_black_transparent]  absolute border-solid border-black border-2 h-3 w-3 transform rotate-45 bg-black;
     }
 }
 

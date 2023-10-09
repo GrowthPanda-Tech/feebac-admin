@@ -116,8 +116,9 @@ export default function NewsTable() {
                                                 >
                                                     <i className="fa-solid fa-link"></i>
                                                 </Link>
-                                                <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                <span className="tool-tip-span -right-[1.8rem] bg-black -top-12 ">
                                                     Visit Link
+                                                    <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
                                                 </span>
                                             </div>
                                         </div>
@@ -131,8 +132,9 @@ export default function NewsTable() {
                                                 >
                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                 </Link>
-                                                <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                <span className="tool-tip-span -right-[1.8rem] bg-black -top-12 ">
                                                     Edit News
+                                                    <span className="tooltip-arrow bottom-[-2px] left-[46%]"></span>
                                                 </span>
                                             </div>
                                         </div>
@@ -150,6 +152,7 @@ export default function NewsTable() {
                                                 </button>
                                                 <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
                                                     Delete News
+                                                    <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
                                                 </span>
                                             </div>
                                         </div>

@@ -1,5 +1,4 @@
 import React from "react";
-import "./infocard.css";
 
 function InfoCards({ title, value }) {
     return (

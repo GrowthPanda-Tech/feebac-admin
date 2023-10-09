@@ -109,20 +109,20 @@ export default function NewsTable() {
                                 <Tdata>
                                     <div className="text-xl flex justify-center gap-5">
                                         <div className="flex justify-center">
-                                            <div class="tool-tip-div group">
+                                            <div className="tool-tip-div group">
                                                 <Link
                                                     to={news.newsUrl}
                                                     target="_blank"
                                                 >
                                                     <i className="fa-solid fa-link"></i>
                                                 </Link>
-                                                <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
                                                     Visit Link
                                                 </span>
                                             </div>
                                         </div>
                                         <div className="flex justify-center">
-                                            <div class="tool-tip-div group">
+                                            <div className="tool-tip-div group">
                                                 <Link
                                                     to={`edit/${news.id}`}
                                                     state={{
@@ -131,13 +131,13 @@ export default function NewsTable() {
                                                 >
                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                 </Link>
-                                                <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
                                                     Edit News
                                                 </span>
                                             </div>
                                         </div>
                                         <div className="flex justify-center">
-                                            <div class="tool-tip-div group">
+                                            <div className="tool-tip-div group">
                                                 <button
                                                     onClick={() =>
                                                         handleDelPop(
@@ -148,7 +148,7 @@ export default function NewsTable() {
                                                 >
                                                     <i className="fa-solid fa-trash"></i>
                                                 </button>
-                                                <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
                                                     Delete News
                                                 </span>
                                             </div>

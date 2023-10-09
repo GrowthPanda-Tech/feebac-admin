@@ -58,11 +58,59 @@
     }
 
     .tool-tip-span {
-        @apply pointer-events-none absolute text-sm text-white rounded-lg p-2 w-max opacity-0 transition-opacity group-hover:opacity-100;
+        @apply pointer-events-none absolute z-20 text-sm text-white rounded-lg p-2 w-max opacity-0 transition-opacity group-hover:opacity-100;
     }
 
     .tool-tip-div {
         @apply relative w-max;
+    }
+    .header {
+        @apply relative text-center text-[white];
+        background: linear-gradient(
+            60deg,
+            rgba(234, 82, 95, 1) 50%,
+            rgba(164, 57, 72, 1) 100%
+        );
+    }
+    .logo {
+        @apply w-[50px] fill-[white] inline-block align-middle pr-[15px];
+    }
+    .inner-header {
+        @apply h-[65vh] w-full m-0 p-0;
+    }
+    .waves {
+        @apply relative w-full h-[15vh] min-h-[100px] max-h-[150px] -mb-0.5;
+    }
+    .toggle-container {
+        @apply flex items-center gap-2.5 p-2.5;
+    }
+    .slider-label {
+        @apply text-base select-none;
+    }
+    .slider {
+        @apply w-[60px] h-[30px] bg-[#ccc] relative cursor-pointer transition-[background-color] duration-[0.3s] ease-[ease-in-out] rounded-[15px];
+    }
+    .slider-thumb {
+        @apply w-[30px] h-[30px] bg-white absolute transition-transform duration-[0.3s] ease-[ease-in-out] rounded-[50%] left-0 top-0;
+    }
+    .slider.active {
+        @apply bg-[#34c11e];
+    }
+    .slider.active .slider-thumb {
+        @apply translate-x-[30px];
+    }
+    .slider.in-active {
+        @apply bg-[#dbdcdb];
+    }
+
+    .update-user {
+        @apply bg-[rgba(0,0,0,0.148)] backdrop-blur-[2px] z-[100];
+    }
+    .card-img {
+        @apply bg-[url("../src/assets/couponsbg.png")] bg-no-repeat w-full h-[170px] bg-contain;
+    }
+    .disable-filter {
+        @apply blur-none brightness-[35%] contrast-[110%];
     }
 }
 
@@ -95,24 +143,6 @@
     ::-webkit-scrollbar-thumb {
         @apply bg-light-grey rounded-xl;
     }
-}
-
-.update-user {
-    background-color: rgba(0, 0, 0, 0.148);
-    backdrop-filter: blur(2px);
-    z-index: 100;
-}
-
-.card-img {
-    background-image: url("../src/assets/couponsbg.png");
-    background-repeat: no-repeat;
-    width: 100%;
-    height: 170px;
-    background-size: contain;
-}
-
-.disable-filter {
-    filter: blur(0px) brightness(35%) contrast(110%);
 }
 
 textarea {

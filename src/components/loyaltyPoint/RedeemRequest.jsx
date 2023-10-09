@@ -27,6 +27,7 @@ const APPROVEDHEADERS = [
     "Approved Date",
     "Status",
     "Approved By",
+    "Actions",
 ];
 function Button({ type, setStatus, isActive, onClick }) {
     const handleClick = () => {
@@ -171,28 +172,47 @@ export default function RedeemRequest() {
 
                                     {status === "pending" ? (
                                         <Tdata>
-                                            <div className="flex justify-center gap-4">
-                                                {status === "pending" ? (
-                                                    <Link to={`redeem/${id}`}>
-                                                        <i className="text-xl fa-solid fa-circle-info"></i>
-                                                    </Link>
-                                                ) : null}
+                                            <div className="flex justify-center">
+                                                <div className="tool-tip-div group">
+                                                    <div className="flex justify-center gap-4">
+                                                        {status ===
+                                                        "pending" ? (
+                                                            <Link
+                                                                to={`redeem/${id}`}
+                                                            >
+                                                                <i className="text-xl fa-solid fa-circle-info"></i>
+                                                            </Link>
+                                                        ) : null}
+                                                    </div>
+                                                    <span className="tool-tip-span -right-[4.8rem] bg-black -top-12 ">
+                                                        See Redeem Request
+                                                    </span>
+                                                </div>
                                             </div>
                                         </Tdata>
                                     ) : (
                                         <Tdata capitalize>
-                                            <span className="flex justify-evenly">
+                                            <span className="px-2">
                                                 {approvedBy
                                                     ? approvedBy
                                                           .split("-")
                                                           .pop()
                                                     : ""}
-                                                <Link to={`redeem/${id}`}>
-                                                    <i className="text-xl fa-solid fa-circle-info"></i>
-                                                </Link>
                                             </span>
                                         </Tdata>
                                     )}
+                                    <Tdata>
+                                        <div className="flex justify-center">
+                                            <div className="tool-tip-div group">
+                                                <Link to={`redeem/${id}`}>
+                                                    <i className="text-xl fa-solid fa-circle-info"></i>
+                                                </Link>
+                                                <span className="tool-tip-span -right-[3.8rem] bg-black -top-12 ">
+                                                    See Approved Info
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </Tdata>
                                 </Trow>
                             )
                         )}

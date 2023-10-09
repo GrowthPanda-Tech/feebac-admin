@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./couponToggle.css";
 import { useEffect } from "react";
 import makeRequest from "../../utils/makeRequest";
 

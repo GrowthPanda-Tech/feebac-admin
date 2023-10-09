@@ -187,27 +187,32 @@ export default function Survey() {
                                         </Tdata>
                                         <Tdata>
                                             <div className="flex justify-center gap-4">
-                                                <div className="flex justify-center">
-                                                    <div class="tool-tip-div group">
-                                                        <Link
-                                                            to={`details/${survey_id}`}
-                                                        >
-                                                            <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
-                                                        </Link>
-                                                        <span class="tool-tip-span -right-[3.4rem]  bg-black -top-12 ">
-                                                            View Response
-                                                        </span>
+                                                {status === "live" ||
+                                                status === "expired" ? (
+                                                    <div className="flex justify-center">
+                                                        <div className="tool-tip-div group">
+                                                            <Link
+                                                                to={`details/${survey_id}`}
+                                                            >
+                                                                <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
+                                                            </Link>
+                                                            <span className="tool-tip-span -right-[3.4rem] bg-black -top-12 ">
+                                                                View Response
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                ) : (
+                                                    ""
+                                                )}
                                                 {status === "upcoming" ? (
                                                     <div className="flex justify-center">
-                                                        <div class="tool-tip-div group">
+                                                        <div className="tool-tip-div group">
                                                             <Link
                                                                 to={`edit-survey/${survey_id}`}
                                                             >
                                                                 <i className="fa-solid fa-pen-to-square text-xl"></i>
                                                             </Link>
-                                                            <span class="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                            <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
                                                                 Edit Survey
                                                             </span>
                                                         </div>

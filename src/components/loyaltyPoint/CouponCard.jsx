@@ -18,17 +18,17 @@ export default function CouponCard({ data, setCouponsData }) {
                     </h2>
                 )}
 
-                <div class="absolute top-[-2rem] left-3">
-                    <div class="tool-tip-div group">
+                <div className="absolute top-[-2rem] left-3">
+                    <div className="tool-tip-div group">
                         <button
                             className=""
                             onClick={() => {
                                 setEditPop(true);
                             }}
                         >
-                            <i class="fa-solid fa-pen-to-square"></i>
+                            <i className="fa-solid fa-pen-to-square"></i>
                         </button>
-                        <span class="tool-tip-span left-0 btn-primary  -top-10 ">
+                        <span className="tool-tip-span left-0 btn-primary  -top-10 ">
                             Edit Coupon
                         </span>
                     </div>

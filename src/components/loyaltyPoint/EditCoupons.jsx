@@ -207,14 +207,18 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
                                 min={1}
                             />
                         </div>
-                        <CouponCategory
-                            options={options}
-                            setOptions={setOptions}
-                            setAddCouponData={setEditCouponData}
-                            selectedValueProp={
-                                editCouponData ? editCouponData.category : ""
-                            }
-                        />
+                        {editCouponData && (
+                            <CouponCategory
+                                options={options}
+                                setOptions={setOptions}
+                                setAddCouponData={setEditCouponData}
+                                selectedValueProp={
+                                    editCouponData
+                                        ? editCouponData.category
+                                        : ""
+                                }
+                            />
+                        )}
                         {/* <DateSelect setAddCouponData={setEditCouponData} /> */}
                     </div>
 

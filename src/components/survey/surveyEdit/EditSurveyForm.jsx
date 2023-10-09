@@ -201,7 +201,7 @@ export default function EditSurveyForm({
                 <Label name={"Survey Title"}>
                     <Input
                         name={"surveyTitle"}
-                        value={surveyData ? surveyData?.surveyTitle : ""}
+                        value={updatedData ? updatedData?.surveyTitle : ""}
                         onChange={handleChange}
                     />
                 </Label>
@@ -209,7 +209,9 @@ export default function EditSurveyForm({
                 <Label name={"Survey Description"}>
                     <Input
                         name={"surveyDescription"}
-                        value={surveyData ? surveyData?.surveyDescription : ""}
+                        value={
+                            updatedData ? updatedData?.surveyDescription : ""
+                        }
                         onChange={handleChange}
                     />
                 </Label>
@@ -219,7 +221,7 @@ export default function EditSurveyForm({
                         <option value={null}>-- Categories --</option>
                         {categories.map((item) => {
                             const value = item.category_id;
-                            const selected = value === surveyData.category;
+                            const selected = value === updatedData.category;
                             return (
                                 <option
                                     key={item.category_id}
@@ -238,7 +240,7 @@ export default function EditSurveyForm({
                         type={"number"}
                         name={"loyaltyPoint"}
                         onChange={handleChange}
-                        value={surveyData ? surveyData?.loyaltyPoint : ""}
+                        value={updatedData ? updatedData?.loyaltyPoint : ""}
                     />
                 </Label>
             </div>

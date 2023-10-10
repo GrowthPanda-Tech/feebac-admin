@@ -62,6 +62,8 @@ function ButtonComponent({ setStatus }) {
 export default function Survey() {
     const [surveyData, setsurveyData] = useState([]);
     const [status, setStatus] = useState("live");
+    const [filteredSurveyData, setFilteredSurveyData] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const convertToLocal = (date) => {
         const dateObj = new Date(`${date} UTC`);
@@ -95,6 +97,23 @@ export default function Survey() {
             ignore = true;
         };
     }, [status]);
+
+    useEffect(() => {
+        const filteredData = surveyData.filter(
+            ({ survey_id, survey_title, category, start_date, end_date }) => {
+                const query = searchQuery.toLowerCase();
+                return (
+                    survey_id.includes(query) ||
+                    (survey_title &&
+                        survey_title.toLowerCase().includes(query)) ||
+                    (category && category.toString().includes(query)) ||
+                    (start_date && start_date.toLowerCase().includes(query)) ||
+                    (end_date && end_date.toLowerCase().includes(query))
+                );
+            }
+        );
+        setFilteredSurveyData(filteredData);
+    }, [searchQuery, surveyData]);
 
     return (
         <div className="flex flex-col gap-8">
@@ -131,12 +150,21 @@ export default function Survey() {
             </div>
 
             <ButtonComponent setStatus={setStatus} />
+            <input
+                type="text"
+                className="pill-primary border-0"
+                placeholder={`Search in ${status} surveys...`}
+                value={searchQuery}
+                onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                }}
+            />
 
-            <div className=" h-[60vh] bg-white overflow-y-scroll">
+            <div className=" h-[53vh] bg-white overflow-y-scroll">
                 <Table>
                     <Thead headers={HEADERS} />
                     <tbody>
-                        {surveyData
+                        {filteredSurveyData
                             .toReversed()
                             .map(
                                 ({

@@ -15,10 +15,11 @@ import PaginationSelect from "../PaginationSelect";
 const HEADERS = ["Name", "Status", "Category", "Creation Date", "Actions"];
 
 export default function Content() {
-    let totalItems = 13;
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [page, setPage] = useState(1);
     const [articleList, setArticleList] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [totalItems, setTotalItems] = useState(1);
 
     const convertToLocal = (date) => {
         const dateObj = new Date(date);
@@ -63,6 +64,7 @@ export default function Content() {
 
                 if (!ignore) {
                     setArticleList(response.data.toReversed());
+                    setTotalItems(response.totalCount);
                 }
             } catch (error) {
                 console.error(error);
@@ -87,9 +89,19 @@ export default function Content() {
                     </button>
                 </Link>
             </div>
-            <div className=" flex justify-end">
+            <div className=" flex justify-between">
+                <input
+                    type="text"
+                    className="pill-primary border-0 w-3/4"
+                    placeholder={`Search in article...`}
+                    value={searchQuery}
+                    onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                    }}
+                />
                 <PaginationSelect
                     setItemsPerPage={setItemsPerPage}
+                    setPage={setPage}
                     itemsPerPage={itemsPerPage}
                 />
             </div>

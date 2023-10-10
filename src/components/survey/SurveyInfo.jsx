@@ -75,7 +75,7 @@ export default function SurveyInfo() {
                 </PrimaryButton>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 h-[60vh] overflow-y-scroll p-5">
                 {surveyInfo.data.map((question, index) => (
                     <Response key={index} index={index} question={question} />
                 ))}

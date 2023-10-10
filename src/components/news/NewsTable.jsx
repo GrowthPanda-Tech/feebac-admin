@@ -15,11 +15,17 @@ import AlertComponent from "../AlertComponent/AlertComponent";
 import link from "../../assets/link.svg";
 import edit from "../../assets/edit.svg";
 import delIcon from "../../assets/delete.svg";
+import Pagination from "../Pagination";
+import PaginationSelect from "../PaginationSelect";
 
 const HEADERS = ["Name", "Category", "Date", "Actions"];
 
 export default function NewsTable() {
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [page, setPage] = useState(1);
     const [newsList, setNewsList] = useState([]);
+    const [totalItems, setTotalItems] = useState(1);
+    const [searchQuery, setSearchQuery] = useState("");
     const [delInfo, setDelInfo] = useState({
         id: null,
         idx: null,
@@ -61,7 +67,7 @@ export default function NewsTable() {
             try {
                 //make count dynamic
                 const response = await makeRequest(
-                    "news/get-news?page=1&count=100"
+                    `news/get-news?page=${page}&count=${itemsPerPage}`
                 );
 
                 if (!response.isSuccess) {
@@ -70,6 +76,7 @@ export default function NewsTable() {
 
                 if (!ignore) {
                     setNewsList(response.data);
+                    setTotalItems(response.totalCount);
                 }
             } catch (error) {
                 console.error(error);
@@ -81,10 +88,10 @@ export default function NewsTable() {
         return () => {
             ignore = true;
         };
-    }, []);
+    }, [page, itemsPerPage]);
 
     return (
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-4">
             <div className="flex w-full justify-between items-center">
                 <PageTitle name={"News"} />
                 <Link to={"create"}>
@@ -94,8 +101,24 @@ export default function NewsTable() {
                     </button>
                 </Link>
             </div>
+            <div className="flex justify-between">
+                <input
+                    type="text"
+                    className="pill-primary border-0 w-3/4"
+                    placeholder={`Search in News...`}
+                    value={searchQuery}
+                    onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                    }}
+                />
+                <PaginationSelect
+                    setItemsPerPage={setItemsPerPage}
+                    setPage={setPage}
+                    itemsPerPage={itemsPerPage}
+                />
+            </div>
 
-            <div className="h-[68vh] bg-white overflow-y-scroll">
+            <div className="h-[55vh] bg-white overflow-y-scroll">
                 <Table>
                     <Thead headers={HEADERS} />
                     <tbody>
@@ -163,6 +186,13 @@ export default function NewsTable() {
                     </tbody>
                 </Table>
             </div>
+            <Pagination
+                setItemsPerPage={setItemsPerPage}
+                page={page}
+                setPage={setPage}
+                totalItems={totalItems}
+                itemsPerPage={itemsPerPage}
+            />
             <NewsDelPop
                 delPop={delPop}
                 setDelPop={setDelPop}

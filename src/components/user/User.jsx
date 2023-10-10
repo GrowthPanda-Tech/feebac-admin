@@ -14,10 +14,40 @@ import PaginationSelect from "../PaginationSelect";
 
 const HEADERS = ["User ID", "Gender", "Loyalty Points", "Location", "Actions"];
 export default function User() {
-    let totalItems = 25;
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [page, setPage] = useState(1);
     const [userData, setUserData] = useState([]);
+    const [filteredUserData, setFilteredUserData] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [totalItems, setTotalItems] = useState(1);
+    const [isSearch, setIsSearch] = useState(false);
+
+    console.log(userData);
+
+    useEffect(() => {
+        const filteredData = userData.filter(
+            ({ user_id, gender, loyalty_points, state, city }) => {
+                const query = searchQuery.toLowerCase();
+                return (
+                    user_id.includes(query) ||
+                    (gender && gender.toLowerCase().includes(query)) ||
+                    (loyalty_points &&
+                        loyalty_points.toString().includes(query)) ||
+                    (state && state.toLowerCase().includes(query)) ||
+                    (city && city.toLowerCase().includes(query))
+                );
+            }
+        );
+        setFilteredUserData(filteredData);
+        if (isSearch) {
+            setTotalItems(filteredUserData.length);
+            setIsSearch(false);
+        }
+        if (searchQuery.length === 0) {
+            console.log("hi");
+            setTotalItems(50);
+        }
+    }, [searchQuery, userData]);
 
     useEffect(() => {
         let ignore = false;
@@ -34,6 +64,7 @@ export default function User() {
 
                 if (!ignore) {
                     setUserData(response.data);
+                    setTotalItems(response.totalCount);
                 }
             } catch (error) {
                 console.error(error);
@@ -51,18 +82,30 @@ export default function User() {
         <div className="flex flex-col gap-4">
             <div className=" flex justify-between">
                 <PageTitle name={"User Information"} />
-                <PaginationSelect
-                    setItemsPerPage={setItemsPerPage}
-                    setPage={setPage}
-                    itemsPerPage={itemsPerPage}
-                />
-            </div>
+                <div className=" space-x-3">
+                    <input
+                        type="text"
+                        className="pill-primary border-0"
+                        placeholder="Search in current table..."
+                        value={searchQuery}
+                        onChange={(e) => {
+                            setSearchQuery(e.target.value);
+                            setIsSearch(true);
+                        }}
+                    />
 
+                    <PaginationSelect
+                        setItemsPerPage={setItemsPerPage}
+                        setPage={setPage}
+                        itemsPerPage={itemsPerPage}
+                    />
+                </div>
+            </div>
             <div className="h-[64vh] overflow-y-scroll bg-white">
                 <Table>
                     <Thead headers={HEADERS} />
                     <tbody>
-                        {userData.map(
+                        {filteredUserData.map(
                             ({
                                 user_id,
                                 gender,
@@ -110,8 +153,8 @@ export default function User() {
                 setItemsPerPage={setItemsPerPage}
                 itemsPerPage={itemsPerPage}
                 totalItems={totalItems}
+                searchData={filteredUserData}
             />
-            {/* setItemsPerPage, setPage, itemsPerPage */}
         </div>
     );
 }

@@ -7,6 +7,7 @@ function Pagination({
     setPage,
     totalItems,
 }) {
+    console.log(totalItems);
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     const handlePrevClick = () => {
@@ -23,7 +24,7 @@ function Pagination({
 
     const renderPageNumbers = () => {
         const pageNumbers = [];
-        const maxVisiblePages = 3;
+        const maxVisiblePages = 2;
 
         if (totalPages <= maxVisiblePages) {
             for (let i = 1; i <= totalPages; i++) {

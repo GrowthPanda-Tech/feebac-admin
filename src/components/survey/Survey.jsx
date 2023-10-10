@@ -10,6 +10,7 @@ import Tdata from "../table/Tdata";
 import PageTitle from "../PageTitle";
 
 import makeRequest from "../../utils/makeRequest";
+import convertToLocale from "../../utils/convertToLocale";
 
 const HEADERS = ["Title", "Category", "Start Date", "End Date", "Actions"];
 
@@ -63,11 +64,6 @@ export default function Survey() {
     const [surveyData, setsurveyData] = useState([]);
     const [status, setStatus] = useState("live");
     const [loading, setLoading] = useState(false);
-
-    const convertToLocal = (date) => {
-        const dateObj = new Date(`${date} UTC`);
-        return dateObj.toLocaleString("en-GB", { hour12: true });
-    };
 
     useEffect(() => {
         let ignore = false;
@@ -163,14 +159,14 @@ export default function Survey() {
                                                 <div className="flex flex-col gap-2">
                                                     <div>
                                                         {
-                                                            convertToLocal(
+                                                            convertToLocale(
                                                                 start_date
                                                             ).split(",")[0]
                                                         }
                                                     </div>
                                                     <div className="text-sm">
                                                         {
-                                                            convertToLocal(
+                                                            convertToLocale(
                                                                 start_date
                                                             ).split(",")[1]
                                                         }
@@ -181,14 +177,14 @@ export default function Survey() {
                                                 <div className="flex flex-col gap-2">
                                                     <div>
                                                         {
-                                                            convertToLocal(
+                                                            convertToLocale(
                                                                 end_date
                                                             ).split(",")[0]
                                                         }
                                                     </div>
                                                     <div className="text-sm ">
                                                         {
-                                                            convertToLocal(
+                                                            convertToLocale(
                                                                 end_date
                                                             ).split(",")[1]
                                                         }

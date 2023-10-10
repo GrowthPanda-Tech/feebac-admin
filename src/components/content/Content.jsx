@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+
 import makeRequest from "../../utils/makeRequest";
+import convertToLocale from "../../utils/convertToLocale";
 
 // component imports
 import PageTitle from "../PageTitle";
@@ -16,11 +18,6 @@ const HEADERS = ["Name", "Status", "Category", "Creation Date", "Actions"];
 export default function Content() {
     const [articleList, setArticleList] = useState([]);
     const [loading, setLoading] = useState(false);
-
-    const convertToLocal = (date) => {
-        const dateObj = new Date(date);
-        return dateObj.toLocaleString();
-    };
 
     const handlePublish = async (articleId, index) => {
         try {
@@ -113,8 +110,23 @@ export default function Content() {
                                                 : "Private"}
                                         </Tdata>
                                         <Tdata capitalize>{category}</Tdata>
-                                        <Tdata>
-                                            {convertToLocal(created_date)}
+                                        <Tdata mono>
+                                            <div className="flex flex-col gap-2">
+                                                <div>
+                                                    {
+                                                        convertToLocale(
+                                                            created_date
+                                                        ).split(",")[0]
+                                                    }
+                                                </div>
+                                                <div className="text-sm">
+                                                    {
+                                                        convertToLocale(
+                                                            created_date
+                                                        ).split(",")[1]
+                                                    }
+                                                </div>
+                                            </div>
                                         </Tdata>
                                         <Tdata>
                                             <div className="flex justify-center gap-4 text-xl">

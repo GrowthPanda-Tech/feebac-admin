@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import makeRequest from "../../utils/makeRequest";
+import convertToLocale from "../../utils/convertToLocale";
 import loyaltyImg from "../../assets/loyalty.png";
 
 //components
@@ -112,9 +113,9 @@ export default function UserInfo() {
                                             </Tdata>
                                             <Tdata mono>
                                                 {
-                                                    transaction.dateTime.split(
-                                                        " "
-                                                    )[0]
+                                                    convertToLocale(
+                                                        transaction.dateTime
+                                                    ).split(",")[0]
                                                 }
                                             </Tdata>
                                             <Tdata>
@@ -173,8 +174,42 @@ export default function UserInfo() {
                                 <Trow key={survey.survey_id}>
                                     <Tdata left>{survey.survey_title}</Tdata>
                                     <Tdata capitalize>{survey.category}</Tdata>
-                                    <Tdata mono>{survey.start_date}</Tdata>
-                                    <Tdata mono>{survey.end_date}</Tdata>
+                                    <Tdata mono>
+                                        <div className="flex flex-col gap-2">
+                                            <div>
+                                                {
+                                                    convertToLocale(
+                                                        survey.start_date
+                                                    ).split(",")[0]
+                                                }
+                                            </div>
+                                            <div className="text-sm">
+                                                {
+                                                    convertToLocale(
+                                                        survey.start_date
+                                                    ).split(",")[1]
+                                                }
+                                            </div>
+                                        </div>
+                                    </Tdata>
+                                    <Tdata mono>
+                                        <div className="flex flex-col gap-2">
+                                            <div>
+                                                {
+                                                    convertToLocale(
+                                                        survey.end_date
+                                                    ).split(",")[0]
+                                                }
+                                            </div>
+                                            <div className="text-sm">
+                                                {
+                                                    convertToLocale(
+                                                        survey.end_date
+                                                    ).split(",")[1]
+                                                }
+                                            </div>
+                                        </div>
+                                    </Tdata>
                                     <Tdata>
                                         {survey.total_response > 0
                                             ? "Completed"

@@ -11,6 +11,7 @@ import Tdata from "../table/Tdata";
 import NewsDelPop from "./NewsDelPop";
 import AlertComponent from "../AlertComponent/AlertComponent";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import convertToLocale from "../../utils/convertToLocale";
 
 const HEADERS = ["Name", "Category", "Date", "Actions"];
 
@@ -106,7 +107,22 @@ export default function NewsTable() {
                                     <Tdata left>{news.title}</Tdata>
                                     <Tdata capitalize>{news.category}</Tdata>
                                     <Tdata mono>
-                                        {news.createDate.split(" ")[0]}
+                                        <div className="flex flex-col gap-2">
+                                            <div>
+                                                {
+                                                    convertToLocale(
+                                                        news.createDate
+                                                    ).split(",")[0]
+                                                }
+                                            </div>
+                                            <div className="text-sm">
+                                                {
+                                                    convertToLocale(
+                                                        news.createDate
+                                                    ).split(",")[1]
+                                                }
+                                            </div>
+                                        </div>
                                     </Tdata>
                                     <Tdata>
                                         <div className="text-xl flex justify-center gap-5">

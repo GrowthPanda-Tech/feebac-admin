@@ -9,7 +9,7 @@ export default function ProfileContextProvider({ children }) {
     useEffect(() => {
         let ignore = false;
 
-        async function getCategories() {
+        async function getProfile() {
             try {
                 const response = await makeRequest("profile/");
 
@@ -25,7 +25,7 @@ export default function ProfileContextProvider({ children }) {
             }
         }
 
-        getCategories();
+        getProfile();
 
         return () => {
             ignore = true;

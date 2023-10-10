@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+import withMT from "@material-tailwind/react/utils/withMT";
+
+export default withMT({
     content: [
         "./index.html",
         "./src/App.jsx",
@@ -12,7 +14,6 @@ export default {
             mono: "IBM Plex Mono",
         },
         colors: {
-            //TODO: Redefine these
             white: "#FFFFFF",
             black: "#000000",
             primary: "#A43948",
@@ -27,4 +28,4 @@ export default {
             accent: "#EA8552",
         },
     },
-};
+});

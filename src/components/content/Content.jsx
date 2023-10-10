@@ -9,10 +9,15 @@ import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import AlertComponent from "../AlertComponent/AlertComponent";
+import Pagination from "../Pagination";
+import PaginationSelect from "../PaginationSelect";
 
 const HEADERS = ["Name", "Status", "Category", "Creation Date", "Actions"];
 
 export default function Content() {
+    let totalItems = 13;
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [page, setPage] = useState(1);
     const [articleList, setArticleList] = useState([]);
 
     const convertToLocal = (date) => {
@@ -49,7 +54,7 @@ export default function Content() {
         async function getArticleList() {
             try {
                 const response = await makeRequest(
-                    "site-admin/get-article-list?page=1&count=1000"
+                    `site-admin/get-article-list?page=${page}&count=${itemsPerPage}`
                 );
 
                 if (!response.isSuccess) {
@@ -69,7 +74,7 @@ export default function Content() {
         return () => {
             ignore = true;
         };
-    }, []);
+    }, [page, itemsPerPage]);
 
     return (
         <div className="flex flex-col gap-8">
@@ -82,8 +87,14 @@ export default function Content() {
                     </button>
                 </Link>
             </div>
+            <div className=" flex justify-end">
+                <PaginationSelect
+                    setItemsPerPage={setItemsPerPage}
+                    itemsPerPage={itemsPerPage}
+                />
+            </div>
 
-            <div className="h-[69vh] relative overflow-y-scroll bg-white">
+            <div className="h-[50vh] relative overflow-y-scroll bg-white">
                 <Table>
                     <Thead headers={HEADERS} />
                     <tbody>
@@ -150,6 +161,13 @@ export default function Content() {
                     </tbody>
                 </Table>
             </div>
+            <Pagination
+                setPage={setPage}
+                page={page}
+                setItemsPerPage={setItemsPerPage}
+                itemsPerPage={itemsPerPage}
+                totalItems={totalItems}
+            />
         </div>
     );
 }

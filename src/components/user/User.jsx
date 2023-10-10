@@ -9,10 +9,14 @@ import Table from "../table/Table";
 import Trow from "../table/Trow";
 import Thead from "../table/Thead";
 import Tdata from "../table/Tdata";
+import Pagination from "../Pagination";
+import PaginationSelect from "../PaginationSelect";
 
 const HEADERS = ["User ID", "Gender", "Loyalty Points", "Location", "Actions"];
-
 export default function User() {
+    let totalItems = 25;
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [page, setPage] = useState(1);
     const [userData, setUserData] = useState([]);
 
     useEffect(() => {
@@ -21,7 +25,7 @@ export default function User() {
         async function getUserData() {
             try {
                 const response = await makeRequest(
-                    "site-admin/get-all-user?page=1&count=1000"
+                    `site-admin/get-all-user?page=${page}&count=${itemsPerPage}`
                 );
 
                 if (!response.isSuccess) {
@@ -41,12 +45,20 @@ export default function User() {
         return () => {
             ignore = true;
         };
-    }, []);
+    }, [itemsPerPage, page]);
 
     return (
-        <div className="flex flex-col gap-8">
-            <PageTitle name={"User Information"} />
-            <div className="h-[70vh] overflow-y-scroll bg-white">
+        <div className="flex flex-col gap-4">
+            <div className=" flex justify-between">
+                <PageTitle name={"User Information"} />
+                <PaginationSelect
+                    setItemsPerPage={setItemsPerPage}
+                    setPage={setPage}
+                    itemsPerPage={itemsPerPage}
+                />
+            </div>
+
+            <div className="h-[64vh] overflow-y-scroll bg-white">
                 <Table>
                     <Thead headers={HEADERS} />
                     <tbody>
@@ -92,6 +104,14 @@ export default function User() {
                     </tbody>
                 </Table>
             </div>
+            <Pagination
+                page={page}
+                setPage={setPage}
+                setItemsPerPage={setItemsPerPage}
+                itemsPerPage={itemsPerPage}
+                totalItems={totalItems}
+            />
+            {/* setItemsPerPage, setPage, itemsPerPage */}
         </div>
     );
 }

@@ -112,7 +112,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
 
         if (questionValue) {
             const updatedQuestionData = { ...questionData };
-            delete updatedQuestionData.questionValue;
+            updatedQuestionData.questionValue = {};
             setQuestionData({ ...updatedQuestionData, questionType });
             setOptions(initOptions);
             return;
@@ -128,9 +128,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         }
         setQuestionData({ ...questionData, questionValue });
     };
-
-    // console.log(options);
-    console.log(questionData);
 
     const handleChange = (event, index) => {
         const name = event.target.name;
@@ -199,6 +196,11 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             console.log(response);
             if (response.isSuccess) {
                 AlertComponent("success", response);
+                setOptions(initOptions);
+                setQuestionData(initQuestionData);
+                setActiveButtonIndex(1);
+
+                getQuestions();
             } else {
                 AlertComponent("failed", response);
             }
@@ -206,11 +208,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             if (error >= 500) console.log("hii");
             AlertComponent("error", "", "something has gone wrong");
         }
-
-        setOptions(initOptions);
-        setQuestionData(initQuestionData);
-
-        getQuestions();
     };
 
     const handleSchedule = async () => {

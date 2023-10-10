@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { Spinner } from "@material-tailwind/react";
+import LoadingSpinner from "../_helperComponents/LoadingSpinner";
 
 import Table from "../table/Table";
 import Thead from "../table/Thead";
@@ -138,9 +138,7 @@ export default function Survey() {
 
             <div className="h-[60vh] bg-white overflow-y-scroll">
                 {loading ? (
-                    <div className="flex h-full w-full justify-center items-center">
-                        <Spinner className="h-12 w-12" />
-                    </div>
+                    <LoadingSpinner />
                 ) : (
                     <Table>
                         <Thead headers={HEADERS} />

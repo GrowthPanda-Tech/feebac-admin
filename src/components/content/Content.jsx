@@ -9,11 +9,13 @@ import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import AlertComponent from "../AlertComponent/AlertComponent";
+import LoadingSpinner from "../_helperComponents/LoadingSpinner";
 
 const HEADERS = ["Name", "Status", "Category", "Creation Date", "Actions"];
 
 export default function Content() {
     const [articleList, setArticleList] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const convertToLocal = (date) => {
         const dateObj = new Date(date);
@@ -48,6 +50,7 @@ export default function Content() {
 
         async function getArticleList() {
             try {
+                setLoading(true);
                 const response = await makeRequest(
                     "site-admin/get-article-list?page=1&count=1000"
                 );
@@ -58,6 +61,7 @@ export default function Content() {
 
                 if (!ignore) {
                     setArticleList(response.data.toReversed());
+                    setLoading(false);
                 }
             } catch (error) {
                 console.error(error);
@@ -84,71 +88,77 @@ export default function Content() {
             </div>
 
             <div className="h-[69vh] relative overflow-y-scroll bg-white">
-                <Table>
-                    <Thead headers={HEADERS} />
-                    <tbody>
-                        {articleList.map(
-                            (
-                                {
-                                    article_id,
-                                    article_title,
-                                    is_published,
-                                    category,
-                                    created_date,
-                                },
-                                index
-                            ) => (
-                                <Trow key={article_id}>
-                                    <Tdata left>{article_title}</Tdata>
-                                    <Tdata>
-                                        {is_published ? "Public" : "Private"}
-                                    </Tdata>
-                                    <Tdata capitalize>{category}</Tdata>
-                                    <Tdata>
-                                        {convertToLocal(created_date)}
-                                    </Tdata>
-                                    <Tdata>
-                                        <div className="flex justify-center gap-4 text-xl">
-                                            <div className="flex justify-center">
-                                                <div className="tool-tip-div group">
-                                                    <Link
-                                                        to={`/content/edit/${article_id}`}
-                                                    >
-                                                        <button>
-                                                            <i className="fa-solid fa-pen-to-square"></i>
+                {loading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <Table>
+                        <Thead headers={HEADERS} />
+                        <tbody>
+                            {articleList.map(
+                                (
+                                    {
+                                        article_id,
+                                        article_title,
+                                        is_published,
+                                        category,
+                                        created_date,
+                                    },
+                                    index
+                                ) => (
+                                    <Trow key={article_id}>
+                                        <Tdata left>{article_title}</Tdata>
+                                        <Tdata>
+                                            {is_published
+                                                ? "Public"
+                                                : "Private"}
+                                        </Tdata>
+                                        <Tdata capitalize>{category}</Tdata>
+                                        <Tdata>
+                                            {convertToLocal(created_date)}
+                                        </Tdata>
+                                        <Tdata>
+                                            <div className="flex justify-center gap-4 text-xl">
+                                                <div className="flex justify-center">
+                                                    <div className="tool-tip-div group">
+                                                        <Link
+                                                            to={`/content/edit/${article_id}`}
+                                                        >
+                                                            <button>
+                                                                <i className="fa-solid fa-pen-to-square"></i>
+                                                            </button>
+                                                        </Link>
+                                                        <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                            Edit Article
+                                                            <span className="tooltip-arrow bottom-[-2px] left-[37%]"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-center">
+                                                    <div className="tool-tip-div group">
+                                                        <button
+                                                            onClick={() =>
+                                                                handlePublish(
+                                                                    article_id,
+                                                                    index
+                                                                )
+                                                            }
+                                                        >
+                                                            <i className="fa-regular fa-newspaper"></i>
                                                         </button>
-                                                    </Link>
-                                                    <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
-                                                        Edit Article
-                                                        <span className="tooltip-arrow bottom-[-2px] left-[37%]"></span>
-                                                    </span>
+                                                        <span className="tool-tip-span  -right-[2.8rem] bg-black -top-12 ">
+                                                            Toggle Status
+                                                            <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="flex justify-center">
-                                                <div className="tool-tip-div group">
-                                                    <button
-                                                        onClick={() =>
-                                                            handlePublish(
-                                                                article_id,
-                                                                index
-                                                            )
-                                                        }
-                                                    >
-                                                        <i className="fa-regular fa-newspaper"></i>
-                                                    </button>
-                                                    <span className="tool-tip-span  -right-[2.8rem] bg-black -top-12 ">
-                                                        Toggle Status
-                                                        <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Tdata>
-                                </Trow>
-                            )
-                        )}
-                    </tbody>
-                </Table>
+                                        </Tdata>
+                                    </Trow>
+                                )
+                            )}
+                        </tbody>
+                    </Table>
+                )}
             </div>
         </div>
     );

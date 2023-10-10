@@ -9,17 +9,20 @@ import Table from "../table/Table";
 import Trow from "../table/Trow";
 import Thead from "../table/Thead";
 import Tdata from "../table/Tdata";
+import LoadingSpinner from "../_helperComponents/LoadingSpinner";
 
 const HEADERS = ["User ID", "Gender", "Loyalty Points", "Location", "Actions"];
 
 export default function User() {
     const [userData, setUserData] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         let ignore = false;
 
         async function getUserData() {
             try {
+                setLoading(true);
                 const response = await makeRequest(
                     "site-admin/get-all-user?page=1&count=1000"
                 );
@@ -30,6 +33,7 @@ export default function User() {
 
                 if (!ignore) {
                     setUserData(response.data);
+                    setLoading(false);
                 }
             } catch (error) {
                 console.error(error);
@@ -47,50 +51,54 @@ export default function User() {
         <div className="flex flex-col gap-8">
             <PageTitle name={"User Information"} />
             <div className="h-[70vh] overflow-y-scroll bg-white">
-                <Table>
-                    <Thead headers={HEADERS} />
-                    <tbody>
-                        {userData.map(
-                            ({
-                                user_id,
-                                gender,
-                                loyalty_points,
-                                state,
-                                city,
-                            }) => (
-                                <Trow key={user_id}>
-                                    <Tdata mono>
-                                        {user_id.split("-").pop()}
-                                    </Tdata>
-                                    <Tdata capitalize>
-                                        {gender ? gender : "-"}
-                                    </Tdata>
-                                    <Tdata>{loyalty_points} </Tdata>
-                                    <Tdata>
-                                        {state && city
-                                            ? `${city}, ${state}`
-                                            : state
-                                            ? state
-                                            : "-"}
-                                    </Tdata>
-                                    <Tdata>
-                                        <div className="flex justify-center">
-                                            <div className="tool-tip-div group">
-                                                <Link to={user_id}>
-                                                    <i className="text-xl fa-solid fa-circle-info"></i>
-                                                </Link>
-                                                <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
-                                                    See User Info
-                                                    <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
-                                                </span>
+                {loading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <Table>
+                        <Thead headers={HEADERS} />
+                        <tbody>
+                            {userData.map(
+                                ({
+                                    user_id,
+                                    gender,
+                                    loyalty_points,
+                                    state,
+                                    city,
+                                }) => (
+                                    <Trow key={user_id}>
+                                        <Tdata mono>
+                                            {user_id.split("-").pop()}
+                                        </Tdata>
+                                        <Tdata capitalize>
+                                            {gender ? gender : "-"}
+                                        </Tdata>
+                                        <Tdata>{loyalty_points} </Tdata>
+                                        <Tdata>
+                                            {state && city
+                                                ? `${city}, ${state}`
+                                                : state
+                                                ? state
+                                                : "-"}
+                                        </Tdata>
+                                        <Tdata>
+                                            <div className="flex justify-center">
+                                                <div className="tool-tip-div group">
+                                                    <Link to={user_id}>
+                                                        <i className="text-xl fa-solid fa-circle-info"></i>
+                                                    </Link>
+                                                    <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                        See User Info
+                                                        <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Tdata>
-                                </Trow>
-                            )
-                        )}
-                    </tbody>
-                </Table>
+                                        </Tdata>
+                                    </Trow>
+                                )
+                            )}
+                        </tbody>
+                    </Table>
+                )}
             </div>
         </div>
     );

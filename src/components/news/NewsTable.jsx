@@ -10,11 +10,7 @@ import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import NewsDelPop from "./NewsDelPop";
 import AlertComponent from "../AlertComponent/AlertComponent";
-
-//assets
-import link from "../../assets/link.svg";
-import edit from "../../assets/edit.svg";
-import delIcon from "../../assets/delete.svg";
+import LoadingSpinner from "../_helperComponents/LoadingSpinner";
 
 const HEADERS = ["Name", "Category", "Date", "Actions"];
 
@@ -25,6 +21,7 @@ export default function NewsTable() {
         idx: null,
     });
     const [delPop, setDelPop] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleDelPop = (id, idx) => {
         setDelInfo({ id, idx });
@@ -60,6 +57,7 @@ export default function NewsTable() {
         async function getNewsList() {
             try {
                 //make count dynamic
+                setLoading(true);
                 const response = await makeRequest(
                     "news/get-news?page=1&count=100"
                 );
@@ -70,6 +68,7 @@ export default function NewsTable() {
 
                 if (!ignore) {
                     setNewsList(response.data);
+                    setLoading(false);
                 }
             } catch (error) {
                 console.error(error);
@@ -96,72 +95,76 @@ export default function NewsTable() {
             </div>
 
             <div className="h-[68vh] bg-white overflow-y-scroll">
-                <Table>
-                    <Thead headers={HEADERS} />
-                    <tbody>
-                        {newsList.map((news, index) => (
-                            <Trow key={news.id}>
-                                <Tdata left>{news.title}</Tdata>
-                                <Tdata capitalize>{news.category}</Tdata>
-                                <Tdata mono>
-                                    {news.createDate.split(" ")[0]}
-                                </Tdata>
-                                <Tdata>
-                                    <div className="text-xl flex justify-center gap-5">
-                                        <div className="flex justify-center">
-                                            <div className="tool-tip-div group">
-                                                <Link
-                                                    to={news.newsUrl}
-                                                    target="_blank"
-                                                >
-                                                    <i className="fa-solid fa-link"></i>
-                                                </Link>
-                                                <span className="tool-tip-span -right-[1.8rem] bg-black -top-12 ">
-                                                    Visit Link
-                                                    <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
-                                                </span>
+                {loading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <Table>
+                        <Thead headers={HEADERS} />
+                        <tbody>
+                            {newsList.map((news, index) => (
+                                <Trow key={news.id}>
+                                    <Tdata left>{news.title}</Tdata>
+                                    <Tdata capitalize>{news.category}</Tdata>
+                                    <Tdata mono>
+                                        {news.createDate.split(" ")[0]}
+                                    </Tdata>
+                                    <Tdata>
+                                        <div className="text-xl flex justify-center gap-5">
+                                            <div className="flex justify-center">
+                                                <div className="tool-tip-div group">
+                                                    <Link
+                                                        to={news.newsUrl}
+                                                        target="_blank"
+                                                    >
+                                                        <i className="fa-solid fa-link"></i>
+                                                    </Link>
+                                                    <span className="tool-tip-span -right-[1.8rem] bg-black -top-12 ">
+                                                        Visit Link
+                                                        <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-center">
+                                                <div className="tool-tip-div group">
+                                                    <Link
+                                                        to={`edit/${news.id}`}
+                                                        state={{
+                                                            from: news,
+                                                        }}
+                                                    >
+                                                        <i className="fa-solid fa-pen-to-square"></i>
+                                                    </Link>
+                                                    <span className="tool-tip-span -right-[1.8rem] bg-black -top-12 ">
+                                                        Edit News
+                                                        <span className="tooltip-arrow bottom-[-2px] left-[46%]"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-center">
+                                                <div className="tool-tip-div group">
+                                                    <button
+                                                        onClick={() =>
+                                                            handleDelPop(
+                                                                news.id,
+                                                                index
+                                                            )
+                                                        }
+                                                    >
+                                                        <i className="fa-solid fa-trash"></i>
+                                                    </button>
+                                                    <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                        Delete News
+                                                        <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="flex justify-center">
-                                            <div className="tool-tip-div group">
-                                                <Link
-                                                    to={`edit/${news.id}`}
-                                                    state={{
-                                                        from: news,
-                                                    }}
-                                                >
-                                                    <i className="fa-solid fa-pen-to-square"></i>
-                                                </Link>
-                                                <span className="tool-tip-span -right-[1.8rem] bg-black -top-12 ">
-                                                    Edit News
-                                                    <span className="tooltip-arrow bottom-[-2px] left-[46%]"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div className="flex justify-center">
-                                            <div className="tool-tip-div group">
-                                                <button
-                                                    onClick={() =>
-                                                        handleDelPop(
-                                                            news.id,
-                                                            index
-                                                        )
-                                                    }
-                                                >
-                                                    <i className="fa-solid fa-trash"></i>
-                                                </button>
-                                                <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
-                                                    Delete News
-                                                    <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Tdata>
-                            </Trow>
-                        ))}
-                    </tbody>
-                </Table>
+                                    </Tdata>
+                                </Trow>
+                            ))}
+                        </tbody>
+                    </Table>
+                )}
             </div>
             <NewsDelPop
                 delPop={delPop}

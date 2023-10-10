@@ -72,12 +72,12 @@ export default function CouponCard({ data, setCouponsData }) {
                                     <span>
                                         Total : {data ? data.totalCount : ""}
                                     </span>
-                                    <span>
+                                    {/* <span>
                                         Available :{" "}
                                         {data
                                             ? data.totalCount - data.redeemCount
                                             : ""}
-                                    </span>
+                                    </span> */}
                                 </div>
                             </div>
                             <div className="flex bg-[#5927E8] w-24 p-2 rounded-full items-center justify-evenly text-white ">

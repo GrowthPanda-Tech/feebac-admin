@@ -11,7 +11,7 @@ import PieChart from "../dashboard/charts/PieChart";
 const HEADERS = [
     "Transcation Id",
     "User ID",
-    "Category",
+    "Reason",
     "Date",
     "Point history",
 ];

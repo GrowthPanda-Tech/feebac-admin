@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
-import Filters from "../createSurvey/filter/Filters";
+import { useState, useContext } from "react";
+import { useParams } from "react-router-dom";
+import { CategoryContext } from "../../../contexts/CategoryContext";
+
 import makeRequest from "../../../utils/makeRequest";
 import convertToUTC from "../../../utils/convertToUTC";
 import formSubmit from "../../../utils/formSubmit";
-import { useNavigate, useParams } from "react-router-dom";
+
 import AlertComponent from "../../AlertComponent/AlertComponent";
 
 const TODAY = new Date().toISOString().slice(0, 16);
@@ -48,6 +50,8 @@ export default function EditSurveyForm({
     surveyInfo,
     setSurveyInfo,
 }) {
+    const { categories } = useContext(CategoryContext);
+
     const [isDateChange, setIsDateChange] = useState(false);
 
     const convertToCalendarFormat = (dateString) => {
@@ -67,7 +71,6 @@ export default function EditSurveyForm({
     };
 
     const { slug } = useParams();
-    const [categories, setCategories] = useState([]);
     const [surveyData, setSurveyData] = useState({
         surveyId: surveyInfo?.survey_id,
         surveyTitle: surveyInfo?.survey_title,
@@ -79,31 +82,17 @@ export default function EditSurveyForm({
         isUpdateImage: false,
     });
 
-    const [profileData, setProfileData] = useState({});
     const [updatedData, setUpdatedData] = useState({
         ...surveyData,
         startDate: surveyInfo?.start_date,
         endDate: surveyInfo?.end_date,
     });
 
-    // console.log(surveyData.startDate.split("/").join("-"));
-    const getCategories = async () => {
-        const response = await makeRequest(
-            "site-admin/get-all-category",
-            "GET"
-        );
-        response.isSuccess && setCategories(response.categoryList);
-    };
-    console.log(surveyInfo.startDate);
-
     const handleChange = (e) => {
         if (e.target.name === "startDate" || e.target.name === "endDate") {
-            console.log("hi");
             setIsDateChange(true);
-            console.log(e.target.value);
             const localDateObject = new Date(e.target.value);
             const formattedOutput = convertToUTC(localDateObject);
-            console.log(formattedOutput);
             setUpdatedData({
                 ...updatedData,
                 [e.target.name]: formattedOutput,
@@ -150,12 +139,6 @@ export default function EditSurveyForm({
             AlertComponent("error", "", "Please Enter Valid Value");
         }
     };
-
-    console.log(updatedData);
-
-    useEffect(() => {
-        getCategories();
-    }, []);
 
     return (
         <div className="flex flex-col p-8 gap-8">
@@ -255,7 +238,7 @@ export default function EditSurveyForm({
                         setSurveyEditPop(false);
                     }}
                 >
-                    cancel
+                    Cancel
                 </button>
             </div>
         </div>

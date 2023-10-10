@@ -1,4 +1,3 @@
-import React from "react";
 import EditSurveyForm from "./EditSurveyForm";
 
 function EditSurveyDetails({ setSurveyEditPop, surveyInfo, setSurveyInfo }) {

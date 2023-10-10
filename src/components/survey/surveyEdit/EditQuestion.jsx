@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 //utils
@@ -28,18 +28,19 @@ export default function EditQuestion({
     setQuestionList,
     setSurveyInfo,
 }) {
-    const apiOptions = Object.values(questions[0].question_values);
-
     const { slug } = useParams();
 
-    const [options, setOptions] = useState(apiOptions);
     const [updatedQuestionData, setUpdatedQuestionData] = useState({
         surveyId: surveyId,
-        questionId: questions[0].question_id,
-        questionType: questions[0]?.question_type?.type_id,
-        questionTitle: questions[0]?.question_title,
-        questionValue: questions[0].question_values,
+        questionId: questions.question_id,
+        questionType: questions.question_type?.type_id,
+        questionTitle: questions.question_title,
+        questionValue: questions.question_values,
     });
+
+    const [options, setOptions] = useState(
+        Object.values(updatedQuestionData.questionValue)
+    );
     const [activeButtonIndex, setActiveButtonIndex] = useState(
         updatedQuestionData.questionType - 1
     );
@@ -50,6 +51,15 @@ export default function EditQuestion({
         questionValue = updatedQuestionData.questionValue
     ) => {
         setActiveButtonIndex(index);
+
+        if (questionType === 2 || questionType === 3) {
+            if (Object.values(questionValue).length === 0) {
+                setOptions(["", ""]);
+            } else {
+                setOptions(Object.values(questionValue));
+            }
+        }
+
         setUpdatedQuestionData({
             ...updatedQuestionData,
             questionType,
@@ -85,32 +95,30 @@ export default function EditQuestion({
         arrangeOptions(updatedOptions);
     };
 
-    const handleQuestionSubmit = async () => {
+    const handleQuestionSubmit = async (event) => {
+        event.preventDefault();
+
         try {
             const response = await makeRequest(
                 "survey/update-question",
                 "PUT",
                 updatedQuestionData
             );
-            setOptions(["", ""]);
-            setUpdatedQuestionData({
-                surveyId: surveyId,
-                questionType: 2,
-            });
-            setEditPop(false);
 
             if (response.isSuccess) {
                 AlertComponent("success", response);
                 const getData = async () => {
                     const response = await makeRequest(
-                        `survey/show-survey?sid=${slug}`,
-                        "GET"
+                        `survey/show-survey?sid=${slug}`
                     );
+
                     if (response.isSuccess) {
                         setQuestionList(response.questionList);
                         setSurveyInfo(response.surveyInfo);
+                        setEditPop(false);
                     }
                 };
+
                 getData();
             } else {
                 AlertComponent("failed", response);
@@ -120,9 +128,6 @@ export default function EditQuestion({
                 AlertComponent("error", "", "Something went wrong!!");
         }
     };
-    useEffect(() => {
-        setOptions(apiOptions);
-    }, []);
 
     return (
         <form onSubmit={handleQuestionSubmit}>
@@ -134,7 +139,7 @@ export default function EditQuestion({
                     <Input
                         type={"text"}
                         name={"questionTitle"}
-                        onChange={handleInputChange}
+                        onChange={(e) => handleInputChange(e)}
                         value={
                             updatedQuestionData
                                 ? updatedQuestionData.questionTitle
@@ -145,6 +150,7 @@ export default function EditQuestion({
                 <div className="flex w-full items-center justify-between">
                     <div className="flex gap-7 h-fit">
                         <button
+                            type="button"
                             className={`pill ${
                                 activeButtonIndex === 0
                                     ? "pill-primary"
@@ -155,6 +161,7 @@ export default function EditQuestion({
                             Text Answer
                         </button>
                         <button
+                            type="button"
                             className={`pill ${
                                 activeButtonIndex === 1
                                     ? "pill-primary"
@@ -165,6 +172,7 @@ export default function EditQuestion({
                             One Answer
                         </button>
                         <button
+                            type="button"
                             className={`pill ${
                                 activeButtonIndex === 2
                                     ? "pill-primary"
@@ -180,7 +188,7 @@ export default function EditQuestion({
                     {updatedQuestionData.questionType === 1 ? (
                         <></>
                     ) : (
-                        Object.values(options).map((option, index) => (
+                        options.map((option, index) => (
                             <div
                                 key={index}
                                 className="flex items-center justify-between"
@@ -189,8 +197,8 @@ export default function EditQuestion({
                                     type={"text"}
                                     name={"questionValue"}
                                     value={option}
-                                    onChange={(event) =>
-                                        handleOptionChange(event, index)
+                                    onChange={(e) =>
+                                        handleOptionChange(e, index)
                                     }
                                 />
 
@@ -198,6 +206,7 @@ export default function EditQuestion({
                                     <></>
                                 ) : (
                                     <button
+                                        type="button"
                                         className="ml-6"
                                         onClick={() =>
                                             handleRemoveOption(index)
@@ -211,9 +220,9 @@ export default function EditQuestion({
                     )}
                 </div>
                 <div className="flex justify-between">
-                    {updatedQuestionData.questionType !== 1 &&
-                    updatedQuestionData.questionType !== 4 ? (
+                    {updatedQuestionData.questionType !== 1 ? (
                         <button
+                            type="button"
                             onClick={() => setOptions([...options, ""])}
                             className="btn-primary bg-white text-black hover:bg-secondary hover:text-white border border-grey w-fit"
                         >
@@ -224,6 +233,7 @@ export default function EditQuestion({
 
                     <div className="flex gap-4">
                         <button
+                            type="button"
                             className="btn-secondary"
                             onClick={() => {
                                 setEditPop(false);
@@ -231,7 +241,9 @@ export default function EditQuestion({
                         >
                             Cancel
                         </button>
-                        <button className="btn-primary w-fit">Save</button>
+                        <button type="submit" className="btn-primary w-fit">
+                            Save
+                        </button>
                     </div>
                 </div>
             </div>

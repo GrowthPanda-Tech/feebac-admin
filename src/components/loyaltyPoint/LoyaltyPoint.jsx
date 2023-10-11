@@ -7,6 +7,7 @@ import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import PieChart from "../dashboard/charts/PieChart";
+import FilterLoyalty from "./FilterLoyalty";
 
 const HEADERS = [
     "Transcation Id",
@@ -19,6 +20,37 @@ const HEADERS = [
 function LoyaltyPoint() {
     const [loyaltyData, setLoyaltyData] = useState([]);
     const [data, setData] = useState();
+    const [selectedSort, setSelectedSort] = useState("");
+    const [selectedReason, setSelectedReason] = useState("All");
+    const [selectedPointsHistory, setSelectedPointsHistory] = useState("All");
+
+    const sortedData = [...loyaltyData];
+
+    useEffect(() => {
+        if (selectedSort === "") {
+            setSelectedReason("All");
+            setSelectedPointsHistory("All");
+        } else if (selectedSort === "By Points History") {
+            setSelectedReason("All");
+            sortedData.sort((a, b) => a.isCredit - b.isCredit);
+        } else if (selectedSort === "By Reason") {
+            setSelectedPointsHistory("All");
+        }
+    }, [selectedSort]);
+
+    const filteredData = sortedData.filter(({ reason, isCredit }) => {
+        const isCreditMatch =
+            selectedPointsHistory === "All" ||
+            (selectedPointsHistory === "Gain" && isCredit) ||
+            (selectedPointsHistory === "Spend" && !isCredit);
+
+        if (selectedReason === "All" && isCreditMatch) {
+            return true;
+        } else {
+            return reason === selectedReason && isCreditMatch;
+        }
+    });
+
     const getData = async () => {
         const response = await makeRequest(
             `loyalty/get-loyalty-transaction`,
@@ -80,34 +112,35 @@ function LoyaltyPoint() {
     return (
         <div className="w-full flex flex-col ">
             <div className="w-full flex justify-between gap-6">
-                <div className="w-3/4 h-auto flex flex-col gap-6 ">
-                    <div className="grid grid-cols-2 gap-8 w-full ">
-                        <div className="bg-[#EA525F]  rounded-lg p-8 items-center  justify-center flex flex-col text-white">
-                            <div className="flex flex-col text-center w-full">
-                                <h2 className="text-5xl p-8">
-                                    {data ? data.totalCredit : 0}
-                                </h2>
-                            </div>
-                            <div className="flex justify-between mx-auto text-center">
-                                <h3 className="text-3xl">Total Gain</h3>
-                            </div>
+                <div className="w-3/4 h-auto flex flex-col gap-4 ">
+                    <div className="flex justify-between w-full gap-10">
+                        <div className="bg-[#EA525F] p-10 w-[80%]  rounded-lg items-center  justify-center flex flex-col text-white">
+                            <h2 className="text-5xl">
+                                {data ? data.totalCredit : 0}
+                            </h2>
+                            <h3 className="text-3xl">Total Gain</h3>
                         </div>
-                        <div className="bg-[#EA525F]  p-8 rounded-lg items-center justify-center flex flex-col  text-white">
-                            <div className="flex flex-col text-center w-full">
-                                <h2 className="text-5xl p-8">
-                                    {data ? data.totalSpend : 0}
-                                </h2>
-                            </div>
-                            <div className="flex justify-between mx-auto text-center">
-                                <h3 className="text-3xl">Total Spend</h3>
-                            </div>
+                        <div className="bg-[#EA525F] rounded-lg w-[80%] items-center justify-center flex flex-col  text-white">
+                            <h2 className="text-5xl ">
+                                {data ? data.totalSpend : 0}
+                            </h2>
+                            <h3 className="text-3xl">Total Spend</h3>
                         </div>
                     </div>
+                    <FilterLoyalty
+                        setSelectedSort={setSelectedSort}
+                        selectedSort={selectedSort}
+                        setSelectedReason={setSelectedReason}
+                        setSelectedPointsHistory={setSelectedPointsHistory}
+                        selectedReason={selectedReason}
+                        selectedPointsHistory={selectedPointsHistory}
+                    />
+
                     <div className=" h-[40vh]  overflow-y-scroll bg-white ">
                         <Table>
                             <Thead headers={HEADERS} />
                             <tbody className="">
-                                {loyaltyData.map(
+                                {filteredData.map(
                                     ({
                                         id,
                                         affectedUser,

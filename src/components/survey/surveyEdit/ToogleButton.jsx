@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./ToggleButton.css";
 import { useEffect } from "react";
 import makeRequest from "../../../utils/makeRequest";
+import AlertComponent from "../../AlertComponent/AlertComponent";
 
 function ToggleButton({ surveyInfo, surveyId }) {
     const [isPublic, setIsPublic] = useState();
@@ -18,6 +19,9 @@ function ToggleButton({ surveyInfo, surveyId }) {
             body
         );
         if (response.isSuccess) setIsPublic(!isPublic);
+        else {
+            AlertComponent("failed", response, "");
+        }
     };
 
     console.log(isPublic);

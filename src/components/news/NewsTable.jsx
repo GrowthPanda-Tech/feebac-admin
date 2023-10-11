@@ -67,7 +67,7 @@ export default function NewsTable() {
             try {
                 //make count dynamic
                 const response = await makeRequest(
-                    `news/get-news?page=${page}&count=${itemsPerPage}`
+                    `news/get-news?page=${page}&count=${itemsPerPage}&query=${searchQuery}`
                 );
 
                 if (!response.isSuccess) {
@@ -88,10 +88,10 @@ export default function NewsTable() {
         return () => {
             ignore = true;
         };
-    }, [page, itemsPerPage]);
+    }, [page, itemsPerPage, searchQuery]);
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-8">
             <div className="flex w-full justify-between items-center">
                 <PageTitle name={"News"} />
                 <Link to={"create"}>
@@ -118,7 +118,7 @@ export default function NewsTable() {
                 />
             </div>
 
-            <div className="h-[55vh] bg-white overflow-y-scroll">
+            <div className="h-[50vh] bg-white overflow-y-scroll">
                 <Table>
                     <Thead headers={HEADERS} />
                     <tbody>

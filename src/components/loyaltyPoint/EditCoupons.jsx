@@ -9,6 +9,7 @@ import PageTitle from "../PageTitle";
 import AlertComponent from "../AlertComponent/AlertComponent";
 import CouponCategory from "./CouponCategory";
 import { useEffect } from "react";
+import removeForbiddenChars from "../../utils/removeForbiddenChars";
 
 function InputForm({
     label,
@@ -50,6 +51,13 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
     }
 
     const handleChange = (e) => {
+        if (e.target.name === "description") {
+            setEditCouponData({
+                ...editCouponData,
+                description: "₹" + e.target.value,
+            });
+            return;
+        }
         if (e.target.name === "totalCount") {
             setEditCouponData({
                 ...editCouponData,

@@ -20,6 +20,18 @@ export default function Content() {
     const [articleList, setArticleList] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [totalItems, setTotalItems] = useState(1);
+    const [sortOrder, setSortOrder] = useState("");
+    const sortedData = [...articleList];
+
+    if (sortOrder === "asc") {
+        sortedData.sort((a, b) =>
+            a.article_title.localeCompare(b.article_title)
+        );
+    } else if (sortOrder === "desc") {
+        sortedData.sort((a, b) =>
+            b.article_title.localeCompare(a.article_title)
+        );
+    }
 
     const convertToLocal = (date) => {
         const dateObj = new Date(date);
@@ -55,7 +67,7 @@ export default function Content() {
         async function getArticleList() {
             try {
                 const response = await makeRequest(
-                    `site-admin/get-article-list?page=${page}&count=${itemsPerPage}`
+                    `site-admin/get-article-list?page=${page}&count=${itemsPerPage}&query=${searchQuery}`
                 );
 
                 if (!response.isSuccess) {
@@ -76,7 +88,7 @@ export default function Content() {
         return () => {
             ignore = true;
         };
-    }, [page, itemsPerPage]);
+    }, [page, itemsPerPage, searchQuery]);
 
     return (
         <div className="flex flex-col gap-8">
@@ -89,7 +101,18 @@ export default function Content() {
                     </button>
                 </Link>
             </div>
-            <div className=" flex justify-between">
+            <div className=" flex justify-between gap-2">
+                {/* <select
+                    value={sortOrder}
+                    onChange={(e) => setSortOrder(e.target.value)}
+                    className="pill-primary border-0 w-32"
+                >
+                    <option value="">
+                        {sortOrder === "" ? "Sort" : "Default"}
+                    </option>
+                    <option value="asc">A-Z</option>
+                    <option value="desc">Z-A</option>
+                </select> */}
                 <input
                     type="text"
                     className="pill-primary border-0 w-3/4"
@@ -110,7 +133,7 @@ export default function Content() {
                 <Table>
                     <Thead headers={HEADERS} />
                     <tbody>
-                        {articleList.map(
+                        {sortedData.map(
                             (
                                 {
                                     article_id,
@@ -124,7 +147,15 @@ export default function Content() {
                                 <Trow key={article_id}>
                                     <Tdata left>{article_title}</Tdata>
                                     <Tdata>
-                                        {is_published ? "Public" : "Private"}
+                                        {is_published ? (
+                                            <span className="text-green">
+                                                Public
+                                            </span>
+                                        ) : (
+                                            <span className="text-[#FF5733]">
+                                                Private
+                                            </span>
+                                        )}
                                     </Tdata>
                                     <Tdata capitalize>{category}</Tdata>
                                     <Tdata>

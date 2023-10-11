@@ -40,7 +40,7 @@ export default function CouponCard({ data, setCouponsData }) {
                     } bg-white rounded-xl shadow-xl flex-col`}
                 >
                     {!data.isActive && (
-                        <h2 className="text-2xl text-white z-10 absolute top-[50%] left-[36%]">
+                        <h2 className="text-3xl text-black bg-white z-10 absolute top-[50%] left-[36%]">
                             Disabled
                         </h2>
                     )}

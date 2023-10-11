@@ -11,6 +11,7 @@ import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import PageTitle from "../PageTitle";
+import LoadingSpinner from "../_helperComponents/LoadingSpinner";
 
 const SURVEY_HEADERS = [
     "Title",
@@ -34,6 +35,7 @@ export default function UserInfo() {
     const { slug } = useParams();
 
     const [surveyList, setSurveyList] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [transactInfo, setTransactInfo] = useState([]);
     const [points, setPoints] = useState({
         totalCredit: 0,
@@ -45,6 +47,8 @@ export default function UserInfo() {
 
         async function getUserInfo() {
             try {
+                setLoading(true);
+
                 const response = await makeRequest(
                     `site-admin/get-user-info?userId=${slug}`
                 );
@@ -55,6 +59,7 @@ export default function UserInfo() {
 
                 if (!ignore) {
                     setSurveyList(response.data.surveyList);
+                    setLoading(false);
                 }
             } catch (error) {
                 console.error(error);
@@ -63,6 +68,8 @@ export default function UserInfo() {
 
         async function getTransactInfo() {
             try {
+                // setLoading(false);
+
                 const response = await makeRequest(
                     `loyalty/get-loyalty-transaction?user=${slug}`
                 );
@@ -77,6 +84,7 @@ export default function UserInfo() {
                         totalCredit: response.totalCredit,
                         totalSpend: response.totalSpend,
                     });
+                    // setLoading(false);
                 }
             } catch (error) {
                 console.error(error);
@@ -91,6 +99,8 @@ export default function UserInfo() {
         };
     }, []);
 
+    console.log(loading);
+
     return (
         <>
             <h1 className="text-2xl font-semibold p-2 text-secondary border-b border-b-light-grey">
@@ -103,36 +113,42 @@ export default function UserInfo() {
                     <div className="flex flex-col gap-6 bg-white rounded-xl p-6 w-8/12">
                         <PageTitle name={"Transaction Ledger"} />
                         <div className=" overflow-y-scroll">
-                            <Table>
-                                <Thead headers={LOYALTY_HEADERS} />
-                                <tbody>
-                                    {transactInfo.map((transaction) => (
-                                        <Trow key={transaction.id}>
-                                            <Tdata left>
-                                                {transaction.reason}
-                                            </Tdata>
-                                            <Tdata mono>
-                                                {
-                                                    convertToLocale(
-                                                        transaction.dateTime
-                                                    ).split(",")[0]
-                                                }
-                                            </Tdata>
-                                            <Tdata>
-                                                {transaction.isCredit ? (
-                                                    <div className="text-green">
-                                                        + {transaction.value}
-                                                    </div>
-                                                ) : (
-                                                    <div className="text-secondary">
-                                                        - {transaction.value}
-                                                    </div>
-                                                )}
-                                            </Tdata>
-                                        </Trow>
-                                    ))}
-                                </tbody>
-                            </Table>
+                            {loading ? (
+                                <LoadingSpinner />
+                            ) : (
+                                <Table>
+                                    <Thead headers={LOYALTY_HEADERS} />
+                                    <tbody>
+                                        {transactInfo.map((transaction) => (
+                                            <Trow key={transaction.id}>
+                                                <Tdata left>
+                                                    {transaction.reason}
+                                                </Tdata>
+                                                <Tdata mono>
+                                                    {
+                                                        convertToLocale(
+                                                            transaction.dateTime
+                                                        ).split(",")[0]
+                                                    }
+                                                </Tdata>
+                                                <Tdata>
+                                                    {transaction.isCredit ? (
+                                                        <div className="text-green">
+                                                            +{" "}
+                                                            {transaction.value}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="text-secondary">
+                                                            -{" "}
+                                                            {transaction.value}
+                                                        </div>
+                                                    )}
+                                                </Tdata>
+                                            </Trow>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            )}
                         </div>
                     </div>
 
@@ -167,69 +183,73 @@ export default function UserInfo() {
                             {surveyList.length}
                         </span>
                     </div>
-                    <div className=" overflow-y-scroll h-[32vh]">
-                        <Table>
-                            <Thead headers={SURVEY_HEADERS} />
-                            <tbody>
-                                {surveyList.map((survey) => (
-                                    <Trow key={survey.survey_id}>
-                                        <Tdata left>
-                                            {survey.survey_title}
-                                        </Tdata>
-                                        <Tdata capitalize>
-                                            {survey.category}
-                                        </Tdata>
-                                        <Tdata mono>
-                                            <div className="flex flex-col gap-2">
-                                                <div>
-                                                    {
-                                                        convertToLocale(
-                                                            survey.start_date
-                                                        ).split(",")[0]
-                                                    }
+                    <div className=" overflow-y-scroll h-[30vh]">
+                        {loading ? (
+                            <LoadingSpinner />
+                        ) : (
+                            <Table>
+                                <Thead headers={SURVEY_HEADERS} />
+                                <tbody>
+                                    {surveyList.map((survey) => (
+                                        <Trow key={survey.survey_id}>
+                                            <Tdata left>
+                                                {survey.survey_title}
+                                            </Tdata>
+                                            <Tdata capitalize>
+                                                {survey.category}
+                                            </Tdata>
+                                            <Tdata mono>
+                                                <div className="f4lex flex-col gap-2">
+                                                    <div>
+                                                        {
+                                                            convertToLocale(
+                                                                survey.start_date
+                                                            ).split(",")[0]
+                                                        }
+                                                    </div>
+                                                    <div className="text-sm">
+                                                        {
+                                                            convertToLocale(
+                                                                survey.start_date
+                                                            ).split(",")[1]
+                                                        }
+                                                    </div>
                                                 </div>
-                                                <div className="text-sm">
-                                                    {
-                                                        convertToLocale(
-                                                            survey.start_date
-                                                        ).split(",")[1]
-                                                    }
+                                            </Tdata>
+                                            <Tdata mono>
+                                                <div className="flex flex-col gap-2">
+                                                    <div>
+                                                        {
+                                                            convertToLocale(
+                                                                survey.end_date
+                                                            ).split(",")[0]
+                                                        }
+                                                    </div>
+                                                    <div className="text-sm">
+                                                        {
+                                                            convertToLocale(
+                                                                survey.end_date
+                                                            ).split(",")[1]
+                                                        }
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </Tdata>
-                                        <Tdata mono>
-                                            <div className="flex flex-col gap-2">
-                                                <div>
-                                                    {
-                                                        convertToLocale(
-                                                            survey.end_date
-                                                        ).split(",")[0]
-                                                    }
-                                                </div>
-                                                <div className="text-sm">
-                                                    {
-                                                        convertToLocale(
-                                                            survey.end_date
-                                                        ).split(",")[1]
-                                                    }
-                                                </div>
-                                            </div>
-                                        </Tdata>
-                                        <Tdata>
-                                            {survey.total_response > 0 ? (
-                                                <span className="chip-green">
-                                                    Completed
-                                                </span>
-                                            ) : (
-                                                <span className="chip-red">
-                                                    In-Complete
-                                                </span>
-                                            )}
-                                        </Tdata>
-                                    </Trow>
-                                ))}
-                            </tbody>
-                        </Table>
+                                            </Tdata>
+                                            <Tdata>
+                                                {survey.total_response > 0 ? (
+                                                    <span className="chip-green">
+                                                        Completed
+                                                    </span>
+                                                ) : (
+                                                    <span className="chip-red">
+                                                        In-Complete
+                                                    </span>
+                                                )}
+                                            </Tdata>
+                                        </Trow>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        )}
                     </div>
                     {surveyList.length === 0 ? (
                         <div className="flex justify-center p-6 opacity-50">

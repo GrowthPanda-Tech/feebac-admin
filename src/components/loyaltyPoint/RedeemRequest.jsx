@@ -10,6 +10,7 @@ import makeRequest from "../../utils/makeRequest";
 
 //assets
 import edit from "../../assets/edit.svg";
+import LoadingSpinner from "../_helperComponents/LoadingSpinner";
 
 const HEADERS = [
     "Request Id",
@@ -72,6 +73,8 @@ function ButtonComponent({ setStatus }) {
 export default function RedeemRequest() {
     const [redeemData, setRedeemData] = useState([]);
     const [status, setStatus] = useState("pending");
+    const [loading, setLoading] = useState(false);
+
     const convertToLocal = (date) => {
         const dateObj = new Date(`${date} UTC`);
         return dateObj.toLocaleString();
@@ -83,6 +86,8 @@ export default function RedeemRequest() {
 
         async function fetchrRedeemData() {
             try {
+                setLoading(true);
+
                 const response = await makeRequest(
                     `/loyalty/get-all-redeem-request?status=${status}`
                 );
@@ -97,6 +102,7 @@ export default function RedeemRequest() {
                             (item) => item.currentStatus === `${status}`
                         )
                     );
+                    setLoading(false);
                 }
             } catch (error) {
                 console.error(error);
@@ -116,114 +122,120 @@ export default function RedeemRequest() {
             <ButtonComponent setStatus={setStatus} />
 
             <div className=" bg-white h-[50vh] overflow-y-scroll">
-                <Table>
-                    <Thead
-                        headers={
-                            status === "pending" ? HEADERS : APPROVEDHEADERS
-                        }
-                    />
-                    <tbody>
-                        {redeemData.map(
-                            ({
-                                id,
-                                coupon,
-                                requestBy,
-                                createdDate,
-                                approvedBy,
-                                currentStatus,
-                                actionDate,
-                                message,
-                            }) => (
-                                <Trow key={id}>
-                                    <Tdata>{id.split("-").pop()} </Tdata>
-                                    <Tdata capitalize> {coupon} </Tdata>
-                                    <Tdata mono>
-                                        {requestBy.split("-").pop()}
-                                    </Tdata>
-                                    <Tdata mono>
-                                        <div className="flex flex-col gap-2">
-                                            <div>
-                                                {
-                                                    convertToLocal(
-                                                        createdDate
-                                                    ).split(",")[0]
-                                                }
-                                            </div>
-                                            <div className="text-sm">
-                                                {
-                                                    convertToLocal(
-                                                        createdDate
-                                                    ).split(",")[1]
-                                                }
-                                            </div>
-                                        </div>
-                                    </Tdata>
-                                    <Tdata capitalize>
-                                        {status === "pending" ? (
-                                            <span className="text-[#FF0000]">
-                                                {currentStatus}
-                                            </span>
-                                        ) : (
-                                            <span className="text-green">
-                                                {currentStatus}
-                                            </span>
-                                        )}
-                                    </Tdata>
-
-                                    {status === "pending" ? (
-                                        <Tdata>
-                                            <div className="flex justify-center">
-                                                <div className="tool-tip-div group">
-                                                    <div className="flex justify-center gap-4">
-                                                        {status ===
-                                                        "pending" ? (
-                                                            <Link
-                                                                to={`redeem/${id}`}
-                                                            >
-                                                                <i className="text-xl fa-solid fa-circle-info"></i>
-                                                            </Link>
-                                                        ) : null}
-                                                    </div>
-                                                    <span className="tool-tip-span -right-[4.8rem] bg-black -top-12 ">
-                                                        See Redeem Request
-                                                        <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
-                                                    </span>
+                {loading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <Table>
+                        <Thead
+                            headers={
+                                status === "pending" ? HEADERS : APPROVEDHEADERS
+                            }
+                        />
+                        <tbody>
+                            {redeemData.map(
+                                ({
+                                    id,
+                                    coupon,
+                                    requestBy,
+                                    createdDate,
+                                    approvedBy,
+                                    currentStatus,
+                                    actionDate,
+                                    message,
+                                }) => (
+                                    <Trow key={id}>
+                                        <Tdata>{id.split("-").pop()} </Tdata>
+                                        <Tdata capitalize> {coupon} </Tdata>
+                                        <Tdata mono>
+                                            {requestBy.split("-").pop()}
+                                        </Tdata>
+                                        <Tdata mono>
+                                            <div className="flex flex-col gap-2">
+                                                <div>
+                                                    {
+                                                        convertToLocal(
+                                                            createdDate
+                                                        ).split(",")[0]
+                                                    }
+                                                </div>
+                                                <div className="text-sm">
+                                                    {
+                                                        convertToLocal(
+                                                            createdDate
+                                                        ).split(",")[1]
+                                                    }
                                                 </div>
                                             </div>
                                         </Tdata>
-                                    ) : (
                                         <Tdata capitalize>
-                                            <span className="px-2">
-                                                {approvedBy
-                                                    ? approvedBy
-                                                          .split("-")
-                                                          .pop()
-                                                    : ""}
-                                            </span>
+                                            {status === "pending" ? (
+                                                <span className="chip-red">
+                                                    {currentStatus}
+                                                </span>
+                                            ) : (
+                                                <span className="chip-green">
+                                                    {currentStatus}
+                                                </span>
+                                            )}
                                         </Tdata>
-                                    )}
-                                    {status === "approved" ? (
-                                        <Tdata>
-                                            <div className="flex justify-center">
-                                                <div className="tool-tip-div group">
-                                                    <Link to={`redeem/${id}`}>
-                                                        <i className="text-xl fa-solid fa-circle-info"></i>
-                                                    </Link>
-                                                    <span className="tool-tip-span -right-[3.8rem] bg-black -top-12 ">
-                                                        See Approved Info
-                                                        <span className="tooltip-arrow bottom-[-2px] left-[47%]"></span>
-                                                    </span>
+
+                                        {status === "pending" ? (
+                                            <Tdata>
+                                                <div className="flex justify-center">
+                                                    <div className="tool-tip-div group">
+                                                        <div className="flex justify-center gap-4">
+                                                            {status ===
+                                                            "pending" ? (
+                                                                <Link
+                                                                    to={`redeem/${id}`}
+                                                                >
+                                                                    <i className="text-xl fa-solid fa-circle-info"></i>
+                                                                </Link>
+                                                            ) : null}
+                                                        </div>
+                                                        <span className="tool-tip-span -right-[4.8rem] bg-black -top-12 ">
+                                                            See Redeem Request
+                                                            <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </Tdata>
-                                    ) : (
-                                        ""
-                                    )}
-                                </Trow>
-                            )
-                        )}
-                    </tbody>
-                </Table>
+                                            </Tdata>
+                                        ) : (
+                                            <Tdata capitalize>
+                                                <span className="px-2">
+                                                    {approvedBy
+                                                        ? approvedBy
+                                                              .split("-")
+                                                              .pop()
+                                                        : ""}
+                                                </span>
+                                            </Tdata>
+                                        )}
+                                        {status === "approved" ? (
+                                            <Tdata>
+                                                <div className="flex justify-center">
+                                                    <div className="tool-tip-div group">
+                                                        <Link
+                                                            to={`redeem/${id}`}
+                                                        >
+                                                            <i className="text-xl fa-solid fa-circle-info"></i>
+                                                        </Link>
+                                                        <span className="tool-tip-span -right-[3.8rem] bg-black -top-12 ">
+                                                            See Approved Info
+                                                            <span className="tooltip-arrow bottom-[-2px] left-[47%]"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </Tdata>
+                                        ) : (
+                                            ""
+                                        )}
+                                    </Trow>
+                                )
+                            )}
+                        </tbody>
+                    </Table>
+                )}
             </div>
         </div>
     );

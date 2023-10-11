@@ -8,6 +8,7 @@ import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import PieChart from "../dashboard/charts/PieChart";
 import FilterLoyalty from "./FilterLoyalty";
+import LoadingSpinner from "../_helperComponents/LoadingSpinner";
 
 const HEADERS = [
     "Transcation Id",
@@ -20,6 +21,8 @@ const HEADERS = [
 function LoyaltyPoint() {
     const [loyaltyData, setLoyaltyData] = useState([]);
     const [data, setData] = useState();
+    const [loading, setLoading] = useState(false);
+
     const [selectedSort, setSelectedSort] = useState("");
     const [selectedReason, setSelectedReason] = useState("All");
     const [selectedPointsHistory, setSelectedPointsHistory] = useState("All");
@@ -51,16 +54,37 @@ function LoyaltyPoint() {
         }
     });
 
-    const getData = async () => {
-        const response = await makeRequest(
-            `loyalty/get-loyalty-transaction`,
-            "GET"
-        );
-        if (response.isSuccess) {
-            setLoyaltyData(response.data);
-            setData(response);
+    useEffect(() => {
+        let ignore = false;
+
+        async function getData() {
+            try {
+                setLoading(true);
+                const response = await makeRequest(
+                    `loyalty/get-loyalty-transaction`,
+                    "GET"
+                );
+
+                if (!response.isSuccess) {
+                    throw new Error(json.message);
+                }
+
+                if (!ignore) {
+                    setLoyaltyData(response.data);
+                    setData(response);
+                    setLoading(false);
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
-    };
+
+        getData();
+
+        return () => {
+            ignore = true;
+        };
+    }, []);
 
     const convertToLocal = (date) => {
         const dateObj = new Date(`${date} UTC`);
@@ -105,16 +129,12 @@ function LoyaltyPoint() {
         ],
     };
 
-    useEffect(() => {
-        getData();
-    }, []);
-
     return (
         <div className="w-full flex flex-col ">
             <div className="w-full flex justify-between gap-6">
                 <div className="w-3/4 h-auto flex flex-col gap-4 ">
                     <div className="flex justify-between w-full gap-10">
-                        <div className="bg-[#EA525F] p-10 w-[80%]  rounded-lg items-center  justify-center flex flex-col text-white">
+                        <div className="bg-[#EA525F] p-16 w-[80%]  rounded-lg items-center  justify-center flex flex-col text-white">
                             <h2 className="text-5xl">
                                 {data ? data.totalCredit : 0}
                             </h2>
@@ -137,62 +157,68 @@ function LoyaltyPoint() {
                     />
 
                     <div className=" h-[40vh]  overflow-y-scroll bg-white ">
-                        <Table>
-                            <Thead headers={HEADERS} />
-                            <tbody className="">
-                                {filteredData.map(
-                                    ({
-                                        id,
-                                        affectedUser,
-                                        reason,
-                                        value,
-                                        dateTime,
-                                        isCredit,
-                                    }) => (
-                                        <Trow key={id}>
-                                            <Tdata mono>
-                                                {id.split("-").pop()}
-                                            </Tdata>
-                                            <Tdata mono>
-                                                {affectedUser.split("-").pop()}
-                                            </Tdata>
-                                            <Tdata>
-                                                {reason ? reason : "-"}
-                                            </Tdata>
-                                            <Tdata>
-                                                <div className="flex flex-col gap-2">
-                                                    <div>
-                                                        {
-                                                            convertToLocal(
-                                                                dateTime
-                                                            ).split(",")[0]
-                                                        }
+                        {loading ? (
+                            <LoadingSpinner />
+                        ) : (
+                            <Table>
+                                <Thead headers={HEADERS} />
+                                <tbody className="">
+                                    {filteredData.map(
+                                        ({
+                                            id,
+                                            affectedUser,
+                                            reason,
+                                            value,
+                                            dateTime,
+                                            isCredit,
+                                        }) => (
+                                            <Trow key={id}>
+                                                <Tdata mono>
+                                                    {id.split("-").pop()}
+                                                </Tdata>
+                                                <Tdata mono>
+                                                    {affectedUser
+                                                        .split("-")
+                                                        .pop()}
+                                                </Tdata>
+                                                <Tdata>
+                                                    {reason ? reason : "-"}
+                                                </Tdata>
+                                                <Tdata>
+                                                    <div className="flex flex-col gap-2">
+                                                        <div>
+                                                            {
+                                                                convertToLocal(
+                                                                    dateTime
+                                                                ).split(",")[0]
+                                                            }
+                                                        </div>
+                                                        <div className="text-sm">
+                                                            {
+                                                                convertToLocal(
+                                                                    dateTime
+                                                                ).split(",")[1]
+                                                            }
+                                                        </div>
                                                     </div>
-                                                    <div className="text-sm">
-                                                        {
-                                                            convertToLocal(
-                                                                dateTime
-                                                            ).split(",")[1]
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </Tdata>
-                                            <Tdata>
-                                                {isCredit ? (
-                                                    <span className="text-green">
-                                                        + {value}
-                                                    </span>
-                                                ) : (
-                                                    <span className=" text-[#FF0000]">
-                                                        - {value}
-                                                    </span>
-                                                )}
-                                            </Tdata>
-                                        </Trow>
-                                    )
-                                )}
-                            </tbody>
-                        </Table>
+                                                </Tdata>
+                                                <Tdata>
+                                                    {isCredit ? (
+                                                        <span className="text-green">
+                                                            + {value}
+                                                        </span>
+                                                    ) : (
+                                                        <span className=" text-[#FF0000]">
+                                                            - {value}
+                                                        </span>
+                                                    )}
+                                                </Tdata>
+                                            </Trow>
+                                        )
+                                    )}
+                                </tbody>
+                            </Table>
+                        )}
                     </div>
                 </div>
                 <div className="w-1/4 flex flex-col items-center  rounded-lg p-8 h-fit  bg-white">

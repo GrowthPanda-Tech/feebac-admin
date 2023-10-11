@@ -124,7 +124,7 @@ export default function NewsTable() {
                 />
             </div>
 
-            <div className="h-[50vh] bg-white overflow-y-scroll">
+            <div className="h-[55vh] bg-white overflow-y-scroll">
                 {loading ? (
                     <LoadingSpinner />
                 ) : (

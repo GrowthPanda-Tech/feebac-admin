@@ -141,7 +141,7 @@ export default function Survey() {
                 />
             </div>
 
-            <div className=" h-[53vh] bg-white overflow-y-scroll">
+            <div className=" h-[60vh] bg-white overflow-y-scroll">
                 {loading ? (
                     <LoadingSpinner />
                 ) : (

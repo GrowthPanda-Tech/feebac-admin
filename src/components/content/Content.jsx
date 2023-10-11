@@ -120,7 +120,7 @@ export default function Content() {
                 />
             </div>
 
-            <div className="h-[50vh] relative overflow-y-scroll bg-white">
+            <div className="h-[55vh] relative overflow-y-scroll bg-white">
                 {loading ? (
                     <LoadingSpinner />
                 ) : (

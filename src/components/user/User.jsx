@@ -64,7 +64,7 @@ export default function User() {
                     />
                 </div>
             </div>
-            <div className="h-[64vh] overflow-y-scroll bg-white">
+            <div className="h-[69vh] overflow-y-scroll bg-white">
                 {loading ? (
                     <LoadingSpinner />
                 ) : (

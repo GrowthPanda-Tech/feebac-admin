@@ -97,6 +97,7 @@ export default function Survey() {
                     setsurveyData(response.data);
                     setLoading(false);
                     setTotalItems(response.totalCount);
+                    setPage(1);
                 }
             } catch (error) {
                 console.error(error);

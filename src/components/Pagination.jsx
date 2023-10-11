@@ -82,7 +82,7 @@ function Pagination({
     return (
         <div className="flex justify-center space-x-4 mt-4">
             <button
-                className="px-4 py-2 border rounded-md pill-primary hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="px-4 py-2 border rounded-md pill-primary disabled:cursor-not-allowed"
                 onClick={handlePrevClick}
                 disabled={page === 1}
             >
@@ -90,7 +90,7 @@ function Pagination({
             </button>
             {renderPageNumbers()}
             <button
-                className="px-4 py-2 border rounded-md pill-primary hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="px-4 py-2 border rounded-md pill-primary disabled:cursor-not-allowed"
                 onClick={handleNextClick}
                 disabled={page === totalPages}
             >

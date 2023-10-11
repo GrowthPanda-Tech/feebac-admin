@@ -45,7 +45,7 @@ export default function App() {
                             <Header />
 
                             <CategoryContextProvider>
-                                <main className="p-12">
+                                <main className="p-10">
                                     <Routes>
                                         <Route
                                             path="/"

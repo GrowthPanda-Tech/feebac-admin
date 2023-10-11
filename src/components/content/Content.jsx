@@ -78,6 +78,7 @@ export default function Content() {
                     setArticleList(response.data.toReversed());
                     setTotalItems(response.totalCount);
                     setLoading(false);
+                    setPage(1);
                 }
             } catch (error) {
                 console.error(error);
@@ -103,17 +104,6 @@ export default function Content() {
                 </Link>
             </div>
             <div className=" flex justify-between gap-2">
-                {/* <select
-                    value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value)}
-                    className="pill-primary border-0 w-32"
-                >
-                    <option value="">
-                        {sortOrder === "" ? "Sort" : "Default"}
-                    </option>
-                    <option value="asc">A-Z</option>
-                    <option value="desc">Z-A</option>
-                </select> */}
                 <input
                     type="text"
                     className="pill-primary border-0 w-3/4"
@@ -152,11 +142,11 @@ export default function Content() {
                                         <Tdata left>{article_title}</Tdata>
                                         <Tdata>
                                             {is_published ? (
-                                                <span className="text-green">
+                                                <span className=" chip-green">
                                                     Public
                                                 </span>
                                             ) : (
-                                                <span className="text-[#FF5733]">
+                                                <span className="chip-red">
                                                     Private
                                                 </span>
                                             )}

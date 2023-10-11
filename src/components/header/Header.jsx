@@ -10,7 +10,7 @@ export default function Header() {
     const { profile } = useContext(ProfileContext);
 
     return (
-        <header className="flex justify-end py-8 bg-white">
+        <header className="flex justify-end py-4 bg-white">
             <div className="flex gap-4 mr-16">
                 <div className="flex flex-col items-end">
                     <div className="font-bold">

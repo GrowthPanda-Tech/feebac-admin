@@ -82,6 +82,7 @@ export default function NewsTable() {
                     setNewsList(response.data);
                     setLoading(false);
                     setTotalItems(response.totalCount);
+                    setPage(1);
                 }
             } catch (error) {
                 console.error(error);

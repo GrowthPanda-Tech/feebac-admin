@@ -93,14 +93,14 @@ export default function UserInfo() {
 
     return (
         <>
-            <h1 className="text-2xl font-semibold mb-8 text-secondary border-b border-b-light-grey pb-8">
+            <h1 className="text-2xl font-semibold p-2 text-secondary border-b border-b-light-grey">
                 {slug}
             </h1>
 
-            <div className="flex flex-col gap-8">
-                <div className="flex h-[40vh] justify-between gap-6">
+            <div className="flex flex-col gap-8 mt-2">
+                <div className="flex h-[33vh] justify-between gap-6">
                     {/* Transaction Info */}
-                    <div className="flex flex-col gap-6 bg-white rounded-xl p-10 w-8/12">
+                    <div className="flex flex-col gap-6 bg-white rounded-xl p-6 w-8/12">
                         <PageTitle name={"Transaction Ledger"} />
                         <div className=" overflow-y-scroll">
                             <Table>
@@ -161,64 +161,76 @@ export default function UserInfo() {
 
                 {/* Participated Surveys Table */}
                 <div className="bg-white rounded-xl">
-                    <div className="p-7 text-xl font-semibold border-b border-b-light-grey flex gap-4">
+                    <div className="p-6 text-xl font-semibold border-b border-b-light-grey flex gap-4">
                         <PageTitle name={"Participated Surveys"} />
                         <span className="bg-secondary rounded-full text-white w-8 h-8 flex items-center justify-center">
                             {surveyList.length}
                         </span>
                     </div>
-                    <Table>
-                        <Thead headers={SURVEY_HEADERS} />
-                        <tbody>
-                            {surveyList.map((survey) => (
-                                <Trow key={survey.survey_id}>
-                                    <Tdata left>{survey.survey_title}</Tdata>
-                                    <Tdata capitalize>{survey.category}</Tdata>
-                                    <Tdata mono>
-                                        <div className="flex flex-col gap-2">
-                                            <div>
-                                                {
-                                                    convertToLocale(
-                                                        survey.start_date
-                                                    ).split(",")[0]
-                                                }
+                    <div className=" overflow-y-scroll h-[32vh]">
+                        <Table>
+                            <Thead headers={SURVEY_HEADERS} />
+                            <tbody>
+                                {surveyList.map((survey) => (
+                                    <Trow key={survey.survey_id}>
+                                        <Tdata left>
+                                            {survey.survey_title}
+                                        </Tdata>
+                                        <Tdata capitalize>
+                                            {survey.category}
+                                        </Tdata>
+                                        <Tdata mono>
+                                            <div className="flex flex-col gap-2">
+                                                <div>
+                                                    {
+                                                        convertToLocale(
+                                                            survey.start_date
+                                                        ).split(",")[0]
+                                                    }
+                                                </div>
+                                                <div className="text-sm">
+                                                    {
+                                                        convertToLocale(
+                                                            survey.start_date
+                                                        ).split(",")[1]
+                                                    }
+                                                </div>
                                             </div>
-                                            <div className="text-sm">
-                                                {
-                                                    convertToLocale(
-                                                        survey.start_date
-                                                    ).split(",")[1]
-                                                }
+                                        </Tdata>
+                                        <Tdata mono>
+                                            <div className="flex flex-col gap-2">
+                                                <div>
+                                                    {
+                                                        convertToLocale(
+                                                            survey.end_date
+                                                        ).split(",")[0]
+                                                    }
+                                                </div>
+                                                <div className="text-sm">
+                                                    {
+                                                        convertToLocale(
+                                                            survey.end_date
+                                                        ).split(",")[1]
+                                                    }
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Tdata>
-                                    <Tdata mono>
-                                        <div className="flex flex-col gap-2">
-                                            <div>
-                                                {
-                                                    convertToLocale(
-                                                        survey.end_date
-                                                    ).split(",")[0]
-                                                }
-                                            </div>
-                                            <div className="text-sm">
-                                                {
-                                                    convertToLocale(
-                                                        survey.end_date
-                                                    ).split(",")[1]
-                                                }
-                                            </div>
-                                        </div>
-                                    </Tdata>
-                                    <Tdata>
-                                        {survey.total_response > 0
-                                            ? "Completed"
-                                            : "Incomplete"}
-                                    </Tdata>
-                                </Trow>
-                            ))}
-                        </tbody>
-                    </Table>
+                                        </Tdata>
+                                        <Tdata>
+                                            {survey.total_response > 0 ? (
+                                                <span className="chip-green">
+                                                    Completed
+                                                </span>
+                                            ) : (
+                                                <span className="chip-red">
+                                                    In-Complete
+                                                </span>
+                                            )}
+                                        </Tdata>
+                                    </Trow>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </div>
                     {surveyList.length === 0 ? (
                         <div className="flex justify-center p-6 opacity-50">
                             User hasn't participated in any surveys yet

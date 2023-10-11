@@ -11,13 +11,31 @@ import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import AlertComponent from "../AlertComponent/AlertComponent";
+import Pagination from "../Pagination";
+import PaginationSelect from "../PaginationSelect";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
 
 const HEADERS = ["Name", "Status", "Category", "Creation Date", "Actions"];
 
 export default function Content() {
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [page, setPage] = useState(1);
     const [articleList, setArticleList] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [totalItems, setTotalItems] = useState(1);
+    const [sortOrder, setSortOrder] = useState("");
+    const sortedData = [...articleList];
+
+    if (sortOrder === "asc") {
+        sortedData.sort((a, b) =>
+            a.article_title.localeCompare(b.article_title)
+        );
+    } else if (sortOrder === "desc") {
+        sortedData.sort((a, b) =>
+            b.article_title.localeCompare(a.article_title)
+        );
+    }
 
     const handlePublish = async (articleId, index) => {
         try {
@@ -49,7 +67,7 @@ export default function Content() {
             try {
                 setLoading(true);
                 const response = await makeRequest(
-                    "site-admin/get-article-list?page=1&count=1000"
+                    `site-admin/get-article-list?page=${page}&count=${itemsPerPage}&query=${searchQuery}`
                 );
 
                 if (!response.isSuccess) {
@@ -58,6 +76,7 @@ export default function Content() {
 
                 if (!ignore) {
                     setArticleList(response.data.toReversed());
+                    setTotalItems(response.totalCount);
                     setLoading(false);
                 }
             } catch (error) {
@@ -70,7 +89,7 @@ export default function Content() {
         return () => {
             ignore = true;
         };
-    }, []);
+    }, [page, itemsPerPage, searchQuery]);
 
     return (
         <div className="flex flex-col gap-8">
@@ -83,15 +102,42 @@ export default function Content() {
                     </button>
                 </Link>
             </div>
+            <div className=" flex justify-between gap-2">
+                {/* <select
+                    value={sortOrder}
+                    onChange={(e) => setSortOrder(e.target.value)}
+                    className="pill-primary border-0 w-32"
+                >
+                    <option value="">
+                        {sortOrder === "" ? "Sort" : "Default"}
+                    </option>
+                    <option value="asc">A-Z</option>
+                    <option value="desc">Z-A</option>
+                </select> */}
+                <input
+                    type="text"
+                    className="pill-primary border-0 w-3/4"
+                    placeholder={`Search in article...`}
+                    value={searchQuery}
+                    onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                    }}
+                />
+                <PaginationSelect
+                    setItemsPerPage={setItemsPerPage}
+                    setPage={setPage}
+                    itemsPerPage={itemsPerPage}
+                />
+            </div>
 
-            <div className="h-[69vh] relative overflow-y-scroll bg-white">
+            <div className="h-[50vh] relative overflow-y-scroll bg-white">
                 {loading ? (
                     <LoadingSpinner />
                 ) : (
                     <Table>
                         <Thead headers={HEADERS} />
                         <tbody>
-                            {articleList.map(
+                            {sortedData.map(
                                 (
                                     {
                                         article_id,
@@ -105,28 +151,19 @@ export default function Content() {
                                     <Trow key={article_id}>
                                         <Tdata left>{article_title}</Tdata>
                                         <Tdata>
-                                            {is_published
-                                                ? "Public"
-                                                : "Private"}
+                                            {is_published ? (
+                                                <span className="text-green">
+                                                    Public
+                                                </span>
+                                            ) : (
+                                                <span className="text-[#FF5733]">
+                                                    Private
+                                                </span>
+                                            )}
                                         </Tdata>
                                         <Tdata capitalize>{category}</Tdata>
-                                        <Tdata mono>
-                                            <div className="flex flex-col gap-2">
-                                                <div>
-                                                    {
-                                                        convertToLocale(
-                                                            created_date
-                                                        ).split(",")[0]
-                                                    }
-                                                </div>
-                                                <div className="text-sm">
-                                                    {
-                                                        convertToLocale(
-                                                            created_date
-                                                        ).split(",")[1]
-                                                    }
-                                                </div>
-                                            </div>
+                                        <Tdata>
+                                            {convertToLocale(created_date)}
                                         </Tdata>
                                         <Tdata>
                                             <div className="flex justify-center gap-4 text-xl">
@@ -172,6 +209,13 @@ export default function Content() {
                     </Table>
                 )}
             </div>
+            <Pagination
+                setPage={setPage}
+                page={page}
+                setItemsPerPage={setItemsPerPage}
+                itemsPerPage={itemsPerPage}
+                totalItems={totalItems}
+            />
         </div>
     );
 }

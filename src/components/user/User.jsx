@@ -10,12 +10,16 @@ import Trow from "../table/Trow";
 import Thead from "../table/Thead";
 import Tdata from "../table/Tdata";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import Pagination from "../Pagination";
+import PaginationSelect from "../PaginationSelect";
 
 const HEADERS = ["User ID", "Gender", "Loyalty Points", "Location", "Actions"];
-
 export default function User() {
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [page, setPage] = useState(1);
     const [userData, setUserData] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [totalItems, setTotalItems] = useState(1);
 
     useEffect(() => {
         let ignore = false;
@@ -24,7 +28,7 @@ export default function User() {
             try {
                 setLoading(true);
                 const response = await makeRequest(
-                    "site-admin/get-all-user?page=1&count=1000"
+                    `site-admin/get-all-user?page=${page}&count=${itemsPerPage}`
                 );
 
                 if (!response.isSuccess) {
@@ -33,6 +37,7 @@ export default function User() {
 
                 if (!ignore) {
                     setUserData(response.data);
+                    setTotalItems(response.totalCount);
                     setLoading(false);
                 }
             } catch (error) {
@@ -45,12 +50,21 @@ export default function User() {
         return () => {
             ignore = true;
         };
-    }, []);
+    }, [itemsPerPage, page]);
 
     return (
-        <div className="flex flex-col gap-8">
-            <PageTitle name={"User Information"} />
-            <div className="h-[70vh] overflow-y-scroll bg-white">
+        <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+                <PageTitle name={"User Information"} />
+                <div className="space-x-3">
+                    <PaginationSelect
+                        setItemsPerPage={setItemsPerPage}
+                        setPage={setPage}
+                        itemsPerPage={itemsPerPage}
+                    />
+                </div>
+            </div>
+            <div className="h-[64vh] overflow-y-scroll bg-white">
                 {loading ? (
                     <LoadingSpinner />
                 ) : (
@@ -100,6 +114,13 @@ export default function User() {
                     </Table>
                 )}
             </div>
+            <Pagination
+                page={page}
+                setPage={setPage}
+                setItemsPerPage={setItemsPerPage}
+                itemsPerPage={itemsPerPage}
+                totalItems={totalItems}
+            />
         </div>
     );
 }

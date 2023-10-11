@@ -8,15 +8,20 @@ import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import PageTitle from "../PageTitle";
-
 import makeRequest from "../../utils/makeRequest";
 import convertToLocale from "../../utils/convertToLocale";
 
+//assets
+import edit from "../../assets/edit.svg";
+import Pagination from "../Pagination";
+import PaginationSelect from "../PaginationSelect";
+
 const HEADERS = ["Title", "Category", "Start Date", "End Date", "Actions"];
 
-function Button({ type, setStatus, isActive, onClick }) {
+function Button({ type, setStatus, isActive, onClick, setPage }) {
     const handleClick = () => {
         setStatus(type);
+        setPage(1);
         onClick();
     };
 
@@ -32,7 +37,7 @@ function Button({ type, setStatus, isActive, onClick }) {
     );
 }
 
-function ButtonComponent({ setStatus }) {
+function ButtonComponent({ setStatus, setPage }) {
     const [activeButton, setactiveButton] = useState(1);
     const handleClick = (buttonId) => setactiveButton(buttonId);
 
@@ -40,18 +45,21 @@ function ButtonComponent({ setStatus }) {
         <div className="flex gap-4">
             <Button
                 type={"live"}
+                setPage={setPage}
                 setStatus={setStatus}
                 isActive={activeButton === 1}
                 onClick={() => handleClick(1)}
             />
             <Button
                 type={"upcoming"}
+                setPage={setPage}
                 setStatus={setStatus}
                 isActive={activeButton === 2}
                 onClick={() => handleClick(2)}
             />
             <Button
                 type={"expired"}
+                setPage={setPage}
                 setStatus={setStatus}
                 isActive={activeButton === 3}
                 onClick={() => handleClick(3)}
@@ -62,8 +70,13 @@ function ButtonComponent({ setStatus }) {
 
 export default function Survey() {
     const [surveyData, setsurveyData] = useState([]);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [totalItems, setTotalItems] = useState(1);
+    const [page, setPage] = useState(1);
     const [status, setStatus] = useState("live");
     const [loading, setLoading] = useState(false);
+    const [filteredSurveyData, setFilteredSurveyData] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         let ignore = false;
@@ -73,7 +86,7 @@ export default function Survey() {
                 setLoading(true);
 
                 const response = await makeRequest(
-                    `site-admin/get-all-survey?time=${status}`
+                    `site-admin/get-all-survey?time=${status}&query=${searchQuery}&page=${page}&count=${itemsPerPage}`
                 );
 
                 if (!response.isSuccess) {
@@ -83,6 +96,7 @@ export default function Survey() {
                 if (!ignore) {
                     setsurveyData(response.data);
                     setLoading(false);
+                    setTotalItems(response.totalCount);
                 }
             } catch (error) {
                 console.error(error);
@@ -94,32 +108,10 @@ export default function Survey() {
         return () => {
             ignore = true;
         };
-    }, [status]);
+    }, [status, searchQuery, page, itemsPerPage]);
 
     return (
-        <div className="flex flex-col gap-8">
-            {/* <div className="w-full gap-20 flex justify-between"> */}
-            {/* <div className="w-1/2 flex flex-col ">
-                    <PageTitle name={"Survey Response Metrics"} /> */}
-            {/* <div className="bg-[#EA525F] mt-6 p-10 rounded-lg items-center w-full flex flex-col gap-16 text-white">
-                        <div className="flex flex-col text-center w-full">
-                            <h2 className="text-5xl p-2">0</h2>
-                            <h3 className="text-2xl">Total Response</h3>
-                        </div>
-                        <div className="flex justify-between p-4 mx-auto text-center divide-x w-full">
-                            <div className="w-full">
-                                <h3 className="text-2xl">0hr</h3>
-                                <h3>Average Time</h3>
-                            </div>
-                            <div className="w-full">
-                                <h3 className="text-2xl">0%</h3>
-                                <h3>Completion Rate</h3>
-                            </div>
-                        </div>
-                    </div> */}
-            {/* </div> */}
-            {/* </div> */}
-
+        <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center">
                 <PageTitle name={"Survey List"} />
                 <Link to={"/survey/create"} className="w-fit">
@@ -130,9 +122,25 @@ export default function Survey() {
                 </Link>
             </div>
 
-            <ButtonComponent setStatus={setStatus} />
+            <div className="flex justify-between">
+                <ButtonComponent setStatus={setStatus} setPage={setPage} />
+                <input
+                    type="text"
+                    className="pill-primary border-0 w-1/2"
+                    placeholder={`Search in ${status} surveys...`}
+                    value={searchQuery}
+                    onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                    }}
+                />
+                <PaginationSelect
+                    setItemsPerPage={setItemsPerPage}
+                    setPage={setPage}
+                    itemsPerPage={itemsPerPage}
+                />
+            </div>
 
-            <div className="h-[60vh] bg-white overflow-y-scroll">
+            <div className=" h-[53vh] bg-white overflow-y-scroll">
                 {loading ? (
                     <LoadingSpinner />
                 ) : (
@@ -182,7 +190,7 @@ export default function Survey() {
                                                             ).split(",")[0]
                                                         }
                                                     </div>
-                                                    <div className="text-sm ">
+                                                    <div className="text-sm">
                                                         {
                                                             convertToLocale(
                                                                 end_date
@@ -236,6 +244,13 @@ export default function Survey() {
                     </Table>
                 )}
             </div>
+            <Pagination
+                page={page}
+                setPage={setPage}
+                setItemsPerPage={setItemsPerPage}
+                itemsPerPage={itemsPerPage}
+                totalItems={totalItems}
+            />
         </div>
     );
 }

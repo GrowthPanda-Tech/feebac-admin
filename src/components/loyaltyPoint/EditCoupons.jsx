@@ -41,7 +41,7 @@ function InputForm({
     );
 }
 
-function EditCoupons({ setEditPop, setCouponsData, id }) {
+function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
     const [editCouponData, setEditCouponData] = useState({});
     const [options, setOptions] = useState([]);
 
@@ -121,6 +121,7 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
         );
 
         if (response.isSuccess) {
+            setLoading(true);
             AlertComponent("success", response);
             const getData = async () => {
                 const response = await makeRequest(
@@ -129,6 +130,7 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
                 );
                 if (response.isSuccess) {
                     setCouponsData(response.data);
+                    setLoading(false);
                 }
             };
             setEditPop(false);

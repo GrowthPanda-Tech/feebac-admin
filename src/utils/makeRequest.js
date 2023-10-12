@@ -32,7 +32,7 @@ export default async function makeRequest(
 
         clearTimeout();
 
-        if (response.status >= 500) {
+        if (response.status >= 500 || response.status === 204) {
             throw new Error(response.status);
         }
 

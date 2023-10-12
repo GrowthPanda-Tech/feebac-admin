@@ -18,10 +18,18 @@ import PaginationSelect from "../PaginationSelect";
 
 const HEADERS = ["Title", "Category", "Start Date", "End Date", "Actions"];
 
-function Button({ type, setStatus, isActive, onClick, setPage }) {
+function Button({
+    type,
+    setStatus,
+    isActive,
+    onClick,
+    setPage,
+    setSearchQuery,
+}) {
     const handleClick = () => {
         setStatus(type);
         setPage(1);
+        setSearchQuery("");
         onClick();
     };
 
@@ -37,7 +45,7 @@ function Button({ type, setStatus, isActive, onClick, setPage }) {
     );
 }
 
-function ButtonComponent({ setStatus, setPage }) {
+function ButtonComponent({ setStatus, setPage, setSearchQuery }) {
     const [activeButton, setactiveButton] = useState(1);
     const handleClick = (buttonId) => setactiveButton(buttonId);
 
@@ -47,12 +55,14 @@ function ButtonComponent({ setStatus, setPage }) {
                 type={"live"}
                 setPage={setPage}
                 setStatus={setStatus}
+                setSearchQuery={setSearchQuery}
                 isActive={activeButton === 1}
                 onClick={() => handleClick(1)}
             />
             <Button
                 type={"upcoming"}
                 setPage={setPage}
+                setSearchQuery={setSearchQuery}
                 setStatus={setStatus}
                 isActive={activeButton === 2}
                 onClick={() => handleClick(2)}
@@ -60,6 +70,7 @@ function ButtonComponent({ setStatus, setPage }) {
             <Button
                 type={"expired"}
                 setPage={setPage}
+                setSearchQuery={setSearchQuery}
                 setStatus={setStatus}
                 isActive={activeButton === 3}
                 onClick={() => handleClick(3)}
@@ -97,10 +108,14 @@ export default function Survey() {
                     setsurveyData(response.data);
                     setLoading(false);
                     setTotalItems(response.totalCount);
-                    setPage(1);
                 }
             } catch (error) {
                 console.error(error);
+                if (error.message == 204) {
+                    setLoading(false);
+                    setsurveyData([]);
+                    setTotalItems(0);
+                }
             }
         }
 
@@ -124,7 +139,11 @@ export default function Survey() {
             </div>
 
             <div className="flex justify-between">
-                <ButtonComponent setStatus={setStatus} setPage={setPage} />
+                <ButtonComponent
+                    setStatus={setStatus}
+                    setSearchQuery={setSearchQuery}
+                    setPage={setPage}
+                />
                 <input
                     type="text"
                     className="pill-primary border-0 w-1/2"
@@ -132,6 +151,7 @@ export default function Survey() {
                     value={searchQuery}
                     onChange={(e) => {
                         setSearchQuery(e.target.value);
+                        setPage(1);
                     }}
                 />
                 <PaginationSelect
@@ -244,6 +264,11 @@ export default function Survey() {
                         </tbody>
                     </Table>
                 )}
+                {surveyData.length === 0 ? (
+                    <div className="flex justify-center items-center p-56 opacity-50">
+                        Ops No Survey Found !!
+                    </div>
+                ) : null}
             </div>
             <Pagination
                 page={page}

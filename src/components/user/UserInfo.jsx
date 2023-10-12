@@ -63,6 +63,10 @@ export default function UserInfo() {
                 }
             } catch (error) {
                 console.error(error);
+                if (error.message == 204) {
+                    setLoading(false);
+                    setSurveyList([]);
+                }
             }
         }
 
@@ -176,14 +180,14 @@ export default function UserInfo() {
                 </div>
 
                 {/* Participated Surveys Table */}
-                <div className="bg-white rounded-xl">
+                <div className="bg-white rounded-xl ">
                     <div className="p-6 text-xl font-semibold border-b border-b-light-grey flex gap-4">
                         <PageTitle name={"Participated Surveys"} />
                         <span className="bg-secondary rounded-full text-white w-8 h-8 flex items-center justify-center">
                             {surveyList.length}
                         </span>
                     </div>
-                    <div className=" overflow-y-scroll h-[30vh]">
+                    <div className=" overflow-y-scroll h-[28vh]">
                         {loading ? (
                             <LoadingSpinner />
                         ) : (
@@ -251,8 +255,8 @@ export default function UserInfo() {
                             </Table>
                         )}
                     </div>
-                    {surveyList.length === 0 ? (
-                        <div className="flex justify-center p-6 opacity-50">
+                    {!loading && surveyList.length === 0 ? (
+                        <div className="flex justify-center p-2 opacity-50">
                             User hasn't participated in any surveys yet
                         </div>
                     ) : null}

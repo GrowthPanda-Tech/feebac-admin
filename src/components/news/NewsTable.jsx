@@ -64,6 +64,8 @@ export default function NewsTable() {
         }
     };
 
+    console.log(loading);
+
     useEffect(() => {
         let ignore = false;
 
@@ -74,18 +76,20 @@ export default function NewsTable() {
                     `news/get-news?page=${page}&count=${itemsPerPage}&query=${searchQuery}`
                 );
 
-                if (!response.isSuccess) {
+                if (response.isSuccess) {
+                    console.log("hii");
+                    setLoading(false);
+                    setNewsList(response.data);
+                    setTotalItems(response.totalCount);
+                } else {
                     throw new Error(response.message);
                 }
-
-                if (!ignore) {
-                    setNewsList(response.data);
-                    setLoading(false);
-                    setTotalItems(response.totalCount);
-                    setPage(1);
-                }
             } catch (error) {
-                console.error(error);
+                if (error.message == 204) {
+                    setLoading(false);
+                    setNewsList([]);
+                    setTotalItems(0);
+                }
             }
         }
 
@@ -95,6 +99,8 @@ export default function NewsTable() {
             ignore = true;
         };
     }, [page, itemsPerPage, searchQuery]);
+
+    console.log(newsList);
 
     return (
         <div className="flex flex-col gap-8">
@@ -115,6 +121,7 @@ export default function NewsTable() {
                     value={searchQuery}
                     onChange={(e) => {
                         setSearchQuery(e.target.value);
+                        setPage(1);
                     }}
                 />
                 <PaginationSelect
@@ -195,6 +202,11 @@ export default function NewsTable() {
                         </tbody>
                     </Table>
                 )}
+                {newsList.length === 0 ? (
+                    <div className="flex justify-center items-center p-56 opacity-50">
+                        No News Found !!
+                    </div>
+                ) : null}
             </div>
             <Pagination
                 setItemsPerPage={setItemsPerPage}

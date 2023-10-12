@@ -106,6 +106,10 @@ export default function RedeemRequest() {
                 }
             } catch (error) {
                 console.error(error);
+                if (error.message == 204) {
+                    setLoading(false);
+                    setRedeemData([]);
+                }
             }
         }
 
@@ -236,6 +240,11 @@ export default function RedeemRequest() {
                         </tbody>
                     </Table>
                 )}
+                {redeemData.length === 0 ? (
+                    <div className="flex justify-center items-center p-56 opacity-50">
+                        Ops No {status} Request Found !!
+                    </div>
+                ) : null}
             </div>
         </div>
     );

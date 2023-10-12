@@ -24,18 +24,18 @@ export default function Content() {
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [totalItems, setTotalItems] = useState(1);
-    const [sortOrder, setSortOrder] = useState("");
-    const sortedData = [...articleList];
+    // const [sortOrder, setSortOrder] = useState("");
+    // const sortedData = [...articleList];
 
-    if (sortOrder === "asc") {
-        sortedData.sort((a, b) =>
-            a.article_title.localeCompare(b.article_title)
-        );
-    } else if (sortOrder === "desc") {
-        sortedData.sort((a, b) =>
-            b.article_title.localeCompare(a.article_title)
-        );
-    }
+    // if (sortOrder === "asc") {
+    //     sortedData.sort((a, b) =>
+    //         a.article_title.localeCompare(b.article_title)
+    //     );
+    // } else if (sortOrder === "desc") {
+    //     sortedData.sort((a, b) =>
+    //         b.article_title.localeCompare(a.article_title)
+    //     );
+    // }
 
     const handlePublish = async (articleId, index) => {
         try {
@@ -78,10 +78,14 @@ export default function Content() {
                     setArticleList(response.data.toReversed());
                     setTotalItems(response.totalCount);
                     setLoading(false);
-                    setPage(1);
                 }
             } catch (error) {
                 console.error(error);
+                if (error.message == 204) {
+                    setLoading(false);
+                    setArticleList([]);
+                    setTotalItems(0);
+                }
             }
         }
 
@@ -111,6 +115,7 @@ export default function Content() {
                     value={searchQuery}
                     onChange={(e) => {
                         setSearchQuery(e.target.value);
+                        setPage(1);
                     }}
                 />
                 <PaginationSelect
@@ -127,7 +132,7 @@ export default function Content() {
                     <Table>
                         <Thead headers={HEADERS} />
                         <tbody>
-                            {sortedData.map(
+                            {articleList.map(
                                 (
                                     {
                                         article_id,
@@ -198,6 +203,11 @@ export default function Content() {
                         </tbody>
                     </Table>
                 )}
+                {articleList.length === 0 ? (
+                    <div className="flex justify-center items-center p-56 opacity-50">
+                        Ops No Article Found !!
+                    </div>
+                ) : null}
             </div>
             <Pagination
                 setPage={setPage}

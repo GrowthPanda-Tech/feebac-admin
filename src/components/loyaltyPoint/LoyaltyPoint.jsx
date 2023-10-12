@@ -76,6 +76,11 @@ function LoyaltyPoint() {
                 }
             } catch (error) {
                 console.error(error);
+                if (error.message == 204) {
+                    setLoading(false);
+                    setLoyaltyData([]);
+                    setData();
+                }
             }
         }
 

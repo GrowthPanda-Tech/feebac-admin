@@ -14,6 +14,7 @@ import AlertComponent from "../AlertComponent/AlertComponent";
 import Pagination from "../Pagination";
 import PaginationSelect from "../PaginationSelect";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import TableDateTime from "../table/TableDateTime";
 
 const HEADERS = ["Name", "Status", "Category", "Creation Date", "Actions"];
 
@@ -81,6 +82,7 @@ export default function Content() {
                 }
             } catch (error) {
                 console.error(error);
+
                 if (error.message == 204) {
                     setLoading(false);
                     setArticleList([]);
@@ -157,8 +159,10 @@ export default function Content() {
                                             )}
                                         </Tdata>
                                         <Tdata capitalize>{category}</Tdata>
-                                        <Tdata>
-                                            {convertToLocale(created_date)}
+                                        <Tdata mono>
+                                            <TableDateTime
+                                                data={created_date}
+                                            />
                                         </Tdata>
                                         <Tdata>
                                             <div className="flex justify-center gap-4 text-xl">

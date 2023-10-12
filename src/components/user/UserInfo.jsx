@@ -12,6 +12,7 @@ import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import PageTitle from "../PageTitle";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import TableDateTime from "../table/TableDateTime";
 
 const SURVEY_HEADERS = [
     "Title",
@@ -201,40 +202,15 @@ export default function UserInfo() {
                                                 {survey.category}
                                             </Tdata>
                                             <Tdata mono>
-                                                <div className="f4lex flex-col gap-2">
-                                                    <div>
-                                                        {
-                                                            convertToLocale(
-                                                                survey.start_date
-                                                            ).split(",")[0]
-                                                        }
-                                                    </div>
-                                                    <div className="text-sm">
-                                                        {
-                                                            convertToLocale(
-                                                                survey.start_date
-                                                            ).split(",")[1]
-                                                        }
-                                                    </div>
-                                                </div>
+                                                <TableDateTime
+                                                    data={survey.start_date}
+                                                />
                                             </Tdata>
+
                                             <Tdata mono>
-                                                <div className="flex flex-col gap-2">
-                                                    <div>
-                                                        {
-                                                            convertToLocale(
-                                                                survey.end_date
-                                                            ).split(",")[0]
-                                                        }
-                                                    </div>
-                                                    <div className="text-sm">
-                                                        {
-                                                            convertToLocale(
-                                                                survey.end_date
-                                                            ).split(",")[1]
-                                                        }
-                                                    </div>
-                                                </div>
+                                                <TableDateTime
+                                                    data={survey.end_date}
+                                                />
                                             </Tdata>
                                             <Tdata>
                                                 {survey.total_response > 0 ? (

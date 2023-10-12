@@ -1,7 +1,6 @@
-import React from "react";
-import PageTitle from "../PageTitle";
 import { useState, useEffect } from "react";
 import makeRequest from "../../utils/makeRequest";
+
 import Table from "../table/Table";
 import Thead from "../table/Thead";
 import Trow from "../table/Trow";
@@ -9,6 +8,7 @@ import Tdata from "../table/Tdata";
 import PieChart from "../dashboard/charts/PieChart";
 import FilterLoyalty from "./FilterLoyalty";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import TableDateTime from "../table/TableDateTime";
 
 const HEADERS = [
     "Transcation Id",
@@ -61,8 +61,7 @@ function LoyaltyPoint() {
             try {
                 setLoading(true);
                 const response = await makeRequest(
-                    `loyalty/get-loyalty-transaction`,
-                    "GET"
+                    `loyalty/get-loyalty-transaction`
                 );
 
                 if (!response.isSuccess) {
@@ -76,6 +75,7 @@ function LoyaltyPoint() {
                 }
             } catch (error) {
                 console.error(error);
+
                 if (error.message == 204) {
                     setLoading(false);
                     setLoyaltyData([]);
@@ -90,11 +90,6 @@ function LoyaltyPoint() {
             ignore = true;
         };
     }, []);
-
-    const convertToLocal = (date) => {
-        const dateObj = new Date(`${date} UTC`);
-        return dateObj.toLocaleString();
-    };
 
     let option = {
         plugins: {
@@ -189,22 +184,11 @@ function LoyaltyPoint() {
                                                 <Tdata>
                                                     {reason ? reason : "-"}
                                                 </Tdata>
-                                                <Tdata>
+                                                <Tdata mono>
                                                     <div className="flex flex-col gap-2">
-                                                        <div>
-                                                            {
-                                                                convertToLocal(
-                                                                    dateTime
-                                                                ).split(",")[0]
-                                                            }
-                                                        </div>
-                                                        <div className="text-sm">
-                                                            {
-                                                                convertToLocal(
-                                                                    dateTime
-                                                                ).split(",")[1]
-                                                            }
-                                                        </div>
+                                                        <TableDateTime
+                                                            data={dateTime}
+                                                        />
                                                     </div>
                                                 </Tdata>
                                                 <Tdata>

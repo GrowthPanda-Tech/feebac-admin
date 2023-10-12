@@ -8,18 +8,12 @@ import Table from "../table/Table";
 import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
+import TableDateTime from "../table/TableDateTime";
 import NewsDelPop from "./NewsDelPop";
 import AlertComponent from "../AlertComponent/AlertComponent";
 import Pagination from "../Pagination";
 import PaginationSelect from "../PaginationSelect";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
-
-import convertToLocale from "../../utils/convertToLocale";
-
-//assets
-import link from "../../assets/link.svg";
-import edit from "../../assets/edit.svg";
-import delIcon from "../../assets/delete.svg";
 
 const HEADERS = ["Name", "Category", "Date", "Actions"];
 
@@ -74,14 +68,18 @@ export default function NewsTable() {
                     `news/get-news?page=${page}&count=${itemsPerPage}&query=${searchQuery}`
                 );
 
-                if (response.isSuccess) {
+                if (!response.isSuccess) {
+                    throw new Error(response.message);
+                }
+
+                if (!ignore) {
                     setLoading(false);
                     setNewsList(response.data);
                     setTotalItems(response.totalCount);
-                } else {
-                    throw new Error(response.message);
                 }
             } catch (error) {
+                console.error(error);
+
                 if (error.message == 204) {
                     setLoading(false);
                     setNewsList([]);
@@ -138,7 +136,7 @@ export default function NewsTable() {
                                     <Tdata left>{news.title}</Tdata>
                                     <Tdata capitalize>{news.category}</Tdata>
                                     <Tdata mono>
-                                        {news.createDate.split(" ")[0]}
+                                        <TableDateTime data={news.createDate} />
                                     </Tdata>
                                     <Tdata>
                                         <div className="text-xl flex justify-center gap-5">

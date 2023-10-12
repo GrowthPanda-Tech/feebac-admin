@@ -1,20 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import LoadingSpinner from "../_helperComponents/LoadingSpinner";
-
 import Table from "../table/Table";
 import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
-import PageTitle from "../PageTitle";
-import makeRequest from "../../utils/makeRequest";
-import convertToLocale from "../../utils/convertToLocale";
+import TableDateTime from "../table/TableDateTime";
 
-//assets
-import edit from "../../assets/edit.svg";
+import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import PageTitle from "../PageTitle";
 import Pagination from "../Pagination";
 import PaginationSelect from "../PaginationSelect";
+
+import makeRequest from "../../utils/makeRequest";
 
 const HEADERS = ["Title", "Category", "Start Date", "End Date", "Actions"];
 
@@ -86,7 +84,6 @@ export default function Survey() {
     const [page, setPage] = useState(1);
     const [status, setStatus] = useState("live");
     const [loading, setLoading] = useState(false);
-    const [filteredSurveyData, setFilteredSurveyData] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
@@ -106,15 +103,16 @@ export default function Survey() {
 
                 if (!ignore) {
                     setsurveyData(response.data);
-                    setLoading(false);
                     setTotalItems(response.totalCount);
+                    setLoading(false);
                 }
             } catch (error) {
                 console.error(error);
+
                 if (error.message == 204) {
-                    setLoading(false);
                     setsurveyData([]);
                     setTotalItems(1);
+                    setLoading(false);
                 }
             }
         }
@@ -185,40 +183,14 @@ export default function Survey() {
                                                 {category}{" "}
                                             </Tdata>
                                             <Tdata mono>
-                                                <div className="flex flex-col gap-2">
-                                                    <div>
-                                                        {
-                                                            convertToLocale(
-                                                                start_date
-                                                            ).split(",")[0]
-                                                        }
-                                                    </div>
-                                                    <div className="text-sm">
-                                                        {
-                                                            convertToLocale(
-                                                                start_date
-                                                            ).split(",")[1]
-                                                        }
-                                                    </div>
-                                                </div>
+                                                <TableDateTime
+                                                    data={start_date}
+                                                />
                                             </Tdata>
                                             <Tdata mono>
-                                                <div className="flex flex-col gap-2">
-                                                    <div>
-                                                        {
-                                                            convertToLocale(
-                                                                end_date
-                                                            ).split(",")[0]
-                                                        }
-                                                    </div>
-                                                    <div className="text-sm">
-                                                        {
-                                                            convertToLocale(
-                                                                end_date
-                                                            ).split(",")[1]
-                                                        }
-                                                    </div>
-                                                </div>
+                                                <TableDateTime
+                                                    data={end_date}
+                                                />
                                             </Tdata>
                                             <Tdata>
                                                 <div className="flex justify-center gap-4">

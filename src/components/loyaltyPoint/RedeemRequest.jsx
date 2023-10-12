@@ -9,8 +9,8 @@ import PageTitle from "../PageTitle";
 import makeRequest from "../../utils/makeRequest";
 
 //assets
-import edit from "../../assets/edit.svg";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import TableDateTime from "../table/TableDateTime";
 
 const HEADERS = [
     "Request Id",
@@ -75,11 +75,6 @@ export default function RedeemRequest() {
     const [status, setStatus] = useState("pending");
     const [loading, setLoading] = useState(false);
 
-    const convertToLocal = (date) => {
-        const dateObj = new Date(`${date} UTC`);
-        return dateObj.toLocaleString();
-    };
-
     useEffect(() => {
         let ignore = false;
 
@@ -143,8 +138,6 @@ export default function RedeemRequest() {
                                     createdDate,
                                     approvedBy,
                                     currentStatus,
-                                    actionDate,
-                                    message,
                                 }) => (
                                     <Trow key={id}>
                                         <Tdata>{id.split("-").pop()} </Tdata>
@@ -154,20 +147,9 @@ export default function RedeemRequest() {
                                         </Tdata>
                                         <Tdata mono>
                                             <div className="flex flex-col gap-2">
-                                                <div>
-                                                    {
-                                                        convertToLocal(
-                                                            createdDate
-                                                        ).split(",")[0]
-                                                    }
-                                                </div>
-                                                <div className="text-sm">
-                                                    {
-                                                        convertToLocal(
-                                                            createdDate
-                                                        ).split(",")[1]
-                                                    }
-                                                </div>
+                                                <TableDateTime
+                                                    data={createdDate}
+                                                />
                                             </div>
                                         </Tdata>
                                         <Tdata capitalize>

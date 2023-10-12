@@ -53,7 +53,6 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
             return;
         }
         if (e.target.name === "totalCount") {
-            console.log(parseInt(e.target.value));
             setAddCouponData({
                 ...addCouponData,
                 totalCount: parseInt(e.target.value),

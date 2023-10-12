@@ -136,7 +136,6 @@ function EditCoupons({ setEditPop, setCouponsData, id }) {
         } else {
             AlertComponent("failed", response);
         }
-        console.log(editCouponData.description);
     };
     return (
         <div className="fixed top-0 left-0 w-full flex justify-center overflow-y-scroll items-center update-user h-screen">

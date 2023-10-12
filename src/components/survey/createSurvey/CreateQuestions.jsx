@@ -193,7 +193,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                 "POST",
                 questionData
             );
-            console.log(response);
             if (response.isSuccess) {
                 AlertComponent("success", response);
                 setOptions(initOptions);
@@ -205,8 +204,8 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                 AlertComponent("failed", response);
             }
         } catch (error) {
-            if (error >= 500) console.log("hii");
-            AlertComponent("error", "", "something has gone wrong");
+            if (error.message >= 500)
+                AlertComponent("error", "", "something has gone wrong");
         }
     };
 

@@ -37,7 +37,6 @@ export default function FilterCreate({
             }
 
             const json = await response.json();
-            console.log(json);
 
             if (!json.isSuccess) {
                 throw new Error(json.message);

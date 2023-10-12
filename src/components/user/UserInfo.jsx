@@ -103,8 +103,6 @@ export default function UserInfo() {
         };
     }, []);
 
-    console.log(loading);
-
     return (
         <>
             <h1 className="text-2xl font-semibold p-2 text-secondary border-b border-b-light-grey">

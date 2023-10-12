@@ -64,8 +64,6 @@ export default function NewsTable() {
         }
     };
 
-    console.log(loading);
-
     useEffect(() => {
         let ignore = false;
 
@@ -77,7 +75,6 @@ export default function NewsTable() {
                 );
 
                 if (response.isSuccess) {
-                    console.log("hii");
                     setLoading(false);
                     setNewsList(response.data);
                     setTotalItems(response.totalCount);
@@ -88,7 +85,7 @@ export default function NewsTable() {
                 if (error.message == 204) {
                     setLoading(false);
                     setNewsList([]);
-                    setTotalItems(0);
+                    setTotalItems(1);
                 }
             }
         }
@@ -99,8 +96,6 @@ export default function NewsTable() {
             ignore = true;
         };
     }, [page, itemsPerPage, searchQuery]);
-
-    console.log(newsList);
 
     return (
         <div className="flex flex-col gap-8">

@@ -131,8 +131,6 @@ export default function Question({
         }
     };
 
-    console.log(questionNumber);
-
     // const handlePublish = async () => {
     //     const body = {
     //         surveyId,

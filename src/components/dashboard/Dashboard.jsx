@@ -71,8 +71,6 @@ function Dashboard() {
         },
     };
 
-    console.log(loading);
-
     useEffect(() => {
         let ignore = false;
 
@@ -104,8 +102,6 @@ function Dashboard() {
             ignore = true;
         };
     }, []);
-
-    console.log(Object.values(adminData));
 
     return (
         <>

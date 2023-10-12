@@ -15,7 +15,6 @@ function InputHeading({ title, value }) {
 export default function SurveyReview() {
     const splitDate = (data) => {
         let arr = data;
-        console.log(arr);
         const NewDate = arr.split("");
         return NewDate;
     };
@@ -23,7 +22,6 @@ export default function SurveyReview() {
     const [surveyInfo, setSurveyInfo] = useState({});
     const [questionList, setQuestionList] = useState([]);
     const [surveyId, setSurveyId] = useState(surveyInfo.survey_id);
-    console.log(surveyId);
 
     const getData = async () => {
         const response = await makeRequest(

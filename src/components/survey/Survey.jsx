@@ -114,7 +114,7 @@ export default function Survey() {
                 if (error.message == 204) {
                     setLoading(false);
                     setsurveyData([]);
-                    setTotalItems(0);
+                    setTotalItems(1);
                 }
             }
         }

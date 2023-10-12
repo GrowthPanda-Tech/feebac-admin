@@ -77,7 +77,6 @@ function RedeemInfo() {
                     navigate(-1);
                 }, 1500);
             }
-            console.log(body);
         } catch (error) {}
     };
 

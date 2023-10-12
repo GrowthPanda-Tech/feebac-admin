@@ -84,7 +84,7 @@ export default function Content() {
                 if (error.message == 204) {
                     setLoading(false);
                     setArticleList([]);
-                    setTotalItems(0);
+                    setTotalItems(1);
                 }
             }
         }

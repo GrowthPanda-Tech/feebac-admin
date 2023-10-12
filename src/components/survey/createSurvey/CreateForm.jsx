@@ -161,9 +161,6 @@ export default function CreateForm() {
             }, 1000);
     }
 
-    console.log(surveyId);
-    console.log(isSurveyCreate);
-
     useEffect(() => {
         getCategories();
         getFilters();

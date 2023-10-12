@@ -79,7 +79,6 @@ export default function RedeemRequest() {
         const dateObj = new Date(`${date} UTC`);
         return dateObj.toLocaleString();
     };
-    console.log(status);
 
     useEffect(() => {
         let ignore = false;

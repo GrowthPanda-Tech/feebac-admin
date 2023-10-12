@@ -15,7 +15,6 @@ function formatDate(inputDate) {
 
 export function DateSelect({ setAddCouponData }) {
     let date = new Date();
-    console.log(date, "date new date");
     date.setDate(date.getDate() + 7);
     let todayDate = date.toDateString();
     const [selectedOption, setSelectedOption] = useState();

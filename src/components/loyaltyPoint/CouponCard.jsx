@@ -2,7 +2,7 @@ import { useState } from "react";
 import CouponToggle from "./CouponToggle";
 import EditCoupons from "./EditCoupons";
 
-export default function CouponCard({ data, setCouponsData }) {
+export default function CouponCard({ data, setCouponsData, setLoading }) {
     const [editPop, setEditPop] = useState(false);
 
     return (
@@ -93,6 +93,7 @@ export default function CouponCard({ data, setCouponsData }) {
                     id={data.id}
                     setCouponsData={setCouponsData}
                     setEditPop={setEditPop}
+                    setLoading={setLoading}
                 />
             )}
         </>

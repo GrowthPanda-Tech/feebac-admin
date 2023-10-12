@@ -4,10 +4,11 @@ import makeRequest from "../../utils/makeRequest";
 import AlertComponent from "../AlertComponent/AlertComponent";
 import InfoCards from "./InfoCards";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import DashboardSkeleton from "../_helperComponents/DashboardSkeleton";
 
 function Dashboard() {
     const [adminData, setAdminData] = useState({});
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     let surveyData = {
         labels: ["Total Survey", "Public Survey"],
@@ -76,7 +77,6 @@ function Dashboard() {
 
         async function getAdminData() {
             try {
-                setLoading(true);
                 const response = await makeRequest(
                     "/site-admin/admin-dashboard",
                     "GET"
@@ -105,11 +105,9 @@ function Dashboard() {
 
     return (
         <>
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold">Dashboard</h1>
-                {loading ? (
-                    <LoadingSpinner />
-                ) : (
+            {!loading ? (
+                <div className="flex flex-col gap-2">
+                    <h1 className="text-3xl font-bold">Dashboard</h1>
                     <div className="flex flex-col">
                         <div className=" flex w-full">
                             <InfoCards
@@ -160,8 +158,10 @@ function Dashboard() {
                             </div>
                         </div>
                     </div>
-                )}
-            </div>
+                </div>
+            ) : (
+                <DashboardSkeleton />
+            )}
         </>
     );
 }

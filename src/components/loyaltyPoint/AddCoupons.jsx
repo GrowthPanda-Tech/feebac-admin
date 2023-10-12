@@ -40,7 +40,7 @@ function InputForm({
     );
 }
 
-function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
+function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
     const [addCouponData, setAddCouponData] = useState({});
     const [options, setOptions] = useState([]);
 
@@ -92,6 +92,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
         );
 
         if (response.isSuccess) {
+            setLoading(true);
             AlertComponent("success", response);
             const getData = async () => {
                 const response = await makeRequest(
@@ -99,6 +100,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData }) {
                     "GET"
                 );
                 if (response.isSuccess) {
+                    setLoading(false);
                     setCouponsData(response.data);
                 }
             };

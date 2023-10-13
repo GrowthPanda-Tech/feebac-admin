@@ -92,7 +92,10 @@ function Dashboard() {
                 }
             } catch (error) {
                 AlertComponent("error", error.message);
-                console.error(error);
+                if (error.message == 204) {
+                    setAdminData([]);
+                    setLoading(false);
+                }
             }
         }
 
@@ -105,7 +108,11 @@ function Dashboard() {
 
     return (
         <>
-            {!loading ? (
+            {adminData.length === 0 ? (
+                <div className="flex h-[60vh] font-semibold text-2xl justify-center items-center">
+                    Ops No Data to show
+                </div>
+            ) : !loading ? (
                 <div className="flex flex-col gap-2">
                     <h1 className="text-3xl font-bold">Dashboard</h1>
                     <div className="flex flex-col">

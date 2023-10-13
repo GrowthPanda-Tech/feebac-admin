@@ -11,17 +11,39 @@ function Coupons() {
     const [showCouponAddPop, setShowCouponAddPop] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    const getData = async () => {
-        const response = await makeRequest(`loyalty/get-all-coupons`, "GET");
-        if (response.isSuccess) {
-            setCouponsData(response.data);
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
+        let ignore = false;
+
+        async function getData() {
+            try {
+                const response = await makeRequest(
+                    `loyalty/get-all-coupons`,
+                    "GET"
+                );
+
+                if (!response.isSuccess) {
+                    throw new Error(json.message);
+                }
+
+                if (!ignore) {
+                    setCouponsData(response.data);
+                    setLoading(false);
+                }
+            } catch (error) {
+                if (error.message == 204) {
+                    setCouponsData([]);
+                    setLoading(false);
+                }
+            }
+        }
+
         getData();
+
+        return () => {
+            ignore = true;
+        };
     }, []);
+
     return (
         <>
             <div className=" flex justify-end">
@@ -39,6 +61,14 @@ function Coupons() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
                     <CardSkeleton card={6} />
                 </div>
+            )}
+
+            {couponData.length === 0 ? (
+                <div className="flex h-[60vh] font-semibold text-2xl justify-center items-center">
+                    No Coupons Avaiable !! Add new
+                </div>
+            ) : (
+                ""
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">

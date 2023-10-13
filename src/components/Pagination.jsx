@@ -7,7 +7,10 @@ function Pagination({
     setPage,
     totalItems,
 }) {
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    let totalPages = Math.ceil(totalItems / itemsPerPage);
+    if (isNaN(totalPages) || totalPages === 0) {
+        totalPages = 1;
+    }
 
     const handlePrevClick = () => {
         if (page > 1) {

@@ -148,11 +148,8 @@ export default function CreateSurveyForm({
         const value = e.target.value;
 
         if (name === "startDate" || name === "endDate") {
-            const localDateObject = new Date(value);
-            const formattedOutput = convertToUTC(localDateObject);
-
+            const formattedOutput = convertToUTC(value);
             setSurveyData({ ...surveyData, [name]: formattedOutput });
-
             return;
         }
 
@@ -193,15 +190,10 @@ export default function CreateSurveyForm({
 
     const handleDragover = (e) => {
         e.preventDefault();
-    };
-
-    const handleDragEnter = (e) => {
-        e.preventDefault();
         setIsDragging(true);
     };
 
     const handleDragLeave = (e) => {
-        e.preventDefault();
         setIsDragging(false);
     };
 
@@ -321,7 +313,6 @@ export default function CreateSurveyForm({
                     }`}
                     onDrop={(e) => handleDrop(e)}
                     onDragOver={(e) => handleDragover(e)}
-                    onDragEnter={(e) => handleDragEnter(e)}
                     onDragLeave={(e) => handleDragLeave(e)}
                 >
                     <img src={upload} className="w-12" />

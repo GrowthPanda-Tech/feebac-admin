@@ -91,8 +91,7 @@ export default function EditSurveyForm({
     const handleChange = (e) => {
         if (e.target.name === "startDate" || e.target.name === "endDate") {
             setIsDateChange(true);
-            const localDateObject = new Date(e.target.value);
-            const formattedOutput = convertToUTC(localDateObject);
+            const formattedOutput = convertToUTC(e.target.value);
             setUpdatedData({
                 ...updatedData,
                 [e.target.name]: formattedOutput,

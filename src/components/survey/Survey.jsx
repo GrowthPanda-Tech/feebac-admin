@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+import makeRequest from "../../utils/makeRequest";
+
 import Table from "../table/Table";
 import Thead from "../table/Thead";
 import Trow from "../table/Trow";
@@ -11,8 +13,6 @@ import LoadingSpinner from "../_helperComponents/LoadingSpinner";
 import PageTitle from "../PageTitle";
 import Pagination from "../Pagination";
 import PaginationSelect from "../PaginationSelect";
-
-import makeRequest from "../../utils/makeRequest";
 import AlertComponent from "../AlertComponent/AlertComponent";
 
 const HEADERS = [
@@ -103,46 +103,16 @@ export default function Survey() {
             );
 
             if (!response.isSuccess) {
-                AlertComponent("failed", response);
                 throw new Error(response.message);
             }
-            let ignore = false;
 
-            async function fetchSurveyData() {
-                try {
-                    setLoading(true);
+            const updatedData = [...surveyData];
+            updatedData[index].is_public = !updatedData[index].is_public;
+            setsurveyData(updatedData);
 
-                    const response = await makeRequest(
-                        `site-admin/get-all-survey?time=${status}&query=${searchQuery}&page=${page}&count=${itemsPerPage}`
-                    );
-
-                    if (!response.isSuccess) {
-                        throw new Error(json.message);
-                    }
-
-                    if (!ignore) {
-                        setsurveyData(response.data);
-                        setTotalItems(response.totalCount);
-                        setLoading(false);
-                    }
-                } catch (error) {
-                    console.error(error);
-
-                    if (error.message == 204) {
-                        setsurveyData([]);
-                        setTotalItems(1);
-                        setLoading(false);
-                    }
-                }
-            }
-            fetchSurveyData();
             AlertComponent("success", response);
-
-            return () => {
-                ignore = true;
-            };
         } catch (error) {
-            console.error(error);
+            AlertComponent("failed", error);
         }
     };
 
@@ -226,117 +196,58 @@ export default function Survey() {
                     <Table>
                         <Thead headers={HEADERS} />
                         <tbody>
-                            {surveyData
-                                .toReversed()
-                                .map(
-                                    (
-                                        {
-                                            survey_id,
-                                            survey_title,
-                                            category,
-                                            start_date,
-                                            end_date,
-                                            is_public,
-                                        },
-                                        index
-                                    ) => (
-                                        <Trow key={survey_id}>
-                                            <Tdata left> {survey_title} </Tdata>
-                                            <Tdata capitalize>
-                                                {" "}
-                                                {category}{" "}
-                                            </Tdata>
-                                            <Tdata mono>
-                                                <TableDateTime
-                                                    data={start_date}
-                                                />
-                                            </Tdata>
-                                            <Tdata mono>
-                                                <TableDateTime
-                                                    data={end_date}
-                                                />
-                                            </Tdata>
-                                            <Tdata>
-                                                {is_public ? (
-                                                    <span className=" chip-green">
-                                                        Public
-                                                    </span>
-                                                ) : (
-                                                    <span className="chip-red">
-                                                        Private
-                                                    </span>
-                                                )}
-                                            </Tdata>
-                                            <Tdata>
-                                                <div className="flex justify-center gap-4">
-                                                    {status === "live" ||
-                                                    status === "expired" ? (
-                                                        <div className="flex items-center justify-center gap-4 w-full">
-                                                            <div className="flex justify-center">
-                                                                <div className="tool-tip-div group">
-                                                                    <Link
-                                                                        to={`details/${survey_id}`}
-                                                                    >
-                                                                        <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
-                                                                    </Link>
-                                                                    <span className="tool-tip-span -right-[3.4rem] bg-black -top-12 ">
-                                                                        View
-                                                                        Response
-                                                                        <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
-                                                                    </span>
-                                                                </div>
+                            {surveyData.map(
+                                (
+                                    {
+                                        survey_id,
+                                        survey_title,
+                                        category,
+                                        start_date,
+                                        end_date,
+                                        is_public,
+                                    },
+                                    index
+                                ) => (
+                                    <Trow key={survey_id}>
+                                        <Tdata left> {survey_title} </Tdata>
+                                        <Tdata capitalize> {category} </Tdata>
+                                        <Tdata mono>
+                                            <TableDateTime data={start_date} />
+                                        </Tdata>
+                                        <Tdata mono>
+                                            <TableDateTime data={end_date} />
+                                        </Tdata>
+                                        <Tdata>
+                                            {is_public ? (
+                                                <span className=" chip-green">
+                                                    Public
+                                                </span>
+                                            ) : (
+                                                <span className="chip-red">
+                                                    Private
+                                                </span>
+                                            )}
+                                        </Tdata>
+                                        <Tdata>
+                                            <div className="flex justify-center gap-4">
+                                                {status === "live" ||
+                                                status === "expired" ? (
+                                                    <div className="flex items-center justify-center gap-4 w-full">
+                                                        <div className="flex justify-center">
+                                                            <div className="tool-tip-div group">
+                                                                <Link
+                                                                    to={`details/${survey_id}`}
+                                                                >
+                                                                    <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
+                                                                </Link>
+                                                                <span className="tool-tip-span -right-[3.4rem] bg-black -top-12 ">
+                                                                    View
+                                                                    Response
+                                                                    <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
+                                                                </span>
                                                             </div>
-                                                            {status ===
-                                                            "live" ? (
-                                                                <div className="flex justify-center">
-                                                                    <div className="tool-tip-div group">
-                                                                        <button
-                                                                            onClick={() =>
-                                                                                handleSatus(
-                                                                                    survey_id,
-                                                                                    index
-                                                                                )
-                                                                            }
-                                                                        >
-                                                                            <i
-                                                                                className={`fa-regular ${
-                                                                                    is_public
-                                                                                        ? " fa-eye-slash "
-                                                                                        : "fa-eye"
-                                                                                } `}
-                                                                            ></i>
-                                                                        </button>
-                                                                        <span className="tool-tip-span  -right-[2.8rem] bg-black -top-12 ">
-                                                                            {is_public
-                                                                                ? "Make Private"
-                                                                                : "Make Public"}
-                                                                            <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            ) : (
-                                                                ""
-                                                            )}
                                                         </div>
-                                                    ) : (
-                                                        ""
-                                                    )}
-                                                    {status === "upcoming" ? (
-                                                        <div className="flex justify-center gap-4">
-                                                            <div className="flex justify-center">
-                                                                <div className="tool-tip-div group">
-                                                                    <Link
-                                                                        to={`edit-survey/${survey_id}`}
-                                                                    >
-                                                                        <i className="fa-solid fa-pen-to-square text-xl"></i>
-                                                                    </Link>
-                                                                    <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
-                                                                        Edit
-                                                                        Survey
-                                                                        <span className="tooltip-arrow bottom-[-2px] left-[38%]"></span>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
+                                                        {status === "live" ? (
                                                             <div className="flex justify-center">
                                                                 <div className="tool-tip-div group">
                                                                     <button
@@ -363,19 +274,67 @@ export default function Survey() {
                                                                     </span>
                                                                 </div>
                                                             </div>
+                                                        ) : (
+                                                            ""
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    ""
+                                                )}
+                                                {status === "upcoming" ? (
+                                                    <div className="flex justify-center gap-4">
+                                                        <div className="flex justify-center">
+                                                            <div className="tool-tip-div group">
+                                                                <Link
+                                                                    to={`edit-survey/${survey_id}`}
+                                                                >
+                                                                    <i className="fa-solid fa-pen-to-square text-xl"></i>
+                                                                </Link>
+                                                                <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                                    Edit Survey
+                                                                    <span className="tooltip-arrow bottom-[-2px] left-[38%]"></span>
+                                                                </span>
+                                                            </div>
                                                         </div>
-                                                    ) : null}
-                                                </div>
-                                            </Tdata>
-                                        </Trow>
-                                    )
-                                )}
+                                                        <div className="flex justify-center">
+                                                            <div className="tool-tip-div group">
+                                                                <button
+                                                                    onClick={() =>
+                                                                        handleSatus(
+                                                                            survey_id,
+                                                                            index
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <i
+                                                                        className={`fa-regular ${
+                                                                            is_public
+                                                                                ? " fa-eye-slash "
+                                                                                : "fa-eye"
+                                                                        } `}
+                                                                    ></i>
+                                                                </button>
+                                                                <span className="tool-tip-span  -right-[2.8rem] bg-black -top-12 ">
+                                                                    {is_public
+                                                                        ? "Make Private"
+                                                                        : "Make Public"}
+                                                                    <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                        </Tdata>
+                                    </Trow>
+                                )
+                            )}
                         </tbody>
                     </Table>
                 )}
                 {surveyData.length === 0 ? (
                     <div className="flex justify-center items-center p-56 opacity-50">
-                        Ops No Survey Found !!
+                        No Survey Found !!
                     </div>
                 ) : null}
             </div>

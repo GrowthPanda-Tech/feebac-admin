@@ -1,8 +1,11 @@
 import { useState, useEffect, useContext } from "react";
+
 import makeRequest from "../../../utils/makeRequest";
 import formSubmit from "../../../utils/formSubmit";
 import removeForbiddenChars from "../../../utils/removeForbiddenChars";
 import convertToUTC from "../../../utils/convertToUTC";
+
+import upload from "../../../assets/upload.png";
 
 //components
 import Filters from "./filter/Filters";
@@ -10,6 +13,7 @@ import PageTitle from "../../PageTitle";
 import AlertComponent from "../../AlertComponent/AlertComponent";
 
 import { CategoryContext } from "../../../contexts/CategoryContext";
+import { useRef } from "react";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -76,7 +80,8 @@ export default function CreateSurveyForm({
     setIsSurveyCreate,
 }) {
     const { categories } = useContext(CategoryContext);
-    const initCat = categories[0]?.category_id ? categories[0].category_id : "";
+
+    let initCat = categories[0]?.category_id ? categories[0].category_id : "";
 
     const [filters, setFilters] = useState([]);
     const [surveyData, setSurveyData] = useState({
@@ -85,6 +90,10 @@ export default function CreateSurveyForm({
     const [profileData, setProfileData] = useState({});
     const [userCount, setUserCount] = useState(0);
     const [filterdUserCount, setFilteredUserCount] = useState(0);
+
+    const [isDragging, setIsDragging] = useState(false);
+
+    const imgRef = useRef(null);
 
     const getFilters = async () => {
         try {
@@ -147,7 +156,53 @@ export default function CreateSurveyForm({
             return;
         }
 
+        if (name === "surveyImg") {
+            const file = e.target.files[0];
+            setSurveyData({ ...surveyData, surveyImg: file });
+
+            // if (file) {
+            //     const reader = new FileReader();
+            //     reader.onload = () => setImgPreview(reader.result);
+            //     reader.readAsDataURL(file);
+            // }
+
+            return;
+        }
+
         setSurveyData({ ...surveyData, [name]: value });
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+
+        if (e.dataTransfer.items) {
+            [...e.dataTransfer.items].forEach((item) => {
+                if (item.kind === "file") {
+                    const file = item.getAsFile();
+                    setSurveyData({ ...surveyData, surveyImg: file });
+                }
+            });
+        } else {
+            [...e.dataTransfer.files].forEach((file) => {
+                setSurveyData({ ...surveyData, surveyImg: file });
+            });
+        }
+
+        setIsDragging(false);
+    };
+
+    const handleDragover = (e) => {
+        e.preventDefault();
+    };
+
+    const handleDragEnter = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
     };
 
     const handleSubmit = async (event) => {
@@ -156,6 +211,11 @@ export default function CreateSurveyForm({
             const formdata = new FormData();
 
             for (const [key, value] of Object.entries(surveyData)) {
+                if (key === "surveyImg") {
+                    formdata.append(key, value, value.name);
+                    continue;
+                }
+
                 formdata.append(key, value);
             }
 
@@ -248,21 +308,64 @@ export default function CreateSurveyForm({
                 </Label>
             </div>
 
+            <div className="flex flex-col gap-6">
+                <span className="font-semibold text-xl">Upload Image</span>
+                <div
+                    className={`transition flex flex-col gap-6 items-center justify-center py-6 border-dashed border-2 border-black rounded-xl ${
+                        isDragging ? "bg-white" : ""
+                    }`}
+                    onDrop={(e) => handleDrop(e)}
+                    onDragOver={(e) => handleDragover(e)}
+                    onDragEnter={(e) => handleDragEnter(e)}
+                    onDragLeave={(e) => handleDragLeave(e)}
+                >
+                    <img src={upload} className="w-12" />
+                    <div className="flex gap-2">
+                        <span
+                            className={`font-semibold text-xl text-secondary`}
+                        >
+                            Drag & Drop
+                        </span>
+                        <span className="font-semibold text-xl">Image</span>
+                    </div>
+                    <div className="font-medium flex gap-2">
+                        <span>Or</span>
+                        <span
+                            className={`text-secondary cursor-pointer hover:text-primary underline`}
+                            onClick={() => imgRef.current.click()}
+                        >
+                            browse files
+                        </span>
+                        <span>
+                            on your computer
+                            {surveyData.surveyImg
+                                ? `(${surveyData.surveyImg.name})`
+                                : null}
+                        </span>
+                    </div>
+                </div>
+
+                <input
+                    onChange={handleChange}
+                    ref={imgRef}
+                    type="file"
+                    accept="image/*"
+                    name="surveyImg"
+                    hidden
+                />
+            </div>
+
             <div className="flex gap-16">
                 <UserCount type={"total"} count={userCount} />
                 <UserCount type={"filter"} count={filterdUserCount} />
             </div>
 
-            {filters.length === 0 ? (
-                <div>Looks like there are no filters 😕</div>
-            ) : (
-                <Filters
-                    filters={filters}
-                    profileData={profileData}
-                    setProfileData={setProfileData}
-                    setFilteredUserCount={setFilteredUserCount}
-                />
-            )}
+            <Filters
+                filters={filters}
+                profileData={profileData}
+                setProfileData={setProfileData}
+                setFilteredUserCount={setFilteredUserCount}
+            />
 
             <div className="flex gap-4">
                 {filters.length > 0 ? (

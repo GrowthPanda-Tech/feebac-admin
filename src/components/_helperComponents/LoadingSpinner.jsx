@@ -1,9 +1,9 @@
 import { Spinner } from "@material-tailwind/react";
 
-export default function LoadingSpinner() {
+export default function LoadingSpinner({ size = 12 }) {
     return (
-        <div className="flex h-full w-full justify-center items-center">
-            <Spinner className="h-12 w-12" />
+        <div className="flex leading-5 h-full w-full justify-center items-center">
+            <Spinner className={`w-${size} h-${size}`} />
         </div>
     );
 }

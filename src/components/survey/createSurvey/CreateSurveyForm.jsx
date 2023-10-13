@@ -216,6 +216,11 @@ export default function CreateSurveyForm({
                     continue;
                 }
 
+                if (key === "category" && value === "") {
+                    formdata.append(key, categories[0].category_id);
+                    continue;
+                }
+
                 formdata.append(key, value);
             }
 
@@ -228,17 +233,17 @@ export default function CreateSurveyForm({
                 formdata
             );
 
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-
-                setSurveyId(response.surveyId);
-                setSurveyTitle(surveyData.surveyTitle);
-                setIsSurveyCreate(response.isSuccess);
-            } else {
-                AlertComponent("failed", response);
+            if (!response.isSuccess) {
+                throw new Error(response.message);
             }
+
+            AlertComponent("success", response.message);
+
+            setSurveyId(response.surveyId);
+            setSurveyTitle(surveyData.surveyTitle);
+            setIsSurveyCreate(response.isSuccess);
         } catch (error) {
-            AlertComponent("error", "", "Please Enter Valid Value");
+            AlertComponent("failed", error);
         }
     };
 
@@ -312,7 +317,7 @@ export default function CreateSurveyForm({
                 <span className="font-semibold text-xl">Upload Image</span>
                 <div
                     className={`transition flex flex-col gap-6 items-center justify-center py-6 border-dashed border-2 border-black rounded-xl ${
-                        isDragging ? "bg-white" : ""
+                        isDragging ? "bg-white border-secondary" : ""
                     }`}
                     onDrop={(e) => handleDrop(e)}
                     onDragOver={(e) => handleDragover(e)}

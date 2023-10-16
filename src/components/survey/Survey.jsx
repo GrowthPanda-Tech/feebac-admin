@@ -15,6 +15,7 @@ import Pagination from "../Pagination";
 import PaginationSelect from "../PaginationSelect";
 import AlertComponent from "../AlertComponent/AlertComponent";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 const HEADERS = [
     "Title",
     "Category",
@@ -117,31 +118,47 @@ export default function Survey() {
     };
 
     useEffect(() => {
-        let ignore = false;
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        const request = {
+            signal,
+            headers: {
+                authToken: localStorage.getItem("authToken"),
+            },
+        };
 
         async function fetchSurveyData() {
             try {
                 setLoading(true);
 
-                const response = await makeRequest(
-                    `site-admin/get-all-survey?time=${status}&query=${searchQuery}&page=${page}&count=${itemsPerPage}`
+                const response = await fetch(
+                    `${BASE_URL}/site-admin/get-all-survey?time=${status}&query=${searchQuery}&page=${page}&count=${itemsPerPage}`,
+                    request
                 );
 
-                if (!response.isSuccess) {
+                if (response.status >= 500 || response.status === 204) {
+                    throw new Error(response.status);
+                }
+
+                const json = await response.json();
+                console.log(json);
+
+                if (!json.isSuccess) {
                     throw new Error(json.message);
                 }
 
-                if (!ignore) {
-                    setsurveyData(response.data);
-                    setTotalItems(response.totalCount);
-                    setLoading(false);
-                }
+                setsurveyData(json.data);
+                setTotalItems(json.totalCount);
+
+                setLoading(false);
             } catch (error) {
                 console.error(error);
 
                 if (error.message == 204) {
                     setsurveyData([]);
                     setTotalItems(1);
+
                     setLoading(false);
                 }
             }
@@ -150,7 +167,7 @@ export default function Survey() {
         fetchSurveyData();
 
         return () => {
-            ignore = true;
+            controller.abort();
         };
     }, [status, searchQuery, page, itemsPerPage]);
 
@@ -259,9 +276,9 @@ export default function Survey() {
                                                                         }
                                                                     >
                                                                         <i
-                                                                            className={`fa-regular ${
+                                                                            className={`fa-solid ${
                                                                                 is_public
-                                                                                    ? " fa-eye-slash "
+                                                                                    ? "fa-eye-slash"
                                                                                     : "fa-eye"
                                                                             } `}
                                                                         ></i>

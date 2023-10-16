@@ -17,8 +17,8 @@ import ContentEdit from "./components/content/ContentEdit";
 import NewsTable from "./components/news/NewsTable";
 import NewsCreate from "./components/news/NewsCreate";
 import NewsEdit from "./components/news/NewsEdit";
-import Revenue from "./components/revenue/Revenue";
-import Analytics from "./components/analytics/Analytics";
+// import Revenue from "./components/revenue/Revenue";
+// import Analytics from "./components/analytics/Analytics";
 import Settings from "./components/settings/Settings";
 import PageNotFound from "./components/pageNotFound/PageNotFound";
 import ProfileUpdate from "./components/header/ProfileUpdate";
@@ -27,130 +27,66 @@ import SurveyEdit from "./components/survey/surveyEdit/SurveyEdit";
 import Loyalty from "./components/loyaltyPoint/Loyalty";
 import RedeemInfo from "./components/loyaltyPoint/RedeemInfo";
 
-// contexts
-import CategoryContextProvider from "./contexts/CategoryContext";
-import ProfileContextProvider from "./contexts/ProfileContext";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+
 export default function App() {
-    const isLoggedIn = localStorage.getItem("authToken") != null;
+    const isLoggedIn = localStorage.getItem("authToken");
+
+    if (!isLoggedIn) {
+        return <Login />;
+    }
+
+    const routes = [
+        { path: "/", element: <Dashboard /> },
+        { path: "user", element: <User /> },
+        { path: "user/:slug", element: <UserInfo /> },
+        { path: "profile-update", element: <ProfileUpdate /> },
+        { path: "survey", element: <Survey /> },
+        { path: "survey/create", element: <CreateSurvey /> },
+        {
+            path: "survey/create/add-questions/:slug",
+            element: <AddQuestions />,
+        },
+        { path: "survey/details/:slug", element: <SurveyInfo /> },
+        { path: "survey/review/:slug", element: <SurveyReview /> },
+        { path: "survey/edit-survey/:slug", element: <SurveyEdit /> },
+        { path: "content", element: <Content /> },
+        { path: "content/create", element: <ContentCreate /> },
+        { path: "content/edit/:slug", element: <ContentEdit /> },
+        { path: "news", element: <NewsTable /> },
+        { path: "news/create", element: <NewsCreate /> },
+        { path: "news/edit/:slug", element: <NewsEdit /> },
+        { path: "insights", element: <Insights /> },
+        { path: "loyalty-point", element: <Loyalty /> },
+        { path: "loyalty-point/redeem/:slug", element: <RedeemInfo /> },
+        // { path: "revenue", element: <Revenue /> },
+        // { path: "analytics", element: <Analytics /> },
+        { path: "settings", element: <Settings /> },
+        { path: "*", element: <PageNotFound /> },
+    ];
+
     return (
         <>
-            {isLoggedIn ? (
-                <div>
-                    <div className="hidden md:block">
-                        <Navbar />
-                    </div>
-                    <div className="md:ml-80">
-                        <SkeletonTheme
-                            baseColor="#D2D5D4"
-                            highlightColor="#BBC4C2"
-                        >
-                            <ProfileContextProvider>
-                                <Header />
-
-                                <CategoryContextProvider>
-                                    <main className="p-10">
-                                        <Routes>
-                                            <Route
-                                                path="/"
-                                                element={<Dashboard />}
-                                            />
-                                            <Route
-                                                path="user"
-                                                element={<User />}
-                                            />
-                                            <Route
-                                                path="user/:slug"
-                                                element={<UserInfo />}
-                                            />
-                                            <Route
-                                                path="loyalty-point/redeem/:slug"
-                                                element={<RedeemInfo />}
-                                            />
-                                            <Route
-                                                path="survey"
-                                                element={<Survey />}
-                                            />
-                                            <Route
-                                                path="survey/create"
-                                                element={<CreateSurvey />}
-                                            />
-                                            <Route
-                                                path="survey/create/add-questions/:slug"
-                                                element={<AddQuestions />}
-                                            />
-                                            <Route
-                                                path="survey/details/:slug"
-                                                element={<SurveyInfo />}
-                                            />
-                                            <Route
-                                                path="survey/review/:slug"
-                                                element={<SurveyReview />}
-                                            />
-                                            <Route
-                                                path="survey/edit-survey/:slug"
-                                                element={<SurveyEdit />}
-                                            />
-                                            <Route
-                                                path="content"
-                                                element={<Content />}
-                                            />
-                                            <Route
-                                                path="content/create"
-                                                element={<ContentCreate />}
-                                            />
-                                            <Route
-                                                path="content/edit/:slug"
-                                                element={<ContentEdit />}
-                                            />
-                                            <Route
-                                                path="news"
-                                                element={<NewsTable />}
-                                            />
-                                            <Route
-                                                path="news/create"
-                                                element={<NewsCreate />}
-                                            />
-                                            <Route
-                                                path="news/edit/:slug"
-                                                element={<NewsEdit />}
-                                            />
-
-                                            <Route
-                                                path="loyalty-point"
-                                                element={<Loyalty />}
-                                            />
-                                            <Route
-                                                path="revenue"
-                                                element={<Revenue />}
-                                            />
-                                            <Route
-                                                path="analytics"
-                                                element={<Analytics />}
-                                            />
-                                            <Route
-                                                path="settings"
-                                                element={<Settings />}
-                                            />
-                                            <Route
-                                                path="*"
-                                                element={<PageNotFound />}
-                                            />
-                                            <Route
-                                                path="profile-update"
-                                                element={<ProfileUpdate />}
-                                            />
-                                        </Routes>
-                                    </main>
-                                </CategoryContextProvider>
-                            </ProfileContextProvider>
-                        </SkeletonTheme>
-                    </div>
-                </div>
-            ) : (
-                <Login />
-            )}
+            <div className="hidden md:block">
+                <Navbar />
+            </div>
+            <div className="md:ml-80">
+                <SkeletonTheme baseColor="#D2D5D4" highlightColor="#BBC4C2">
+                    <Header />
+                    <main className="p-10">
+                        <Routes>
+                            {routes.map(({ path, element }, index) => (
+                                <Route
+                                    path={path}
+                                    element={element}
+                                    key={index}
+                                />
+                            ))}
+                        </Routes>
+                    </main>
+                </SkeletonTheme>
+            </div>
         </>
     );
 }

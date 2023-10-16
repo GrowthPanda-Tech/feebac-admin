@@ -6,13 +6,14 @@ import user from "../../assets/navbar/user.png";
 import survey from "../../assets/navbar/survey.png";
 import content from "../../assets/navbar/content.png";
 import loyalty from "../../assets/navbar/loyalty.png";
-import revenue from "../../assets/navbar/revenue.png";
-import analytics from "../../assets/navbar/analytics.png";
+// import revenue from "../../assets/navbar/revenue.png";
+// import analytics from "../../assets/navbar/analytics.png";
 import settings from "../../assets/navbar/settings.png";
 import logout from "../../assets/navbar/logout.png";
 
 function NavList({ link, title, icon }) {
-    const isActive = ({ isActive }) => (isActive ? "active" : undefined);
+    const isActive = ({ isActive }) => (isActive ? "active" : null);
+
     return (
         <NavLink
             to={link}
@@ -41,7 +42,6 @@ export default function Navbar() {
 
     const handleLogout = () => {
         localStorage.removeItem("authToken");
-        localStorage.removeItem("userInfo");
         location.replace("/");
     };
 

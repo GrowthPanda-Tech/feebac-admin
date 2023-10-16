@@ -47,7 +47,7 @@ const AlertComponent = (type, data, Text) => {
                 position: "top",
                 icon: "error",
                 title: "Oops...",
-                text: warningText,
+                text: Text,
                 showConfirmButton: false,
                 width: "40vh",
                 timer: 1500,

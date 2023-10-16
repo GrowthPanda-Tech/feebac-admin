@@ -57,7 +57,7 @@ export default function App() {
         { path: "news", element: <NewsTable /> },
         { path: "news/create", element: <NewsCreate /> },
         { path: "news/edit/:slug", element: <NewsEdit /> },
-        { path: "insights", element: <Insights /> },
+        // { path: "insights", element: <Insights /> },
         { path: "loyalty-point", element: <Loyalty /> },
         { path: "loyalty-point/redeem/:slug", element: <RedeemInfo /> },
         // { path: "revenue", element: <Revenue /> },

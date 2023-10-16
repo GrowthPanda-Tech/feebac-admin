@@ -191,10 +191,18 @@ export default function Content() {
                                                                 )
                                                             }
                                                         >
-                                                            <i className="fa-regular fa-newspaper"></i>
+                                                            <i
+                                                                className={`fa-solid ${
+                                                                    is_published
+                                                                        ? "fa-eye-slash"
+                                                                        : "fa-eye"
+                                                                } `}
+                                                            ></i>{" "}
                                                         </button>
                                                         <span className="tool-tip-span  -right-[2.8rem] bg-black -top-12 ">
-                                                            Toggle Status
+                                                            {is_published
+                                                                ? "Make Private"
+                                                                : "Make Public"}
                                                             <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
                                                         </span>
                                                     </div>

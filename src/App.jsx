@@ -17,6 +17,7 @@ import ContentEdit from "./components/content/ContentEdit";
 import NewsTable from "./components/news/NewsTable";
 import NewsCreate from "./components/news/NewsCreate";
 import NewsEdit from "./components/news/NewsEdit";
+import Insights from "./components/insights/Insights";
 // import Revenue from "./components/revenue/Revenue";
 // import Analytics from "./components/analytics/Analytics";
 import Settings from "./components/settings/Settings";

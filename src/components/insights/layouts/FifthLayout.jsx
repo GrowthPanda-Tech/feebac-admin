@@ -26,17 +26,9 @@ export default function FifthLayout({ parent }) {
         const name = e.target.name;
         const value = e.target.value;
 
-        if (name === "sectionTitle") {
+        if (name === "sectionTitle" || name === "sectionDesc") {
             const updatedLayout = { ...layout };
-            updatedLayout.section[index].sectionTitle = value;
-
-            setLayout(updatedLayout);
-            return;
-        }
-
-        if (name === "sectionDesc") {
-            const updatedLayout = { ...layout };
-            updatedLayout.section[index].sectionDesc = value;
+            updatedLayout.section[index][name] = value;
 
             setLayout(updatedLayout);
             return;

@@ -15,10 +15,11 @@ import fourth from "../../assets/insight-templates/04.png";
 import fifth from "../../assets/insight-templates/05.png";
 import sixth from "../../assets/insight-templates/06.png";
 import seventh from "../../assets/insight-templates/07.png";
+import eighth from "../../assets/insight-templates/08.png";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const CREATE_URL = `${BASE_URL}/insights/create-insights`;
-const TEMPLATES = [first, second, third, fourth, fifth, sixth, seventh];
+const TEMPLATES = [first, second, third, fourth, fifth, sixth, seventh, eighth];
 
 export default function Insights() {
     const { categories } = useContext(CategoryContext);
@@ -132,11 +133,10 @@ export default function Insights() {
                         <img
                             src={template}
                             key={index}
-                            className={`w-40 transition cursor-pointer rounded-lg ${
-                                activeLayout === index + 1
+                            className={`w-40 transition cursor-pointer rounded-lg ${activeLayout === index + 1
                                     ? "border-2 border-accent"
                                     : ""
-                            }`}
+                                }`}
                             onClick={() => setActiveLayout(index + 1)}
                         />
                     ))}

@@ -211,54 +211,46 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         }
     };
 
+    console.log(questions.length);
+
     const handleSchedule = async () => {
-        if (!questions.length === 0) {
-            try {
-                const response = await makeRequest(
-                    "survey/toggle-survey-status",
-                    "PATCH",
-                    { surveyId }
-                );
+        try {
+            const response = await makeRequest(
+                "survey/toggle-survey-status",
+                "PATCH",
+                { surveyId }
+            );
 
-                if (!response.isSuccess) {
-                    throw new Error(response.message);
-                }
-
-                const customAlert = {
-                    message: "Survey will start at the scheduled time",
-                };
-
-                AlertComponent("success", customAlert);
-                navigate("/survey");
-            } catch (error) {
-                console.error(error);
+            if (!response.isSuccess) {
+                throw new Error(response.message);
             }
-        } else {
-            console.log(questions.length);
-            AlertComponent("warning", "", "Pls Add min 1 questions");
+
+            const customAlert = {
+                message: "Survey will start at the scheduled time",
+            };
+
+            AlertComponent("success", customAlert);
+            navigate("/survey");
+        } catch (error) {
+            console.error(error);
         }
     };
 
     const handlePublish = async () => {
-        if (!questions.length === 0) {
-            const body = {
-                surveyId,
-                isStartNow: true,
-            };
-            const response = await makeRequest(
-                "survey/start-survey",
-                "PATCH",
-                body
-            );
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                navigate("/survey");
-            } else {
-                AlertComponent("failed", response);
-            }
+        const body = {
+            surveyId,
+            isStartNow: true,
+        };
+        const response = await makeRequest(
+            "survey/start-survey",
+            "PATCH",
+            body
+        );
+        if (response.isSuccess) {
+            AlertComponent("success", response);
+            navigate("/survey");
         } else {
-            console.log(questions.length);
-            AlertComponent("warning", "", "Pls Add min 1 questions");
+            AlertComponent("failed", response);
         }
     };
 

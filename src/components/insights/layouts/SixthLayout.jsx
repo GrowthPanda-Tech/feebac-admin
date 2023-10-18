@@ -19,7 +19,7 @@ export default function SixthLayout({ parent }) {
         <>
             <LayoutInput name={"title"} />
             {layout.section.map((section, index) => (
-                <SectionContainer>
+                <SectionContainer key={index}>
                     <LayoutInput label={`Title ${index + 1}`} />
                     <LayoutTextArea label={`Description ${index + 1}`} />
                 </SectionContainer>

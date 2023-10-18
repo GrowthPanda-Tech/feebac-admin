@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import getInsightImgUrl from "../../../utils/getInsightImgUrl";
 
 import LayoutInput from "./helperComponents/LayoutInput";
@@ -10,7 +11,7 @@ const CREATE_PAGE_URL = `${BASE_URL}/insights/add-insights-pages`;
 const AUTH_TOKEN = localStorage.getItem("authToken");
 
 //used in 1, 2
-export default function DefaultLayout({ parent, pageType = 1 }) {
+export default function DefaultLayout({ parent, pageType }) {
     const [layout, setLayout] = useState({
         parent,
         pageType,

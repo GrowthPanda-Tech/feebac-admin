@@ -1,3 +1,4 @@
+//change the location
 export default function FormInput({
     label,
     name,
@@ -10,7 +11,7 @@ export default function FormInput({
                 {label ? label : name}
             </span>
             <input
-                className="py-5 px-10 rounded-xl bg-white"
+                className="py-5 px-10 rounded-xl bg-white border border-[#1D1D1D]"
                 type={type}
                 name={name}
                 onChange={handleChange}

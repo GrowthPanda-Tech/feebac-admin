@@ -13,7 +13,9 @@ export default function ImageInput({ handleChange }) {
 
     return (
         <div className="flex gap-4 flex-col">
-            <span className="capitalize font-semibold">Background Image</span>
+            <span className="capitalize text-lg font-semibold">
+                Background Image
+            </span>
             <input
                 name="insightsImage"
                 type="file"

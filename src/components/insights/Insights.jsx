@@ -16,6 +16,7 @@ import fifth from "../../assets/insight-templates/05.png";
 import sixth from "../../assets/insight-templates/06.png";
 import seventh from "../../assets/insight-templates/07.png";
 import eighth from "../../assets/insight-templates/08.png";
+import ImageInput from "./helperComponents/ImageInput";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const CREATE_URL = `${BASE_URL}/insights/create-insights`;

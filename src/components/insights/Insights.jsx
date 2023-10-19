@@ -31,7 +31,7 @@ export default function Insights() {
     const [activeLayout, setActiveLayout] = useState(1);
 
     const [insightId, setInsightId] = useState(
-        localStorage.getItem("insightId")
+        sessionStorage.getItem("insightId")
     );
     const [insight, setInsight] = useState({
         title: "",
@@ -97,7 +97,7 @@ export default function Insights() {
 
             const id = json.data;
             setInsightId(id);
-            localStorage.setItem("insightId", id);
+            sessionStorage.setItem("insightId", id);
         } catch (error) {
             console.error(error);
         }
@@ -131,42 +131,44 @@ export default function Insights() {
 
                     <button type="submit">Create</button>
                 </form>
-            ) : null}
+            ) : (
+                <>
+                    <div className="flex flex-col gap-5">
+                        <span className="font-semibold text-lg capitalize">
+                            Choose Your Template
+                        </span>
 
-            <div className="flex flex-col gap-5">
-                <span className="font-semibold text-lg capitalize">
-                    Choose Your Template
-                </span>
+                        <div className="flex gap-8 justify-between overflow-x-scroll no-scrollbar">
+                            {TEMPLATES.map((template, index) => (
+                                <img
+                                    src={template}
+                                    key={index}
+                                    className={`w-40 transition cursor-pointer rounded-lg ${
+                                        activeLayout === index + 1
+                                            ? "border-2 border-accent"
+                                            : "border-[#1D1D1D] opacity-75"
+                                    }`}
+                                    onClick={() => setActiveLayout(index + 1)}
+                                />
+                            ))}
+                        </div>
+                    </div>
 
-                <div className="flex gap-8 justify-between overflow-x-scroll no-scrollbar">
-                    {TEMPLATES.map((template, index) => (
-                        <img
-                            src={template}
-                            key={index}
-                            className={`w-40 transition cursor-pointer rounded-lg ${
-                                activeLayout === index + 1
-                                    ? "border-2 border-accent"
-                                    : "border-[#1D1D1D] opacity-75"
-                            }`}
-                            onClick={() => setActiveLayout(index + 1)}
+                    <div className="flex gap-4">
+                        {pages.map((page, index) => (
+                            <PagePill key={index} index={index} />
+                        ))}
+                    </div>
+
+                    <div className="bg-white flex flex-col rounded-xl p-10 gap-7">
+                        <LayoutFactory
+                            parent={insightId}
+                            activeLayout={activeLayout}
+                            setPages={setPages}
                         />
-                    ))}
-                </div>
-            </div>
-
-            <div className="flex gap-4">
-                {pages.map((page, index) => (
-                    <PagePill key={index} index={index} />
-                ))}
-            </div>
-
-            <div className="bg-white flex flex-col rounded-xl p-10 gap-7">
-                <LayoutFactory
-                    parent={insightId}
-                    activeLayout={activeLayout}
-                    setPages={setPages}
-                />
-            </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }

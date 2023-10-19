@@ -5,6 +5,7 @@ import getInsightImgUrl from "../../../utils/getInsightImgUrl";
 import LayoutInput from "./helperComponents/LayoutInput";
 import LayoutTextArea from "./helperComponents/LayoutTextArea";
 import ImageDragDrop from "../../_helperComponents/ImgDragDrop";
+import SubmitButton from "../helperComponents/SubmitButton";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const CREATE_PAGE_URL = `${BASE_URL}/insights/add-insights-pages`;
@@ -72,7 +73,7 @@ export default function DefaultLayout({ parent, pageType, setPages }) {
             <LayoutInput name={"title"} handleChange={handleChange} />
             <ImageDragDrop name={"image"} handleChange={getImgUrl} />
             <LayoutTextArea name={"description"} handleChange={handleChange} />
-            <button onClick={handleSubmit}>Create Page</button>
+            <SubmitButton handleSubmit={handleSubmit} />
         </>
     );
 }

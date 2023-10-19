@@ -18,6 +18,7 @@ import fifth from "../../assets/insight-templates/05.png";
 import sixth from "../../assets/insight-templates/06.png";
 import seventh from "../../assets/insight-templates/07.png";
 import eighth from "../../assets/insight-templates/08.png";
+import SubmitButton from "./helperComponents/SubmitButton";
 
 const AUTH_TOKEN = localStorage.getItem("authToken");
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -54,7 +55,7 @@ export default function Insights() {
         setInsight({ ...insight, [name]: value });
     };
 
-    const handleCreate = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const formData = new FormData();
@@ -108,7 +109,7 @@ export default function Insights() {
             <PageTitle name={"Insights"} />
 
             {!insightId ? (
-                <form className="flex flex-col gap-8" onSubmit={handleCreate}>
+                <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
                     <div className="flex w-full justify-between gap-14">
                         <FormInput name={"title"} handleChange={handleChange} />
 
@@ -129,7 +130,7 @@ export default function Insights() {
 
                     <ImageInput handleChange={handleChange} />
 
-                    <button type="submit">Create</button>
+                    <SubmitButton insight />
                 </form>
             ) : (
                 <>

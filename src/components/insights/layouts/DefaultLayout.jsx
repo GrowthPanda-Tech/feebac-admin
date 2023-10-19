@@ -11,7 +11,7 @@ const CREATE_PAGE_URL = `${BASE_URL}/insights/add-insights-pages`;
 const AUTH_TOKEN = localStorage.getItem("authToken");
 
 //used in 1, 2
-export default function DefaultLayout({ parent, pageType }) {
+export default function DefaultLayout({ parent, pageType, setPages }) {
     const [layout, setLayout] = useState({
         parent,
         pageType,
@@ -60,6 +60,8 @@ export default function DefaultLayout({ parent, pageType }) {
             if (!json.isSuccess) {
                 throw new Error(response.message);
             }
+
+            setPages((prev) => [...prev, layout]);
         } catch (error) {
             console.error(error);
         }

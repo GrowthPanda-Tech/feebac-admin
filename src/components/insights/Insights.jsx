@@ -27,7 +27,7 @@ const TEMPLATES = [first, second, third, fourth, fifth, sixth, seventh, eighth];
 export default function Insights() {
     const { categories } = useContext(CategoryContext);
 
-    const [pages, setPages] = useState([{}]);
+    const [pages, setPages] = useState([]);
     const [activeLayout, setActiveLayout] = useState(1);
 
     const [insightId, setInsightId] = useState(
@@ -161,7 +161,11 @@ export default function Insights() {
             </div>
 
             <div className="bg-white flex flex-col rounded-xl p-10 gap-7">
-                <LayoutFactory parent={insightId} activeLayout={activeLayout} />
+                <LayoutFactory
+                    parent={insightId}
+                    activeLayout={activeLayout}
+                    setPages={setPages}
+                />
             </div>
         </div>
     );

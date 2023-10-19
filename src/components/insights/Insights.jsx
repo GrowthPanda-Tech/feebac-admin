@@ -5,7 +5,9 @@ import { CategoryContext } from "../../contexts/CategoryContext";
 import PageTitle from "../PageTitle";
 import FormInput from "../_helperComponents/FormInput";
 import FormSelect from "../_helperComponents/FormSelect";
+import ImageInput from "./helperComponents/ImageInput";
 import LayoutFactory from "./LayoutFactory";
+import PagePill from "./helperComponents/PagePill";
 
 //lord save me
 import first from "../../assets/insight-templates/01.png";
@@ -16,8 +18,8 @@ import fifth from "../../assets/insight-templates/05.png";
 import sixth from "../../assets/insight-templates/06.png";
 import seventh from "../../assets/insight-templates/07.png";
 import eighth from "../../assets/insight-templates/08.png";
-import ImageInput from "./helperComponents/ImageInput";
 
+const AUTH_TOKEN = localStorage.getItem("authToken");
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const CREATE_URL = `${BASE_URL}/insights/create-insights`;
 const TEMPLATES = [first, second, third, fourth, fifth, sixth, seventh, eighth];
@@ -25,8 +27,12 @@ const TEMPLATES = [first, second, third, fourth, fifth, sixth, seventh, eighth];
 export default function Insights() {
     const { categories } = useContext(CategoryContext);
 
-    const [insightId, setInsightId] = useState(null);
+    const [pages, setPages] = useState([{}]);
     const [activeLayout, setActiveLayout] = useState(1);
+
+    const [insightId, setInsightId] = useState(
+        localStorage.getItem("insightId")
+    );
     const [insight, setInsight] = useState({
         title: "",
         description: "Test",
@@ -67,11 +73,12 @@ export default function Insights() {
             formData.append(key, value);
         }
 
+        //manual fetch calls all the way baby
         const request = {
             method: "POST",
             body: formData,
             headers: {
-                authToken: localStorage.getItem("authToken"),
+                authToken: AUTH_TOKEN,
             },
         };
 
@@ -88,7 +95,9 @@ export default function Insights() {
                 throw new Error(json.message);
             }
 
-            setInsightId(json.data);
+            const id = json.data;
+            setInsightId(id);
+            localStorage.setItem("insightId", id);
         } catch (error) {
             console.error(error);
         }
@@ -98,50 +107,57 @@ export default function Insights() {
         <div className="flex flex-col gap-8">
             <PageTitle name={"Insights"} />
 
-            <form className="flex flex-col gap-8" onSubmit={handleCreate}>
-                <div className="flex w-full justify-between gap-14">
-                    <FormInput name={"title"} handleChange={handleChange} />
+            {!insightId ? (
+                <form className="flex flex-col gap-8" onSubmit={handleCreate}>
+                    <div className="flex w-full justify-between gap-14">
+                        <FormInput name={"title"} handleChange={handleChange} />
 
-                    <FormSelect name={"category"} handleChange={handleChange}>
-                        {categories.map((category) => (
-                            <option
-                                key={category.category_id}
-                                value={category.category_id}
-                            >
-                                {category.category_name}
-                            </option>
-                        ))}
-                    </FormSelect>
-                </div>
+                        <FormSelect
+                            name={"category"}
+                            handleChange={handleChange}
+                        >
+                            {categories.map((category) => (
+                                <option
+                                    key={category.category_id}
+                                    value={category.category_id}
+                                >
+                                    {category.category_name}
+                                </option>
+                            ))}
+                        </FormSelect>
+                    </div>
 
-                <FormInput
-                    name={"insightsImage"}
-                    label={"Background Image"}
-                    type={"file"}
-                    handleChange={handleChange}
-                />
+                    <ImageInput handleChange={handleChange} />
 
-                <button type="submit">Create</button>
-            </form>
+                    <button type="submit">Create</button>
+                </form>
+            ) : null}
 
             <div className="flex flex-col gap-5">
                 <span className="font-semibold text-lg capitalize">
                     Choose Your Template
                 </span>
 
-                <div className="flex justify-between">
+                <div className="flex gap-8 justify-between overflow-x-scroll no-scrollbar">
                     {TEMPLATES.map((template, index) => (
                         <img
                             src={template}
                             key={index}
-                            className={`w-40 transition cursor-pointer rounded-lg ${activeLayout === index + 1
+                            className={`w-40 transition cursor-pointer rounded-lg ${
+                                activeLayout === index + 1
                                     ? "border-2 border-accent"
-                                    : ""
-                                }`}
+                                    : "border-[#1D1D1D] opacity-75"
+                            }`}
                             onClick={() => setActiveLayout(index + 1)}
                         />
                     ))}
                 </div>
+            </div>
+
+            <div className="flex gap-4">
+                {pages.map((page, index) => (
+                    <PagePill key={index} index={index} />
+                ))}
             </div>
 
             <div className="bg-white flex flex-col rounded-xl p-10 gap-7">

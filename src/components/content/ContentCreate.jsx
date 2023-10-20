@@ -19,6 +19,7 @@ export default function ContentCreate({ surveyId }) {
         category: initCat,
     });
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleChange = (event) => {
         if (event.target.name === "articleImg") {
@@ -45,6 +46,7 @@ export default function ContentCreate({ surveyId }) {
 
     const handleSubmit = async (event) => {
         try {
+            setIsSaving(true);
             const formData = new FormData();
             formData.append("articleTitle", articleData.article_title);
             formData.append(
@@ -71,10 +73,12 @@ export default function ContentCreate({ surveyId }) {
                 AlertComponent("success", response);
                 setTimeout(() => {
                     navigate("/content");
-                }, 3200);
+                }, 1200);
             } else AlertComponent("failed", response);
         } catch (error) {
             AlertComponent("error", "", error);
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -89,9 +93,13 @@ export default function ContentCreate({ surveyId }) {
                             handleChange={handleChange}
                             handleEditorChange={handleEditorChange}
                         />
-                        <button className="btn-primary w-fit mt-8">
+                        <button
+                            className={`${
+                                isSaving ? "btn-secondary" : "btn-primary"
+                            }  w-fit mt-8`}
+                        >
                             <i className="fa-solid fa-floppy-disk mr-2"></i>
-                            Save Draft
+                            {isSaving ? "Saving..." : "Save Drafts"}
                         </button>
                     </form>
                 </div>

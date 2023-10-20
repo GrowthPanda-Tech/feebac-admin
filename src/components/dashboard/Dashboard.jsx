@@ -10,6 +10,8 @@ function Dashboard() {
     const [adminData, setAdminData] = useState({});
     const [loading, setLoading] = useState(true);
 
+    console.log(adminData);
+
     let surveyData = {
         labels: ["Total Survey", "Public Survey"],
         datasets: [
@@ -126,8 +128,7 @@ function Dashboard() {
                                 title={"Total Android Download"}
                                 value={
                                     adminData
-                                        ? adminData?.downloadData
-                                              ?.totalAndroidDownloads
+                                        ? adminData?.downloadData?.android
                                         : ""
                                 }
                             />
@@ -135,8 +136,7 @@ function Dashboard() {
                                 title={"Total Ios Download"}
                                 value={
                                     adminData
-                                        ? adminData?.downloadData
-                                              ?.totalIOSDownloads
+                                        ? adminData?.downloadData?.iOS
                                         : ""
                                 }
                             />

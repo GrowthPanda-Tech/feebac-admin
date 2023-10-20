@@ -29,6 +29,7 @@ import RedeemInfo from "./components/loyaltyPoint/RedeemInfo";
 
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import SurveyContent from "./components/content/SurveyContent";
 
 export default function App() {
     const isLoggedIn = localStorage.getItem("authToken");
@@ -53,6 +54,7 @@ export default function App() {
         { path: "survey/edit-survey/:slug", element: <SurveyEdit /> },
         { path: "content", element: <Content /> },
         { path: "content/create", element: <ContentCreate /> },
+        { path: "content/create-content/:slug", element: <SurveyContent /> },
         { path: "content/edit/:slug", element: <ContentEdit /> },
         { path: "news", element: <NewsTable /> },
         { path: "news/create", element: <NewsCreate /> },

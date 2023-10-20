@@ -9,12 +9,13 @@ import ContentForm from "./ContentForm";
 import PageTitle from "../PageTitle";
 import AlertComponent from "../AlertComponent/AlertComponent";
 
-export default function ContentCreate() {
+export default function ContentCreate({ surveyId }) {
     const { categories } = useContext(CategoryContext);
     const initCat = categories[0]?.category_id ? categories[0].category_id : "";
 
     const navigate = useNavigate();
     const [articleData, setArticleData] = useState({
+        surveyId: surveyId ? surveyId : null,
         category: initCat,
     });
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);

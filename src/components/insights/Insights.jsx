@@ -28,7 +28,9 @@ const TEMPLATES = [first, second, third, fourth, fifth, sixth, seventh, eighth];
 export default function Insights() {
     const { categories } = useContext(CategoryContext);
 
-    const [pages, setPages] = useState([]);
+    const initPages = JSON.parse(sessionStorage.getItem("insightPages"));
+
+    const [pages, setPages] = useState(initPages ? initPages : []);
     const [activeLayout, setActiveLayout] = useState(1);
 
     const [insightId, setInsightId] = useState(
@@ -103,6 +105,19 @@ export default function Insights() {
             console.error(error);
         }
     };
+
+
+    useEffect(() => {
+        let ignore = false;
+
+        if (!ignore) {
+            sessionStorage.setItem("insightPages", JSON.stringify(pages));
+        }
+
+        return () => {
+            ignore = true;
+        };
+    }, [pages]);
 
     return (
         <div className="flex flex-col gap-8">

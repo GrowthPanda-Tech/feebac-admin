@@ -1,5 +1,7 @@
-import { useState, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { CategoryContext } from "../../contexts/CategoryContext";
+
+import makeRequest from "../../utils/makeRequest";
 
 //components
 import PageTitle from "../PageTitle";
@@ -8,6 +10,7 @@ import FormSelect from "../_helperComponents/FormSelect";
 import ImageInput from "./helperComponents/ImageInput";
 import LayoutFactory from "./LayoutFactory";
 import PagePill from "./helperComponents/PagePill";
+import SubmitButton from "./helperComponents/SubmitButton";
 
 //lord save me
 import first from "../../assets/insight-templates/01.png";
@@ -18,7 +21,6 @@ import fifth from "../../assets/insight-templates/05.png";
 import sixth from "../../assets/insight-templates/06.png";
 import seventh from "../../assets/insight-templates/07.png";
 import eighth from "../../assets/insight-templates/08.png";
-import SubmitButton from "./helperComponents/SubmitButton";
 
 const AUTH_TOKEN = localStorage.getItem("authToken");
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -106,6 +108,25 @@ export default function Insights() {
         }
     };
 
+    const handleInsightSubmit = async () => {
+        try {
+            const response = await makeRequest(
+                "insights/toggle-insights-status",
+                "PATCH",
+                { id: insightId }
+            );
+
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
+
+            sessionStorage.clear();
+            setInsightId(null);
+            setPages([]);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     useEffect(() => {
         let ignore = false;
@@ -159,11 +180,10 @@ export default function Insights() {
                                 <img
                                     src={template}
                                     key={index}
-                                    className={`w-40 transition cursor-pointer rounded-lg ${
-                                        activeLayout === index + 1
+                                    className={`w-40 transition cursor-pointer rounded-lg ${activeLayout === index + 1
                                             ? "border-2 border-accent"
                                             : "border-[#1D1D1D] opacity-75"
-                                    }`}
+                                        }`}
                                     onClick={() => setActiveLayout(index + 1)}
                                 />
                             ))}
@@ -172,7 +192,13 @@ export default function Insights() {
 
                     <div className="flex gap-4">
                         {pages.map((page, index) => (
-                            <PagePill key={index} index={index} />
+                            <PagePill
+                                key={index}
+                                index={index}
+                                handleClick={() =>
+                                    setActiveLayout(pages[index].pageType)
+                                }
+                            />
                         ))}
                     </div>
 
@@ -183,6 +209,10 @@ export default function Insights() {
                             setPages={setPages}
                         />
                     </div>
+
+                    <button onClick={handleInsightSubmit}>
+                        Submit Insight
+                    </button>
                 </>
             )}
         </div>

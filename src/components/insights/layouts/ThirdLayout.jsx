@@ -7,8 +7,9 @@ import SectionContainer from "./helperComponents/SectionContainer";
 import LayoutInput from "./helperComponents/LayoutInput";
 import ImageDragDrop from "../../_helperComponents/ImgDragDrop";
 import LayoutTextArea from "./helperComponents/LayoutTextArea";
+import SubmitButton from "../helperComponents/SubmitButton";
 
-export default function ThirdLayout({ parent }) {
+export default function ThirdLayout({ parent, setPages }) {
     const initSections = { sectionImg: "", sectionTitle: "", sectionDesc: "" };
 
     const [layout, setLayout] = useState({
@@ -31,17 +32,9 @@ export default function ThirdLayout({ parent }) {
         const name = e.target.name;
         const value = e.target.value;
 
-        if (name === "sectionTitle") {
+        if (name === "sectionTitle" || name === "sectionDesc") {
             const updatedLayout = { ...layout };
-            updatedLayout.section[index].sectionTitle = value;
-
-            setLayout(updatedLayout);
-            return;
-        }
-
-        if (name === "sectionDesc") {
-            const updatedLayout = { ...layout };
-            updatedLayout.section[index].sectionDesc = value;
+            updatedLayout.section[index][name] = value;
 
             setLayout(updatedLayout);
             return;
@@ -80,6 +73,8 @@ export default function ThirdLayout({ parent }) {
             if (!response.isSuccess) {
                 throw new Error(response.message);
             }
+
+            setPages((prev) => [...prev, layout]);
         } catch (error) {
             console.error(error);
         }
@@ -122,8 +117,7 @@ export default function ThirdLayout({ parent }) {
             ))}
 
             <LayoutTextArea name={"description"} handleChange={handleChange} />
-
-            <button onClick={handleSubmit}>Add Page</button>
+            <SubmitButton handleSubmit={handleSubmit} />
         </>
     );
 }

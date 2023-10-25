@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { PageContext } from "../../../contexts/InsightPageContext";
 
 import makeRequest from "../../../utils/makeRequest";
+import submitLayout from "../../../utils/submitLayout";
 
 import SectionContainer from "./helperComponents/SectionContainer";
 import LayoutInput from "./helperComponents/LayoutInput";
@@ -73,40 +74,6 @@ export default function ThirdLayout() {
         }
     };
 
-    const handleSubmit = async () => {
-        let route = "insights/add-insights-pages";
-        let method = "POST";
-
-        if (layout.id) {
-            route = "insights/update-insight-pages";
-            method = "PUT";
-        }
-
-        try {
-            const response = await makeRequest(route, method, layout);
-
-            if (!response.isSuccess) {
-                throw new Error(response.message);
-            }
-
-            if (layout.id) {
-                const updatedPages = [...pages];
-                updatedPages[state.index] = layout;
-
-                setPages(updatedPages);
-            } else {
-                const updatedPages = [
-                    ...pages,
-                    { ...layout, id: response.data },
-                ];
-
-                setPages(updatedPages);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     useEffect(() => {
         if (state.data) {
             setLayout(state.data);
@@ -162,7 +129,12 @@ export default function ThirdLayout() {
                 value={layout.description}
                 handleChange={handleChange}
             />
-            <SubmitButton handleSubmit={handleSubmit} />
+
+            <SubmitButton
+                handleSubmit={() =>
+                    submitLayout(layout, state.index, pages, setPages)
+                }
+            />
         </>
     );
 }

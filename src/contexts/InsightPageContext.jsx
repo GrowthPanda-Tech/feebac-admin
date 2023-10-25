@@ -4,6 +4,7 @@ import { createContext, useState, useEffect, useReducer } from "react";
 
 const INIT_STATE = {
     pageType: 1,
+    activePage: null,
     data: null,
     index: null,
 };
@@ -13,6 +14,7 @@ function insightReducer(state, action) {
         case "LAYOUT": {
             return {
                 pageType: action.pageType,
+                activePage: null,
                 data: null,
                 index: null,
             };
@@ -22,6 +24,7 @@ function insightReducer(state, action) {
             return {
                 ...state,
                 pageType: action.pageType,
+                activePage: action.activePage,
                 data: action.data,
                 index: action.index,
             };

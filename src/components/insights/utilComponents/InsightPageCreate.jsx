@@ -20,7 +20,7 @@ export default function InsightPageCreate() {
     const { pages, state, dispatch } = useContext(PageContext);
 
     return (
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-10">
             <span className="font-semibold text-lg capitalize">
                 Choose Your Template
             </span>
@@ -52,10 +52,12 @@ export default function InsightPageCreate() {
                     <PagePill
                         key={index}
                         index={index}
+                        active={state.activePage === index}
                         onClick={() =>
                             dispatch({
                                 type: "PAGE",
                                 pageType: page.pageType,
+                                activePage: index,
                                 data: page,
                                 index: index,
                             })

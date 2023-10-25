@@ -1,10 +1,12 @@
-export default function PagePill({ index, onClick }) {
+export default function PagePill({ index, active, onClick }) {
     return (
         <div
-            className="bg-white w-fit font-medium cursor-pointer py-2 px-7 rounded-2xl text-[#EA8552]"
+            className={`${
+                active ? "bg-accent text-white" : "bg-white"
+            } w-fit font-medium cursor-pointer py-2 px-7 rounded-2xl text-[#EA8552]`}
             onClick={onClick}
         >
-            Page {index + 1}
+            {index >= 0 ? `Page ${index + 1}` : "+"}
         </div>
     );
 }

@@ -1,50 +1,43 @@
-import DefaultLayout from "./layouts/DefaultLayout";
-import EighthLayout from "./layouts/EighthLayout";
-import FifthLayout from "./layouts/FifthLayout";
-import FourthLayout from "./layouts/FourthLayout";
-import SeventhLayout from "./layouts/SeventhLayout";
-import SixthLayout from "./layouts/SixthLayout";
-import ThirdLayout from "./layouts/ThirdLayout";
+import { useContext } from "react";
+import { PageContext } from "../../contexts/InsightPageContext";
 
-export default function LayoutFactory({ parent, activeLayout, setPages }) {
-    switch (activeLayout) {
+import DefaultLayout from "./layoutComponents/DefaultLayout";
+import ThirdLayout from "./layoutComponents/ThirdLayout";
+// import FourthLayout from "./layoutComponents/FourthLayout";
+// import FifthLayout from "./layoutComponents/FifthLayout";
+// import SixthLayout from "./layoutComponents/SixthLayout";
+// import SeventhLayout from "./layoutComponents/SeventhLayout";
+// import EighthLayout from "./layoutComponents/EighthLayout";
+
+export default function LayoutFactory() {
+    const { state } = useContext(PageContext);
+
+    switch (state.pageType) {
         case 1:
-            return (
-                <DefaultLayout
-                    parent={parent}
-                    pageType={1}
-                    setPages={setPages}
-                />
-            );
+            return <DefaultLayout pageType={1} />;
 
         case 2:
-            return (
-                <DefaultLayout
-                    parent={parent}
-                    pageType={2}
-                    setPages={setPages}
-                />
-            );
+            return <DefaultLayout pageType={2} />;
 
         case 3:
-            return <ThirdLayout parent={parent} setPages={setPages} />;
+            return <ThirdLayout />;
 
-        case 4:
-            return <FourthLayout parent={parent} setPages={setPages} />;
-
-        case 5:
-            return <FifthLayout parent={parent} setPages={setPages} />;
-
-        case 6:
-            return <SixthLayout parent={parent} setPages={setPages} />;
-
-        case 7:
-            return <SeventhLayout parent={parent} setPages={setPages} />;
-
-        case 8:
-            return <EighthLayout parent={parent} setPages={setPages} />;
+        // case 4:
+        //     return <FourthLayout />;
+        //
+        // case 5:
+        //     return <FifthLayout />;
+        //
+        // case 6:
+        //     return <SixthLayout />;
+        //
+        // case 7:
+        //     return <SeventhLayout />;
+        //
+        // case 8:
+        //     return <EighthLayout />;
 
         default:
-            break;
+            return null;
     }
 }

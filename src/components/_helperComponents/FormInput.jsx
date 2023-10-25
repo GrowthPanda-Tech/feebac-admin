@@ -15,6 +15,7 @@ export default function FormInput({
                 type={type}
                 name={name}
                 onChange={handleChange}
+                required
             />
         </label>
     );

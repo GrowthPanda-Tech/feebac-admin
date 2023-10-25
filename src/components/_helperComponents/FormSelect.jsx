@@ -7,6 +7,7 @@ export default function FormSelect({ name, children, value, handleChange }) {
                 name={name}
                 value={value}
                 onChange={handleChange}
+                required
             >
                 {children}
             </select>

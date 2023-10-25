@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { PageContext } from "../../../contexts/InsightPageContext";
 
 import makeRequest from "../../../utils/makeRequest";
-import getInsightImgUrl from "../../../utils/getInsightImgUrl";
+import submitLayout from "../../../utils/submitLayout";
 
 import LayoutInput from "./helperComponents/LayoutInput";
 import SectionContainer from "./helperComponents/SectionContainer";
@@ -9,15 +10,19 @@ import ImageDragDrop from "../../_helperComponents/ImgDragDrop";
 import LayoutTextArea from "./helperComponents/LayoutTextArea";
 import SubmitButton from "../helperComponents/SubmitButton";
 
-export default function FifthLayout({ parent, setPages }) {
-    const initSections = { sectionImg: "", sectionDesc: "" };
+export default function FifthLayout() {
+    const { pages, setPages, state } = useContext(PageContext);
 
-    const [layout, setLayout] = useState({
-        parent,
+    const insightId = sessionStorage.getItem("insightId");
+    const initSections = { sectionImg: "", sectionDesc: "" };
+    const initLayout = {
+        parent: insightId,
         pageType: 5,
         title: "",
         section: [{ ...initSections }],
-    });
+    };
+
+    const [layout, setLayout] = useState(initLayout);
 
     const handleSectionAdd = () => {
         const updatedLayout = { ...layout };
@@ -49,10 +54,18 @@ export default function FifthLayout({ parent, setPages }) {
         formData.append("image", image);
 
         try {
-            const url = await getInsightImgUrl(formData);
+            const response = await makeRequest(
+                "insights/upload-insights-images",
+                "POST",
+                formData
+            );
+
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
 
             const updatedLayout = { ...layout };
-            updatedLayout.section[index].sectionImg = url;
+            updatedLayout.section[index].sectionImg = response.data;
 
             setLayout(updatedLayout);
         } catch (error) {
@@ -60,27 +73,21 @@ export default function FifthLayout({ parent, setPages }) {
         }
     };
 
-    const handleSubmit = async () => {
-        try {
-            const response = await makeRequest(
-                "insights/add-insights-pages",
-                "POST",
-                layout
-            );
-
-            if (!response.isSuccess) {
-                throw new Error(response.message);
-            }
-
-            setPages((prev) => [...prev, layout]);
-        } catch (error) {
-            console.error(error);
+    useEffect(() => {
+        if (state.data) {
+            setLayout(state.data);
+        } else {
+            setLayout(initLayout);
         }
-    };
+    }, [state.data]);
 
     return (
         <>
-            <LayoutInput name={"title"} />
+            <LayoutInput
+                name={"title"}
+                value={layout.title}
+                handleChange={handleChange}
+            />
 
             <button
                 className="bg-[#E6E6E6] px-8 py-2 rounded-2xl w-fit"
@@ -89,7 +96,7 @@ export default function FifthLayout({ parent, setPages }) {
                 <i className="fa-solid fa-plus"></i>
             </button>
 
-            {layout.section.map((_, index) => (
+            {layout.section.map((sec, index) => (
                 <SectionContainer key={index}>
                     <h2 className="text-[#EA8552] font-semibold text-xl">
                         Section {index + 1}
@@ -102,13 +109,18 @@ export default function FifthLayout({ parent, setPages }) {
 
                     <LayoutTextArea
                         name={"sectionDesc"}
+                        value={sec.sectionDesc}
                         label={"description"}
                         handleChange={(e) => handleChange(e, index)}
                     />
                 </SectionContainer>
             ))}
 
-            <SubmitButton handleSubmit={handleSubmit} />
+            <SubmitButton
+                handleSubmit={() =>
+                    submitLayout(layout, state.index, pages, setPages)
+                }
+            />
         </>
     );
 }

@@ -1,7 +1,9 @@
 import { useState, useContext } from "react";
 import { CategoryContext } from "../../contexts/CategoryContext";
 import { useNavigate } from "react-router-dom";
-import formSubmit from "../../utils/formSubmit";
+
+import makeRequest from "../../utils/makeRequest";
+
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 //components
@@ -39,6 +41,8 @@ export default function NewsCreate() {
     };
 
     const handleSubmit = async (event) => {
+        event.preventDefault();
+
         const formdata = new FormData();
 
         for (const [key, value] of Object.entries(newsData)) {
@@ -56,8 +60,7 @@ export default function NewsCreate() {
         }
 
         try {
-            const response = await formSubmit(
-                event,
+            const response = await makeRequest(
                 "news/create-news",
                 "POST",
                 formdata

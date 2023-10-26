@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 
 import makeRequest from "../../../utils/makeRequest";
-import formSubmit from "../../../utils/formSubmit";
 import removeForbiddenChars from "../../../utils/removeForbiddenChars";
 import convertToUTC from "../../../utils/convertToUTC";
 
@@ -15,7 +14,9 @@ import AlertComponent from "../../AlertComponent/AlertComponent";
 import { CategoryContext } from "../../../contexts/CategoryContext";
 import { useRef } from "react";
 
-const TODAY = new Date().toISOString().slice(0, 16);
+const DATE_OBJ = new Date();
+const TODAY = `${DATE_OBJ.toISOString().split("T")[0]}T00:00`; //whew
+const TODAY_VAL = DATE_OBJ.toLocaleString("sv").replace(" ", "T"); //thanks sweden
 
 function UserCount({ type, count }) {
     return (
@@ -52,12 +53,13 @@ function Select({ name, value, onChange, children }) {
     );
 }
 
-function Input({ type, min, name, onChange }) {
+function Input({ type, name, value, min, onChange }) {
     return (
         <input
             type={type}
             min={min}
             name={name}
+            value={value}
             onChange={onChange}
             className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3"
             required
@@ -81,11 +83,11 @@ export default function CreateSurveyForm({
 }) {
     const { categories } = useContext(CategoryContext);
 
-    let initCat = categories[0]?.category_id ? categories[0].category_id : "";
-
     const [filters, setFilters] = useState([]);
     const [surveyData, setSurveyData] = useState({
-        category: initCat,
+        startDate: TODAY_VAL,
+        endDate: TODAY_VAL,
+        category: "",
     });
     const [profileData, setProfileData] = useState({});
     const [userCount, setUserCount] = useState(0);
@@ -198,28 +200,29 @@ export default function CreateSurveyForm({
     };
 
     const handleSubmit = async (event) => {
-        try {
-            const dataString = JSON.stringify(profileData);
-            const formdata = new FormData();
+        event.preventDefault();
 
-            for (const [key, value] of Object.entries(surveyData)) {
-                if (key === "surveyImg") {
-                    formdata.append(key, value, value.name);
-                    continue;
-                }
+        const dataString = JSON.stringify(profileData);
+        const formdata = new FormData();
 
-                if (key === "category" && value === "") {
-                    formdata.append(key, categories[0].category_id);
-                    continue;
-                }
-
-                formdata.append(key, value);
+        for (const [key, value] of Object.entries(surveyData)) {
+            if (key === "surveyImg") {
+                formdata.append(key, value, value.name);
+                continue;
             }
 
-            formdata.append("target", dataString);
+            if (key === "category" && value === "") {
+                formdata.append(key, categories[0].category_id);
+                continue;
+            }
 
-            const response = await formSubmit(
-                event,
+            formdata.append(key, value);
+        }
+
+        formdata.append("target", dataString);
+
+        try {
+            const response = await makeRequest(
                 "site-admin/create-survey",
                 "POST",
                 formdata
@@ -252,8 +255,9 @@ export default function CreateSurveyForm({
                 <Label name={"Start Date"}>
                     <Input
                         type={"datetime-local"}
-                        min={TODAY}
                         name={"startDate"}
+                        min={TODAY}
+                        value={TODAY_VAL}
                         onChange={handleChange}
                     />
                 </Label>
@@ -261,8 +265,9 @@ export default function CreateSurveyForm({
                 <Label name={"End Date"}>
                     <Input
                         type={"datetime-local"}
-                        min={TODAY}
                         name={"endDate"}
+                        min={TODAY}
+                        value={TODAY_VAL}
                         onChange={handleChange}
                     />
                 </Label>

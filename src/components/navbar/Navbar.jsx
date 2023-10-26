@@ -47,7 +47,7 @@ export default function Navbar() {
     };
 
     return (
-        <div className="bg-primary h-screen w-80 fixed flex flex-col justify-between">
+        <div className="bg-primary h-screen w-80 fixed flex flex-col justify-between overflow-y-scroll no-scrollbar">
             <div>
                 <img src={dashboard} className="w-full p-12" />
                 {navItems.map((item, index) => (

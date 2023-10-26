@@ -2,7 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CategoryContext } from "../../contexts/CategoryContext";
 
-import formSubmit from "../../utils/formSubmit";
+import makeRequest from "../../utils/makeRequest";
+
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 //components
@@ -44,6 +45,45 @@ function NewsEdit() {
         setNewsData({ ...newsData, [name]: value });
     };
 
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const formdata = new FormData();
+
+        for (const [key, value] of Object.entries(newsData)) {
+            if (key === "newsImage") {
+                if (imgUpdate) {
+                    formdata.append(
+                        "newsImage",
+                        newsData.newsImage,
+                        newsData.newsImage.name
+                    );
+                }
+                continue;
+            }
+            formdata.append(key, value);
+        }
+
+        try {
+            const response = await makeRequest(
+                "news/edit-news",
+                "PUT",
+                formdata
+            );
+
+            if (response.isSuccess) {
+                AlertComponent("success", response);
+                setTimeout(() => {
+                    navigate("/news");
+                }, 1000);
+            } else {
+                AlertComponent("failed", response);
+            }
+        } catch (error) {
+            AlertComponent("error", "", error);
+        }
+    };
+
     useEffect(() => {
         let ignore = false;
 
@@ -62,44 +102,6 @@ function NewsEdit() {
             ignore = true;
         };
     }, []);
-
-    const handleSubmit = async (event) => {
-        const formdata = new FormData();
-
-        for (const [key, value] of Object.entries(newsData)) {
-            if (key === "newsImage") {
-                if (imgUpdate) {
-                    formdata.append(
-                        "newsImage",
-                        newsData.newsImage,
-                        newsData.newsImage.name
-                    );
-                }
-                continue;
-            }
-            formdata.append(key, value);
-        }
-
-        try {
-            const response = await formSubmit(
-                event,
-                "news/edit-news",
-                "PUT",
-                formdata
-            );
-
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                setTimeout(() => {
-                    navigate("/news");
-                }, 1000);
-            } else {
-                AlertComponent("failed", response);
-            }
-        } catch (error) {
-            AlertComponent("error", "", error);
-        }
-    };
 
     return (
         <div className="flex flex-col gap-8">

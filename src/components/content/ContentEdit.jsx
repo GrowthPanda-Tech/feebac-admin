@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import makeRequest from "../../utils/makeRequest";
-import formSubmit from "../../utils/formSubmit";
 
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
@@ -47,28 +46,27 @@ export default function ContentEdit() {
         setArticleData({ ...articleData, article_content: content });
 
     const handleSubmit = async (event) => {
-        try {
-            const formData = new FormData();
-            formData.append("articleId", articleData.article_id);
-            formData.append("articleTitle", articleData.article_title);
+        event.preventDefault();
+
+        const formData = new FormData();
+
+        formData.append("articleId", articleData.article_id);
+        formData.append("articleTitle", articleData.article_title);
+        formData.append("articleDesctiption", articleData.article_desctiption);
+        formData.append("articleContent", articleData.article_content);
+        formData.append("category", articleData.category);
+        formData.append("isUpdateImage", imgUpdate.isUpdate);
+
+        if (imgUpdate.isUpdate) {
             formData.append(
-                "articleDesctiption",
-                articleData.article_desctiption
+                "articleImg",
+                imgUpdate.articleImg,
+                imgUpdate.articleImg.name
             );
-            formData.append("articleContent", articleData.article_content);
-            formData.append("category", articleData.category);
-            formData.append("isUpdateImage", imgUpdate.isUpdate);
+        }
 
-            if (imgUpdate.isUpdate) {
-                formData.append(
-                    "articleImg",
-                    imgUpdate.articleImg,
-                    imgUpdate.articleImg.name
-                );
-            }
-
-            const response = await formSubmit(
-                event,
+        try {
+            const response = await makeRequest(
                 "/site-admin/update-article",
                 "PUT",
                 formData

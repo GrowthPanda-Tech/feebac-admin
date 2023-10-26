@@ -5,7 +5,6 @@ import { ProfileContext } from "../../contexts/ProfileContext";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 //utils
-import formSubmit from "../../utils/formSubmit";
 import makeRequest from "../../utils/makeRequest";
 
 import AlertComponent from "../AlertComponent/AlertComponent";
@@ -54,12 +53,13 @@ function ProfileForm({ setShow }) {
     }
 
     const handleImageSubmit = async (event) => {
+        event.preventDefault();
+
         if (isUpdateImage) {
             const formData = new FormData();
             formData.append("userImage", imgUpdate.userImage);
 
-            const res = await formSubmit(
-                event,
+            const res = await makeRequest(
                 "profile/upload-image",
                 "POST",
                 formData

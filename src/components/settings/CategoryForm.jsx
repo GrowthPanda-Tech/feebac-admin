@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
 import { CategoryContext } from "../../contexts/CategoryContext";
 
+import makeRequest from "../../utils/makeRequest";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
-import formSubmit from "../../utils/formSubmit";
 
 import AlertComponent from "../AlertComponent/AlertComponent";
 
@@ -35,17 +35,18 @@ export default function CategoryForm({ setIsShowCategoryCreate }) {
     };
 
     const handleSubmit = async (event) => {
-        try {
-            const formdata = new FormData();
-            formdata.append("categoryName", newCategory.categoryName);
-            formdata.append(
-                "categoryImg",
-                newCategory.categoryImg,
-                newCategory.categoryImg.name
-            );
+        event.preventDefault();
 
-            const response = await formSubmit(
-                event,
+        const formdata = new FormData();
+        formdata.append("categoryName", newCategory.categoryName);
+        formdata.append(
+            "categoryImg",
+            newCategory.categoryImg,
+            newCategory.categoryImg.name
+        );
+
+        try {
+            const response = await makeRequest(
                 "site-admin/add-category",
                 "POST",
                 formdata

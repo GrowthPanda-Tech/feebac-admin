@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import Filters from "./filter/Filters";
+import { useNavigate, useParams } from "react-router-dom";
+
 import makeRequest from "../../../utils/makeRequest";
 import convertToUTC from "../../../utils/convertToUTC";
-import formSubmit from "../../../utils/formSubmit";
 import AddQuestions from "./AddQuestions";
-import { useNavigate, useParams } from "react-router-dom";
+
+import Filters from "./filter/Filters";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -124,6 +125,8 @@ export default function CreateForm() {
     };
 
     const handleSubmit = async (event) => {
+        event.preventDefault();
+
         const dataString = JSON.stringify(profileData);
         const formdata = new FormData();
 
@@ -133,8 +136,7 @@ export default function CreateForm() {
 
         formdata.append("target", dataString);
 
-        const response = await formSubmit(
-            event,
+        const response = await makeRequest(
             "site-admin/create-survey",
             "POST",
             formdata

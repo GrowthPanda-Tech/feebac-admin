@@ -4,7 +4,6 @@ import { CategoryContext } from "../../../contexts/CategoryContext";
 
 import makeRequest from "../../../utils/makeRequest";
 import convertToUTC from "../../../utils/convertToUTC";
-import formSubmit from "../../../utils/formSubmit";
 
 import AlertComponent from "../../AlertComponent/AlertComponent";
 
@@ -103,22 +102,21 @@ export default function EditSurveyForm({
     };
 
     const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const formdata = new FormData();
+
+        for (const [key, value] of Object.entries(updatedData)) {
+            formdata.append(key, value);
+        }
+
         try {
-            const dataString = JSON.stringify(profileData);
-            const formdata = new FormData();
-
-            for (const [key, value] of Object.entries(updatedData)) {
-                formdata.append(key, value);
-            }
-
-            formdata.append("target", dataString);
-
-            const response = await formSubmit(
-                event,
+            const response = await makeRequest(
                 "site-admin/update-survey",
                 "PUT",
                 formdata
             );
+
             if (response.isSuccess) {
                 AlertComponent("success", response);
                 const getData = async () => {

@@ -651,7 +651,7 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tinymce: 6.6.2
+      tinymce: 6.7.1
     dev: false
 
   /@types/prop-types@15.7.5:
@@ -2415,8 +2415,8 @@ packages:
       any-promise: 1.3.0
     dev: true
 
-  /tinymce@6.6.2:
-    resolution: {integrity: sha512-ShoaznNP3qI8dPtEnYt3ByhAJfMhzIY1K04CoFu1IPDeAxmAZCUJLgfiplo8etP4wN8zrBIxHEqpwYYb2IllOQ==}
+  /tinymce@6.7.1:
+    resolution: {integrity: sha512-SIGJgWk2d/X59VbO+i81QfNx2EP1P5t+sza2/1So3OLGtmMBhEJMag7sN/Mo8sq4s0niwb65Z51yLju32jP11g==}
     dev: false
 
   /to-regex-range@5.0.1:

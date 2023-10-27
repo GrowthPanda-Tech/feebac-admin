@@ -211,6 +211,8 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         }
     };
 
+    console.log(questions.length);
+
     const handleSchedule = async () => {
         try {
             const response = await makeRequest(
@@ -239,13 +241,11 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             surveyId,
             isStartNow: true,
         };
-
         const response = await makeRequest(
             "survey/start-survey",
             "PATCH",
             body
         );
-
         if (response.isSuccess) {
             AlertComponent("success", response);
             navigate("/survey");

@@ -40,7 +40,12 @@ function RedeemInfo() {
             expiredData: "",
         },
     });
-    const [message, setMessage] = useState("");
+    const [redeemCouponData, setRedeemCouponData] = useState(
+        useState({
+            message: "",
+            couponCode: "",
+        })
+    );
 
     const getRedeemInfo = async () => {
         try {
@@ -56,15 +61,21 @@ function RedeemInfo() {
             console.log(error);
         }
     };
-    const onChangeHandler = (event) => {
-        setMessage(event.target.value);
+    const onChangeHandler = (e) => {
+        const { name, value } = e.target;
+
+        setRedeemCouponData({
+            ...redeemCouponData,
+            [name]: value,
+        });
     };
 
     const onSubmitHandler = async () => {
         try {
             const body = {
                 id: slug,
-                message: message,
+                message: redeemCouponData.message,
+                couponCode: redeemCouponData.couponCode,
             };
             const response = await makeRequest(
                 "loyalty/approve-request",
@@ -80,28 +91,64 @@ function RedeemInfo() {
         } catch (error) {}
     };
 
+    const isButtonDisabled =
+        !redeemCouponData.message ||
+        !redeemCouponData.couponCode ||
+        !redeemCouponData.message.trim() ||
+        !redeemCouponData.couponCode.trim();
+
+    console.log(isButtonDisabled);
+
     useEffect(() => {
         getRedeemInfo();
     }, [slug]);
     return (
         <>
-            <PageTitle name={"Redeem Information"} />
+            <h1 className="text-2xl font-semibold ">Redeem Infomation</h1>
             {redeemInfo.currentStatus === "pending" ? (
-                <div className="p-5 flex items-center gap-10  ">
-                    <input
-                        className="w-full p-5 rounded-lg"
-                        placeholder="Enter the Requested Code Here..."
-                        type="text"
-                        onChange={onChangeHandler}
-                    />
-                    <button className="btn-primary" onClick={onSubmitHandler}>
+                <div className="p-5 flex flex-col  gap-2  ">
+                    <div className="">
+                        <label className=" text-xl font-bold  ">
+                            Enter The message for user
+                        </label>
+                        <input
+                            name="message"
+                            className="w-full p-5 rounded-lg mt-2"
+                            placeholder="Enter the Message Code Here..."
+                            type="text"
+                            onChange={(e) => {
+                                onChangeHandler(e);
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label className=" text-xl font-bold">
+                            Enter Coupon Code
+                        </label>
+                        <input
+                            name="couponCode"
+                            className="w-full p-5 rounded-lg mt-2"
+                            placeholder="Enter the Code Here..."
+                            type="text"
+                            onChange={(e) => {
+                                onChangeHandler(e);
+                            }}
+                        />
+                    </div>
+                    <button
+                        className={` ${
+                            isButtonDisabled ? "btn-secondary" : "btn-primary"
+                        }  w-28`}
+                        onClick={onSubmitHandler}
+                        disabled={isButtonDisabled}
+                    >
                         Send
                     </button>
                 </div>
             ) : (
                 ""
             )}
-            <div className="grid grid-cols-2 p-5 gap-10">
+            <div className="grid grid-cols-2 p-5 gap-10 h-[35vh]">
                 <div className=" space-y-4">
                     <PageTitle name={"User Details"} />
                     <div className="flex flex-col gap-4 bg-white rounded-xl h-[40vh] justify-center p-8 w-full">

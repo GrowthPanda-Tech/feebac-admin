@@ -1,3 +1,4 @@
+import swal from "./swal";
 import makeRequest from "./makeRequest";
 
 export default async function submitLayout(layout, index, pages, setPages) {
@@ -26,7 +27,9 @@ export default async function submitLayout(layout, index, pages, setPages) {
 
             setPages(updatedPages);
         }
+
+        swal("success", response.message);
     } catch (error) {
-        console.error(error);
+        swal("error", error.message);
     }
 }

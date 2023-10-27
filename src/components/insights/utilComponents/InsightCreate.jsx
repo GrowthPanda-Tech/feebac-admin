@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { CategoryContext } from "../../../contexts/CategoryContext";
 
 import makeRequest from "../../../utils/makeRequest";
+import swal from "../../../utils/swal";
 
 //components
 import FormInput from "../../_helperComponents/FormInput";
@@ -66,8 +67,10 @@ export default function InsightCreate({ setInsightId }) {
 
             setInsightId(id);
             sessionStorage.setItem("insightId", id);
+
+            swal("success", response.message);
         } catch (error) {
-            console.error(error);
+            swal("error", error.message);
         }
     };
 

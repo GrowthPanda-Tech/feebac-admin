@@ -1,19 +1,49 @@
-export default async function makeRequest(route, method, body = null) {
-    const baseUrl = import.meta.env.VITE_BACKEND_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
+export default async function makeRequest(
+    route,
+    method = "GET",
+    body = null,
+    timeout = 10000
+) {
     const request = {
         method,
         headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
             authToken: localStorage.getItem("authToken"),
         },
     };
 
-    if (body != null) request.body = JSON.stringify(body);
+    if (body != null) {
+        request.body = JSON.stringify(body);
+    }
 
-    const response = await fetch(`${baseUrl}/${route}`, request);
-    const json = await response.json();
+    try {
+        const controller = new AbortController();
+        const signal = controller.signal;
 
-    return json;
+        setTimeout(() => {
+            controller.abort();
+        }, timeout);
+
+        const response = await fetch(`${BASE_URL}/${route}`, {
+            ...request,
+            signal,
+        });
+
+        clearTimeout();
+
+        if (response.status >= 500 || response.status === 204) {
+            throw new Error(response.status);
+        }
+
+        const json = await response.json();
+
+        return json;
+    } catch (error) {
+        if (error.name === "AbortError") {
+            throw new Error("Timeout");
+        } else {
+            throw error;
+        }
+    }
 }

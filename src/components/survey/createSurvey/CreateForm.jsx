@@ -5,6 +5,7 @@ import convertToUTC from "../../../utils/convertToUTC";
 import formSubmit from "../../../utils/formSubmit";
 import AddQuestions from "./AddQuestions";
 import { useNavigate, useParams } from "react-router-dom";
+import AlertComponent from "../../AlertComponent/AlertComponent";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -139,13 +140,14 @@ export default function CreateForm() {
             "POST",
             formdata
         );
-        alert(response.message);
 
         if (response.isSuccess) {
+            AlertComponent("success", response);
+
             setSurveyId(response.surveyId);
             setSurveyTitle(surveyData.surveyTitle);
             setIsSurveyCreate(response.isSuccess);
-        }
+        } else AlertComponent("error", response);
     };
 
     {
@@ -160,9 +162,6 @@ export default function CreateForm() {
                 setIsSurveyCreate(false);
             }, 1000);
     }
-
-    console.log(surveyId);
-    console.log(isSurveyCreate);
 
     useEffect(() => {
         getCategories();

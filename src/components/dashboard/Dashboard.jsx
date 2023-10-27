@@ -1,96 +1,173 @@
 import { React, useState, useEffect } from "react";
 import PieChart from "./charts/PieChart";
-import { PieData } from "./charts/mockData";
-// import GeoLoaction from "./charts/GeoLoaction";
 import makeRequest from "../../utils/makeRequest";
-
-function addValue(lowerValue, upperValue, name) {
-    for (let i in PieData) {
-        if (PieData[i].name === name) {
-            PieData[i].data[0].value = lowerValue;
-            PieData[i].data[1].value = upperValue;
-        }
-    }
-}
+import AlertComponent from "../AlertComponent/AlertComponent";
+import InfoCards from "./InfoCards";
+import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import DashboardSkeleton from "../_helperComponents/DashboardSkeleton";
 
 function Dashboard() {
-    const [adminData, setAdminData] = useState([]);
+    const [adminData, setAdminData] = useState({});
+    const [loading, setLoading] = useState(true);
 
-    const getAdminData = async () => {
-        const response = await makeRequest(
-            "/site-admin/admin-dashboard",
-            "GET"
-        );
-        response.isSuccess
-            ? setAdminData(response.data)
-            : alert(response.message);
+    let surveyData = {
+        labels: ["Total Survey", "Public Survey"],
+        datasets: [
+            {
+                label: "Surveys",
+                data: Object.values(
+                    adminData.surveyData ? adminData.surveyData : []
+                ),
+                backgroundColor: [
+                    "rgba(164, 57, 72, 1)",
+                    "rgba(234, 82, 95, 1)",
+                ],
+                hoverOffset: 4,
+            },
+        ],
+    };
+
+    let loyaltyData = {
+        labels: ["Total Loyalty Point", "Used Loyalty Point"],
+        datasets: [
+            {
+                label: "Loyalty Point",
+                data: Object.values(
+                    adminData.loyaltyPointData ? adminData.loyaltyPointData : []
+                ),
+                backgroundColor: [
+                    "rgba(164, 57, 72, 1)",
+                    "rgba(234, 82, 95, 1)",
+                ],
+                hoverOffset: 4,
+            },
+        ],
+    };
+    let articleData = {
+        labels: ["Total Articles", "Public Articles"],
+        datasets: [
+            {
+                label: "Articles",
+                data: Object.values(
+                    adminData?.articleData ? adminData?.articleData : []
+                ),
+                backgroundColor: [
+                    "rgba(164, 57, 72, 1)",
+                    "rgba(234, 82, 95, 1)",
+                ],
+                hoverOffset: 4,
+            },
+        ],
+    };
+
+    let option = {
+        plugins: {
+            legend: {
+                position: "bottom",
+                labels: {
+                    usePointStyle: true,
+                    pointStyle: "circle",
+                },
+            },
+        },
     };
 
     useEffect(() => {
+        let ignore = false;
+
+        async function getAdminData() {
+            try {
+                const response = await makeRequest(
+                    "/site-admin/admin-dashboard",
+                    "GET"
+                );
+
+                if (!response.isSuccess) {
+                    throw new Error(json.message);
+                }
+
+                if (!ignore) {
+                    setAdminData(response.data);
+                    setLoading(false);
+                }
+            } catch (error) {
+                AlertComponent("error", error.message);
+                if (error.message == 204) {
+                    setAdminData([]);
+                    setLoading(false);
+                }
+            }
+        }
+
         getAdminData();
+
+        return () => {
+            ignore = true;
+        };
     }, []);
 
-    if (adminData) {
-        addValue(
-            adminData?.surveyData?.publicSurvey,
-            adminData?.surveyData?.totalSurvey,
-            "Survey Data"
-        );
-        addValue(
-            adminData?.loyaltyPointData?.totalLoyaltyPoint,
-            adminData?.loyaltyPointData?.usedLoyaltyPoint,
-            "loyalty Point Data"
-        );
-        addValue(
-            adminData?.articleData?.publicArticles,
-            adminData?.articleData?.totalArticles,
-            "Article Data"
-        );
-    }
-
-    console.log(adminData);
     return (
         <>
-            <div>
-                <h1 className=" text-4xl font-semibold">Dashboard</h1>
-            </div>
-            <div className="grid grid-cols-3 w-full  h-96">
-                {PieData.map((item, index) => {
-                    return <PieChart key={index} value={item} />;
-                })}
-            </div>
-            {adminData && (
-                <div className="grid grid-cols-2 h-96">
-                    <div className="flex w-full justify-between">
-                        <div className="h-32 bg-white w-1/2 m-2 p-5">
-                            <h2 className="text-2xl font-bold">
-                                Total User:{adminData?.totalUsers}
-                            </h2>
-                        </div>
-                        {/* <GeoLoaction /> */}
-                        <div className="h-44 bg-white m-2 w-1/2 p-5">
-                            <h2 className="text-xl flex flex-col font-bold">
-                                Total Downloads
-                                <span>
-                                    Total Andriod Download :
-                                    {
-                                        adminData?.downloadData
-                                            ?.totalAndroidDownloads
-                                    }
-                                </span>
-                                <span>
-                                    Total Ios Download :
-                                    {adminData?.downloadData?.totalIOSDownloads}
-                                </span>
-                            </h2>
-                        </div>
-                    </div>
-                    <div className=" bg-white flex justify-between m-2 text-center items-center">
-                        <h2 className=" w-full">Map</h2>
-                    </div>
-
-                    {/* <GeoLoaction /> */}
+            {adminData.length === 0 ? (
+                <div className="flex h-[60vh] font-semibold text-2xl justify-center items-center">
+                    Ops No Data to show
                 </div>
+            ) : !loading ? (
+                <div className="flex flex-col gap-2">
+                    <h1 className="text-3xl font-bold">Dashboard</h1>
+                    <div className="flex flex-col">
+                        <div className=" flex w-full">
+                            <InfoCards
+                                title={"Total User"}
+                                value={adminData ? adminData?.totalUsers : ""}
+                            />
+                            <InfoCards title={"Active User"} value={5} />
+                            <InfoCards
+                                title={"Total Android Download"}
+                                value={
+                                    adminData
+                                        ? adminData?.downloadData
+                                              ?.totalAndroidDownloads
+                                        : ""
+                                }
+                            />
+                            <InfoCards
+                                title={"Total Ios Download"}
+                                value={
+                                    adminData
+                                        ? adminData?.downloadData
+                                              ?.totalIOSDownloads
+                                        : ""
+                                }
+                            />
+                        </div>
+
+                        <div>
+                            <div className="grid grid-cols-3 p-6 bg-white mt-5 rounded-lg">
+                                {adminData && (
+                                    <PieChart
+                                        chartData={surveyData}
+                                        option={option}
+                                    />
+                                )}
+                                {adminData && (
+                                    <PieChart
+                                        chartData={loyaltyData}
+                                        option={option}
+                                    />
+                                )}
+                                {adminData && (
+                                    <PieChart
+                                        chartData={articleData}
+                                        option={option}
+                                    />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <DashboardSkeleton />
             )}
         </>
     );

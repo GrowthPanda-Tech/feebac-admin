@@ -1,39 +1,32 @@
-import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import ContentForm from "./ContentForm";
+import { useParams, useNavigate } from "react-router-dom";
+
 import makeRequest from "../../utils/makeRequest";
 import formSubmit from "../../utils/formSubmit";
+
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
+
+import ContentForm from "./ContentForm";
+import PageTitle from "../PageTitle";
+import AlertComponent from "../AlertComponent/AlertComponent";
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function ContentEdit() {
     const { slug } = useParams();
-    const baseUrl = import.meta.env.VITE_BACKEND_URL;
+    const navigate = useNavigate();
 
-    const [articleData, setArticleData] = useState({
-        category: { category_id: null },
-    });
+    const [articleData, setArticleData] = useState({});
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
-    const [imgUpdate, setImgUpdate] = useState(false);
-
-    const getArticleInfo = async () => {
-        const response = await makeRequest(
-            `site-admin/show-article-info?articleId=${slug}`,
-            "GET"
-        );
-        response.isSuccess
-            ? setArticleData(response.articleInfo)
-            : alert(response.message);
-    };
+    const [imgUpdate, setImgUpdate] = useState({
+        isUpdate: false,
+        articleImg: null,
+    });
 
     const handleChange = (event) => {
-        console.log(event.target.name);
         if (event.target.name === "articleImg") {
             const file = event.target.files[0];
-            setImgUpdate({
-                ...imgUpdate,
-                isUpdateImage: true,
-                articleImg: file,
-            });
+            setImgUpdate({ isUpdate: true, articleImg: file });
 
             if (file) {
                 const reader = new FileReader();
@@ -48,53 +41,85 @@ export default function ContentEdit() {
             ...articleData,
             [event.target.name]: event.target.value,
         });
-        console.log(
-            setArticleData({
-                ...articleData,
-                [event.target.name]: event.target.value,
-            })
-        );
     };
 
     const handleEditorChange = (content) =>
         setArticleData({ ...articleData, article_content: content });
 
     const handleSubmit = async (event) => {
-        const formData = new FormData();
-
-        formData.append("articleId", articleData.article_id);
-        formData.append("articleTitle", articleData.article_title);
-        formData.append("articleDesctiption", articleData.article_desctiption);
-        formData.append("articleContent", articleData.article_content);
-        formData.append("category", articleData.category);
-        formData.append("isUpdateImage", imgUpdate);
-        if (imgUpdate) {
+        try {
+            const formData = new FormData();
+            formData.append("articleId", articleData.article_id);
+            formData.append("articleTitle", articleData.article_title);
             formData.append(
-                "articleImg",
-                imgUpdate.articleImg,
-                imgUpdate.articleImg.name
+                "articleDesctiption",
+                articleData.article_desctiption
             );
-        }
+            formData.append("articleContent", articleData.article_content);
+            formData.append("category", articleData.category);
+            formData.append("isUpdateImage", imgUpdate.isUpdate);
 
-        const response = await formSubmit(
-            event,
-            "/site-admin/update-article",
-            "PUT",
-            formData
-        );
-        response.isSuccess ? alert("Article Edited") : alert(response.message);
+            if (imgUpdate.isUpdate) {
+                formData.append(
+                    "articleImg",
+                    imgUpdate.articleImg,
+                    imgUpdate.articleImg.name
+                );
+            }
+
+            const response = await formSubmit(
+                event,
+                "/site-admin/update-article",
+                "PUT",
+                formData
+            );
+
+            if (response.isSuccess) {
+                AlertComponent("success", response);
+                setTimeout(() => {
+                    navigate("/content");
+                }, 3200);
+            } else AlertComponent("failed", response);
+        } catch (error) {
+            AlertComponent("error", "", error);
+        }
     };
 
     useEffect(() => {
+        let ignore = false;
+
+        async function getArticleInfo() {
+            try {
+                const response = await makeRequest(
+                    `site-admin/show-article-info?articleId=${slug}`
+                );
+
+                if (!response.isSuccess) {
+                    throw new Error(response.message);
+                }
+
+                if (!ignore) {
+                    const antiAnwarObj = {
+                        ...response.articleInfo,
+                        category: response.articleInfo.category.category_id,
+                    };
+                    setArticleData(antiAnwarObj);
+                }
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
         getArticleInfo();
-        setImgPreview(baseUrl + articleData.image_url);
+
+        return () => {
+            ignore = true;
+        };
     }, []);
 
-    console.log(articleData);
-
     return (
-        <>
-            <h1 className="heading"> Edit Article </h1>
+        <div className="flex flex-col gap-8">
+            <PageTitle name={"Edit Article"} />
             <div className="flex flex-col-reverse md:flex-row gap-8">
                 <div className="md:w-3/4">
                     <ContentForm
@@ -116,13 +141,13 @@ export default function ContentEdit() {
                     <img
                         src={
                             articleData.image_url
-                                ? baseUrl + articleData.image_url
+                                ? BASE_URL + articleData.image_url
                                 : imgPreview
                         }
                         className="max-h-full max-w-full"
                     />
                 </div>
             </div>
-        </>
+        </div>
     );
 }

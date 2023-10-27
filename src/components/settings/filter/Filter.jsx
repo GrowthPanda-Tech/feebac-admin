@@ -7,19 +7,21 @@ export default function Filter({ dataTypeId, filter }) {
 
     return (
         <div className="h-fit bg-white py-6 px-8 flex gap-4 flex-col rounded-md border border-[#DDD]">
-            <div className="flex items-center justify-between">
+            <div
+                className="cursor-pointer flex items-center justify-between"
+                onClick={() => setIsExpand(!isExpand)}
+            >
                 <span className="font-medium text-lg capitalize">
                     {filter.key_name}
                 </span>
                 <i
-                    onClick={() => setIsExpand(!isExpand)}
                     className={`fa-solid fa-angles-${
                         !isExpand ? "down" : "up"
-                    } cursor-pointer`}
+                    }`}
                 ></i>
             </div>
 
-            {isExpand && (
+            {isExpand ? (
                 <FilterValues
                     dataTypeId={dataTypeId}
                     filterId={filter.id}
@@ -27,7 +29,7 @@ export default function Filter({ dataTypeId, filter }) {
                     options={options}
                     setOptions={setOptions}
                 />
-            )}
+            ) : null}
         </div>
     );
 }

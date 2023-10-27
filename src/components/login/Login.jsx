@@ -1,12 +1,16 @@
 import { useState } from "react";
-import OtpField from "./OtpField";
 import loginBanner from "../../assets/loginBanner.png";
-import makeRequest from "../../utils/makeRequest";
 
-function LargeBtn({ name }) {
+import makeRequest from "../../utils/makeRequest";
+import removeForbiddenChars from "../../utils/removeForbiddenChars";
+
+import OtpField from "./OtpField";
+import { Spinner } from "@material-tailwind/react";
+
+function LargeBtn({ children }) {
     return (
-        <button className="bg-primary transition hover:bg-accent text-white py-6 text-xl rounded-3xl font-semibold">
-            {name}
+        <button className="bg-primary flex justify-center items-center transition hover:bg-accent text-white py-6 text-xl rounded-3xl font-semibold">
+            {children}
         </button>
     );
 }
@@ -16,6 +20,8 @@ export default function Login() {
     const [loginInfo, setLoginInfo] = useState({ mobile: "", otp: "" });
     const [alertInfo, setAlertInfo] = useState({ message: "", type: null });
     const [otpStatus, setOtpStatus] = useState(true);
+
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (event) => {
         if (event.target.name === "mobile") {
@@ -34,27 +40,44 @@ export default function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        // validate admin or not
-        const isAdminResponse = await makeRequest(
-            `site-admin/is-admin?mobile=${loginInfo.mobile}`,
-            "GET"
-        );
+        try {
+            setLoading(true);
 
-        if (isAdminResponse.isSuccess && isAdminResponse.isAdmin) {
-            const jsonResponse = await makeRequest(
-                "auth/login",
-                "POST",
-                loginInfo
+            const isAdmin = await makeRequest(
+                `site-admin/is-admin?mobile=${loginInfo.mobile}`
             );
+
+            if (!isAdmin.isSuccess) {
+                setLoading(false);
+                throw new Error(isAdmin.message);
+            }
+
+            try {
+                const response = await makeRequest(
+                    "auth/login",
+                    "POST",
+                    loginInfo
+                );
+
+                if (!response.isSuccess) {
+                    setLoading(false);
+                    throw new Error(response.message);
+                }
+
+                setAlertInfo({
+                    ...alertInfo,
+                    message: response.message,
+                    type: "success",
+                });
+
+                setOtpStatus(false);
+                setLoading(false);
+            } catch (error) {
+                throw error;
+            }
+        } catch (error) {
             setAlertInfo({
-                ...alertInfo,
-                message: "OTP sent",
-                type: "success",
-            });
-            if (jsonResponse.isSuccess) setOtpStatus(false);
-        } else {
-            setAlertInfo({
-                message: "You are not allowed to login here",
+                message: error.message,
                 type: "error",
             });
         }
@@ -64,31 +87,49 @@ export default function Login() {
         e.preventDefault();
 
         let otp = "";
+
         Object.values(inputData).forEach((element) => {
             otp += element;
         });
 
-        const response = await makeRequest("auth/verify-otp", "POST", {
-            ...loginInfo,
-            otp: otp,
-        });
-        if (response.isSuccess) {
+        setLoading(true);
+
+        try {
+            const response = await makeRequest("auth/verify-otp", "POST", {
+                ...loginInfo,
+                otp: otp,
+            });
+
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
+
             localStorage.setItem("authToken", response.authToken);
-            localStorage.setItem("userInfo", JSON.stringify(response.userInfo));
+
+            setLoading(false);
+
             location.replace("/");
-        } else {
+        } catch (error) {
+            console.log(error);
+
             setAlertInfo({
                 ...setAlertInfo,
-                message: "OTP not matched.",
+                message: error.message,
                 type: "error",
             });
+
+            setLoading(false);
         }
     };
 
     return (
         <div className="flex w-full h-screen p-28 bg-white">
-            <div className="w-1/2 overflow-hidden">
-                <img src={loginBanner} alt="loading" />
+            <div className="w-1/2 aspect-square">
+                <img
+                    src={loginBanner}
+                    className="h-full mx-auto"
+                    alt="loading"
+                />
             </div>
 
             {/* Separation bar */}
@@ -106,11 +147,21 @@ export default function Login() {
                         placeholder="Enter mobile number"
                         value={loginInfo.mobile}
                         onChange={(event) => handleChange(event, 10)}
+                        onKeyDown={(event) => removeForbiddenChars(event)}
+                        onPaste={(event) => removeForbiddenChars(event)}
                         disabled={!otpStatus}
                         className="login-input disabled:cursor-not-allowed disabled:opacity-50"
                         required
                     />
-                    {otpStatus && <LargeBtn name={"Send OTP"} />}
+                    {otpStatus ? (
+                        <LargeBtn>
+                            {loading ? (
+                                <Spinner className="h-7 w-7" />
+                            ) : (
+                                "Send OTP"
+                            )}
+                        </LargeBtn>
+                    ) : null}
                 </form>
 
                 <div>
@@ -135,7 +186,13 @@ export default function Login() {
                                 inputOnChange={handleChange}
                             />
                         </div>
-                        <LargeBtn name={"LOGIN"} />
+                        <LargeBtn>
+                            {loading ? (
+                                <Spinner className="h-7 w-7" />
+                            ) : (
+                                "LOGIN"
+                            )}
+                        </LargeBtn>
                     </form>
                 )}
             </div>

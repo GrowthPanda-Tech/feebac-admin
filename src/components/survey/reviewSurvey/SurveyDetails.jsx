@@ -1,5 +1,4 @@
 export default function SurveyDetails({ info }) {
-    console.log(info);
     return (
         <>
             {info && (

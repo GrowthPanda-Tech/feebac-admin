@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import makeRequest from "../../utils/makeRequest";
+
+//components
+import PageTitle from "../PageTitle";
 import CategoryForm from "./CategoryForm";
 import Categories from "./Categories";
 import Profiles from "./filter/Profiles";
 import FilterCreate from "./filter/FilterCreate";
-import FilterValCreate from "./filter/FilterValCreate";
 
 function Pill({ section, isActive, onClick }) {
     return (
@@ -19,57 +22,68 @@ function Pill({ section, isActive, onClick }) {
 }
 
 export default function Settings() {
-    //TODO: refactor
-    const [isShowForm, setIsShowForm] = useState(false);
+    const [isShowCategoryCreate, setIsShowCategoryCreate] = useState(false);
     const [isShowFilterCreate, setIsShowFilterCreate] = useState(false);
-    const [isShowFilterValCreate, setIsShowFilterValCreate] = useState(false);
     const [visibleSection, setVisibleSection] = useState("category");
+    const [tertiaryKeys, setTertiaryKeys] = useState([]);
+    const [filterVals, setFilterVals] = useState({
+        dataType: 3,
+        isSelect: true,
+        options: [],
+    });
 
-    //TODO: DEFINITELY REFACTOR THIS
-    const handleShow = (section) => {
-        if (section === "filter") {
-            setIsShowFilterCreate(true);
-            setIsShowFilterValCreate(false);
-        } else if (section === "filterVal") {
-            setIsShowFilterCreate(false);
-            setIsShowFilterValCreate(true);
+    useEffect(() => {
+        let ignore = false;
+
+        async function getTertiaryKeys() {
+            try {
+                const response = await makeRequest(
+                    `config/get-profile-key-value`
+                );
+
+                if (!response.isSuccess) {
+                    throw new Error(response.message);
+                }
+
+                if (!ignore) {
+                    setTertiaryKeys(response.data[2].key);
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
-    };
+
+        getTertiaryKeys();
+
+        return () => {
+            ignore = true;
+        };
+    }, []);
 
     return (
-        <>
-            <div className="md:flex  md:justify-between items-center mb-6">
-                <h1 className="heading mb-1">Settings</h1>
+        <div className="flex flex-col gap-6">
+            <div className="md:flex md:justify-between items-center">
+                <PageTitle name={"Settings"} />
                 {visibleSection === "category" ? (
                     <button
                         className="btn-primary"
-                        onClick={() => setIsShowForm(true)}
+                        onClick={() => setIsShowCategoryCreate(true)}
                     >
-                        <i className="fa-solid fa-plus mr-3"></i>
+                        <i className="fa-solid fa-plus"></i>
                         Category
                     </button>
-                ) : (
-                    <div className="flex gap-4">
-                        <button
-                            className="text-xs md:text-base btn-primary"
-                            onClick={() => handleShow("filter")}
-                        >
-                            <i className="fa-solid fa-plus mr-3"></i>
-                            Filter Type
-                        </button>
-
-                        <button
-                            className="text-xs md:text-base btn-primary bg-accent"
-                            onClick={() => handleShow("filterVal")}
-                        >
-                            <i className="fa-solid fa-plus mr-3"></i>
-                            Filter Value
-                        </button>
-                    </div>
-                )}
+                ) : visibleSection === "filter" ? (
+                    <button
+                        className="btn-primary bg-accent"
+                        onClick={() => setIsShowFilterCreate(true)}
+                    >
+                        <i className="fa-solid fa-plus"></i>
+                        Filter
+                    </button>
+                ) : null}
             </div>
 
-            <div className="flex gap-4 mb-8">
+            <div className="flex gap-4">
                 <Pill
                     section={"Categories"}
                     isActive={visibleSection === "category"}
@@ -82,20 +96,26 @@ export default function Settings() {
                 />
             </div>
 
-            {/* TODO: find a better way to do this */}
-            {isShowForm && visibleSection === "category" && (
-                <CategoryForm setIsShowForm={setIsShowForm} />
-            )}
-            {isShowFilterCreate && visibleSection === "filter" && (
-                <FilterCreate setIsShowFilterCreate={setIsShowFilterCreate} />
-            )}
-            {isShowFilterValCreate && visibleSection === "filter" && (
-                <FilterValCreate
-                    setIsShowFilterValCreate={setIsShowFilterValCreate}
+            {isShowCategoryCreate && visibleSection === "category" ? (
+                <CategoryForm
+                    setIsShowCategoryCreate={setIsShowCategoryCreate}
                 />
-            )}
+            ) : null}
 
-            {visibleSection === "category" ? <Categories /> : <Profiles />}
-        </>
+            {isShowFilterCreate && visibleSection === "filter" ? (
+                <FilterCreate
+                    filterVals={filterVals}
+                    setFilterVals={setFilterVals}
+                    setTertiaryKeys={setTertiaryKeys}
+                    setIsShowFilterCreate={setIsShowFilterCreate}
+                />
+            ) : null}
+
+            {visibleSection === "category" ? (
+                <Categories />
+            ) : (
+                <Profiles tertiaryKeys={tertiaryKeys} />
+            )}
+        </div>
     );
 }

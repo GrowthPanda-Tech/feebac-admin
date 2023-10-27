@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { CategoryContext } from "../../contexts/CategoryContext";
+
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import formSubmit from "../../utils/formSubmit";
 
-export default function CategoryForm({ setIsShowForm, setCategories }) {
+import AlertComponent from "../AlertComponent/AlertComponent";
+
+export default function CategoryForm({ setIsShowCategoryCreate }) {
     const [newCategory, setNewCategory] = useState({});
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
+
+    const { categories, setCategories } = useContext(CategoryContext);
 
     const onChange = (event) => {
         if (event.target.name === "categoryName") {
@@ -29,35 +35,41 @@ export default function CategoryForm({ setIsShowForm, setCategories }) {
     };
 
     const handleSubmit = async (event) => {
-        const formdata = new FormData();
-        formdata.append("categoryName", newCategory.categoryName);
-        formdata.append(
-            "categoryImg",
-            newCategory.categoryImg,
-            newCategory.categoryImg.name
-        );
+        try {
+            const formdata = new FormData();
+            formdata.append("categoryName", newCategory.categoryName);
+            formdata.append(
+                "categoryImg",
+                newCategory.categoryImg,
+                newCategory.categoryImg.name
+            );
 
-        const response = await formSubmit(
-            event,
-            "site-admin/add-category",
-            "POST",
-            formdata
-        );
+            const response = await formSubmit(
+                event,
+                "site-admin/add-category",
+                "POST",
+                formdata
+            );
 
-        // TODO: Certainly need to use context for this
-        // if (response.isSuccess) {
-        //     const newCategories = categories.slice();
-        //     newCategories.push(response.data);
-        //     setCategories(newCategories);
-        //     setIsShowForm(false);
-        //     return;
-        // }
+            if (!response.isSuccess) {
+                AlertComponent("failed", response);
+                return;
+            }
 
-        alert(response.message);
+            AlertComponent("success", response);
+
+            const newCategories = categories.slice();
+            newCategories.push(response.data);
+            setCategories(newCategories);
+
+            setIsShowCategoryCreate(false);
+        } catch (error) {
+            AlertComponent("error", error);
+        }
     };
 
     return (
-        <div className="bg-white rounded-xl mb-8 p-8 flex flex-col md:flex-row  gap-8">
+        <div className="bg-white rounded-xl mb-8 p-8 flex flex-col md:flex-row gap-8">
             <div className=" w-full md:w-1/5 flex justify-center items-center border rounded-xl">
                 <img src={imgPreview} />
             </div>
@@ -91,7 +103,7 @@ export default function CategoryForm({ setIsShowForm, setCategories }) {
                         <button className="btn-primary"> Save </button>
                         <button
                             className="btn-secondary"
-                            onClick={() => setIsShowForm(false)}
+                            onClick={() => setIsShowCategoryCreate(false)}
                         >
                             Cancel
                         </button>

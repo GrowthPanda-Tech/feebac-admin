@@ -13,16 +13,15 @@ export default function FilterValues({
 
     const handleOptionRemove = async (index) => {
         const response = await makeRequest(
-            `config/delete-profile-key-option?dataType=${dataTypeId}&key=${filterId}&option=${options[index]}`,
+            `config/delete-profile-key-option?dataType=3&key=${filterId}&option=${options[index]}`,
             "DELETE"
         );
         response.isSuccess && setOptions(response.data.options);
     };
 
-    //TODO: find a better way
     const handleOptionAdd = async () => {
         const request = {
-            dataType: dataTypeId,
+            dataType: 3,
             key: filterId,
             newOptions: [newOption],
         };

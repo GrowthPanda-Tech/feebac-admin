@@ -1,15 +1,42 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import makeRequest from "../../utils/makeRequest";
+
 import Table from "../table/Table";
 import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
-import MyResponsiveBar from "./Databar";
+import TableDateTime from "../table/TableDateTime";
 
-function Button({ type, setUrl, isActive, onClick }) {
+import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import PageTitle from "../PageTitle";
+import Pagination from "../Pagination";
+import PaginationSelect from "../PaginationSelect";
+import AlertComponent from "../AlertComponent/AlertComponent";
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+const HEADERS = [
+    "Title",
+    "Category",
+    "Start Date",
+    "End Date",
+    "Status",
+    "Actions",
+];
+
+function Button({
+    type,
+    setStatus,
+    isActive,
+    onClick,
+    setPage,
+    setSearchQuery,
+}) {
     const handleClick = () => {
-        setUrl(type);
+        setStatus(type);
+        setPage(1);
+        setSearchQuery("");
         onClick();
     };
 
@@ -25,7 +52,7 @@ function Button({ type, setUrl, isActive, onClick }) {
     );
 }
 
-function ButtonComponent({ setUrl }) {
+function ButtonComponent({ setStatus, setPage, setSearchQuery }) {
     const [activeButton, setactiveButton] = useState(1);
     const handleClick = (buttonId) => setactiveButton(buttonId);
 
@@ -33,19 +60,25 @@ function ButtonComponent({ setUrl }) {
         <div className="flex gap-4">
             <Button
                 type={"live"}
-                setUrl={setUrl}
+                setPage={setPage}
+                setStatus={setStatus}
+                setSearchQuery={setSearchQuery}
                 isActive={activeButton === 1}
                 onClick={() => handleClick(1)}
             />
             <Button
                 type={"upcoming"}
-                setUrl={setUrl}
+                setPage={setPage}
+                setSearchQuery={setSearchQuery}
+                setStatus={setStatus}
                 isActive={activeButton === 2}
                 onClick={() => handleClick(2)}
             />
             <Button
                 type={"expired"}
-                setUrl={setUrl}
+                setPage={setPage}
+                setSearchQuery={setSearchQuery}
+                setStatus={setStatus}
                 isActive={activeButton === 3}
                 onClick={() => handleClick(3)}
             />
@@ -55,61 +88,93 @@ function ButtonComponent({ setUrl }) {
 
 export default function Survey() {
     const [surveyData, setsurveyData] = useState([]);
-    const [url, setUrl] = useState("live");
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [totalItems, setTotalItems] = useState(1);
+    const [page, setPage] = useState(1);
+    const [status, setStatus] = useState("live");
+    const [loading, setLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
-    const headers = [
-        "Title",
-        "Category",
-        "Start Date",
-        "End Date",
-        "Timings",
-        "Actions",
-    ];
+    const handleSatus = async (surveyId, index) => {
+        try {
+            const response = await makeRequest(
+                "survey/toggle-survey-status",
+                "PATCH",
+                { surveyId }
+            );
 
-    const fetchSurveyData = async () => {
-        const response = await makeRequest(
-            `site-admin/get-all-survey?time=${url}`,
-            "GET"
-        );
-        setsurveyData(response.data);
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
+
+            const updatedData = [...surveyData];
+            updatedData[index].is_public = !updatedData[index].is_public;
+            setsurveyData(updatedData);
+
+            AlertComponent("success", response);
+        } catch (error) {
+            AlertComponent("failed", error);
+        }
     };
+
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        const request = {
+            signal,
+            headers: {
+                authToken: localStorage.getItem("authToken"),
+            },
+        };
+
+        async function fetchSurveyData() {
+            try {
+                setLoading(true);
+
+                const response = await fetch(
+                    `${BASE_URL}/site-admin/get-all-survey?time=${status}&query=${searchQuery}&page=${page}&count=${itemsPerPage}`,
+                    request
+                );
+
+                if (response.status >= 500 || response.status === 204) {
+                    throw new Error(response.status);
+                }
+
+                const json = await response.json();
+                console.log(json);
+
+                if (!json.isSuccess) {
+                    throw new Error(json.message);
+                }
+
+                setsurveyData(json.data);
+                setTotalItems(json.totalCount);
+
+                setLoading(false);
+            } catch (error) {
+                console.error(error);
+
+                if (error.message == 204) {
+                    setsurveyData([]);
+                    setTotalItems(1);
+
+                    setLoading(false);
+                }
+            }
+        }
+
         fetchSurveyData();
-    }, [url]);
+
+        return () => {
+            controller.abort();
+        };
+    }, [status, searchQuery, page, itemsPerPage]);
 
     return (
-        <div className="flex flex-col gap-8">
-            <div className="w-full gap-20 flex justify-between">
-                <div className="w-1/2 flex flex-col ">
-                    <h2 className="heading mb-0">Survey Response Metrics</h2>
-                    <div className="bg-[#EA525F] mt-6 p-10 rounded-lg items-center w-full flex flex-col gap-16 text-white">
-                        <div className="flex flex-col text-center w-full">
-                            <h2 className="text-5xl p-2">0</h2>
-                            <h3 className="text-2xl">Total Response</h3>
-                        </div>
-                        <div className="flex justify-between p-4 mx-auto text-center divide-x w-full">
-                            <div className="w-full">
-                                <h3 className="text-2xl">0hr</h3>
-                                <h3>Average Time</h3>
-                            </div>
-                            <div className="w-full">
-                                <h3 className="text-2xl">0%</h3>
-                                <h3>Completion Rate</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="w-1/2 flex flex-col">
-                    <h2 className="heading mb-0">
-                        Audience Demographic By Gender
-                        <div className="h-[40vh]">
-                            <MyResponsiveBar />
-                        </div>
-                    </h2>
-                </div>
-            </div>
+        <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center">
-                <h1 className="heading mb-0"> Survey List </h1>
+                <PageTitle name={"Survey List"} />
                 <Link to={"/survey/create"} className="w-fit">
                     <button className="btn-primary">
                         <i className="fa-solid fa-plus"></i>
@@ -118,44 +183,185 @@ export default function Survey() {
                 </Link>
             </div>
 
-            <ButtonComponent setUrl={setUrl} />
+            <div className="flex justify-between">
+                <ButtonComponent
+                    setStatus={setStatus}
+                    setSearchQuery={setSearchQuery}
+                    setPage={setPage}
+                />
+                <input
+                    type="text"
+                    className="pill-primary border-0 w-1/2"
+                    placeholder={`Search in ${status} surveys...`}
+                    value={searchQuery}
+                    onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setPage(1);
+                    }}
+                />
+                <PaginationSelect
+                    setItemsPerPage={setItemsPerPage}
+                    setPage={setPage}
+                    itemsPerPage={itemsPerPage}
+                />
+            </div>
 
-            <Table>
-                <Thead headers={headers} />
-                <tbody>
-                    {surveyData.map(
-                        ({
-                            survey_id,
-                            survey_title,
-                            category,
-                            start_date,
-                            end_date,
-                        }) => (
-                            <Trow key={survey_id}>
-                                <Tdata left> {survey_title} </Tdata>
-                                <Tdata capitalize> {category} </Tdata>
-                                <Tdata mono>{start_date.split(" ")[0]}</Tdata>
-                                <Tdata mono>{end_date.split(" ")[0]}</Tdata>
-                                <Tdata mono>
-                                    {`${start_date.split(" ")[1]} - ${
-                                        end_date.split(" ")[1]
-                                    }`}
-                                </Tdata>
-                                <Tdata>
-                                    <div className="flex justify-evenly">
-                                        <Link to={`details/${survey_id}`}>
-                                            <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
-                                        </Link>
-                                        <Link to={`edit-survey/${survey_id}`}>
-                                            <i className="fa-solid fa-pen-to-square text-xl"></i>
-                                        </Link>
-                                    </div>
-                                </Tdata>
-                            </Trow>
-                        )
-                    )}
-                </tbody>
-            </Table>
+            <div className=" h-[60vh] bg-white overflow-y-scroll">
+                {loading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <Table>
+                        <Thead headers={HEADERS} />
+                        <tbody>
+                            {surveyData.map(
+                                (
+                                    {
+                                        survey_id,
+                                        survey_title,
+                                        category,
+                                        start_date,
+                                        end_date,
+                                        is_public,
+                                    },
+                                    index
+                                ) => (
+                                    <Trow key={survey_id}>
+                                        <Tdata left> {survey_title} </Tdata>
+                                        <Tdata capitalize> {category} </Tdata>
+                                        <Tdata mono>
+                                            <TableDateTime data={start_date} />
+                                        </Tdata>
+                                        <Tdata mono>
+                                            <TableDateTime data={end_date} />
+                                        </Tdata>
+                                        <Tdata>
+                                            {is_public ? (
+                                                <span className=" chip-green">
+                                                    Public
+                                                </span>
+                                            ) : (
+                                                <span className="chip-red">
+                                                    Private
+                                                </span>
+                                            )}
+                                        </Tdata>
+                                        <Tdata>
+                                            <div className="flex justify-center gap-4">
+                                                {status === "live" ||
+                                                status === "expired" ? (
+                                                    <div className="flex items-center justify-center gap-4 w-full">
+                                                        <div className="flex justify-center">
+                                                            <div className="tool-tip-div group">
+                                                                <Link
+                                                                    to={`details/${survey_id}`}
+                                                                >
+                                                                    <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
+                                                                </Link>
+                                                                <span className="tool-tip-span -right-[3.4rem] bg-black -top-12 ">
+                                                                    View
+                                                                    Response
+                                                                    <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        {status === "live" ? (
+                                                            <div className="flex justify-center">
+                                                                <div className="tool-tip-div group">
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            handleSatus(
+                                                                                survey_id,
+                                                                                index
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <i
+                                                                            className={`fa-solid ${
+                                                                                is_public
+                                                                                    ? "fa-eye-slash"
+                                                                                    : "fa-eye"
+                                                                            } `}
+                                                                        ></i>
+                                                                    </button>
+                                                                    <span className="tool-tip-span  -right-[2.8rem] bg-black -top-12 ">
+                                                                        {is_public
+                                                                            ? "Make Private"
+                                                                            : "Make Public"}
+                                                                        <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            ""
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    ""
+                                                )}
+                                                {status === "upcoming" ? (
+                                                    <div className="flex justify-center gap-4">
+                                                        <div className="flex justify-center">
+                                                            <div className="tool-tip-div group">
+                                                                <Link
+                                                                    to={`edit-survey/${survey_id}`}
+                                                                >
+                                                                    <i className="fa-solid fa-pen-to-square text-xl"></i>
+                                                                </Link>
+                                                                <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                                                    Edit Survey
+                                                                    <span className="tooltip-arrow bottom-[-2px] left-[38%]"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex justify-center">
+                                                            <div className="tool-tip-div group">
+                                                                <button
+                                                                    onClick={() =>
+                                                                        handleSatus(
+                                                                            survey_id,
+                                                                            index
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <i
+                                                                        className={`fa-regular ${
+                                                                            is_public
+                                                                                ? " fa-eye-slash "
+                                                                                : "fa-eye"
+                                                                        } `}
+                                                                    ></i>
+                                                                </button>
+                                                                <span className="tool-tip-span  -right-[2.8rem] bg-black -top-12 ">
+                                                                    {is_public
+                                                                        ? "Make Private"
+                                                                        : "Make Public"}
+                                                                    <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                        </Tdata>
+                                    </Trow>
+                                )
+                            )}
+                        </tbody>
+                    </Table>
+                )}
+                {surveyData.length === 0 ? (
+                    <div className="flex justify-center items-center p-56 opacity-50">
+                        No Survey Found !!
+                    </div>
+                ) : null}
+            </div>
+            <Pagination
+                page={page}
+                setPage={setPage}
+                setItemsPerPage={setItemsPerPage}
+                itemsPerPage={itemsPerPage}
+                totalItems={totalItems}
+            />
         </div>
     );
 }

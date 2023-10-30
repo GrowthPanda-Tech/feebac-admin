@@ -76,7 +76,7 @@ export default function Content() {
                 }
 
                 if (!ignore) {
-                    setArticleList(response.data.toReversed());
+                    setArticleList(response.data);
                     setTotalItems(response.totalCount);
                     setLoading(false);
                 }

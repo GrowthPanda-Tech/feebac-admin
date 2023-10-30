@@ -22,6 +22,7 @@ function NewsEdit() {
     const [newsData, setNewsData] = useState({});
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
     const [imgUpdate, setImgUpdate] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     const editHandleChange = (event) => {
         const name = event.target.name;
@@ -81,6 +82,8 @@ function NewsEdit() {
         }
 
         try {
+            setIsSaving(true);
+
             const response = await formSubmit(
                 event,
                 "news/edit-news",
@@ -98,6 +101,8 @@ function NewsEdit() {
             }
         } catch (error) {
             AlertComponent("error", "", error);
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -109,14 +114,18 @@ function NewsEdit() {
                     <NewsForm
                         newsData={newsData}
                         handleChange={editHandleChange}
+                        isSaving={isSaving}
                     />
 
                     <button
-                        className="btn-primary w-fit mt-8"
+                        className={` ${
+                            isSaving ? "btn-secondary" : "btn-primary"
+                        }  w-fit mt-8 `}
                         onClick={handleSubmit}
+                        disabled={isSaving}
                     >
                         <i className="fa-solid fa-floppy-disk mr-2"></i>
-                        Save Changes
+                        {isSaving ? "Saving" : "Save Changes"}
                     </button>
                 </div>
 

@@ -1,15 +1,18 @@
 import { useContext } from "react";
 import { CategoryContext } from "../../contexts/CategoryContext";
 
-function Select({ label, name, value, onChange, items }) {
+function Select({ label, name, value, onChange, items, disabled }) {
     return (
         <label className="flex flex-col">
             <span className="font-semibold mb-2"> {label} </span>
             <select
                 name={name}
                 value={value}
-                className="capitalize py-3 px-8 rounded-xl bg-white"
+                className={`capitalize py-3 px-8 rounded-xl  ${
+                    disabled ? "bg-light-grey" : ""
+                }`}
                 onChange={onChange}
+                disabled={disabled}
                 required
             >
                 {items.map((item) => {
@@ -24,7 +27,7 @@ function Select({ label, name, value, onChange, items }) {
     );
 }
 
-export default function NewsForm({ newsData, handleChange }) {
+export default function NewsForm({ newsData, handleChange, isSaving }) {
     const { categories } = useContext(CategoryContext);
 
     return (
@@ -35,10 +38,13 @@ export default function NewsForm({ newsData, handleChange }) {
                         <span className="font-semibold mb-2">Title</span>
                         <input
                             name="title"
-                            className="py-3 px-8 rounded-xl bg-white"
+                            className={`py-3 px-8 rounded-xl  ${
+                                isSaving ? "bg-light-grey" : ""
+                            }`}
                             value={newsData ? newsData.title : ""}
                             onChange={handleChange}
                             required
+                            disabled={isSaving}
                         />
                     </label>
                 </div>
@@ -53,6 +59,7 @@ export default function NewsForm({ newsData, handleChange }) {
                         }
                         onChange={handleChange}
                         items={categories}
+                        disabled={isSaving}
                     />
                 </div>
             </div>
@@ -63,9 +70,12 @@ export default function NewsForm({ newsData, handleChange }) {
                     type="url"
                     placeholder="https://example.com"
                     pattern="https://.*"
-                    className="py-3 px-8 rounded-xl bg-white"
+                    className={`py-3 px-8 rounded-xl  ${
+                        isSaving ? "bg-light-grey" : ""
+                    }`}
                     value={newsData ? newsData.newsUrl : ""}
                     onChange={handleChange}
+                    disabled={isSaving}
                     required
                 />
             </label>
@@ -76,18 +86,24 @@ export default function NewsForm({ newsData, handleChange }) {
                     name="newsImage"
                     type="file"
                     accept="image/*"
-                    className="py-3 px-8 rounded-xl bg-white"
+                    className={`py-3 px-8 rounded-xl  ${
+                        isSaving ? "bg-light-grey" : "bg-white"
+                    }`}
                     onChange={handleChange}
+                    disabled={isSaving}
                     required
                 />
             </label>
             <label className="flex flex-col">
                 <span className="font-semibold mb-2">Description</span>
                 <textarea
-                    className="py-3 px-8 rounded-xl bg-white"
+                    className={`py-3 px-8 rounded-xl  ${
+                        isSaving ? "bg-light-grey" : ""
+                    }`}
                     label={"Description"}
                     name={"description"}
                     rows={10}
+                    disabled={isSaving}
                     value={newsData ? newsData.description : ""}
                     onChange={handleChange}
                     required

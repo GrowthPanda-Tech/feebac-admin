@@ -5,7 +5,7 @@ import CreateSurveyForm from "./CreateSurveyForm";
 export default function CreateSurvey() {
     const [surveyId, setSurveyId] = useState(null);
     const [surveyTitle, setSurveyTitle] = useState(null);
-    const [isSurveyCreate, setIsSurveyCreate] = useState(false);
+    const [isSurveyCreate, setIsSurveyCreate] = useState(true);
 
     return (
         // <CreateQuestions
@@ -21,8 +21,8 @@ export default function CreateSurvey() {
                 />
             ) : (
                 <CreateQuestions
-                    surveyId={surveyId}
-                    surveyTitle={surveyTitle}
+                    surveyId={"506a4d3c-4f3a-4d2e-8db0-e8df809b61b8"}
+                    surveyTitle={"Sabir Test 26"}
                 />
             )}
         </>

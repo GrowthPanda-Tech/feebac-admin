@@ -25,6 +25,7 @@ export default function Content() {
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [totalItems, setTotalItems] = useState(1);
+    const [isPublishing, setIsPublishing] = useState(false);
     // const [sortOrder, setSortOrder] = useState("");
     // const sortedData = [...articleList];
 
@@ -40,6 +41,7 @@ export default function Content() {
 
     const handlePublish = async (articleId, index) => {
         try {
+            setIsPublishing(true);
             const response = await makeRequest(
                 "article/toggle-article-status",
                 "PATCH",
@@ -58,6 +60,8 @@ export default function Content() {
             AlertComponent("success", response);
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsPublishing(false);
         }
     };
 
@@ -190,14 +194,17 @@ export default function Content() {
                                                                     index
                                                                 )
                                                             }
+                                                            disabled={
+                                                                isPublishing
+                                                            }
                                                         >
                                                             <i
-                                                                className={`fa-solid ${
+                                                                className={`fa-solid  ${
                                                                     is_published
                                                                         ? "fa-eye-slash"
                                                                         : "fa-eye"
                                                                 } `}
-                                                            ></i>{" "}
+                                                            ></i>
                                                         </button>
                                                         <span className="tool-tip-span  -right-[2.8rem] bg-black -top-12 ">
                                                             {is_published

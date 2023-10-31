@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
-import makeRequest from "../../utils/makeRequest";
+import { useState } from "react";
 
 //components
-import PageTitle from "../PageTitle";
+import PageTitle from "../_helperComponents/PageTitle";
 import CategoryForm from "./CategoryForm";
 import Categories from "./Categories";
 import Profiles from "./filter/Profiles";
@@ -25,40 +24,6 @@ export default function Settings() {
     const [isShowCategoryCreate, setIsShowCategoryCreate] = useState(false);
     const [isShowFilterCreate, setIsShowFilterCreate] = useState(false);
     const [visibleSection, setVisibleSection] = useState("category");
-    const [tertiaryKeys, setTertiaryKeys] = useState([]);
-    const [filterVals, setFilterVals] = useState({
-        dataType: 3,
-        isSelect: true,
-        options: [],
-    });
-
-    useEffect(() => {
-        let ignore = false;
-
-        async function getTertiaryKeys() {
-            try {
-                const response = await makeRequest(
-                    `config/get-profile-key-value`
-                );
-
-                if (!response.isSuccess) {
-                    throw new Error(response.message);
-                }
-
-                if (!ignore) {
-                    setTertiaryKeys(response.data[2].key);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        getTertiaryKeys();
-
-        return () => {
-            ignore = true;
-        };
-    }, []);
 
     return (
         <div className="flex flex-col gap-6">
@@ -103,19 +68,10 @@ export default function Settings() {
             ) : null}
 
             {isShowFilterCreate && visibleSection === "filter" ? (
-                <FilterCreate
-                    filterVals={filterVals}
-                    setFilterVals={setFilterVals}
-                    setTertiaryKeys={setTertiaryKeys}
-                    setIsShowFilterCreate={setIsShowFilterCreate}
-                />
+                <FilterCreate setIsShowFilterCreate={setIsShowFilterCreate} />
             ) : null}
 
-            {visibleSection === "category" ? (
-                <Categories />
-            ) : (
-                <Profiles tertiaryKeys={tertiaryKeys} />
-            )}
+            {visibleSection === "category" ? <Categories /> : <Profiles />}
         </div>
     );
 }

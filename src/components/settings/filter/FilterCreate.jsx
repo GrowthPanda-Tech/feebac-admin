@@ -1,6 +1,8 @@
-import AlertComponent from "../../AlertComponent/AlertComponent";
+import { useState, useContext } from "react";
+import { FilterContext } from "../../../contexts/FilterContext";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+import makeRequest from "../../../utils/makeRequest";
+import swal from "../../../utils/swal";
 
 function Label({ name, children }) {
     return (
@@ -11,41 +13,42 @@ function Label({ name, children }) {
     );
 }
 
-export default function FilterCreate({
-    filterVals,
-    setFilterVals,
-    setTertiaryKeys,
-    setIsShowFilterCreate,
-}) {
+export default function FilterCreate({ setIsShowFilterCreate }) {
+    const { response, setResponse } = useContext(FilterContext);
+
+    const [loading, setLoading] = useState(false);
+    const [filterVals, setFilterVals] = useState({
+        dataType: 3,
+        isSelect: true,
+        name: "",
+        options: [],
+    });
+
     const handleSubmit = async () => {
-        const request = {
-            method: "POST",
-            headers: {
-                authToken: localStorage.getItem("authToken"),
-            },
-            body: JSON.stringify(filterVals),
-        };
+        setLoading(true);
 
         try {
-            const response = await fetch(
-                `${BASE_URL}/config/add-profile-key-value`,
-                request
+            const res = await makeRequest(
+                "config/add-profile-key-value",
+                "POST",
+                filterVals
             );
 
-            if (response.status >= 500) {
-                throw new Error(response.status);
+            if (!res.isSuccess) {
+                throw new Error(response.message);
             }
 
-            const json = await response.json();
+            const updatedRes = { ...response };
+            updatedRes.data[2].key.push(res.data);
 
-            if (!json.isSuccess) {
-                throw new Error(json.message);
-            }
-
+            setResponse(updatedRes);
             setIsShowFilterCreate(false);
-            setTertiaryKeys((prev) => [...prev, json.data]);
+
+            swal("success", res.message);
         } catch (error) {
-            AlertComponent("error", "", error);
+            swal("error", error.message);
+        } finally {
+            setLoading(false);
         }
     };
 

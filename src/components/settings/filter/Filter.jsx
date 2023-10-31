@@ -1,9 +1,8 @@
 import { useState } from "react";
 import FilterValues from "./FilterValues";
 
-export default function Filter({ dataTypeId, filter }) {
+export default function Filter({ filter, index }) {
     const [isExpand, setIsExpand] = useState(false);
-    const [options, setOptions] = useState(filter.options);
 
     return (
         <div className="h-fit bg-white py-6 px-8 flex gap-4 flex-col rounded-md border border-[#DDD]">
@@ -18,17 +17,11 @@ export default function Filter({ dataTypeId, filter }) {
                     className={`fa-solid fa-angles-${
                         !isExpand ? "down" : "up"
                     }`}
-                ></i>
+                />
             </div>
 
             {isExpand ? (
-                <FilterValues
-                    dataTypeId={dataTypeId}
-                    filterId={filter.id}
-                    isSelect={filter.is_select}
-                    options={options}
-                    setOptions={setOptions}
-                />
+                <FilterValues filter={filter} filterIdx={index} />
             ) : null}
         </div>
     );

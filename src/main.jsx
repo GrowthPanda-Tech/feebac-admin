@@ -8,14 +8,18 @@ import { ThemeProvider } from "@material-tailwind/react";
 
 import CategoryContextProvider from "./contexts/CategoryContext.jsx";
 import ProfileContextProvider from "./contexts/ProfileContext.jsx";
+import FilterContextProvider from "./contexts/FilterContext.jsx";
 
+//TODO: damn..
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <BrowserRouter>
             <ThemeProvider>
                 <ProfileContextProvider>
                     <CategoryContextProvider>
-                        <App />
+                        <FilterContextProvider>
+                            <App />
+                        </FilterContextProvider>
                     </CategoryContextProvider>
                 </ProfileContextProvider>
             </ThemeProvider>

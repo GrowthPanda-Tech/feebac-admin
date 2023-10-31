@@ -104,6 +104,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     };
     const setQuestionType = (index, questionType, questionValue) => {
         setActiveButtonIndex(index);
+        // setIsChecked(false);
 
         if (questionValue) {
             const updatedQuestionData = { ...questionData };
@@ -126,6 +127,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
 
     function addValueToNestedArray(arr, index, value) {
         if (index >= 0 && index < arr.length && !arr[index][1].trim()) {
+            console.log("hii,hello");
             arr[index][1] = value;
         }
         return arr;
@@ -158,9 +160,14 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         if (name === "keywords") {
             const updatedOptions = [...options];
             const answerVal = updatedOptions[index];
-            updatedOptions[index] = Array.isArray(answerVal)
-                ? [...answerVal, value]
-                : [answerVal, value];
+            if (inputType == 3) {
+                updatedOptions[index] = [...answerVal, value];
+            } else if (inputType == 2) {
+                const imgVal = previewImages[index];
+                updatedOptions[index] = [imgVal, value];
+            } else {
+                updatedOptions[index] = [answerVal, value];
+            }
             arrangeOptions(updatedOptions);
             setOptions(updatedOptions);
 
@@ -175,6 +182,10 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             arrangeOptions(updatedOptions);
             setOptions(updatedOptions);
 
+            return;
+        }
+        if (name === "onlyImage") {
+            arrangeOptions(options);
             return;
         }
 
@@ -203,15 +214,14 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                 setPreviewImages(updatedPreviewImages);
 
                 if (name === "onlyImage") {
-                    arrangeOptions(updatedPreviewImages);
+                    const updatedOption = [...options];
+                    updatedOption[index] = imageUrl;
+                    setOptions(updatedOption);
+
                     return;
                 }
                 if (name === "imgAndText") {
-                    const newOptions = addValueToNestedArray(
-                        options,
-                        index,
-                        imageUrl
-                    );
+                    addValueToNestedArray(options, index, imageUrl);
                 }
             } else {
                 console.error("Image upload failed");
@@ -228,10 +238,13 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             const originalOptions = [...options];
             for (let i = 0; i < options.length; i++) {
                 if (Array.isArray(options[i])) {
-                    originalOptions[i] = options[i][0];
+                    if (inputType == 3) {
+                        originalOptions[i] = [options[i][0], options[i][1]];
+                    } else originalOptions[i] = options[i][0];
                 }
             }
             setOptions(originalOptions);
+            arrangeOptions(originalOptions);
         }
     };
 
@@ -242,6 +255,8 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     };
 
     const handleQuestionSubmit = async () => {
+        setIsChecked(false);
+
         try {
             const response = await makeRequest(
                 "survey/add-question",
@@ -392,6 +407,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                                 onChange={(e) => {
                                     resetState();
                                     setInputType(e.target.value);
+                                    setIsChecked(false);
                                 }}
                                 value={inputType}
                             >
@@ -406,6 +422,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                             type="checkbox"
                             className="h-6 w-6 accent-secondary"
                             onClick={handleClick}
+                            checked={isChecked}
                         />
                         <Select
                             isChecked={isChecked}
@@ -482,9 +499,10 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                                         type="file"
                                         className=" absolute w-32 p-12 opacity-0"
                                         accept="image/*"
-                                        onChange={(event) =>
-                                            handleImageChange(event, index)
-                                        }
+                                        onChange={(event) => {
+                                            handleImageChange(event, index);
+                                            handleChange(event, index);
+                                        }}
                                     />
                                 )}
 

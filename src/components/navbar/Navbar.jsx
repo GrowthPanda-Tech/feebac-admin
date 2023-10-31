@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import dashboard from "../../assets/dashboard.svg";
+import dashboard from "../../assets/feebac-logo.png";
 
 import dashboardIcon from "../../assets/navbar/dashboard.png";
 import user from "../../assets/navbar/user.png";
@@ -48,7 +48,7 @@ export default function Navbar() {
     return (
         <div className="bg-primary h-screen w-80 fixed flex flex-col justify-between">
             <div>
-                <img src={dashboard} className="w-full p-12" />
+                <img src={dashboard} className="w-full p-12 " />
                 {navItems.map((item, index) => (
                     <NavList
                         key={index}

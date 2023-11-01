@@ -6,10 +6,20 @@ import makeRequest from "../../utils/makeRequest";
 import AddCoupons from "./AddCoupons";
 import Skeleton from "react-loading-skeleton";
 import CardSkeleton from "../_helperComponents/CardSkeleton";
+import Card from "./Card";
 function Coupons() {
     const [couponData, setCouponsData] = useState([]);
     const [showCouponAddPop, setShowCouponAddPop] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [status, setStatus] = useState("active");
+
+    const handleStatusChange = () => {
+        setStatus(status === "active" ? "inactive" : "active");
+    };
+
+    const handleEditClick = () => {
+        // Handle edit action
+    };
 
     useEffect(() => {
         let ignore = false;
@@ -73,7 +83,7 @@ function Coupons() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
                 {couponData.map((data, index) => (
-                    <CouponCard
+                    <Card
                         key={index}
                         data={data}
                         setCouponsData={setCouponsData}

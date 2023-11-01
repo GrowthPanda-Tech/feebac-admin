@@ -126,6 +126,10 @@
     }
 }
 
+.disabled-card {
+    @apply opacity-60 grayscale  bg-[#c9c6c6] border shadow-none cursor-not-allowed border-solid border-[#ccc];
+}
+
 @layer utilities {
     @variants responsive {
         .no-scrollbar::-webkit-scrollbar {

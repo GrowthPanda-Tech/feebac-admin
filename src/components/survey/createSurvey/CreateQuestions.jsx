@@ -184,10 +184,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
 
             return;
         }
-        if (name === "onlyImage") {
-            arrangeOptions(options);
-            return;
-        }
 
         setQuestionData({ ...questionData, [name]: event.target.value });
     };
@@ -217,6 +213,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                     const updatedOption = [...options];
                     updatedOption[index] = imageUrl;
                     setOptions(updatedOption);
+                    arrangeOptions(updatedOption);
 
                     return;
                 }

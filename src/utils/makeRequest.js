@@ -1,49 +1,32 @@
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+const AUTH_TOKEN = localStorage.getItem("authToken");
 
-export default async function makeRequest(
-    route,
-    method = "GET",
-    body = null,
-    timeout = 10000
-) {
+export default async function makeRequest(route, method = "GET", body = null) {
     const request = {
         method,
         headers: {
-            authToken: localStorage.getItem("authToken"),
+            authToken: AUTH_TOKEN,
+            Accept: "application/json",
+            // Authorization: `Bearer ${AUTH_TOKEN}`,
         },
     };
 
-    if (body != null) {
-        request.body = JSON.stringify(body);
+    if (body) {
+        request.body = body instanceof FormData ? body : JSON.stringify(body);
     }
 
     try {
-        const controller = new AbortController();
-        const signal = controller.signal;
+        const response = await fetch(`${BASE_URL}/${route}`, request);
+        const statusCode = response.status;
 
-        setTimeout(() => {
-            controller.abort();
-        }, timeout);
-
-        const response = await fetch(`${BASE_URL}/${route}`, {
-            ...request,
-            signal,
-        });
-
-        clearTimeout();
-
-        if (response.status >= 500 || response.status === 204) {
-            throw new Error(response.status);
+        //TODO: error based on respnse.ok
+        if (statusCode >= 500 || statusCode === 204) {
+            throw new Error(statusCode);
         }
 
-        const json = await response.json();
-
-        return json;
+        return await response.json();
     } catch (error) {
-        if (error.name === "AbortError") {
-            throw new Error("Timeout");
-        } else {
-            throw error;
-        }
+        //TODO: throw different error based on status code
+        throw error;
     }
 }

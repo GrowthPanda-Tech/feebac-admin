@@ -4,16 +4,19 @@ import { CategoryContext } from "../../contexts/CategoryContext";
 
 const TINY_API_KEY = import.meta.env.VITE_TINY_API_KEY;
 
-function Select({ label, name, onChange, items, selectedItem }) {
+function Select({ label, name, onChange, items, selectedItem, disabled }) {
     return (
         <label className="flex flex-col">
             <span className="font-semibold mb-2"> {label} </span>
             <select
                 name={name}
                 value={selectedItem}
-                className="capitalize input-article border-none"
+                className={`capitalize input-article border-none ${
+                    disabled ? "bg-light-grey" : ""
+                } `}
                 onChange={onChange}
                 required
+                disabled={disabled}
             >
                 {items.map((item) => {
                     return (
@@ -27,7 +30,8 @@ function Select({ label, name, onChange, items, selectedItem }) {
     );
 }
 
-function Input({ label, name, value, onChange }) {
+function Input({ label, name, value, onChange, disabled }) {
+    console.log(disabled);
     return (
         <label className="flex flex-col">
             <span className="font-semibold mb-2"> {label} </span>
@@ -35,19 +39,23 @@ function Input({ label, name, value, onChange }) {
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="input-article border-none"
+                className={`input-article  border-none ${
+                    disabled ? "bg-light-grey" : ""
+                } `}
                 required
+                disabled={disabled}
             />
         </label>
     );
 }
-
 export default function ContentForm({
     articleData,
     handleChange,
     handleEditorChange,
+    isSaving,
 }) {
     const { categories } = useContext(CategoryContext);
+    console.log(isSaving);
 
     return (
         <div className="flex flex-col gap-6">
@@ -58,6 +66,7 @@ export default function ContentForm({
                         name={"article_title"}
                         value={articleData ? articleData.article_title : ""}
                         onChange={handleChange}
+                        disabled={isSaving}
                     />
                 </div>
                 <div className="md:w-1/2">
@@ -71,6 +80,7 @@ export default function ContentForm({
                                 ? articleData.category
                                 : categories[0].category_id
                         }
+                        disabled={isSaving}
                     />
                 </div>
             </div>
@@ -79,6 +89,7 @@ export default function ContentForm({
                 name={"article_desctiption"}
                 value={articleData ? articleData.article_desctiption : ""}
                 onChange={handleChange}
+                disabled={isSaving}
             />
 
             <label className="flex flex-col">
@@ -87,8 +98,11 @@ export default function ContentForm({
                     name="articleImg"
                     type="file"
                     accept="image/*"
-                    className="input-article border-none"
+                    className={`input-article border-none ${
+                        isSaving ? "bg-light-grey" : ""
+                    }`}
                     onChange={handleChange}
+                    disabled={isSaving}
                 />
             </label>
 
@@ -103,6 +117,8 @@ export default function ContentForm({
                             : ""
                     }
                     init={{
+                        selector: "textarea", // change this value according to your HTML
+                        content_css: "tinymce-5",
                         height: 500,
                         menubar: false,
                         plugins: [

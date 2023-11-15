@@ -13,6 +13,7 @@ export default function NewsCreate() {
     const navigate = useNavigate();
     const { categories } = useContext(CategoryContext);
     const initCat = categories[0]?.category_id ? categories[0].category_id : "";
+    const [isSaving, setIsSaving] = useState(false);
 
     const [imgPreview, setImgPreview] = useState(defaultImgPreview);
     const [newsData, setNewsData] = useState({
@@ -56,6 +57,8 @@ export default function NewsCreate() {
         }
 
         try {
+            setIsSaving(true);
+
             const response = await formSubmit(
                 event,
                 "news/create-news",
@@ -77,6 +80,8 @@ export default function NewsCreate() {
         } catch (error) {
             console.log(error);
             AlertComponent("error", "", error.message);
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -89,10 +94,15 @@ export default function NewsCreate() {
                         <NewsForm
                             newsData={newsData}
                             handleChange={handleChange}
+                            isSaving={isSaving}
                         />
-                        <button className="btn-primary w-fit mt-8">
+                        <button
+                            className={` ${
+                                isSaving ? "btn-secondary" : "btn-primary"
+                            } w-fit mt-8`}
+                        >
                             <i className="fa-solid fa-floppy-disk mr-2"></i>
-                            Publish
+                            {isSaving ? "Publishing" : "Publish"}
                         </button>
                     </form>
                 </div>

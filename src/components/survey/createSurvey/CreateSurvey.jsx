@@ -8,10 +8,6 @@ export default function CreateSurvey() {
     const [isSurveyCreate, setIsSurveyCreate] = useState(false);
 
     return (
-        // <CreateQuestions
-        //     surveyId={"0b49fb3d-c406-4722-ac26-2b754a74ad66"}
-        //     surveyTitle={"Question Refactor Survey - Rahul"}
-        // />
         <>
             {!isSurveyCreate ? (
                 <CreateSurveyForm

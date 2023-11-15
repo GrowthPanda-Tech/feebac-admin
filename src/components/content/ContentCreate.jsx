@@ -92,11 +92,13 @@ export default function ContentCreate({ surveyId }) {
                             articleData={articleData}
                             handleChange={handleChange}
                             handleEditorChange={handleEditorChange}
+                            isSaving={isSaving}
                         />
                         <button
                             className={`${
                                 isSaving ? "btn-secondary" : "btn-primary"
                             }  w-fit mt-8`}
+                            disabled={isSaving}
                         >
                             <i className="fa-solid fa-floppy-disk mr-2"></i>
                             {isSaving ? "Saving..." : "Save Drafts"}

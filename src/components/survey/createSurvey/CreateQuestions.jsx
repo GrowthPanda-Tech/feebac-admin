@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import makeRequest from "../../../utils/makeRequest";
 import PageTitle from "../../PageTitle";
 import AlertComponent from "../../AlertComponent/AlertComponent";
+import formSubmit from "../../../utils/formSubmit";
+import optionIcon from "../../../assets/option-preview.png";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -58,19 +60,9 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     const [activeButtonIndex, setActiveButtonIndex] = useState(1);
     const [filters, setFilters] = useState([]);
     const [activeFilterIdx, setActiveFilterIdx] = useState(0);
+    const [inputType, setInputType] = useState(1);
+    const [previewImages, setPreviewImages] = useState([null]);
     const [isChecked, setIsChecked] = useState(false);
-
-    // const [state, dispatch] = useReducer(questionReducer, INIT_STATE);
-    //
-    // const {
-    //     options,
-    //     questions,
-    //     questionData,
-    //     activeButtonIndex,
-    //     filters,
-    //     activeFilterIdx,
-    //     isDisabled,
-    // } = state;
 
     const request = {
         headers: { authToken: localStorage.getItem("authToken") },
@@ -99,8 +91,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         }
     };
 
-    console.log(questions.length);
-
     const getFilters = async () => {
         const response = await makeRequest(
             "config/get-profile-key-value",
@@ -108,9 +98,13 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         );
         setFilters(response.data[2].key);
     };
-
+    const resetState = () => {
+        setOptions(initOptions);
+        setPreviewImages([null]);
+    };
     const setQuestionType = (index, questionType, questionValue) => {
         setActiveButtonIndex(index);
+        // setIsChecked(false);
 
         if (questionValue) {
             const updatedQuestionData = { ...questionData };
@@ -130,6 +124,14 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         }
         setQuestionData({ ...questionData, questionValue });
     };
+
+    function addValueToNestedArray(arr, index, value) {
+        if (index >= 0 && index < arr.length && !arr[index][1].trim()) {
+            console.log("hii,hello");
+            arr[index][1] = value;
+        }
+        return arr;
+    }
 
     const handleChange = (event, index) => {
         const name = event.target.name;
@@ -158,7 +160,25 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         if (name === "keywords") {
             const updatedOptions = [...options];
             const answerVal = updatedOptions[index];
-            updatedOptions[index] = [answerVal, value];
+            if (inputType == 3) {
+                updatedOptions[index] = [...answerVal, value];
+            } else if (inputType == 2) {
+                const imgVal = previewImages[index];
+                updatedOptions[index] = [imgVal, value];
+            } else {
+                updatedOptions[index] = [answerVal, value];
+            }
+            arrangeOptions(updatedOptions);
+            setOptions(updatedOptions);
+
+            return;
+        }
+
+        if (name === "imgAndText") {
+            const updatedOptions = [...options];
+            updatedOptions[index] = previewImages[index]
+                ? [value, previewImages[index]]
+                : [value, ""];
             arrangeOptions(updatedOptions);
             setOptions(updatedOptions);
 
@@ -168,6 +188,46 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         setQuestionData({ ...questionData, [name]: event.target.value });
     };
 
+    const handleImageChange = async (event, index) => {
+        const file = event.target.files[0];
+        const name = event.target.name;
+
+        try {
+            const formData = new FormData();
+            formData.append("image", file);
+
+            const response = await formSubmit(
+                event,
+                "survey/upload-option-image",
+                "POST",
+                formData
+            );
+
+            if (response.isSuccess) {
+                const imageUrl = response.data;
+                const updatedPreviewImages = [...previewImages];
+                updatedPreviewImages[index] = imageUrl;
+                setPreviewImages(updatedPreviewImages);
+
+                if (name === "onlyImage") {
+                    const updatedOption = [...options];
+                    updatedOption[index] = imageUrl;
+                    setOptions(updatedOption);
+                    arrangeOptions(updatedOption);
+
+                    return;
+                }
+                if (name === "imgAndText") {
+                    addValueToNestedArray(options, index, imageUrl);
+                }
+            } else {
+                console.error("Image upload failed");
+            }
+        } catch (error) {
+            console.error("Image upload error:", error);
+        }
+    };
+
     const handleClick = () => {
         setIsChecked(!isChecked);
 
@@ -175,10 +235,13 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             const originalOptions = [...options];
             for (let i = 0; i < options.length; i++) {
                 if (Array.isArray(options[i])) {
-                    originalOptions[i] = options[i][0];
+                    if (inputType == 3) {
+                        originalOptions[i] = [options[i][0], options[i][1]];
+                    } else originalOptions[i] = options[i][0];
                 }
             }
             setOptions(originalOptions);
+            arrangeOptions(originalOptions);
         }
     };
 
@@ -189,6 +252,8 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     };
 
     const handleQuestionSubmit = async () => {
+        setIsChecked(false);
+
         try {
             const response = await makeRequest(
                 "survey/add-question",
@@ -208,10 +273,11 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         } catch (error) {
             if (error.message >= 500)
                 AlertComponent("error", "", "something has gone wrong");
+        } finally {
+            resetState();
+            setInputType(1);
         }
     };
-
-    console.log(questions.length);
 
     const handleSchedule = async () => {
         try {
@@ -258,6 +324,10 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         getQuestions();
         getFilters();
     }, []);
+
+    console.log(questionData);
+    console.log(previewImages);
+    console.log(options);
 
     return (
         <div className="flex flex-col gap-4">
@@ -325,11 +395,31 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                             Multiple Answer
                         </button>
                     </div>
+
                     <div className="flex items-center gap-4">
+                        {!activeButtonIndex == 0 ? (
+                            <select
+                                name="inputType"
+                                className="px-3 py-2 border-2 "
+                                onChange={(e) => {
+                                    resetState();
+                                    setInputType(e.target.value);
+                                    setIsChecked(false);
+                                }}
+                                value={inputType}
+                            >
+                                <option value={1}>Only Text</option>
+                                <option value={2}>Only Image</option>
+                                <option value={3}>Both Text and Image</option>
+                            </select>
+                        ) : (
+                            ""
+                        )}
                         <input
                             type="checkbox"
                             className="h-6 w-6 accent-secondary"
                             onClick={handleClick}
+                            checked={isChecked}
                         />
                         <Select
                             isChecked={isChecked}
@@ -360,20 +450,84 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                         options.map((option, index) => (
                             <div
                                 key={index}
-                                className="flex gap-8 items-center"
+                                className="flex gap-8 items-center justify-between"
                             >
-                                <Input
-                                    type={"text"}
-                                    name={"questionValue"}
-                                    value={
-                                        Array.isArray(option)
-                                            ? option[0]
-                                            : option
-                                    }
-                                    onChange={(event) =>
-                                        handleChange(event, index)
-                                    }
-                                />
+                                {inputType == 1 && (
+                                    <Input
+                                        type="text"
+                                        name="questionValue"
+                                        value={
+                                            Array.isArray(option)
+                                                ? option[0]
+                                                : option
+                                        }
+                                        onChange={(event) =>
+                                            handleChange(event, index)
+                                        }
+                                    />
+                                )}
+
+                                {inputType == 3 || inputType == 2 ? (
+                                    <div className="relative">
+                                        {previewImages[index] ? (
+                                            <img
+                                                src={
+                                                    BASE_URL +
+                                                    previewImages[index]
+                                                }
+                                                className="w-32 h-32"
+                                                alt={`Selected Image Preview ${index}`}
+                                            />
+                                        ) : (
+                                            <img
+                                                src={optionIcon}
+                                                className="w-32 h-32"
+                                                alt="Default Image"
+                                            />
+                                        )}
+                                    </div>
+                                ) : (
+                                    <></>
+                                )}
+
+                                {inputType == 2 && (
+                                    <input
+                                        name="onlyImage"
+                                        type="file"
+                                        className=" absolute w-32 p-12 opacity-0"
+                                        accept="image/*"
+                                        onChange={(event) => {
+                                            handleImageChange(event, index);
+                                            handleChange(event, index);
+                                        }}
+                                    />
+                                )}
+
+                                {inputType == 3 && (
+                                    <>
+                                        <input
+                                            type="file"
+                                            name="imgAndText"
+                                            accept="image/*"
+                                            className=" absolute w-28 p-10 opacity-0  "
+                                            onChange={(event) =>
+                                                handleImageChange(event, index)
+                                            }
+                                        />
+                                        <Input
+                                            type="text"
+                                            name="imgAndText"
+                                            value={
+                                                Array.isArray(option)
+                                                    ? option[0]
+                                                    : option
+                                            }
+                                            onChange={(event) =>
+                                                handleChange(event, index)
+                                            }
+                                        />
+                                    </>
+                                )}
 
                                 {isChecked ? (
                                     <Select

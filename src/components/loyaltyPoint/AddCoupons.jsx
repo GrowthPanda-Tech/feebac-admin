@@ -19,6 +19,7 @@ function InputForm({
     min,
     onKeyDown,
     onPaste,
+    onwheel,
 }) {
     return (
         <div>
@@ -29,6 +30,7 @@ function InputForm({
                 name={name}
                 type={type}
                 onKeyDown={onKeyDown}
+                onWheel={onwheel}
                 onPaste={onPaste}
                 className="border-2 input-article rounded-md px-4 py-2 w-full"
                 value={value}
@@ -127,6 +129,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
                             handleChange(e);
                         }}
                         min={0}
+                        onwheel={(e) => e.target.blur()}
                         type={"number"}
                         onKeyDown={(e) => removeForbiddenChars(e)}
                         onPaste={(e) => removeForbiddenChars(e)}
@@ -138,6 +141,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
                         onChange={(e) => {
                             handleChange(e);
                         }}
+                        onwheel={(e) => e.target.blur()}
                         onKeyDown={(e) => removeForbiddenChars(e)}
                         onPaste={(e) => removeForbiddenChars(e)}
                         min={0}
@@ -165,6 +169,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
                                 onChange={(e) => {
                                     handleChange(e);
                                 }}
+                                onwheel={(e) => e.target.blur()}
                                 onKeyDown={(e) => removeForbiddenChars(e)}
                                 onPaste={(e) => removeForbiddenChars(e)}
                                 min={1}

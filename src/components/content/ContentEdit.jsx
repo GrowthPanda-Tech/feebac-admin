@@ -22,6 +22,7 @@ export default function ContentEdit() {
         isUpdate: false,
         articleImg: null,
     });
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleChange = (event) => {
         if (event.target.name === "articleImg") {
@@ -48,6 +49,8 @@ export default function ContentEdit() {
 
     const handleSubmit = async (event) => {
         try {
+            setIsSaving(true);
+
             const formData = new FormData();
             formData.append("articleId", articleData.article_id);
             formData.append("articleTitle", articleData.article_title);
@@ -78,10 +81,12 @@ export default function ContentEdit() {
                 AlertComponent("success", response);
                 setTimeout(() => {
                     navigate("/content");
-                }, 3200);
+                }, 1000);
             } else AlertComponent("failed", response);
         } catch (error) {
             AlertComponent("error", "", error);
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -116,7 +121,6 @@ export default function ContentEdit() {
             ignore = true;
         };
     }, []);
-
     return (
         <div className="flex flex-col gap-8">
             <PageTitle name={"Edit Article"} />
@@ -126,14 +130,18 @@ export default function ContentEdit() {
                         articleData={articleData}
                         handleChange={handleChange}
                         handleEditorChange={handleEditorChange}
+                        isSaving={isSaving}
                     />
 
                     <button
                         onClick={handleSubmit}
-                        className="btn-primary w-fit mt-8"
+                        className={`${
+                            isSaving ? "btn-secondary" : "btn-primary"
+                        }  w-fit mt-8`}
+                        disabled={isSaving}
                     >
                         <i className="fa-solid fa-pen-to-square mr-2"></i>
-                        Edit
+                        {isSaving ? "Saving..." : "Save Edit"}
                     </button>
                 </div>
 

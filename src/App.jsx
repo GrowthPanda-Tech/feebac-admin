@@ -1,4 +1,6 @@
 import { Route, Routes } from "react-router-dom";
+import { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 // components
 import Header from "./components/header/Header";
@@ -9,6 +11,7 @@ import User from "./components/user/User";
 import UserInfo from "./components/user/UserInfo";
 import Survey from "./components/survey/Survey";
 import SurveyInfo from "./components/survey/SurveyInfo";
+import SurveyContent from "./components/content/SurveyContent";
 import CreateSurvey from "./components/survey/createSurvey/CreateSurvey";
 import SurveyReview from "./components/survey/reviewSurvey/SurveyReview";
 import Content from "./components/content/Content";
@@ -17,8 +20,7 @@ import ContentEdit from "./components/content/ContentEdit";
 import NewsTable from "./components/news/NewsTable";
 import NewsCreate from "./components/news/NewsCreate";
 import NewsEdit from "./components/news/NewsEdit";
-// import Revenue from "./components/revenue/Revenue";
-// import Analytics from "./components/analytics/Analytics";
+import Insights from "./components/insights/Insights";
 import Settings from "./components/settings/Settings";
 import PageNotFound from "./components/pageNotFound/PageNotFound";
 import ProfileUpdate from "./components/header/ProfileUpdate";
@@ -26,10 +28,6 @@ import AddQuestions from "./components/survey/createSurvey/AddQuestions";
 import SurveyEdit from "./components/survey/surveyEdit/SurveyEdit";
 import Loyalty from "./components/loyaltyPoint/Loyalty";
 import RedeemInfo from "./components/loyaltyPoint/RedeemInfo";
-
-import { SkeletonTheme } from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import SurveyContent from "./components/content/SurveyContent";
 
 export default function App() {
     const isLoggedIn = localStorage.getItem("authToken");
@@ -59,11 +57,9 @@ export default function App() {
         { path: "news", element: <NewsTable /> },
         { path: "news/create", element: <NewsCreate /> },
         { path: "news/edit/:slug", element: <NewsEdit /> },
-        // { path: "insights", element: <Insights /> },
+        { path: "insights", element: <Insights /> },
         { path: "loyalty-point", element: <Loyalty /> },
         { path: "loyalty-point/redeem/:slug", element: <RedeemInfo /> },
-        // { path: "revenue", element: <Revenue /> },
-        // { path: "analytics", element: <Analytics /> },
         { path: "settings", element: <Settings /> },
         { path: "*", element: <PageNotFound /> },
     ];

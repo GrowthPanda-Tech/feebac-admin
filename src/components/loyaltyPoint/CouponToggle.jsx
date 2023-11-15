@@ -35,9 +35,6 @@ function CouponToggle({ couponInfo, couponId, setCouponsData }) {
 
     return (
         <div className="toggle-container">
-            <label className="slider-label">
-                {/* {isActive ? "Active" : "In-Active"} */}
-            </label>
             <div
                 className={`slider ${isActive ? "active" : "in-active"}`}
                 onClick={handleToggle}

@@ -9,6 +9,7 @@ import { ThemeProvider } from "@material-tailwind/react";
 import CategoryContextProvider from "./contexts/CategoryContext.jsx";
 import ProfileContextProvider from "./contexts/ProfileContext.jsx";
 import FilterContextProvider from "./contexts/FilterContext.jsx";
+import InsightContextProvider from "./contexts/InsightContext.jsx";
 
 //TODO: damn..
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -18,7 +19,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 <ProfileContextProvider>
                     <CategoryContextProvider>
                         <FilterContextProvider>
-                            <App />
+                            <InsightContextProvider>
+                                <App />
+                            </InsightContextProvider>
                         </FilterContextProvider>
                     </CategoryContextProvider>
                 </ProfileContextProvider>

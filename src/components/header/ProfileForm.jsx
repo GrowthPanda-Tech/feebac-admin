@@ -7,8 +7,7 @@ import defaultImgPreview from "../../assets/defaultImgPreview.png";
 //utils
 import formSubmit from "../../utils/formSubmit";
 import makeRequest from "../../utils/makeRequest";
-
-import AlertComponent from "../AlertComponent/AlertComponent";
+import swal from "../../utils/swal";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -31,7 +30,7 @@ function InputForm({ label, name, value, onChange }) {
     );
 }
 
-function ProfileForm({ setShow }) {
+export default function ProfileForm({ setShow }) {
     const { profile, setProfile } = useContext(ProfileContext);
 
     const fileInpRef = useRef(null);
@@ -58,20 +57,18 @@ function ProfileForm({ setShow }) {
             const formData = new FormData();
             formData.append("userImage", imgUpdate.userImage);
 
-            const res = await formSubmit(
+            const response = await formSubmit(
                 event,
                 "profile/upload-image",
                 "POST",
                 formData
             );
-            if (res.isSuccess) {
-                let custom = {
-                    message: "Profile Pic Updated Successfully ",
-                };
-                AlertComponent("success", custom);
+            if (response.isSuccess) {
+                swal("success", "Profile Pic Updated Successfully");
+
                 const getAdminInfo = async () => {
                     try {
-                        const response = await makeRequest(`profile/`, "GET");
+                        const response = await makeRequest("profile/", "GET");
                         if (response.isSuccess) {
                             setUserData(response.userInfo);
                         }
@@ -109,17 +106,14 @@ function ProfileForm({ setShow }) {
                 throw new Error(response.message);
             }
 
-            const custom = {
-                message: "User Profile Updated Successfully ",
-            };
+            swal("success", "User Profile Updated Successfully");
 
-            AlertComponent("success", custom);
             setProfile({ ...profile, ...updatedData });
             setShow((prev) => {
                 !prev;
             });
         } catch (error) {
-            AlertComponent("failed", error);
+            swal("failed", error.message);
         }
     };
 
@@ -292,5 +286,3 @@ function ProfileForm({ setShow }) {
         </div>
     );
 }
-
-export default ProfileForm;

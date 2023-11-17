@@ -1,4 +1,4 @@
-import AlertComponent from "../../AlertComponent/AlertComponent";
+import swal from "../../../utils/swal";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -45,7 +45,7 @@ export default function FilterCreate({
             setIsShowFilterCreate(false);
             setTertiaryKeys((prev) => [...prev, json.data]);
         } catch (error) {
-            AlertComponent("error", "", error);
+            swal("error", error.message);
         }
     };
 

@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
-import { DateSelect } from "./DateSelect";
 import { TermsAndCondition } from "./TermsAndCondition";
 import { CouponsDetails } from "./CouponsDescription";
 
+import swal from "../../utils/swal";
 import makeRequest from "../../utils/makeRequest";
+import removeForbiddenChars from "../../utils/removeForbiddenChars";
 
 import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
 import CouponCategory from "./CouponCategory";
-import removeForbiddenChars from "../../utils/removeForbiddenChars";
 
 function InputForm({
     label,
@@ -95,7 +94,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
 
         if (response.isSuccess) {
             setLoading(true);
-            AlertComponent("success", response);
+            swal("success", response.message);
             const getData = async () => {
                 const response = await makeRequest(
                     `loyalty/get-all-coupons`,
@@ -109,7 +108,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
             setShowCouponAddPop(false);
             getData();
         } else {
-            AlertComponent("failed", response);
+            swal("error", response.message);
         }
     };
     return (

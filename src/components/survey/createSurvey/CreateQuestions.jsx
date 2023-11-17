@@ -1,11 +1,12 @@
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import { questionReducer, INIT_STATE } from "../../../reducers/questionReducer";
+
+import swal from "../../../utils/swal";
 import makeRequest from "../../../utils/makeRequest";
-import PageTitle from "../../PageTitle";
-import AlertComponent from "../../AlertComponent/AlertComponent";
 import formSubmit from "../../../utils/formSubmit";
 import optionIcon from "../../../assets/option-preview.png";
+
+import PageTitle from "../../PageTitle";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -260,19 +261,24 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                 "POST",
                 questionData
             );
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                setOptions(initOptions);
-                setQuestionData(initQuestionData);
-                setActiveButtonIndex(1);
 
-                getQuestions();
-            } else {
-                AlertComponent("failed", response);
+            if (!response.isSuccess) {
+                throw new Error(response.message);
             }
+
+            swal("success", response.message);
+
+            setOptions(initOptions);
+            setQuestionData(initQuestionData);
+            setActiveButtonIndex(1);
+
+            getQuestions();
         } catch (error) {
-            if (error.message >= 500)
-                AlertComponent("error", "", "something has gone wrong");
+            if (error.message >= 500) {
+                swal("error", "Something has gone wrong");
+            } else {
+                swal("error", response.message);
+            }
         } finally {
             resetState();
             setInputType(1);
@@ -295,7 +301,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                 message: "Survey will start at the scheduled time",
             };
 
-            AlertComponent("success", customAlert);
+            swal("success", customAlert);
             navigate("/survey");
         } catch (error) {
             console.error(error);
@@ -313,10 +319,10 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             body
         );
         if (response.isSuccess) {
-            AlertComponent("success", response);
+            swal("success", response);
             navigate("/survey");
         } else {
-            AlertComponent("failed", response);
+            swal("failed", response);
         }
     };
 

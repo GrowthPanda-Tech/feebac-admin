@@ -2,12 +2,12 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CategoryContext } from "../../contexts/CategoryContext";
 
+import swal from "../../utils/swal";
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 import ContentForm from "./ContentForm";
 import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
 
 export default function ContentCreate({ surveyId }) {
     const { categories } = useContext(CategoryContext);
@@ -45,23 +45,21 @@ export default function ContentCreate({ surveyId }) {
         setArticleData({ ...articleData, article_content: content });
 
     const handleSubmit = async (event) => {
-        try {
-            setIsSaving(true);
-            const formData = new FormData();
-            formData.append("articleTitle", articleData.article_title);
-            formData.append(
-                "articleDesctiption",
-                articleData.article_desctiption
-            );
-            formData.append("articleContent", articleData.article_content);
-            formData.append("category", articleData.category);
-            articleData.articleImg &&
-                formData.append(
-                    "articleImg",
-                    articleData.articleImg,
-                    articleData.articleImg.name
-                );
+        setIsSaving(true);
 
+        const formData = new FormData();
+        formData.append("articleTitle", articleData.article_title);
+        formData.append("articleDesctiption", articleData.article_desctiption);
+        formData.append("articleContent", articleData.article_content);
+        formData.append("category", articleData.category);
+        articleData.articleImg &&
+            formData.append(
+                "articleImg",
+                articleData.articleImg,
+                articleData.articleImg.name
+            );
+
+        try {
             const response = await formSubmit(
                 event,
                 "site-admin/create-article",
@@ -69,14 +67,14 @@ export default function ContentCreate({ surveyId }) {
                 formData
             );
 
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                setTimeout(() => {
-                    navigate("/content");
-                }, 1200);
-            } else AlertComponent("failed", response);
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
+
+            swal("success", response.message);
+            navigate("/content");
         } catch (error) {
-            AlertComponent("error", "", error);
+            swal("error", error.message);
         } finally {
             setIsSaving(false);
         }

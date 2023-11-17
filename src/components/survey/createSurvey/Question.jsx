@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import makeRequest from "../../../utils/makeRequest";
 import { Link, useParams } from "react-router-dom";
-import downArrow from "../../../assets/iconamoon_arrow-down-2-light.svg";
-import AlertComponent from "../../AlertComponent/AlertComponent";
+
+import swal from "../../../utils/swal";
+import makeRequest from "../../../utils/makeRequest";
 
 function Input({ type, name, value, onChange, disabled }) {
     return (
@@ -89,24 +89,29 @@ export default function Question({
                     "POST",
                     questionData
                 );
-                if (response.isSuccess) {
-                    AlertComponent("success", response);
-                    const getData = async () => {
-                        const response = await makeRequest(
-                            `survey/show-survey?sid=${slug}`,
-                            "GET"
-                        );
-                        if (response.isSuccess) {
-                            setQuestionList(response.questionList);
-                            setSurveyInfo(response.surveyInfo);
-                        }
-                    };
-                    getData();
-                } else AlertComponent("failed", response);
+
+                if (!response.isSuccess) {
+                    throw new Error(response.message);
+                }
+
+                swal("success", response.message);
+
+                const getData = async () => {
+                    const response = await makeRequest(
+                        `survey/show-survey?sid=${slug}`,
+                        "GET"
+                    );
+
+                    if (response.isSuccess) {
+                        setQuestionList(response.questionList);
+                        setSurveyInfo(response.surveyInfo);
+                    }
+                };
+                getData();
 
                 setQuestionAddPop(false);
             } catch (error) {
-                AlertComponent("error", "", "Server Error");
+                swal("error", response.message);
             }
         } else {
             try {
@@ -115,7 +120,6 @@ export default function Question({
                     "POST",
                     questionData
                 );
-                alert(response.message);
 
                 questions.push(questionData);
 
@@ -126,24 +130,10 @@ export default function Question({
                 });
                 setQuestionNumber(questionNumber + 1);
             } catch (error) {
-                AlertComponent("error", "", "Server Error");
+                swal("error", "Server Error");
             }
         }
     };
-
-    // const handlePublish = async () => {
-    //     const body = {
-    //         surveyId,
-    //         isStartNow: true,
-    //     };
-    //     const response = await makeRequest(
-    //         "survey/start-survey",
-    //         "PATCH",
-    //         body
-    //     );
-    //     alert(response.message);
-    //     location.replace("/survey");
-    // };
 
     useEffect(() => {
         getFilters();
@@ -154,13 +144,6 @@ export default function Question({
             <div className="flex items-center justify-between">
                 {!editAdd && <h1 className="heading mb-0"> {surveyTitle} </h1>}
                 <div className="flex gap-4">
-                    {/* <button
-                        className="btn-primary w-fit"
-                        onClick={handlePublish}
-                    >
-                        Publish Now
-                    </button> */}
-
                     {!editAdd && (
                         <Link to={`/survey/review/${surveyId}`}>
                             <button className="btn-primary w-fit">

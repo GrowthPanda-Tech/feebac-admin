@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import makeRequest from "../../utils/makeRequest";
+import swal from "../../utils/swal";
 
 import Table from "../table/Table";
 import Thead from "../table/Thead";
@@ -13,7 +14,6 @@ import LoadingSpinner from "../_helperComponents/LoadingSpinner";
 import PageTitle from "../PageTitle";
 import Pagination from "../Pagination";
 import PaginationSelect from "../PaginationSelect";
-import AlertComponent from "../AlertComponent/AlertComponent";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const HEADERS = [
@@ -111,9 +111,9 @@ export default function Survey() {
             updatedData[index].is_public = !updatedData[index].is_public;
             setsurveyData(updatedData);
 
-            AlertComponent("success", response);
+            swal("success", response.message);
         } catch (error) {
-            AlertComponent("failed", error);
+            swal("failed", error.message);
         }
     };
 
@@ -142,7 +142,6 @@ export default function Survey() {
                 }
 
                 const json = await response.json();
-                console.log(json);
 
                 if (!json.isSuccess) {
                     throw new Error(json.message);
@@ -153,8 +152,6 @@ export default function Survey() {
 
                 setLoading(false);
             } catch (error) {
-                console.error(error);
-
                 if (error.message == 204) {
                     setsurveyData([]);
                     setTotalItems(1);

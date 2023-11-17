@@ -1,13 +1,14 @@
 import { useState, useContext } from "react";
 import { CategoryContext } from "../../contexts/CategoryContext";
 import { useNavigate } from "react-router-dom";
+
+import swal from "../../utils/swal";
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 //components
 import NewsForm from "./NewsForm";
 import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
 
 export default function NewsCreate() {
     const navigate = useNavigate();
@@ -66,20 +67,14 @@ export default function NewsCreate() {
                 formdata
             );
 
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                setTimeout(() => {
-                    navigate("/news");
-                }, 2000);
-            } else {
-                AlertComponent("failed", response);
+            if (!response.isSuccess) {
                 throw new Error(response.message);
             }
 
-            // alert(response.message);
+            swal("success", response.message);
+            navigate("/news");
         } catch (error) {
-            console.log(error);
-            AlertComponent("error", "", error.message);
+            swal("error", error.message);
         } finally {
             setIsSaving(false);
         }

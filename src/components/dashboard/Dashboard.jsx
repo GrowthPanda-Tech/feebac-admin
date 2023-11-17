@@ -1,10 +1,11 @@
-import { React, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+
 import PieChart from "./charts/PieChart";
-import makeRequest from "../../utils/makeRequest";
-import AlertComponent from "../AlertComponent/AlertComponent";
 import InfoCards from "./InfoCards";
-import LoadingSpinner from "../_helperComponents/LoadingSpinner";
 import DashboardSkeleton from "../_helperComponents/DashboardSkeleton";
+
+import makeRequest from "../../utils/makeRequest";
+import swal from "../../utils/swal";
 
 function Dashboard() {
     const [adminData, setAdminData] = useState({});
@@ -93,7 +94,8 @@ function Dashboard() {
                     setLoading(false);
                 }
             } catch (error) {
-                AlertComponent("error", error.message);
+                swal("error", error.message);
+
                 if (error.message == 204) {
                     setAdminData([]);
                     setLoading(false);

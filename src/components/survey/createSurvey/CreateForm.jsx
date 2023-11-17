@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import Filters from "./filter/Filters";
+import { useNavigate, useParams } from "react-router-dom";
+
+import swal from "../../../utils/swal";
 import makeRequest from "../../../utils/makeRequest";
 import convertToUTC from "../../../utils/convertToUTC";
 import formSubmit from "../../../utils/formSubmit";
-import AddQuestions from "./AddQuestions";
-import { useNavigate, useParams } from "react-router-dom";
-import AlertComponent from "../../AlertComponent/AlertComponent";
+
+import Filters from "./filter/Filters";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -142,12 +143,12 @@ export default function CreateForm() {
         );
 
         if (response.isSuccess) {
-            AlertComponent("success", response);
+            swal("success", response.message);
 
             setSurveyId(response.surveyId);
             setSurveyTitle(surveyData.surveyTitle);
             setIsSurveyCreate(response.isSuccess);
-        } else AlertComponent("error", response);
+        } else swal("error", response.message);
     };
 
     {

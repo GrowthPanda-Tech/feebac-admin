@@ -2,11 +2,10 @@ import { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { CategoryContext } from "../../../contexts/CategoryContext";
 
+import swal from "../../../utils/swal";
 import makeRequest from "../../../utils/makeRequest";
 import convertToUTC from "../../../utils/convertToUTC";
 import formSubmit from "../../../utils/formSubmit";
-
-import AlertComponent from "../../AlertComponent/AlertComponent";
 
 const TODAY = new Date().toISOString().slice(0, 16);
 
@@ -119,23 +118,28 @@ export default function EditSurveyForm({
                 "PUT",
                 formdata
             );
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                const getData = async () => {
-                    const response = await makeRequest(
-                        `survey/show-survey?sid=${slug}`,
-                        "GET"
-                    );
-                    if (response.isSuccess) {
-                        setSurveyInfo(response.surveyInfo);
-                    }
-                };
-                getData();
 
-                setSurveyEditPop(false);
-            } else AlertComponent("failed", response);
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
+
+            swal("success", response.message);
+
+            //TODO: what ze hell?
+            const getData = async () => {
+                const response = await makeRequest(
+                    `survey/show-survey?sid=${slug}`,
+                    "GET"
+                );
+                if (response.isSuccess) {
+                    setSurveyInfo(response.surveyInfo);
+                }
+            };
+            getData();
+
+            setSurveyEditPop(false);
         } catch (error) {
-            AlertComponent("error", "", "Please Enter Valid Value");
+            swal("error", "Please Enter Valid Value");
         }
     };
 

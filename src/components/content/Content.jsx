@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+import swal from "../../utils/swal";
 import makeRequest from "../../utils/makeRequest";
-import convertToLocale from "../../utils/convertToLocale";
 
 // component imports
 import PageTitle from "../PageTitle";
@@ -10,7 +10,6 @@ import Table from "../table/Table";
 import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
-import AlertComponent from "../AlertComponent/AlertComponent";
 import Pagination from "../Pagination";
 import PaginationSelect from "../PaginationSelect";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
@@ -26,18 +25,6 @@ export default function Content() {
     const [searchQuery, setSearchQuery] = useState("");
     const [totalItems, setTotalItems] = useState(1);
     const [isPublishing, setIsPublishing] = useState(false);
-    // const [sortOrder, setSortOrder] = useState("");
-    // const sortedData = [...articleList];
-
-    // if (sortOrder === "asc") {
-    //     sortedData.sort((a, b) =>
-    //         a.article_title.localeCompare(b.article_title)
-    //     );
-    // } else if (sortOrder === "desc") {
-    //     sortedData.sort((a, b) =>
-    //         b.article_title.localeCompare(a.article_title)
-    //     );
-    // }
 
     const handlePublish = async (articleId, index) => {
         try {
@@ -49,7 +36,6 @@ export default function Content() {
             );
 
             if (!response.isSuccess) {
-                AlertComponent("failed", response);
                 throw new Error(response.message);
             }
 
@@ -57,9 +43,9 @@ export default function Content() {
             updatedList[index].is_published = !updatedList[index].is_published;
             setArticleList(updatedList);
 
-            AlertComponent("success", response);
+            swal("success", response.message);
         } catch (error) {
-            console.error(error);
+            swal("error", error.message);
         } finally {
             setIsPublishing(false);
         }
@@ -85,8 +71,6 @@ export default function Content() {
                     setLoading(false);
                 }
             } catch (error) {
-                console.error(error);
-
                 if (error.message == 204) {
                     setLoading(false);
                     setArticleList([]);

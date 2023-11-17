@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+
+import swal from "../../utils/swal";
 import makeRequest from "../../utils/makeRequest";
 
 //components
@@ -10,7 +12,6 @@ import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import TableDateTime from "../table/TableDateTime";
 import NewsDelPop from "./NewsDelPop";
-import AlertComponent from "../AlertComponent/AlertComponent";
 import Pagination from "../Pagination";
 import PaginationSelect from "../PaginationSelect";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
@@ -42,19 +43,18 @@ export default function NewsTable() {
                 "DELETE"
             );
 
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                const updatedList = newsList.filter(
-                    (_, index) => index != delInfo.idx
-                );
-                setNewsList(updatedList);
-                setDelPop(false);
-            } else {
-                AlertComponent("failed", response);
+            if (!response.isSuccess) {
                 throw new Error(response.message);
             }
+
+            swal("success", response.message);
+            const updatedList = newsList.filter(
+                (_, index) => index != delInfo.idx
+            );
+            setNewsList(updatedList);
+            setDelPop(false);
         } catch (error) {
-            AlertComponent("error", "", error);
+            swal("error", error.message);
         }
     };
 

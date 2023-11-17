@@ -1,11 +1,11 @@
-import React from "react";
-import PageTitle from "../PageTitle";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
+import swal from "../../utils/swal";
 import makeRequest from "../../utils/makeRequest";
-import { useState } from "react";
-import { useEffect } from "react";
-import AlertComponent from "../AlertComponent/AlertComponent";
-import { useNavigate } from "react-router-dom";
+
+import PageTitle from "../PageTitle";
+
 function UserInfo({ name, value }) {
     return (
         <div className="flex justify-between">
@@ -83,7 +83,7 @@ function RedeemInfo() {
                 body
             );
             if (response.isSuccess) {
-                AlertComponent("success", response);
+                swal("success", response.message);
                 setTimeout(() => {
                     navigate(-1);
                 }, 1500);
@@ -97,11 +97,10 @@ function RedeemInfo() {
         !redeemCouponData.message.trim() ||
         !redeemCouponData.couponCode.trim();
 
-    console.log(isButtonDisabled);
-
     useEffect(() => {
         getRedeemInfo();
     }, [slug]);
+
     return (
         <>
             <h1 className="text-2xl font-semibold ">Redeem Infomation</h1>

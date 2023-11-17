@@ -4,7 +4,7 @@ import { CategoryContext } from "../../contexts/CategoryContext";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 import formSubmit from "../../utils/formSubmit";
 
-import AlertComponent from "../AlertComponent/AlertComponent";
+import swal from "../../utils/swal";
 
 export default function CategoryForm({ setIsShowCategoryCreate }) {
     const [newCategory, setNewCategory] = useState({});
@@ -12,7 +12,7 @@ export default function CategoryForm({ setIsShowCategoryCreate }) {
 
     const { categories, setCategories } = useContext(CategoryContext);
 
-    const onChange = (event) => {
+    const handleChange = (event) => {
         if (event.target.name === "categoryName") {
             setNewCategory({
                 ...newCategory,
@@ -35,15 +35,15 @@ export default function CategoryForm({ setIsShowCategoryCreate }) {
     };
 
     const handleSubmit = async (event) => {
-        try {
-            const formdata = new FormData();
-            formdata.append("categoryName", newCategory.categoryName);
-            formdata.append(
-                "categoryImg",
-                newCategory.categoryImg,
-                newCategory.categoryImg.name
-            );
+        const formdata = new FormData();
+        formdata.append("categoryName", newCategory.categoryName);
+        formdata.append(
+            "categoryImg",
+            newCategory.categoryImg,
+            newCategory.categoryImg.name
+        );
 
+        try {
             const response = await formSubmit(
                 event,
                 "site-admin/add-category",
@@ -52,19 +52,18 @@ export default function CategoryForm({ setIsShowCategoryCreate }) {
             );
 
             if (!response.isSuccess) {
-                AlertComponent("failed", response);
-                return;
+                throw new Error(response.message);
             }
-
-            AlertComponent("success", response);
 
             const newCategories = categories.slice();
             newCategories.push(response.data);
             setCategories(newCategories);
 
             setIsShowCategoryCreate(false);
+
+            swal("success", response.message);
         } catch (error) {
-            AlertComponent("error", error);
+            swal("error", error.message);
         }
     };
 
@@ -84,7 +83,7 @@ export default function CategoryForm({ setIsShowCategoryCreate }) {
                             type="text"
                             name="categoryName"
                             className="input-primary"
-                            onChange={onChange}
+                            onChange={handleChange}
                             required
                         />
                     </label>
@@ -95,7 +94,7 @@ export default function CategoryForm({ setIsShowCategoryCreate }) {
                             className="input-primary"
                             accept="image/*"
                             name="categoryImg"
-                            onChange={onChange}
+                            onChange={handleChange}
                             required
                         />
                     </label>

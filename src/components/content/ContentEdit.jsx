@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+import swal from "../../utils/swal";
 import makeRequest from "../../utils/makeRequest";
 import formSubmit from "../../utils/formSubmit";
 
@@ -8,7 +9,6 @@ import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 import ContentForm from "./ContentForm";
 import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -77,14 +77,14 @@ export default function ContentEdit() {
                 formData
             );
 
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                setTimeout(() => {
-                    navigate("/content");
-                }, 1000);
-            } else AlertComponent("failed", response);
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
+
+            swal("success", response.message);
+            navigate("/content");
         } catch (error) {
-            AlertComponent("error", "", error);
+            swal("error", error.message);
         } finally {
             setIsSaving(false);
         }

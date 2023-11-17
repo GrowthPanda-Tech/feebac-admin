@@ -1,15 +1,13 @@
-import { useState } from "react";
-import { DateSelect } from "./DateSelect";
+import { useState, useEffect } from "react";
 import { TermsAndCondition } from "./TermsAndCondition";
 import { CouponsDetails } from "./CouponsDescription";
 
+import swal from "../../utils/swal";
 import makeRequest from "../../utils/makeRequest";
+import removeForbiddenChars from "../../utils/removeForbiddenChars";
 
 import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
 import CouponCategory from "./CouponCategory";
-import { useEffect } from "react";
-import removeForbiddenChars from "../../utils/removeForbiddenChars";
 
 function InputForm({
     label,
@@ -114,20 +112,26 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await makeRequest(
-            "/loyalty/update-coupon",
-            "PUT",
-            editCouponData
-        );
-
-        if (response.isSuccess) {
+        try {
             setLoading(true);
-            AlertComponent("success", response);
+            const response = await makeRequest(
+                "/loyalty/update-coupon",
+                "PUT",
+                editCouponData
+            );
+
+            if (!response.isSuccess) {
+                throw new Error(response.message);
+            }
+
+            swal("success", response.message);
+
             const getData = async () => {
                 const response = await makeRequest(
                     `loyalty/get-all-coupons`,
                     "GET"
                 );
+
                 if (response.isSuccess) {
                     setCouponsData(response.data);
                     setLoading(false);
@@ -135,8 +139,8 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
             };
             setEditPop(false);
             getData();
-        } else {
-            AlertComponent("failed", response);
+        } catch (error) {
+            swal("error", error.message);
         }
     };
     return (

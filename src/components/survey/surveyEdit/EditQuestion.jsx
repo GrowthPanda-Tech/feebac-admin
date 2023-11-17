@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-//utils
 import makeRequest from "../../../utils/makeRequest";
-
-//components
-import AlertComponent from "../../AlertComponent/AlertComponent";
+import swal from "../../../utils/swal";
 
 function Input({ type, name, value, onChange }) {
     return (
@@ -106,7 +103,6 @@ export default function EditQuestion({
             );
 
             if (response.isSuccess) {
-                AlertComponent("success", response);
                 const getData = async () => {
                     const response = await makeRequest(
                         `survey/show-survey?sid=${slug}`
@@ -120,12 +116,11 @@ export default function EditQuestion({
                 };
 
                 getData();
-            } else {
-                AlertComponent("failed", response);
+
+                swal("success", response.message);
             }
         } catch (error) {
-            if (error >= 500)
-                AlertComponent("error", "", "Something went wrong!!");
+            if (error >= 500) swal("error", "Something went wrong!!");
         }
     };
 

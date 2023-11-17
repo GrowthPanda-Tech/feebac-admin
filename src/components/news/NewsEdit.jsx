@@ -2,13 +2,13 @@ import { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CategoryContext } from "../../contexts/CategoryContext";
 
+import swal from "../../utils/swal";
 import formSubmit from "../../utils/formSubmit";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 //components
 import NewsForm from "./NewsForm";
 import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -91,16 +91,14 @@ function NewsEdit() {
                 formdata
             );
 
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                setTimeout(() => {
-                    navigate("/news");
-                }, 1000);
-            } else {
-                AlertComponent("failed", response);
+            if (!response.isSuccess) {
+                throw new Error(response.message);
             }
+
+            swal("success", response.message);
+            navigate("/news");
         } catch (error) {
-            AlertComponent("error", "", error);
+            swal("error", error.message);
         } finally {
             setIsSaving(false);
         }

@@ -9,7 +9,7 @@ import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import TableDateTime from "../table/TableDateTime";
-import NewsDelPop from "./NewsDelPop";
+import NewsDelPop from "./utilComponents/NewsDelPop";
 import AlertComponent from "../AlertComponent/AlertComponent";
 import Pagination from "../Pagination";
 import PaginationSelect from "../PaginationSelect";

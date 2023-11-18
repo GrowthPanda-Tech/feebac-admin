@@ -1,6 +1,4 @@
-import React from "react";
-
-function NewsDelPop({ delPop, setDelPop, handleDelete }) {
+export default function NewsDelPop({ delPop, setDelPop, handleDelete }) {
     return (
         <div
             className={`fixed top-0 left-0 w-full flex justify-center items-center update-user  h-[100vh] ${
@@ -29,5 +27,3 @@ function NewsDelPop({ delPop, setDelPop, handleDelete }) {
         </div>
     );
 }
-
-export default NewsDelPop;

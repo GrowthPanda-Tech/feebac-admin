@@ -136,14 +136,16 @@ export default function NewsTable() {
                                     <Tdata left>{news.title}</Tdata>
                                     <Tdata capitalize>{news.category}</Tdata>
                                     <Tdata mono>
-                                        <TableDateTime data={news.createDate} />
+                                        <TableDateTime
+                                            data={news.create_date}
+                                        />
                                     </Tdata>
                                     <Tdata>
                                         <div className="text-xl flex justify-center gap-5">
                                             <div className="flex justify-center">
                                                 <div className="tool-tip-div group">
                                                     <Link
-                                                        to={news.newsUrl}
+                                                        to={news.source_url}
                                                         target="_blank"
                                                     >
                                                         <i className="fa-solid fa-link"></i>

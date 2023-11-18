@@ -1,31 +1,7 @@
 import { useContext } from "react";
 import { CategoryContext } from "../../contexts/CategoryContext";
 
-function Select({ label, name, value, onChange, items, disabled }) {
-    return (
-        <label className="flex flex-col">
-            <span className="font-semibold mb-2"> {label} </span>
-            <select
-                name={name}
-                value={value}
-                className={`capitalize py-3 px-8 rounded-xl  ${
-                    disabled ? "bg-light-grey" : ""
-                }`}
-                onChange={onChange}
-                disabled={disabled}
-                required
-            >
-                {items.map((item) => {
-                    return (
-                        <option key={item.category_id} value={item.category_id}>
-                            {item.category_name}
-                        </option>
-                    );
-                })}
-            </select>
-        </label>
-    );
-}
+import CategorySelector from "./utilComponents/CategorySelector";
 
 export default function NewsForm({ newsData, handleChange, isSaving }) {
     const { categories } = useContext(CategoryContext);
@@ -49,16 +25,13 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
                     </label>
                 </div>
                 <div className="md:w-1/2">
-                    <Select
-                        label={"Category"}
-                        name={"category"}
+                    <CategorySelector
                         value={
                             newsData
                                 ? newsData.category
                                 : categories[0].category_id
                         }
-                        onChange={handleChange}
-                        items={categories}
+                        handleChange={handleChange}
                         disabled={isSaving}
                     />
                 </div>

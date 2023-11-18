@@ -37,16 +37,16 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
                 </div>
             </div>
             <label className="flex flex-col">
-                <span className="font-semibold mb-2">Article Link</span>
+                <span className="font-semibold mb-2">Source Link</span>
                 <input
-                    name="newsUrl"
+                    name="source_url"
                     type="url"
                     placeholder="https://example.com"
                     pattern="https://.*"
                     className={`py-3 px-8 rounded-xl  ${
                         isSaving ? "bg-light-grey" : ""
                     }`}
-                    value={newsData ? newsData.newsUrl : ""}
+                    value={newsData ? newsData.source_url : ""}
                     onChange={handleChange}
                     disabled={isSaving}
                     required
@@ -54,9 +54,9 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
             </label>
 
             <label className="flex flex-col">
-                <span className="font-semibold mb-2"> Image </span>
+                <span className="font-semibold mb-2">Image</span>
                 <input
-                    name="newsImage"
+                    name="news_image"
                     type="file"
                     accept="image/*"
                     className={`py-3 px-8 rounded-xl  ${
@@ -85,7 +85,7 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
             <label className="flex flex-col">
                 <span className="font-semibold mb-2">Description</span>
                 <textarea
-                    className={`py-3 px-8 rounded-xl  ${
+                    className={`p-8 rounded-xl  ${
                         isSaving ? "bg-light-grey" : ""
                     }`}
                     label={"Description"}

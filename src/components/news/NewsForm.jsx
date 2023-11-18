@@ -67,6 +67,21 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
                     required
                 />
             </label>
+
+            <label className="flex flex-col">
+                <span className="font-semibold mb-2">Caption</span>
+                <input
+                    name="caption"
+                    className={`py-3 px-8 rounded-xl  ${
+                        isSaving ? "bg-light-grey" : ""
+                    }`}
+                    value={newsData ? newsData.caption : ""}
+                    onChange={handleChange}
+                    required
+                    disabled={isSaving}
+                />
+            </label>
+
             <label className="flex flex-col">
                 <span className="font-semibold mb-2">Description</span>
                 <textarea

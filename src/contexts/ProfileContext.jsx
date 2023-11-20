@@ -4,37 +4,37 @@ import makeRequest from "../utils/makeRequest";
 export const ProfileContext = createContext(null);
 
 export default function ProfileContextProvider({ children }) {
-    const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState({});
 
-    useEffect(() => {
-        let ignore = false;
+  useEffect(() => {
+    let ignore = false;
 
-        async function getProfile() {
-            try {
-                const response = await makeRequest("profile/");
+    async function getProfile() {
+      try {
+        const response = await makeRequest("profile/");
 
-                if (!response.isSuccess) {
-                    throw new Error(response.message);
-                }
-
-                if (!ignore) {
-                    setProfile(response.userInfo);
-                }
-            } catch (error) {
-                console.error(error);
-            }
+        if (!response.isSuccess) {
+          throw new Error(response.message);
         }
 
-        getProfile();
+        if (!ignore) {
+          setProfile(response.userInfo);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-        return () => {
-            ignore = true;
-        };
-    }, []);
+    getProfile();
 
-    return (
-        <ProfileContext.Provider value={{ profile, setProfile }}>
-            {children}
-        </ProfileContext.Provider>
-    );
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  return (
+    <ProfileContext.Provider value={{ profile, setProfile }}>
+      {children}
+    </ProfileContext.Provider>
+  );
 }

@@ -13,19 +13,19 @@ import InsightContextProvider from "./contexts/InsightContext.jsx";
 
 //TODO: damn..
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <ThemeProvider>
-                <ProfileContextProvider>
-                    <CategoryContextProvider>
-                        <FilterContextProvider>
-                            <InsightContextProvider>
-                                <App />
-                            </InsightContextProvider>
-                        </FilterContextProvider>
-                    </CategoryContextProvider>
-                </ProfileContextProvider>
-            </ThemeProvider>
-        </BrowserRouter>
-    </React.StrictMode>
+  <React.StrictMode>
+    <BrowserRouter>
+      <ThemeProvider>
+        <ProfileContextProvider>
+          <CategoryContextProvider>
+            <FilterContextProvider>
+              <InsightContextProvider>
+                <App />
+              </InsightContextProvider>
+            </FilterContextProvider>
+          </CategoryContextProvider>
+        </ProfileContextProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );

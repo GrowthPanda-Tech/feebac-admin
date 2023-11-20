@@ -1,44 +1,44 @@
 .toggle-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
 }
 
 .slider-label {
-    font-size: 16px;
-    user-select: none;
+  font-size: 16px;
+  user-select: none;
 }
 
 .slider {
-    width: 60px;
-    height: 30px;
-    background-color: #ccc;
-    border-radius: 15px;
-    position: relative;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
+  width: 60px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 15px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .slider-thumb {
-    width: 30px;
-    height: 30px;
-    background-color: #fff;
-    border-radius: 50%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: transform 0.3s ease-in-out;
+  width: 30px;
+  height: 30px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: transform 0.3s ease-in-out;
 }
 
 .slider.public {
-    background-color: #34c11e;
+  background-color: #34c11e;
 }
 
 .slider.public .slider-thumb {
-    transform: translateX(30px);
+  transform: translateX(30px);
 }
 
 .slider.private {
-    background-color: #dbdcdb;
+  background-color: #dbdcdb;
 }

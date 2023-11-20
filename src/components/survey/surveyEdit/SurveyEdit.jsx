@@ -7,7 +7,6 @@ import dateConvert from "../../../utils/dateConvert";
 import ReviewCard from "../reviewSurvey/ReviewCard";
 import EditSurveyDetails from "./EditSurveyDetails";
 import AddMoreQuestionPop from "./AddMoreQuestionPop";
-import ToggleButton from "./ToggleButton";
 import LoadingSpinner from "../../_helperComponents/LoadingSpinner";
 
 function InputHeading({ title, value }) {
@@ -97,7 +96,7 @@ export default function SurveyEdit() {
                                 value={
                                     surveyInfo
                                         ? dateConvert(
-                                              surveyInfo.start_date,
+                                              surveyInfo.end_date,
                                               "local"
                                           )
                                         : null
@@ -114,11 +113,6 @@ export default function SurveyEdit() {
                         </div>
                     </div>
                     <div className="flex flex-col items-end gap-4">
-                        <ToggleButton
-                            status={surveyInfo.is_public}
-                            surveyId={slug}
-                        />
-
                         <div className="flex items-center gap-4">
                             <button
                                 className="btn-primary"

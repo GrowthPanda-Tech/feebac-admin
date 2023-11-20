@@ -12,7 +12,7 @@ export default function ImageInput({ label, name }) {
 
     return (
         <div className="flex gap-4 flex-col">
-            <span className="capitalize font-semibold">{label}</span>
+            <span className="text-lg capitalize font-semibold">{label}</span>
             <input
                 name={name}
                 type="file"

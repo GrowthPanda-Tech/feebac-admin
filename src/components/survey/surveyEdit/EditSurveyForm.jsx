@@ -2,13 +2,11 @@ import { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { CategoryContext } from "../../../contexts/CategoryContext";
 
+import dateConvert from "../../../utils/dateConvert";
+import dateToday from "../../../utils/dateToday";
 import makeRequest from "../../../utils/makeRequest";
-import convertToUTC from "../../../utils/convertToUTC";
-import formSubmit from "../../../utils/formSubmit";
 
 import AlertComponent from "../../AlertComponent/AlertComponent";
-
-const TODAY = new Date().toISOString().slice(0, 16);
 
 function Select({ name, onChange, children }) {
     return (
@@ -54,28 +52,13 @@ export default function EditSurveyForm({
 
     const [isDateChange, setIsDateChange] = useState(false);
 
-    const convertToCalendarFormat = (dateString) => {
-        const date = new Date(dateString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
-        const seconds = String(date.getSeconds()).padStart(2, "0");
-        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-    };
-
-    const convertToLocal = (date) => {
-        const dateObj = new Date(`${date} UTC`);
-        return convertToCalendarFormat(dateObj);
-    };
-
     const { slug } = useParams();
+
     const [surveyData, setSurveyData] = useState({
         surveyId: surveyInfo?.survey_id,
         surveyTitle: surveyInfo?.survey_title,
-        startDate: convertToLocal(surveyInfo?.start_date),
-        endDate: convertToLocal(surveyInfo?.end_date),
+        startDate: dateConvert(surveyInfo?.start_date, "localISO"),
+        endDate: dateConvert(surveyInfo?.end_date, "localISO"),
         loyaltyPoint: surveyInfo?.loyalty_point,
         surveyDescription: surveyInfo?.survey_description,
         category: surveyInfo?.category.category_id,
@@ -91,7 +74,7 @@ export default function EditSurveyForm({
     const handleChange = (e) => {
         if (e.target.name === "startDate" || e.target.name === "endDate") {
             setIsDateChange(true);
-            const formattedOutput = convertToUTC(e.target.value);
+            const formattedOutput = dateConvert(e.target.value, "UTC");
             setUpdatedData({
                 ...updatedData,
                 [e.target.name]: formattedOutput,
@@ -103,22 +86,24 @@ export default function EditSurveyForm({
     };
 
     const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const dataString = JSON.stringify(profileData);
+        const formdata = new FormData();
+
+        for (const [key, value] of Object.entries(updatedData)) {
+            formdata.append(key, value);
+        }
+
+        formdata.append("target", dataString);
+
         try {
-            const dataString = JSON.stringify(profileData);
-            const formdata = new FormData();
-
-            for (const [key, value] of Object.entries(updatedData)) {
-                formdata.append(key, value);
-            }
-
-            formdata.append("target", dataString);
-
-            const response = await formSubmit(
-                event,
+            const response = await makeRequest(
                 "site-admin/update-survey",
                 "PUT",
                 formdata
             );
+
             if (response.isSuccess) {
                 AlertComponent("success", response);
                 const getData = async () => {
@@ -147,14 +132,14 @@ export default function EditSurveyForm({
                 <Label name={"Start Date"}>
                     <Input
                         type={"datetime-local"}
-                        min={TODAY}
+                        min={dateToday()}
                         value={
                             !isDateChange
                                 ? surveyData
                                     ? surveyData.startDate
                                     : ""
                                 : updatedData
-                                ? convertToLocal(updatedData.startDate)
+                                ? dateConvert(updatedData.startDate)
                                 : ""
                         }
                         name={"startDate"}
@@ -165,7 +150,7 @@ export default function EditSurveyForm({
                 <Label name={"End Date"}>
                     <Input
                         type={"datetime-local"}
-                        min={TODAY}
+                        min={dateToday()}
                         name={"endDate"}
                         onChange={handleChange}
                         value={
@@ -174,7 +159,7 @@ export default function EditSurveyForm({
                                     ? surveyData.endDate
                                     : ""
                                 : updatedData
-                                ? convertToLocal(updatedData.endDate)
+                                ? dateConvert(updatedData.endDate)
                                 : ""
                         }
                     />

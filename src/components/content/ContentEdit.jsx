@@ -2,15 +2,12 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import makeRequest from "../../utils/makeRequest";
-import formSubmit from "../../utils/formSubmit";
 
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 import ContentForm from "./ContentForm";
 import PageTitle from "../PageTitle";
 import AlertComponent from "../AlertComponent/AlertComponent";
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function ContentEdit() {
     const { slug } = useParams();
@@ -48,30 +45,29 @@ export default function ContentEdit() {
         setArticleData({ ...articleData, article_content: content });
 
     const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData();
+        formData.append("articleId", articleData.article_id);
+        formData.append("articleTitle", articleData.article_title);
+        formData.append("articleDesctiption", articleData.article_desctiption);
+        formData.append("articleContent", articleData.article_content);
+        formData.append("caption", articleData.caption);
+        formData.append("category", articleData.category);
+        formData.append("isUpdateImage", imgUpdate.isUpdate);
+
+        if (imgUpdate.isUpdate) {
+            formData.append(
+                "articleImg",
+                imgUpdate.articleImg,
+                imgUpdate.articleImg.name
+            );
+        }
+
         try {
             setIsSaving(true);
 
-            const formData = new FormData();
-            formData.append("articleId", articleData.article_id);
-            formData.append("articleTitle", articleData.article_title);
-            formData.append(
-                "articleDesctiption",
-                articleData.article_desctiption
-            );
-            formData.append("articleContent", articleData.article_content);
-            formData.append("category", articleData.category);
-            formData.append("isUpdateImage", imgUpdate.isUpdate);
-
-            if (imgUpdate.isUpdate) {
-                formData.append(
-                    "articleImg",
-                    imgUpdate.articleImg,
-                    imgUpdate.articleImg.name
-                );
-            }
-
-            const response = await formSubmit(
-                event,
+            const response = await makeRequest(
                 "/site-admin/update-article",
                 "PUT",
                 formData
@@ -149,7 +145,7 @@ export default function ContentEdit() {
                     <img
                         src={
                             articleData.image_url
-                                ? BASE_URL + articleData.image_url
+                                ? articleData.image_url
                                 : imgPreview
                         }
                         className="max-h-full max-w-full"

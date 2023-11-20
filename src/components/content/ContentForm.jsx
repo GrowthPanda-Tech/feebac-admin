@@ -31,7 +31,6 @@ function Select({ label, name, onChange, items, selectedItem, disabled }) {
 }
 
 function Input({ label, name, value, onChange, disabled }) {
-    console.log(disabled);
     return (
         <label className="flex flex-col">
             <span className="font-semibold mb-2"> {label} </span>
@@ -48,6 +47,7 @@ function Input({ label, name, value, onChange, disabled }) {
         </label>
     );
 }
+
 export default function ContentForm({
     articleData,
     handleChange,
@@ -55,7 +55,6 @@ export default function ContentForm({
     isSaving,
 }) {
     const { categories } = useContext(CategoryContext);
-    console.log(isSaving);
 
     return (
         <div className="flex flex-col gap-6">
@@ -105,6 +104,14 @@ export default function ContentForm({
                     disabled={isSaving}
                 />
             </label>
+
+            <Input
+                label={"Caption"}
+                name={"caption"}
+                value={articleData ? articleData.caption : ""}
+                onChange={handleChange}
+                disabled={isSaving}
+            />
 
             <label className="flex flex-col">
                 <span className="font-semibold mb-2"> Content </span>

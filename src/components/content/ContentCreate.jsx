@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CategoryContext } from "../../contexts/CategoryContext";
 
-import formSubmit from "../../utils/formSubmit";
+import makeRequest from "../../utils/makeRequest";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 import ContentForm from "./ContentForm";
@@ -45,25 +45,25 @@ export default function ContentCreate({ surveyId }) {
         setArticleData({ ...articleData, article_content: content });
 
     const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData();
+        formData.append("articleTitle", articleData.article_title);
+        formData.append("articleDesctiption", articleData.article_desctiption);
+        formData.append("articleContent", articleData.article_content);
+        formData.append("category", articleData.category);
+        formData.append("caption", articleData.caption);
+        articleData.articleImg &&
+            formData.append(
+                "articleImg",
+                articleData.articleImg,
+                articleData.articleImg.name
+            );
+
         try {
             setIsSaving(true);
-            const formData = new FormData();
-            formData.append("articleTitle", articleData.article_title);
-            formData.append(
-                "articleDesctiption",
-                articleData.article_desctiption
-            );
-            formData.append("articleContent", articleData.article_content);
-            formData.append("category", articleData.category);
-            articleData.articleImg &&
-                formData.append(
-                    "articleImg",
-                    articleData.articleImg,
-                    articleData.articleImg.name
-                );
 
-            const response = await formSubmit(
-                event,
+            const response = await makeRequest(
                 "site-admin/create-article",
                 "POST",
                 formData

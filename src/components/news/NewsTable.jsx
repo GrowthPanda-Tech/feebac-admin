@@ -9,7 +9,7 @@ import Thead from "../table/Thead";
 import Trow from "../table/Trow";
 import Tdata from "../table/Tdata";
 import TableDateTime from "../table/TableDateTime";
-import NewsDelPop from "./NewsDelPop";
+import NewsDelPop from "./utilComponents/NewsDelPop";
 import AlertComponent from "../AlertComponent/AlertComponent";
 import Pagination from "../Pagination";
 import PaginationSelect from "../PaginationSelect";
@@ -136,14 +136,16 @@ export default function NewsTable() {
                                     <Tdata left>{news.title}</Tdata>
                                     <Tdata capitalize>{news.category}</Tdata>
                                     <Tdata mono>
-                                        <TableDateTime data={news.createDate} />
+                                        <TableDateTime
+                                            data={news.create_date}
+                                        />
                                     </Tdata>
                                     <Tdata>
                                         <div className="text-xl flex justify-center gap-5">
                                             <div className="flex justify-center">
                                                 <div className="tool-tip-div group">
                                                     <Link
-                                                        to={news.newsUrl}
+                                                        to={news.source_url}
                                                         target="_blank"
                                                     >
                                                         <i className="fa-solid fa-link"></i>

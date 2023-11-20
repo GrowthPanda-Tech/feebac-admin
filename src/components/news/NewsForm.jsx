@@ -1,31 +1,7 @@
 import { useContext } from "react";
 import { CategoryContext } from "../../contexts/CategoryContext";
 
-function Select({ label, name, value, onChange, items, disabled }) {
-    return (
-        <label className="flex flex-col">
-            <span className="font-semibold mb-2"> {label} </span>
-            <select
-                name={name}
-                value={value}
-                className={`capitalize py-3 px-8 rounded-xl  ${
-                    disabled ? "bg-light-grey" : ""
-                }`}
-                onChange={onChange}
-                disabled={disabled}
-                required
-            >
-                {items.map((item) => {
-                    return (
-                        <option key={item.category_id} value={item.category_id}>
-                            {item.category_name}
-                        </option>
-                    );
-                })}
-            </select>
-        </label>
-    );
-}
+import CategorySelector from "./utilComponents/CategorySelector";
 
 export default function NewsForm({ newsData, handleChange, isSaving }) {
     const { categories } = useContext(CategoryContext);
@@ -49,31 +25,28 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
                     </label>
                 </div>
                 <div className="md:w-1/2">
-                    <Select
-                        label={"Category"}
-                        name={"category"}
+                    <CategorySelector
                         value={
                             newsData
                                 ? newsData.category
                                 : categories[0].category_id
                         }
-                        onChange={handleChange}
-                        items={categories}
+                        handleChange={handleChange}
                         disabled={isSaving}
                     />
                 </div>
             </div>
             <label className="flex flex-col">
-                <span className="font-semibold mb-2">Article Link</span>
+                <span className="font-semibold mb-2">Source Link</span>
                 <input
-                    name="newsUrl"
+                    name="source_url"
                     type="url"
                     placeholder="https://example.com"
                     pattern="https://.*"
                     className={`py-3 px-8 rounded-xl  ${
                         isSaving ? "bg-light-grey" : ""
                     }`}
-                    value={newsData ? newsData.newsUrl : ""}
+                    value={newsData ? newsData.source_url : ""}
                     onChange={handleChange}
                     disabled={isSaving}
                     required
@@ -81,9 +54,9 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
             </label>
 
             <label className="flex flex-col">
-                <span className="font-semibold mb-2"> Image </span>
+                <span className="font-semibold mb-2">Image</span>
                 <input
-                    name="newsImage"
+                    name="news_image"
                     type="file"
                     accept="image/*"
                     className={`py-3 px-8 rounded-xl  ${
@@ -94,10 +67,25 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
                     required
                 />
             </label>
+
+            <label className="flex flex-col">
+                <span className="font-semibold mb-2">Caption</span>
+                <input
+                    name="caption"
+                    className={`py-3 px-8 rounded-xl  ${
+                        isSaving ? "bg-light-grey" : ""
+                    }`}
+                    value={newsData ? newsData.caption : ""}
+                    onChange={handleChange}
+                    required
+                    disabled={isSaving}
+                />
+            </label>
+
             <label className="flex flex-col">
                 <span className="font-semibold mb-2">Description</span>
                 <textarea
-                    className={`py-3 px-8 rounded-xl  ${
+                    className={`p-8 rounded-xl  ${
                         isSaving ? "bg-light-grey" : ""
                     }`}
                     label={"Description"}

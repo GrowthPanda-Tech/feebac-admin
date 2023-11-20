@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import makeRequest from "../../utils/makeRequest";
-import convertToLocale from "../../utils/convertToLocale";
 import loyaltyImg from "../../assets/loyalty.png";
 
 //components
@@ -112,7 +111,6 @@ export default function UserInfo() {
 
             <div className="flex flex-col gap-8 mt-2">
                 <div className="flex h-[33vh] justify-between gap-6">
-                    {/* Transaction Info */}
                     <div className="flex flex-col gap-6 bg-white rounded-xl p-6 w-8/12">
                         <PageTitle name={"Transaction Ledger"} />
                         <div className=" overflow-y-scroll">
@@ -128,11 +126,11 @@ export default function UserInfo() {
                                                     {transaction.reason}
                                                 </Tdata>
                                                 <Tdata mono>
-                                                    {
-                                                        convertToLocale(
+                                                    <TableDateTime
+                                                        data={
                                                             transaction.dateTime
-                                                        ).split(",")[0]
-                                                    }
+                                                        }
+                                                    />
                                                 </Tdata>
                                                 <Tdata>
                                                     {transaction.isCredit ? (

@@ -1,9 +1,10 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
+import { CategoryContext } from "../../../contexts/CategoryContext";
 
+import dateToday from "../../../utils/dateToday";
+import dateConvert from "../../../utils/dateConvert";
 import makeRequest from "../../../utils/makeRequest";
-import formSubmit from "../../../utils/formSubmit";
 import removeForbiddenChars from "../../../utils/removeForbiddenChars";
-import convertToUTC from "../../../utils/convertToUTC";
 
 import upload from "../../../assets/upload.png";
 
@@ -11,11 +12,6 @@ import upload from "../../../assets/upload.png";
 import Filters from "./filter/Filters";
 import PageTitle from "../../PageTitle";
 import AlertComponent from "../../AlertComponent/AlertComponent";
-
-import { CategoryContext } from "../../../contexts/CategoryContext";
-import { useRef } from "react";
-
-const TODAY = new Date().toISOString().slice(0, 16);
 
 function UserCount({ type, count }) {
     return (
@@ -81,12 +77,8 @@ export default function CreateSurveyForm({
 }) {
     const { categories } = useContext(CategoryContext);
 
-    let initCat = categories[0]?.category_id ? categories[0].category_id : "";
-
     const [filters, setFilters] = useState([]);
-    const [surveyData, setSurveyData] = useState({
-        category: initCat,
-    });
+    const [surveyData, setSurveyData] = useState({});
     const [profileData, setProfileData] = useState({});
     const [userCount, setUserCount] = useState(0);
     const [filterdUserCount, setFilteredUserCount] = useState(0);
@@ -143,25 +135,21 @@ export default function CreateSurveyForm({
         }
     };
 
+    console.log(surveyData);
     const handleChange = (e) => {
         const name = e.target.name;
         const value = e.target.value;
 
         if (name === "startDate" || name === "endDate") {
-            const formattedOutput = convertToUTC(value);
+            const formattedOutput = dateConvert(value, "UTC");
             setSurveyData({ ...surveyData, [name]: formattedOutput });
             return;
         }
 
+        //TODO: Image preview
         if (name === "surveyImg") {
             const file = e.target.files[0];
             setSurveyData({ ...surveyData, surveyImg: file });
-
-            // if (file) {
-            //     const reader = new FileReader();
-            //     reader.onload = () => setImgPreview(reader.result);
-            //     reader.readAsDataURL(file);
-            // }
 
             return;
         }
@@ -198,28 +186,28 @@ export default function CreateSurveyForm({
     };
 
     const handleSubmit = async (event) => {
-        try {
-            const dataString = JSON.stringify(profileData);
-            const formdata = new FormData();
+        event.preventDefault();
 
-            for (const [key, value] of Object.entries(surveyData)) {
-                if (key === "surveyImg") {
-                    formdata.append(key, value, value.name);
-                    continue;
-                }
+        const dataString = JSON.stringify(profileData);
+        const formdata = new FormData();
 
-                if (key === "category" && value === "") {
-                    formdata.append(key, categories[0].category_id);
-                    continue;
-                }
-
-                formdata.append(key, value);
+        for (const [key, value] of Object.entries(surveyData)) {
+            if (key === "surveyImg") {
+                formdata.append(key, value, value.name);
+                continue;
             }
 
-            formdata.append("target", dataString);
+            formdata.append(key, value);
+        }
 
-            const response = await formSubmit(
-                event,
+        formdata.append("target", dataString);
+
+        if (!surveyData.category) {
+            formdata.append("category", categories[0].category_id);
+        }
+
+        try {
+            const response = await makeRequest(
                 "site-admin/create-survey",
                 "POST",
                 formdata
@@ -239,6 +227,7 @@ export default function CreateSurveyForm({
         }
     };
 
+    //TODO: replace with useFetch hook
     useEffect(() => {
         getFilters();
         getUserCount();
@@ -252,7 +241,7 @@ export default function CreateSurveyForm({
                 <Label name={"Start Date"}>
                     <Input
                         type={"datetime-local"}
-                        min={TODAY}
+                        min={dateToday()}
                         name={"startDate"}
                         onChange={handleChange}
                     />
@@ -261,7 +250,7 @@ export default function CreateSurveyForm({
                 <Label name={"End Date"}>
                     <Input
                         type={"datetime-local"}
-                        min={TODAY}
+                        min={dateToday()}
                         name={"endDate"}
                         onChange={handleChange}
                     />

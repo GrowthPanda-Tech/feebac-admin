@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import makeRequest from "../../../utils/makeRequest";
-import convertToLocale from "../../../utils/convertToLocale";
+import dateConvert from "../../../utils/dateConvert";
 
 import ReviewCard from "../reviewSurvey/ReviewCard";
 import EditSurveyDetails from "./EditSurveyDetails";
@@ -85,26 +85,22 @@ export default function SurveyEdit() {
                                 title={"Start Date & Time"}
                                 value={
                                     surveyInfo
-                                        ? convertToLocale(
-                                              surveyInfo.start_date
-                                          ).split(",")[0] +
-                                          convertToLocale(
-                                              surveyInfo.start_date
-                                          ).split(",")[1]
-                                        : ""
+                                        ? dateConvert(
+                                              surveyInfo.start_date,
+                                              "local"
+                                          )
+                                        : null
                                 }
                             />
                             <InputHeading
                                 title={"End Date & Time"}
                                 value={
                                     surveyInfo
-                                        ? convertToLocale(
-                                              surveyInfo.end_date
-                                          ).split(",")[0] +
-                                          convertToLocale(
-                                              surveyInfo.end_date
-                                          ).split(",")[1]
-                                        : ""
+                                        ? dateConvert(
+                                              surveyInfo.start_date,
+                                              "local"
+                                          )
+                                        : null
                                 }
                             />
                             <InputHeading

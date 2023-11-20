@@ -1,9 +1,10 @@
-import convertToLocale from "../../utils/convertToLocale";
+import dateConvert from "../../utils/dateConvert";
 
 export default function TableDateTime({ data }) {
-    const locale = convertToLocale(data);
-    const date = locale.split(",")[0];
-    const time = locale.split(",")[1];
+    const local = dateConvert(data, "local");
+
+    const date = local.split(",")[0];
+    const time = local.split(",")[1];
 
     return (
         <div className="flex flex-col gap-2">

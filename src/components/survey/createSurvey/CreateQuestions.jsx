@@ -353,7 +353,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-4">
                 <label className="flex flex-col gap-4">
                     <span className="font-bold">
-                        Question {questions.length + 1} :
+                        {`Question ${questions.length + 1} :`}
                     </span>
                     <Input
                         type={"text"}

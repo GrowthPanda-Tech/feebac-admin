@@ -4,7 +4,7 @@ import makeRequest from "../utils/makeRequest";
 
 export default function useFetch(route) {
     const [loading, setLoading] = useState(false);
-    const [response, setResponse] = useState(null);
+    const [fetchedData, setFetchedData] = useState(null);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -21,7 +21,7 @@ export default function useFetch(route) {
                 }
 
                 if (!ignore) {
-                    setResponse(response);
+                    setFetchedData(response);
                     setLoading(false);
                 }
             } catch (error) {
@@ -37,5 +37,5 @@ export default function useFetch(route) {
         };
     }, [route]);
 
-    return { loading, response, setResponse, error };
+    return { loading, fetchedData, setFetchedData, error };
 }

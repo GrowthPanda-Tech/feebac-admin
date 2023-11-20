@@ -136,6 +136,7 @@ export default function RedeemRequest() {
                                     coupon,
                                     requestBy,
                                     createdDate,
+                                    actionDate,
                                     approvedBy,
                                     currentStatus,
                                 }) => (
@@ -148,7 +149,11 @@ export default function RedeemRequest() {
                                         <Tdata mono>
                                             <div className="flex flex-col gap-2">
                                                 <TableDateTime
-                                                    data={createdDate}
+                                                    data={
+                                                        status === "pending"
+                                                            ? createdDate
+                                                            : actionDate
+                                                    }
                                                 />
                                             </div>
                                         </Tdata>

@@ -88,14 +88,14 @@ export default function EditSurveyForm({
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const dataString = JSON.stringify(profileData);
+        // const dataString = JSON.stringify(profileData);
         const formdata = new FormData();
 
         for (const [key, value] of Object.entries(updatedData)) {
             formdata.append(key, value);
         }
 
-        formdata.append("target", dataString);
+        // formdata.append("target", dataString);
 
         try {
             const response = await makeRequest(
@@ -139,7 +139,7 @@ export default function EditSurveyForm({
                                     ? surveyData.startDate
                                     : ""
                                 : updatedData
-                                ? dateConvert(updatedData.startDate)
+                                ? dateConvert(updatedData.startDate, "localISO")
                                 : ""
                         }
                         name={"startDate"}
@@ -159,7 +159,7 @@ export default function EditSurveyForm({
                                     ? surveyData.endDate
                                     : ""
                                 : updatedData
-                                ? dateConvert(updatedData.endDate)
+                                ? dateConvert(updatedData.endDate, "localISO")
                                 : ""
                         }
                     />

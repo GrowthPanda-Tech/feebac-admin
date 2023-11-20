@@ -1,11 +1,14 @@
 import { useContext } from "react";
-import { InsightContext } from "../../../contexts/InsightContext";
+import { useNavigate } from "react-router-dom";
+import { INIT_STATE, InsightContext } from "../../../contexts/InsightContext";
 
 import makeRequest from "../../../utils/makeRequest";
 import swal from "../../../utils/swal";
 
 export default function SubmitButton() {
-    const { insightModel } = useContext(InsightContext);
+    const { insightModel, setInsightModel } = useContext(InsightContext);
+
+    const navigate = useNavigate();
 
     const handleSubmit = async () => {
         const formData = new FormData();
@@ -28,6 +31,8 @@ export default function SubmitButton() {
             }
 
             swal("success", response.message);
+            setInsightModel(INIT_STATE);
+            navigate("/insights");
         } catch (error) {
             swal("error", error.message);
         }

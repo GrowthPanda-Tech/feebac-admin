@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import makeRequest from "../../utils/makeRequest";
-import convertToLocale from "../../utils/convertToLocale";
 
 // component imports
 import PageTitle from "../PageTitle";

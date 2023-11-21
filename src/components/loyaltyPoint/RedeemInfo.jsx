@@ -1,19 +1,21 @@
-import React from "react";
-import PageTitle from "../PageTitle";
-import { useParams } from "react-router-dom";
-import makeRequest from "../../utils/makeRequest";
 import { useState } from "react";
-import { useEffect } from "react";
-import AlertComponent from "../AlertComponent/AlertComponent";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
+
+import makeRequest from "../../utils/makeRequest";
+import dateConvert from "../../utils/dateConvert";
+import swal from "../../utils/swal";
+
+import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+
 function UserInfo({ name, value }) {
   return (
     <div className="flex justify-between">
-      <h5 className="mb-2 text-xl font-semibold tracking-tight text-gray-900">
+      <h5 className="text-xl font-semibold tracking-tight text-gray-900">
         {name}
       </h5>
       <p
-        className={`mb-3 capitalize font-semibold opacity-50 text-gray-700 ${
+        className={`capitalize font-semibold opacity-50 text-gray-700 ${
           value === "pending" ? `text-[#ff0000]` : ""
         } ${value === "approved" ? `text-green` : ""}`}
       >
@@ -22,46 +24,34 @@ function UserInfo({ name, value }) {
     </div>
   );
 }
+
 function CouponInfo({ name, value }) {
   return (
     <div className="flex justify-between">
-      <h5 className="mb-3 font-bold text-xl">{name}</h5>
-      <p className="mb-3 capitalize font-semibold opacity-50 ">{value}</p>
+      <h5 className="text-xl font-semibold tracking-tight text-gray-900">
+        {name}
+      </h5>
+      <p className="capitalize font-semibold opacity-50 text-gray-700">
+        {value}
+      </p>
     </div>
   );
 }
 
-function RedeemInfo() {
-  const navigate = useNavigate();
+export default function RedeemInfo() {
   const { slug } = useParams();
-  const [redeemInfo, setRedeemInfo] = useState({
-    coupon: {
-      id: "",
-      expiredData: "",
-    },
-  });
-  const [redeemCouponData, setRedeemCouponData] = useState(
-    useState({
-      message: "",
-      couponCode: "",
-    })
+  const navigate = useNavigate();
+
+  const { loading, fetchedData } = useFetch(
+    `loyalty/get-request-info?id=${slug}`
   );
 
-  const getRedeemInfo = async () => {
-    try {
-      const response = await makeRequest(
-        `loyalty/get-request-info?id=${slug}`,
-        "GET"
-      );
+  const [redeemCouponData, setRedeemCouponData] = useState({
+    message: "",
+    couponCode: "",
+  });
 
-      if (response.isSuccess) {
-        setRedeemInfo(response.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const onChangeHandler = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
     setRedeemCouponData({
@@ -70,74 +60,67 @@ function RedeemInfo() {
     });
   };
 
-  const onSubmitHandler = async () => {
+  const handleSubmit = async () => {
     try {
-      const body = {
+      const response = await makeRequest("loyalty/approve-request", "PUT", {
+        ...redeemCouponData,
         id: slug,
-        message: redeemCouponData.message,
-        couponCode: redeemCouponData.couponCode,
-      };
-      const response = await makeRequest(
-        "loyalty/approve-request",
-        "PUT",
-        body
-      );
-      if (response.isSuccess) {
-        AlertComponent("success", response);
-        setTimeout(() => {
-          navigate(-1);
-        }, 1500);
+      });
+
+      if (!response.isSuccess) {
+        throw new Error(response.message);
       }
-    } catch (error) {}
+
+      swal("success", response.message);
+      navigate(-1);
+    } catch (error) {
+      swal("error", error.message);
+    }
   };
 
   const isButtonDisabled =
-    !redeemCouponData.message ||
-    !redeemCouponData.couponCode ||
-    !redeemCouponData.message.trim() ||
-    !redeemCouponData.couponCode.trim();
+    !redeemCouponData.message || !redeemCouponData.couponCode;
 
-  console.log(isButtonDisabled);
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
-  useEffect(() => {
-    getRedeemInfo();
-  }, [slug]);
   return (
-    <>
-      <h1 className="text-2xl font-semibold ">Redeem Infomation</h1>
-      {redeemInfo.currentStatus === "pending" ? (
-        <div className="p-5 flex flex-col  gap-2  ">
-          <div className="">
-            <label className=" text-xl font-bold  ">
-              Enter The message for user
-            </label>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold ">Redeem Information</h1>
+      {fetchedData?.data.currentStatus === "pending" ? (
+        <div className="flex flex-col gap-6">
+          <label className="font-semibold">
+            <span className="text-lg">Message</span>
             <input
               name="message"
               className="w-full p-5 rounded-lg mt-2"
-              placeholder="Enter the Message Code Here..."
+              placeholder="Hola!!"
               type="text"
               onChange={(e) => {
-                onChangeHandler(e);
+                handleChange(e);
               }}
             />
-          </div>
-          <div>
-            <label className=" text-xl font-bold">Enter Coupon Code</label>
+          </label>
+
+          <label className="font-semibold">
+            <span className="text-lg">Coupon Code</span>
             <input
               name="couponCode"
               className="w-full p-5 rounded-lg mt-2"
-              placeholder="Enter the Code Here..."
+              placeholder="XXX-XXXX-XXX"
               type="text"
               onChange={(e) => {
-                onChangeHandler(e);
+                handleChange(e);
               }}
             />
-          </div>
+          </label>
+
           <button
             className={` ${
               isButtonDisabled ? "btn-secondary" : "btn-primary"
             }  w-28`}
-            onClick={onSubmitHandler}
+            onClick={handleSubmit}
             disabled={isButtonDisabled}
           >
             Send
@@ -146,63 +129,61 @@ function RedeemInfo() {
       ) : (
         ""
       )}
-      <div className="grid grid-cols-2 p-5 gap-10 h-[35vh]">
-        <div className=" space-y-4">
-          <PageTitle name={"User Details"} />
-          <div className="flex flex-col gap-4 bg-white rounded-xl h-[40vh] justify-center p-8 w-full">
+      <div className="flex gap-10">
+        <div className="w-1/2 flex flex-col gap-4">
+          <span className="text-lg font-semibold">User Details</span>
+          <div className="flex flex-col gap-4 bg-white rounded-xl justify-center p-8">
             <UserInfo name={"Id"} value={slug} />
-            <UserInfo name={"User Id"} value={redeemInfo.requestBy} />
-            <UserInfo name={"Request Date"} value={redeemInfo.createdDate} />
-            <UserInfo name={"Status"} value={redeemInfo.currentStatus} />
-            {redeemInfo.currentStatus === "approved" ? (
+            <UserInfo name={"User Id"} value={fetchedData?.data.requestBy} />
+            <UserInfo
+              name={"Request Date"}
+              value={dateConvert(fetchedData?.data.createdDate, "local")}
+            />
+            <UserInfo name={"Status"} value={fetchedData?.data.currentStatus} />
+            {fetchedData?.data.currentStatus === "approved" ? (
               <>
-                <UserInfo name={"Message"} value={redeemInfo.message} />
-                <UserInfo name={"Approved By"} value={redeemInfo.approvedBy} />
+                <UserInfo name={"Message"} value={fetchedData?.data.message} />
+                <UserInfo name={"Code"} value={fetchedData?.data.couponCode} />
+                <UserInfo
+                  name={"Approved By"}
+                  value={fetchedData?.data.approvedBy}
+                />
               </>
             ) : (
               ""
             )}
           </div>
         </div>
-        <div className=" space-y-4">
-          <PageTitle name={"Coupons Details"} />
+        <div className="w-1/2 flex flex-col gap-4">
+          <span className="text-lg font-semibold">Coupon Details</span>
 
-          <div className="flex flex-col items-center p-10 h-[40vh] bg-white justify-center rounded-xl ">
+          <div className="flex flex-col items-center p-8 gap-4 bg-white justify-center rounded-xl ">
             <img
               className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 "
-              src={redeemInfo.coupon.imageUrl}
+              src={fetchedData?.data.coupon.imageUrl}
               alt=""
             />
-            <div className="flex flex-col justify-between w-full p-4 leading-normal">
-              {/* <CouponInfo
-                                name={"Coupon Id"}
-                                value={redeemInfo?.coupon?.id.split("-").pop()}
-                            /> */}
-              <CouponInfo name={"Name"} value={redeemInfo.coupon.title} />
+            <div className="flex flex-col justify-between w-full gap-4 leading-normal">
+              <CouponInfo
+                name={"Name"}
+                value={fetchedData?.data.coupon.title}
+              />
               <CouponInfo
                 name={"Value"}
-                value={redeemInfo.coupon.description}
+                value={fetchedData?.data.coupon.description}
               />
               <CouponInfo
                 name={"Category"}
-                value={redeemInfo.coupon.category}
+                value={fetchedData?.data.coupon.category}
               />
               <CouponInfo
                 name={"Coins Requried"}
-                value={redeemInfo.coupon.value}
+                value={fetchedData?.data.coupon.value}
               />
-              {/* <CouponInfo
-                                name={"Expired Date"}
-                                value={
-                                    redeemInfo.coupon.expiredData.split(" ")[0]
-                                }
-                            /> */}
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
-
-export default RedeemInfo;

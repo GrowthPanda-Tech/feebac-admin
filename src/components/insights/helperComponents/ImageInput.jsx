@@ -1,8 +1,9 @@
 import { useContext, useRef } from "react";
 import { InsightContext } from "../../../contexts/InsightContext";
 
-export default function ImageInput({ label, name }) {
+export default function ImageInput() {
   const { insightModel, setInsightModel } = useContext(InsightContext);
+
   const imgRef = useRef(null);
 
   const handleChange = (e) => {
@@ -12,9 +13,9 @@ export default function ImageInput({ label, name }) {
 
   return (
     <div className="flex gap-4 flex-col">
-      <span className="text-lg capitalize font-semibold">{label}</span>
+      <span className="text-lg capitalize font-semibold">Background Image</span>
       <input
-        name={name}
+        name="image"
         type="file"
         accept="image/*"
         ref={imgRef}

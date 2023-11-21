@@ -19,6 +19,7 @@ export default function InsightCard({ data }) {
       }
 
       swal("success", response.message);
+
       setCardData({ ...cardData, is_public: !cardData.is_public });
     } catch (error) {
       swal("error", error.message);
@@ -35,7 +36,7 @@ export default function InsightCard({ data }) {
         backgroundSize: "cover",
       }}
     >
-      <img src={data.pages[0]} />
+      <img src={cardData.pages[0]} />
       <i
         className={`fa-solid ${
           cardData.is_public ? "fa-eye-slash" : "fa-eye"

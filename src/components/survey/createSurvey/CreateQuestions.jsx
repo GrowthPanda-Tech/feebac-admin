@@ -1,11 +1,12 @@
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import { questionReducer, INIT_STATE } from "../../../reducers/questionReducer";
+
 import makeRequest from "../../../utils/makeRequest";
-import PageTitle from "../../PageTitle";
-import AlertComponent from "../../AlertComponent/AlertComponent";
 import formSubmit from "../../../utils/formSubmit";
 import optionIcon from "../../../assets/option-preview.png";
+
+import PageTitle from "../../PageTitle";
+import AlertComponent from "../../AlertComponent/AlertComponent";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -25,7 +26,6 @@ function Select({ value, isChecked, name, handleChange, children }) {
       >
         {children}
       </select>
-      {/* <img src={downArrow} /> */}
     </div>
   );
 }
@@ -449,7 +449,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                   <div className="relative">
                     {previewImages[index] ? (
                       <img
-                        src={BASE_URL + previewImages[index]}
+                        src={previewImages[index]}
                         className="w-32 h-32"
                         alt={`Selected Image Preview ${index}`}
                       />

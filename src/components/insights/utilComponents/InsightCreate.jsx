@@ -8,7 +8,7 @@ export default function InsightCreate() {
   return (
     <div className="flex flex-col gap-8">
       <PageTitle name={"Create Insight"} />
-      <ImageInput label={"Background Image"} name={"image"} />
+      <ImageInput />
       <FormInput />
       <PageFactory />
       <SubmitButton />

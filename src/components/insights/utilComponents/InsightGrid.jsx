@@ -1,9 +1,10 @@
 import useFetch from "../../../hooks/useFetch";
+
 import LoadingSpinner from "../../_helperComponents/LoadingSpinner";
 import InsightCard from "../helperComponents/InsightCard";
 
 export default function InsightGrid() {
-  const { loading, fetchedData, setFetchedData, error } = useFetch(
+  const { loading, fetchedData } = useFetch(
     "insights/get-all-insights?count=&page=1"
   );
 

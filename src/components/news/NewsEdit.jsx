@@ -10,127 +10,123 @@ import PageTitle from "../PageTitle";
 import AlertComponent from "../AlertComponent/AlertComponent";
 
 function NewsEdit() {
-    const navigate = useNavigate();
-    const location = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    const { from } = location.state;
-    const { categories } = useContext(CategoryContext);
+  const { from } = location.state;
+  const { categories } = useContext(CategoryContext);
 
-    const [newsData, setNewsData] = useState({ ...from });
-    const [imgUpdate, setImgUpdate] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
+  const [newsData, setNewsData] = useState({ ...from });
+  const [imgUpdate, setImgUpdate] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-    const imgPreview = newsData.news_image
-        ? `url(${URL.createObjectURL(newsData.news_image)})`
-        : `url(${newsData.image_url})`;
+  const imgPreview = newsData.news_image
+    ? `url(${URL.createObjectURL(newsData.news_image)})`
+    : `url(${newsData.image_url})`;
 
-    const getCategoryId = (name) => {
-        let categoryId;
+  const getCategoryId = (name) => {
+    let categoryId;
 
-        categories.forEach((category) => {
-            if (category.category_name === name) {
-                categoryId = category.category_id;
-            }
-        });
+    categories.forEach((category) => {
+      if (category.category_name === name) {
+        categoryId = category.category_id;
+      }
+    });
 
-        return categoryId;
-    };
+    return categoryId;
+  };
 
-    const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
 
-        if (name === "news_image") {
-            const file = event.target.files[0];
-            setNewsData({ ...newsData, [name]: file });
-            setImgUpdate(true);
+    if (name === "news_image") {
+      const file = event.target.files[0];
+      setNewsData({ ...newsData, [name]: file });
+      setImgUpdate(true);
 
-            return;
-        }
+      return;
+    }
 
-        setNewsData({ ...newsData, [name]: value });
-    };
+    setNewsData({ ...newsData, [name]: value });
+  };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-        const formdata = new FormData();
+    const formdata = new FormData();
 
-        formdata.append("id", newsData.id);
-        formdata.append("title", newsData.title);
-        formdata.append("description", newsData.description);
-        formdata.append("source_url", newsData.source_url);
-        formdata.append("caption", newsData.caption);
+    formdata.append("id", newsData.id);
+    formdata.append("title", newsData.title);
+    formdata.append("description", newsData.description);
+    formdata.append("source_url", newsData.source_url);
+    formdata.append("caption", newsData.caption);
 
-        if (newsData.category === from.category) {
-            formdata.append("category", getCategoryId(newsData.category));
-        } else {
-            formdata.append("category", newsData.category);
-        }
+    if (newsData.category === from.category) {
+      formdata.append("category", getCategoryId(newsData.category));
+    } else {
+      formdata.append("category", newsData.category);
+    }
 
-        if (imgUpdate) {
-            formdata.append("news_image", newsData.news_image);
-        }
+    if (imgUpdate) {
+      formdata.append("news_image", newsData.news_image);
+    }
 
-        try {
-            setIsSaving(true);
+    try {
+      setIsSaving(true);
 
-            const response = await makeRequest(
-                "news/edit-news",
-                "PUT",
-                formdata
-            );
+      const response = await makeRequest("news/edit-news", "PUT", formdata);
 
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                setTimeout(() => {
-                    navigate("/news");
-                }, 1000);
-            } else {
-                AlertComponent("failed", response);
-            }
-        } catch (error) {
-            AlertComponent("error", "", error);
-        } finally {
-            setIsSaving(false);
-        }
-    };
+      if (response.isSuccess) {
+        AlertComponent("success", response);
+        setTimeout(() => {
+          navigate("/news");
+        }, 1000);
+      } else {
+        AlertComponent("failed", response);
+      }
+    } catch (error) {
+      AlertComponent("error", "", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
-    return (
-        <div className="flex flex-col gap-8">
-            <PageTitle name={"Edit News"} />
-            <div className="flex gap-8">
-                <div className="w-3/4">
-                    <NewsForm
-                        newsData={newsData}
-                        handleChange={handleChange}
-                        isSaving={isSaving}
-                    />
+  return (
+    <div className="flex flex-col gap-8">
+      <PageTitle name={"Edit News"} />
+      <div className="flex gap-8">
+        <div className="w-3/4">
+          <NewsForm
+            newsData={newsData}
+            handleChange={handleChange}
+            isSaving={isSaving}
+          />
 
-                    <button
-                        className={` ${
-                            isSaving ? "btn-secondary" : "btn-primary"
-                        }  w-fit mt-8 `}
-                        onClick={handleSubmit}
-                        disabled={isSaving}
-                    >
-                        <i className="fa-solid fa-floppy-disk mr-2"></i>
-                        {isSaving ? "Saving" : "Save Changes"}
-                    </button>
-                </div>
-
-                <div className="bg-white p-4 w-1/4 h-60 rounded-xl">
-                    <div
-                        className="h-full w-full bg-contain"
-                        style={{
-                            backgroundImage: imgPreview,
-                            backgroundSize: "cover",
-                        }}
-                    />
-                </div>
-            </div>
+          <button
+            className={` ${
+              isSaving ? "btn-secondary" : "btn-primary"
+            }  w-fit mt-8 `}
+            onClick={handleSubmit}
+            disabled={isSaving}
+          >
+            <i className="fa-solid fa-floppy-disk mr-2"></i>
+            {isSaving ? "Saving" : "Save Changes"}
+          </button>
         </div>
-    );
+
+        <div className="bg-white p-4 w-1/4 h-60 rounded-xl">
+          <div
+            className="h-full w-full bg-contain"
+            style={{
+              backgroundImage: imgPreview,
+              backgroundSize: "cover",
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default NewsEdit;

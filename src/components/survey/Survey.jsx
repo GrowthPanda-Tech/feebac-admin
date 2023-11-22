@@ -225,7 +225,7 @@ export default function Survey() {
                 ) => (
                   <Trow key={survey_id}>
                     <Tdata left> {survey_title} </Tdata>
-                    <Tdata capitalize> {category} </Tdata>
+                    <Tdata capitalize> {category.category_name} </Tdata>
                     <Tdata mono>
                       <TableDateTime data={start_date} />
                     </Tdata>

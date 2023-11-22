@@ -1,29 +1,23 @@
-import { useParams, useNavigate } from "react-router-dom";
-
+import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+
 import makeRequest from "../../utils/makeRequest";
+import downloadImg from "../../assets/download.svg";
+
 import Response from "./Response";
 import PrimaryButton from "../PrimaryButton";
-
-import downloadImg from "../../assets/download.svg";
-import { Link } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function SurveyInfo() {
   const { slug } = useParams();
-  const navigate = useNavigate();
   const [surveyInfo, setSurveyInfo] = useState({
     surveyData: {
       survey_title: "",
-      total_response: undefined,
+      total_response: null,
     },
     data: [],
   });
-
-  // const handleButtonClick = () => {
-  //     navigate(`content/create/${slug}}`);
-  // };
 
   const request = {
     headers: {
@@ -56,17 +50,17 @@ export default function SurveyInfo() {
 
   const getSurveyData = async () => {
     const response = await makeRequest(
-      `survey/get-survey-result?surveyId=${slug}`,
-      "GET"
+      `survey/get-survey-result?surveyId=${slug}`
     );
     setSurveyInfo(response);
   };
+
   useEffect(() => {
     getSurveyData();
   }, []);
 
   return (
-    <>
+    <div className="flex flex-col gap-6">
       <div className="mb-8 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <h1 className="text-2xl font-semibold">
@@ -89,11 +83,11 @@ export default function SurveyInfo() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 h-[60vh] overflow-y-scroll p-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
         {surveyInfo.data.map((question, index) => (
           <Response key={index} index={index} question={question} />
         ))}
       </div>
-    </>
+    </div>
   );
 }

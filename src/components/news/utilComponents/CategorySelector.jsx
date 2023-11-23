@@ -3,7 +3,6 @@ import { CategoryContext } from "../../../contexts/CategoryContext";
 
 export default function CategorySelector({ value, handleChange, disabled }) {
   const { categories } = useContext(CategoryContext);
-  console.log(value);
 
   return (
     <label className="flex flex-col">

@@ -3,20 +3,23 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { CategoryContext } from "../../contexts/CategoryContext";
 
 import makeRequest from "../../utils/makeRequest";
+import swal from "../../utils/swal";
 
 //components
 import NewsForm from "./NewsForm";
 import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
 
-function NewsEdit() {
+export default function NewsEdit() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const { from } = location.state;
   const { categories } = useContext(CategoryContext);
 
-  const [newsData, setNewsData] = useState({ ...from });
+  const [newsData, setNewsData] = useState({
+    ...from,
+    category: getCategoryId(from.category),
+  });
   const [imgUpdate, setImgUpdate] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -24,7 +27,8 @@ function NewsEdit() {
     ? `url(${URL.createObjectURL(newsData.news_image)})`
     : `url(${newsData.image_url})`;
 
-  const getCategoryId = (name) => {
+  //TODO: find a more graceful solution
+  function getCategoryId(name) {
     let categoryId;
 
     categories.forEach((category) => {
@@ -34,7 +38,7 @@ function NewsEdit() {
     });
 
     return categoryId;
-  };
+  }
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -58,15 +62,10 @@ function NewsEdit() {
 
     formdata.append("id", newsData.id);
     formdata.append("title", newsData.title);
+    formdata.append("category", newsData.category);
     formdata.append("description", newsData.description);
     formdata.append("source_url", newsData.source_url);
     formdata.append("caption", newsData.caption);
-
-    if (newsData.category === from.category) {
-      formdata.append("category", getCategoryId(newsData.category));
-    } else {
-      formdata.append("category", newsData.category);
-    }
 
     if (imgUpdate) {
       formdata.append("news_image", newsData.news_image);
@@ -77,16 +76,15 @@ function NewsEdit() {
 
       const response = await makeRequest("news/edit-news", "PUT", formdata);
 
-      if (response.isSuccess) {
-        AlertComponent("success", response);
-        setTimeout(() => {
-          navigate("/news");
-        }, 1000);
-      } else {
-        AlertComponent("failed", response);
+      if (!response.isSuccess) {
+        throw new Error(response.message);
       }
+
+      navigate(-1);
+
+      swal("success", response.message);
     } catch (error) {
-      AlertComponent("error", "", error);
+      swal("error", error.message);
     } finally {
       setIsSaving(false);
     }
@@ -128,5 +126,3 @@ function NewsEdit() {
     </div>
   );
 }
-
-export default NewsEdit;

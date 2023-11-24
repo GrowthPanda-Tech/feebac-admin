@@ -180,7 +180,7 @@ export default function UserInfo() {
                   {surveyList.map((survey) => (
                     <Trow key={survey.survey_id}>
                       <Tdata left>{survey.survey_title}</Tdata>
-                      <Tdata capitalize>{survey.category}</Tdata>
+                      <Tdata capitalize>{survey.category.category_name}</Tdata>
                       <Tdata mono>
                         <TableDateTime data={survey.start_date} />
                       </Tdata>
@@ -192,7 +192,7 @@ export default function UserInfo() {
                         {survey.total_response > 0 ? (
                           <span className="chip-green">Completed</span>
                         ) : (
-                          <span className="chip-red">In-Complete</span>
+                          <span className="chip-red">Incomplete</span>
                         )}
                       </Tdata>
                     </Trow>

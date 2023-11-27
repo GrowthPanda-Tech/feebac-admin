@@ -3,6 +3,7 @@ name: feebac
 on:
   - push
   - pull_request
+  - workflow_dispatch
 
 jobs:
   cache-and-install:

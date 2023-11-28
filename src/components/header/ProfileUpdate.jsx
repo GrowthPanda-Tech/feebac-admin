@@ -1,8 +1,11 @@
 import { useState, useContext } from "react";
 import { ProfileContext } from "../../contexts/ProfileContext";
 
+//utils
+import dateConvert from "../../utils/dateConvert";
+
+//components
 import ProfileForm from "./ProfileForm";
-const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function ProfileUpdate() {
   const { profile } = useContext(ProfileContext);
@@ -17,8 +20,7 @@ function ProfileUpdate() {
           <div className="w-full p-8 mx-2 flex justify-center">
             <img
               className="rounded-full border-double h-56 w-56 border-4 border-[#A43948]"
-              src={BASE_URL + profile.profile_pic}
-              alt=""
+              src={profile.profile_pic}
             />
           </div>
         </div>
@@ -74,7 +76,9 @@ function ProfileUpdate() {
                 disabled
                 className="border-1  rounded-r px-4 py-2 w-full"
                 type="text"
-                value={profile.date_of_birth}
+                value={
+                  dateConvert(profile.date_of_birth, "local").split(",")[0]
+                }
               />
             </div>
 

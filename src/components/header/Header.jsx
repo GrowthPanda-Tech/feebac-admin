@@ -4,10 +4,9 @@ import { ProfileContext } from "../../contexts/ProfileContext";
 import { Link } from "react-router-dom";
 import defaultUser from "../../assets/defaultUser.png";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-
 export default function Header() {
   const { profile } = useContext(ProfileContext);
+  const profilePic = profile.profile_pic ? profile.profile_pic : defaultUser;
 
   return (
     <header className="flex justify-end py-4 bg-white">
@@ -19,12 +18,7 @@ export default function Header() {
           <div className="text-grey">Admin</div>
         </div>
         <Link to={"profile-update"}>
-          <img
-            src={
-              profile.profile_pic ? BASE_URL + profile.profile_pic : defaultUser
-            }
-            className="h-10 w-10 rounded-full"
-          />
+          <img src={profilePic} className="h-10 w-10 rounded-full" />
         </Link>
       </div>
     </header>

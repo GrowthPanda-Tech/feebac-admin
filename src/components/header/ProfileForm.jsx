@@ -1,16 +1,9 @@
 import { useState, useContext, useRef } from "react";
 import { ProfileContext } from "../../contexts/ProfileContext";
 
-//assets
-import defaultImgPreview from "../../assets/defaultImgPreview.png";
-
 //utils
-import formSubmit from "../../utils/formSubmit";
 import makeRequest from "../../utils/makeRequest";
-
-import AlertComponent from "../AlertComponent/AlertComponent";
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+import swal from "../../utils/swal";
 
 function InputForm({ label, name, value, onChange }) {
   return (
@@ -29,134 +22,90 @@ function InputForm({ label, name, value, onChange }) {
   );
 }
 
-function ProfileForm({ setShow }) {
+export default function ProfileForm({ setShow }) {
   const { profile, setProfile } = useContext(ProfileContext);
+
+  const [dataState, setDataState] = useState({ ...profile });
+  const [dataUpdate, setDataUpdate] = useState({});
+  const [imgData, setImgData] = useState({
+    isUpdate: false,
+    file: null,
+    preview: profile.profile_pic,
+  });
 
   const fileInpRef = useRef(null);
 
-  const [updatedData, setUpdatedData] = useState({
-    ...profile,
-    date_of_birth: convertDate(profile.date_of_birth),
-  });
-  const [imgPreview, setImgPreview] = useState(defaultImgPreview);
-  const [imgUpdate, setImgUpdate] = useState();
-  const [isUpdateImage, setIsUpdateImage] = useState(false);
-  const [isDateChnage, setIsDateChange] = useState(false);
-
-  function convertDateFormat(inputDate) {
-    return inputDate.replace(/\//g, "-");
-  }
-
-  function convertDate(inputDate) {
-    return inputDate.replace(/-/g, "/");
-  }
-
   const handleImageSubmit = async (event) => {
-    if (isUpdateImage) {
-      const formData = new FormData();
-      formData.append("userImage", imgUpdate.userImage);
+    event.preventDefault();
 
-      const res = await formSubmit(
-        event,
+    if (!imgData.isUpdate) return;
+
+    const formData = new FormData();
+    formData.append("userImage", imgData.file);
+
+    try {
+      const response = await makeRequest(
         "profile/upload-image",
         "POST",
         formData
-      );
-      if (res.isSuccess) {
-        let custom = {
-          message: "Profile Pic Updated Successfully ",
-        };
-        AlertComponent("success", custom);
-        const getAdminInfo = async () => {
-          try {
-            const response = await makeRequest(`profile/`, "GET");
-            if (response.isSuccess) {
-              setUserData(response.userInfo);
-            }
-          } catch (error) {
-            console.error(error);
-          }
-        };
-
-        getAdminInfo();
-      }
-      setIsUpdateImage(!isUpdateImage);
-    }
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      delete updatedData.mobile;
-      delete updatedData.gender;
-      delete updatedData.preferred_language;
-      delete updatedData.profile_pic;
-      delete updatedData.total_followers;
-      delete updatedData.total_followings;
-      delete updatedData.loyalty_points;
-      delete updatedData.interest;
-
-      const response = await makeRequest(
-        "profile/update-profile",
-        "PUT",
-        updatedData
       );
 
       if (!response.isSuccess) {
         throw new Error(response.message);
       }
 
-      const custom = {
-        message: "User Profile Updated Successfully ",
-      };
+      swal("success", response.message);
+      setProfile({ ...profile, profile_pic: response.imageUrl });
+      setImgData({ ...imgData, preview: response.imageUrl });
+    } catch (error) {
+      swal("error", error.message);
+    }
 
-      AlertComponent("success", custom);
-      setProfile({ ...profile, ...updatedData });
+    setImgData(!imgData.isUpdate);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await makeRequest(
+        "profile/update-profile",
+        "PUT",
+        dataUpdate
+      );
+
+      if (!response.isSuccess) {
+        throw new Error(response.message);
+      }
+
+      swal("success", response.message);
+      setProfile({ ...profile, ...dataUpdate });
       setShow((prev) => {
         !prev;
       });
     } catch (error) {
-      AlertComponent("failed", error);
+      swal("error", error.message);
     }
   };
 
-  const dateChangeHandler = (event) => {
-    setIsDateChange(true);
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
 
-    const newDate = convertDate(event.target.value);
+    if (name === "userImage") {
+      const file = e.target.files[0];
+      setImgData((prev) => ({ ...prev, isUpdate: true, file }));
 
-    setUpdatedData({
-      ...updatedData,
-      date_of_birth: newDate,
-    });
-  };
-
-  const handleChange = (event) => {
-    if (event.target.name === "userImage") {
-      setIsUpdateImage(true);
-
-      const file = event.target.files[0];
-
-      setImgUpdate({
-        ...imgUpdate,
-        isUpdateImage: true,
-        userImage: file,
-      });
-
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => setImgPreview(reader.result);
-        reader.readAsDataURL(file);
-      }
+      const reader = new FileReader();
+      reader.onload = () =>
+        setImgData((prev) => ({ ...prev, preview: reader.result }));
+      reader.readAsDataURL(file);
 
       return;
     }
 
-    setUpdatedData({
-      ...updatedData,
-      [event.target.name]: event.target.value,
-    });
+    setDataState({ ...dataState, [name]: value });
+    setDataUpdate({ ...dataUpdate, [name]: value });
   };
 
   return (
@@ -173,9 +122,7 @@ function ProfileForm({ setShow }) {
               onChange={handleChange}
             />
             <img
-              src={
-                isUpdateImage ? imgPreview : BASE_URL + updatedData.profile_pic
-              }
+              src={imgData.preview}
               className="rounded-full border-double  h-96 w-96 border-4 border-[#A43948] cursor-pointer"
               onClick={() => fileInpRef.current.click()}
             />
@@ -187,13 +134,13 @@ function ProfileForm({ setShow }) {
             <InputForm
               label={"First Name"}
               name={"first_name"}
-              value={updatedData ? updatedData.first_name : ""}
+              value={dataState ? dataState.first_name : ""}
               onChange={handleChange}
             />
             <InputForm
               label={"Last Name"}
               name={"last_name"}
-              value={updatedData.last_name ? updatedData.last_name : ""}
+              value={dataState.last_name ? dataState.last_name : ""}
               onChange={(e) => {
                 handleChange(e);
               }}
@@ -201,7 +148,7 @@ function ProfileForm({ setShow }) {
             <InputForm
               label={"Email"}
               name={"email"}
-              value={updatedData ? updatedData.email : ""}
+              value={dataState ? dataState.email : ""}
               onChange={(e) => {
                 handleChange(e);
               }}
@@ -210,7 +157,7 @@ function ProfileForm({ setShow }) {
             <InputForm
               label={"City"}
               name={"city"}
-              value={updatedData ? updatedData.city : ""}
+              value={dataState ? dataState.city : ""}
               onChange={(e) => {
                 handleChange(e);
               }}
@@ -218,7 +165,7 @@ function ProfileForm({ setShow }) {
             <InputForm
               label={"State"}
               name={"state"}
-              value={updatedData ? updatedData.state : ""}
+              value={dataState ? dataState.state : ""}
               onChange={(e) => {
                 handleChange(e);
               }}
@@ -232,24 +179,15 @@ function ProfileForm({ setShow }) {
                 <input
                   name="date_of_birth"
                   className="border-2 input-article rounded-md px-4 py-2 w-full"
-                  value={
-                    isDateChnage
-                      ? updatedData
-                        ? convertDateFormat(updatedData.date_of_birth)
-                        : ""
-                      : updatedData
-                      ? convertDateFormat(updatedData.date_of_birth)
-                      : ""
-                  }
+                  value={dataState.date_of_birth}
                   type="date"
-                  onChange={dateChangeHandler}
-                  required
+                  onChange={handleChange}
                 />
               </div>
             </div>
 
             <div className="flex gap-3">
-              {isUpdateImage && (
+              {imgData.isUpdate && (
                 <button
                   className="btn-primary w-fit"
                   onClick={handleImageSubmit}
@@ -276,5 +214,3 @@ function ProfileForm({ setShow }) {
     </div>
   );
 }
-
-export default ProfileForm;

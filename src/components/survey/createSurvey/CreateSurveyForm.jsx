@@ -3,6 +3,7 @@ import { CategoryContext } from "../../../contexts/CategoryContext";
 
 import dateToday from "../../../utils/dateToday";
 import dateConvert from "../../../utils/dateConvert";
+import swal from "../../../utils/swal";
 import makeRequest from "../../../utils/makeRequest";
 import removeForbiddenChars from "../../../utils/removeForbiddenChars";
 
@@ -10,8 +11,7 @@ import upload from "../../../assets/upload.png";
 
 //components
 import Filters from "./filter/Filters";
-import PageTitle from "../../PageTitle";
-import AlertComponent from "../../AlertComponent/AlertComponent";
+import PageTitle from "../../_helperComponents/PageTitle";
 
 function UserCount({ type, count }) {
   return (
@@ -217,13 +217,13 @@ export default function CreateSurveyForm({
         throw new Error(response.message);
       }
 
-      AlertComponent("success", response.message);
+      swal("success", response.message);
 
       setSurveyId(response.surveyId);
       setSurveyTitle(surveyData.surveyTitle);
       setIsSurveyCreate(response.isSuccess);
     } catch (error) {
-      AlertComponent("failed", error);
+      swal("error", error.message);
     }
   };
 

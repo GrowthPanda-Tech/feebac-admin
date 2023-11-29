@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import makeRequest from "../../utils/makeRequest";
 
-import Table from "../table/Table";
-import Thead from "../table/Thead";
-import Trow from "../table/Trow";
-import Tdata from "../table/Tdata";
+import Table from "../_helperComponents/table/Table";
+import Thead from "../_helperComponents/table/Thead";
+import Trow from "../_helperComponents/table/Trow";
+import Tdata from "../_helperComponents/table/Tdata";
+import TableDateTime from "../_helperComponents/table/TableDateTime";
+import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+
 import PieChart from "../dashboard/charts/PieChart";
 import FilterLoyalty from "./FilterLoyalty";
-import LoadingSpinner from "../_helperComponents/LoadingSpinner";
-import TableDateTime from "../table/TableDateTime";
 
 const HEADERS = [
   "Transcation Id",
@@ -63,7 +64,7 @@ function LoyaltyPoint() {
         const response = await makeRequest(`loyalty/get-loyalty-transaction`);
 
         if (!response.isSuccess) {
-          throw new Error(json.message);
+          throw new Error(response.message);
         }
 
         if (!ignore) {

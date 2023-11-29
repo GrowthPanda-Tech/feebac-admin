@@ -1,19 +1,23 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+
 import makeRequest from "../../utils/makeRequest";
+import swal from "../../utils/swal";
 
 //components
-import PageTitle from "../PageTitle";
-import Table from "../table/Table";
-import Thead from "../table/Thead";
-import Trow from "../table/Trow";
-import Tdata from "../table/Tdata";
-import TableDateTime from "../table/TableDateTime";
-import NewsDelPop from "./utilComponents/NewsDelPop";
-import AlertComponent from "../AlertComponent/AlertComponent";
-import Pagination from "../Pagination";
-import PaginationSelect from "../PaginationSelect";
+import PageTitle from "../_helperComponents/PageTitle";
+
+import Table from "../_helperComponents/table/Table";
+import Thead from "../_helperComponents/table/Thead";
+import Trow from "../_helperComponents/table/Trow";
+import Tdata from "../_helperComponents/table/Tdata";
+import TableDateTime from "../_helperComponents/table/TableDateTime";
+
+import Pagination from "../_helperComponents/Pagination";
+import PaginationSelect from "../_helperComponents/PaginationSelect";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+
+import NewsDelPop from "./utilComponents/NewsDelPop";
 
 const HEADERS = ["Name", "Category", "Date", "Actions"];
 
@@ -43,16 +47,16 @@ export default function NewsTable() {
       );
 
       if (response.isSuccess) {
-        AlertComponent("success", response);
+        swal("success", response);
         const updatedList = newsList.filter((_, index) => index != delInfo.idx);
         setNewsList(updatedList);
         setDelPop(false);
       } else {
-        AlertComponent("failed", response);
+        swal("failed", response);
         throw new Error(response.message);
       }
     } catch (error) {
-      AlertComponent("error", "", error);
+      swal("error", "", error);
     }
   };
 

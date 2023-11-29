@@ -2,12 +2,12 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CategoryContext } from "../../contexts/CategoryContext";
 
+import swal from "../../utils/swal";
 import makeRequest from "../../utils/makeRequest";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 import ContentForm from "./ContentForm";
-import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
+import PageTitle from "../_helperComponents/PageTitle";
 
 export default function ContentCreate({ surveyId }) {
   const { categories } = useContext(CategoryContext);
@@ -70,13 +70,13 @@ export default function ContentCreate({ surveyId }) {
       );
 
       if (response.isSuccess) {
-        AlertComponent("success", response);
+        swal("success", response);
         setTimeout(() => {
           navigate("/content");
         }, 1200);
-      } else AlertComponent("failed", response);
+      } else swal("failed", response);
     } catch (error) {
-      AlertComponent("error", "", error);
+      swal("error", "", error);
     } finally {
       setIsSaving(false);
     }

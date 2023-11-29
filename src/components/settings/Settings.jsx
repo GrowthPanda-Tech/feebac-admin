@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
+
 import makeRequest from "../../utils/makeRequest";
 
 //components
-import PageTitle from "../PageTitle";
+import PageTitle from "../_helperComponents/PageTitle";
 import CategoryForm from "./CategoryForm";
 import Categories from "./Categories";
 import Profiles from "./filter/Profiles";

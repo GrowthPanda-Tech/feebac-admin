@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
-import { DateSelect } from "./DateSelect";
 import { TermsAndCondition } from "./TermsAndCondition";
 import { CouponsDetails } from "./CouponsDescription";
 
 import makeRequest from "../../utils/makeRequest";
-
-import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
-import CouponCategory from "./CouponCategory";
+import swal from "../../utils/swal";
 import removeForbiddenChars from "../../utils/removeForbiddenChars";
+
+import PageTitle from "../_helperComponents/PageTitle";
+import CouponCategory from "./CouponCategory";
 
 function InputForm({
   label,
@@ -82,6 +81,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const response = await makeRequest(
       "/loyalty/add-coupon",
       "POST",
@@ -90,9 +90,9 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
 
     if (response.isSuccess) {
       setLoading(true);
-      AlertComponent("success", response);
+      swal("success", response.message);
       const getData = async () => {
-        const response = await makeRequest(`loyalty/get-all-coupons`, "GET");
+        const response = await makeRequest("loyalty/get-all-coupons");
         if (response.isSuccess) {
           setLoading(false);
           setCouponsData(response.data);
@@ -101,9 +101,10 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
       setShowCouponAddPop(false);
       getData();
     } else {
-      AlertComponent("failed", response);
+      swal("error", response.message);
     }
   };
+
   return (
     <div className="fixed top-0 left-0 w-full flex justify-center overflow-y-scroll items-center update-user h-screen">
       <form onSubmit={handleSubmit}>

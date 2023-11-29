@@ -1,15 +1,13 @@
-import { useState } from "react";
-import { DateSelect } from "./DateSelect";
+import { useState, useEffect } from "react";
 import { TermsAndCondition } from "./TermsAndCondition";
 import { CouponsDetails } from "./CouponsDescription";
 
 import makeRequest from "../../utils/makeRequest";
-
-import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
-import CouponCategory from "./CouponCategory";
-import { useEffect } from "react";
+import swal from "../../utils/swal";
 import removeForbiddenChars from "../../utils/removeForbiddenChars";
+
+import PageTitle from "../_helperComponents/PageTitle";
+import CouponCategory from "./CouponCategory";
 
 function InputForm({
   label,
@@ -117,7 +115,7 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
 
     if (response.isSuccess) {
       setLoading(true);
-      AlertComponent("success", response);
+      swal("success", response.message);
       const getData = async () => {
         const response = await makeRequest(`loyalty/get-all-coupons`, "GET");
         if (response.isSuccess) {
@@ -128,7 +126,7 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
       setEditPop(false);
       getData();
     } else {
-      AlertComponent("failed", response);
+      swal("error", response.message);
     }
   };
   return (

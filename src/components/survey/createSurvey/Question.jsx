@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import makeRequest from "../../../utils/makeRequest";
 import { Link, useParams } from "react-router-dom";
-import downArrow from "../../../assets/iconamoon_arrow-down-2-light.svg";
-import AlertComponent from "../../AlertComponent/AlertComponent";
+
+import swal from "../../../utils/swal";
+import makeRequest from "../../../utils/makeRequest";
 
 function Input({ type, name, value, onChange, disabled }) {
   return (
@@ -87,11 +87,10 @@ export default function Question({
           questionData
         );
         if (response.isSuccess) {
-          AlertComponent("success", response);
+          swal("success", response.message);
           const getData = async () => {
             const response = await makeRequest(
-              `survey/show-survey?sid=${slug}`,
-              "GET"
+              `survey/show-survey?sid=${slug}`
             );
             if (response.isSuccess) {
               setQuestionList(response.questionList);
@@ -99,11 +98,11 @@ export default function Question({
             }
           };
           getData();
-        } else AlertComponent("failed", response);
+        } else swal("error", response.message);
 
         setQuestionAddPop(false);
       } catch (error) {
-        AlertComponent("error", "", "Server Error");
+        swal("error", "Something went wrong!!");
       }
     } else {
       try {
@@ -123,7 +122,7 @@ export default function Question({
         });
         setQuestionNumber(questionNumber + 1);
       } catch (error) {
-        AlertComponent("error", "", "Server Error");
+        swal("error", "", "Server Error");
       }
     }
   };

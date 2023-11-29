@@ -5,8 +5,7 @@ import { CategoryContext } from "../../../contexts/CategoryContext";
 import dateConvert from "../../../utils/dateConvert";
 import dateToday from "../../../utils/dateToday";
 import makeRequest from "../../../utils/makeRequest";
-
-import AlertComponent from "../../AlertComponent/AlertComponent";
+import swal from "../../../utils/swal";
 
 function Select({ name, onChange, children }) {
   return (
@@ -105,12 +104,9 @@ export default function EditSurveyForm({
       );
 
       if (response.isSuccess) {
-        AlertComponent("success", response);
+        swal("success", response.message);
         const getData = async () => {
-          const response = await makeRequest(
-            `survey/show-survey?sid=${slug}`,
-            "GET"
-          );
+          const response = await makeRequest(`survey/show-survey?sid=${slug}`);
           if (response.isSuccess) {
             setSurveyInfo(response.surveyInfo);
           }
@@ -118,9 +114,9 @@ export default function EditSurveyForm({
         getData();
 
         setSurveyEditPop(false);
-      } else AlertComponent("failed", response);
+      } else swal("error", response.message);
     } catch (error) {
-      AlertComponent("error", "", "Please Enter Valid Value");
+      swal("error", "Please Enter Valid Value");
     }
   };
 

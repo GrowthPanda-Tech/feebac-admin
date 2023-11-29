@@ -1,16 +1,15 @@
-import { React, useState, useEffect } from "react";
-import PieChart from "./charts/PieChart";
+import { useState, useEffect } from "react";
+
+import swal from "../../utils/swal";
 import makeRequest from "../../utils/makeRequest";
-import AlertComponent from "../AlertComponent/AlertComponent";
+
+import PieChart from "./charts/PieChart";
 import InfoCards from "./InfoCards";
-import LoadingSpinner from "../_helperComponents/LoadingSpinner";
 import DashboardSkeleton from "../_helperComponents/DashboardSkeleton";
 
 function Dashboard() {
   const [adminData, setAdminData] = useState({});
   const [loading, setLoading] = useState(true);
-
-  console.log(adminData);
 
   let surveyData = {
     labels: ["Total Survey", "Public Survey"],
@@ -82,7 +81,7 @@ function Dashboard() {
           setLoading(false);
         }
       } catch (error) {
-        AlertComponent("error", error.message);
+        swal("error", error.message);
         if (error.message == 204) {
           setAdminData([]);
           setLoading(false);

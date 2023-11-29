@@ -4,16 +4,17 @@ import { Link } from "react-router-dom";
 import makeRequest from "../../utils/makeRequest";
 
 //components
-import PageTitle from "../PageTitle";
-import Table from "../table/Table";
-import Trow from "../table/Trow";
-import Thead from "../table/Thead";
-import Tdata from "../table/Tdata";
+import PageTitle from "../_helperComponents/PageTitle";
+import Table from "../_helperComponents/table/Table";
+import Trow from "../_helperComponents/table/Trow";
+import Thead from "../_helperComponents/table/Thead";
+import Tdata from "../_helperComponents/table/Tdata";
+import Pagination from "../_helperComponents/Pagination";
+import PaginationSelect from "../_helperComponents/PaginationSelect";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
-import Pagination from "../Pagination";
-import PaginationSelect from "../PaginationSelect";
 
 const HEADERS = ["User ID", "Gender", "Loyalty Points", "Location", "Actions"];
+
 export default function User() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [page, setPage] = useState(1);

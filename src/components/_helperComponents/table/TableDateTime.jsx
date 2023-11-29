@@ -1,14 +1,15 @@
-export default function TableDateTime({ date }) {
-  const dateObj = new Date(date);
-  const localeString = dateObj.toLocaleString("en-GB");
+import dateConvert from "../../../utils/dateConvert";
 
-  const dateLocale = localeString.split(",")[0];
-  const timeLocale = localeString.split(",")[1];
+export default function TableDateTime({ date }) {
+  const local = dateConvert(date, "local");
+
+  const localDate = local.split(",")[0];
+  const localTime = local.split(",")[1];
 
   return (
     <div className="flex flex-col gap-2">
-      <span> {dateLocale} </span>
-      <span className="text-sm"> {timeLocale} </span>
+      <span> {localDate} </span>
+      <span className="text-sm"> {localTime} </span>
     </div>
   );
 }

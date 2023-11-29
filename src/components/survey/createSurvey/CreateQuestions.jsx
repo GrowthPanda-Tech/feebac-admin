@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import swal from "../../../utils/swal";
 import makeRequest from "../../../utils/makeRequest";
-import formSubmit from "../../../utils/formSubmit";
 import optionIcon from "../../../assets/option-preview.png";
 
-import PageTitle from "../../PageTitle";
-import AlertComponent from "../../AlertComponent/AlertComponent";
+import PageTitle from "../../_helperComponents/PageTitle";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -186,6 +185,8 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
   };
 
   const handleImageChange = async (event, index) => {
+    event.preventDefault();
+
     const file = event.target.files[0];
     const name = event.target.name;
 
@@ -193,8 +194,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await formSubmit(
-        event,
+      const response = await makeRequest(
         "survey/upload-option-image",
         "POST",
         formData
@@ -257,19 +257,19 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         "POST",
         questionData
       );
+
       if (response.isSuccess) {
-        AlertComponent("success", response);
+        swal("success", response.message);
         setOptions(initOptions);
         setQuestionData(initQuestionData);
         setActiveButtonIndex(1);
 
         getQuestions();
       } else {
-        AlertComponent("failed", response);
+        swal("error", response.message);
       }
     } catch (error) {
-      if (error.message >= 500)
-        AlertComponent("error", "", "something has gone wrong");
+      if (error.message >= 500) swal("error", "Something went wrong!!");
     } finally {
       resetState();
       setInputType(1);
@@ -292,7 +292,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         message: "Survey will start at the scheduled time",
       };
 
-      AlertComponent("success", customAlert);
+      swal("success", customAlert);
       navigate("/survey");
     } catch (error) {
       console.error(error);
@@ -306,10 +306,10 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     };
     const response = await makeRequest("survey/start-survey", "PATCH", body);
     if (response.isSuccess) {
-      AlertComponent("success", response);
+      swal("success", response);
       navigate("/survey");
     } else {
-      AlertComponent("failed", response);
+      swal("failed", response);
     }
   };
 

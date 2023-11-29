@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import Table from "../table/Table";
-import Thead from "../table/Thead";
-import Trow from "../table/Trow";
-import Tdata from "../table/Tdata";
-import PageTitle from "../PageTitle";
 import makeRequest from "../../utils/makeRequest";
 
-//assets
+import PageTitle from "../_helperComponents/PageTitle";
+import Table from "../_helperComponents/table/Table";
+import Thead from "../_helperComponents/table/Thead";
+import Trow from "../_helperComponents/table/Trow";
+import Tdata from "../_helperComponents/table/Tdata";
+import TableDateTime from "../_helperComponents/table/TableDateTime";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
-import TableDateTime from "../table/TableDateTime";
 
 const HEADERS = [
   "Request Id",

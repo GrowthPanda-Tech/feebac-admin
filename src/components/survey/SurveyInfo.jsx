@@ -5,7 +5,7 @@ import makeRequest from "../../utils/makeRequest";
 import downloadImg from "../../assets/download.svg";
 
 import Response from "./Response";
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../_helperComponents/PrimaryButton";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 

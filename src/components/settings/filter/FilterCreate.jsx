@@ -1,6 +1,5 @@
-import AlertComponent from "../../AlertComponent/AlertComponent";
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+import swal from "../../../utils/swal";
+import makeRequest from "../../../utils/makeRequest";
 
 function Label({ name, children }) {
   return (
@@ -18,34 +17,21 @@ export default function FilterCreate({
   setIsShowFilterCreate,
 }) {
   const handleSubmit = async () => {
-    const request = {
-      method: "POST",
-      headers: {
-        authToken: localStorage.getItem("authToken"),
-      },
-      body: JSON.stringify(filterVals),
-    };
-
     try {
-      const response = await fetch(
-        `${BASE_URL}/config/add-profile-key-value`,
-        request
+      const response = await makeRequest(
+        "config/add-profile-key-value",
+        "POST",
+        filterVals
       );
 
-      if (response.status >= 500) {
-        throw new Error(response.status);
-      }
-
-      const json = await response.json();
-
-      if (!json.isSuccess) {
-        throw new Error(json.message);
+      if (!response.isSuccess) {
+        throw new Error(response.message);
       }
 
       setIsShowFilterCreate(false);
-      setTertiaryKeys((prev) => [...prev, json.data]);
+      setTertiaryKeys((prev) => [...prev, response.data]);
     } catch (error) {
-      AlertComponent("error", "", error);
+      swal("error", "", error);
     }
   };
 

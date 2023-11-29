@@ -138,7 +138,7 @@ export default function NewsTable() {
                   <Tdata left>{news.title}</Tdata>
                   <Tdata capitalize>{news.category}</Tdata>
                   <Tdata mono>
-                    <TableDateTime data={news.create_date} />
+                    <TableDateTime date={news.create_date} />
                   </Tdata>
                   <Tdata>
                     <div className="text-xl flex justify-center gap-5">

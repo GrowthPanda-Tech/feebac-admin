@@ -138,7 +138,7 @@ export default function RedeemRequest() {
                     <Tdata mono>
                       <div className="flex flex-col gap-2">
                         <TableDateTime
-                          data={status === "pending" ? createdDate : actionDate}
+                          date={status === "pending" ? createdDate : actionDate}
                         />
                       </div>
                     </Tdata>

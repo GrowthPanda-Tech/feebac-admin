@@ -125,7 +125,7 @@ export default function UserInfo() {
                       <Trow key={transaction.id}>
                         <Tdata left>{transaction.reason}</Tdata>
                         <Tdata mono>
-                          <TableDateTime data={transaction.dateTime} />
+                          <TableDateTime date={transaction.dateTime} />
                         </Tdata>
                         <Tdata>
                           {transaction.isCredit ? (
@@ -183,11 +183,11 @@ export default function UserInfo() {
                       <Tdata left>{survey.survey_title}</Tdata>
                       <Tdata capitalize>{survey.category.category_name}</Tdata>
                       <Tdata mono>
-                        <TableDateTime data={survey.start_date} />
+                        <TableDateTime date={survey.start_date} />
                       </Tdata>
 
                       <Tdata mono>
-                        <TableDateTime data={survey.end_date} />
+                        <TableDateTime date={survey.end_date} />
                       </Tdata>
                       <Tdata>
                         {survey.total_response > 0 ? (
@@ -204,7 +204,7 @@ export default function UserInfo() {
           </div>
           {!loading && surveyList.length === 0 ? (
             <div className="flex justify-center p-2 opacity-50">
-              User hasn't participated in any surveys yet
+              User hasn&apos;t participated in any surveys yet
             </div>
           ) : null}
         </div>

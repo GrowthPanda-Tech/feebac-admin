@@ -173,7 +173,7 @@ function LoyaltyPoint() {
                         <Tdata>{reason ? reason : "-"}</Tdata>
                         <Tdata mono>
                           <div className="flex flex-col gap-2">
-                            <TableDateTime data={dateTime} />
+                            <TableDateTime date={dateTime} />
                           </div>
                         </Tdata>
                         <Tdata>

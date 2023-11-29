@@ -4,7 +4,7 @@ import { CouponsDetails } from "./CouponsDescription";
 
 import makeRequest from "../../utils/makeRequest";
 import swal from "../../utils/swal";
-import removeForbiddenChars from "../../utils/removeForbiddenChars";
+import forbidChars from "../../utils/forbidChars";
 
 import PageTitle from "../_helperComponents/PageTitle";
 import CouponCategory from "./CouponCategory";
@@ -120,8 +120,8 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
             min={0}
             onwheel={(e) => e.target.blur()}
             type={"number"}
-            onKeyDown={(e) => removeForbiddenChars(e)}
-            onPaste={(e) => removeForbiddenChars(e)}
+            onKeyDown={(e) => forbidChars(e)}
+            onPaste={(e) => forbidChars(e)}
           />
           <InputForm
             label={"Points Required"}
@@ -131,8 +131,8 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
               handleChange(e);
             }}
             onwheel={(e) => e.target.blur()}
-            onKeyDown={(e) => removeForbiddenChars(e)}
-            onPaste={(e) => removeForbiddenChars(e)}
+            onKeyDown={(e) => forbidChars(e)}
+            onPaste={(e) => forbidChars(e)}
             min={0}
           />
           <label className="flex flex-col pb-6">
@@ -157,8 +157,8 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
                   handleChange(e);
                 }}
                 onwheel={(e) => e.target.blur()}
-                onKeyDown={(e) => removeForbiddenChars(e)}
-                onPaste={(e) => removeForbiddenChars(e)}
+                onKeyDown={(e) => forbidChars(e)}
+                onPaste={(e) => forbidChars(e)}
                 min={1}
               />
             </div>

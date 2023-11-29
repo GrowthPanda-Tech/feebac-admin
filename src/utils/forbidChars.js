@@ -1,4 +1,4 @@
-export default function removeForbiddenChars(event) {
+export default function forbidChars(event) {
   const type = event.type;
   const key = event.key;
 

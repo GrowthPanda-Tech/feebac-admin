@@ -5,7 +5,7 @@ import dateToday from "../../../utils/dateToday";
 import dateConvert from "../../../utils/dateConvert";
 import swal from "../../../utils/swal";
 import makeRequest from "../../../utils/makeRequest";
-import removeForbiddenChars from "../../../utils/removeForbiddenChars";
+import forbidChars from "../../../utils/forbidChars";
 
 import upload from "../../../assets/upload.png";
 
@@ -283,8 +283,8 @@ export default function CreateSurveyForm({
             type="number"
             name="loyaltyPoint"
             onChange={handleChange}
-            onKeyDown={(event) => removeForbiddenChars(event)}
-            onPaste={(event) => removeForbiddenChars(event)}
+            onKeyDown={(event) => forbidChars(event)}
+            onPaste={(event) => forbidChars(event)}
             className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3"
             required
           />

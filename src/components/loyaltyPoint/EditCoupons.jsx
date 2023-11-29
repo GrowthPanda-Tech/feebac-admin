@@ -4,7 +4,7 @@ import { CouponsDetails } from "./CouponsDescription";
 
 import makeRequest from "../../utils/makeRequest";
 import swal from "../../utils/swal";
-import removeForbiddenChars from "../../utils/removeForbiddenChars";
+import forbidChars from "../../utils/forbidChars";
 
 import PageTitle from "../_helperComponents/PageTitle";
 import CouponCategory from "./CouponCategory";
@@ -153,8 +153,8 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
             }}
             min={0}
             type={"number"}
-            onKeyDown={(e) => removeForbiddenChars(e)}
-            onPaste={(e) => removeForbiddenChars(e)}
+            onKeyDown={(e) => forbidChars(e)}
+            onPaste={(e) => forbidChars(e)}
           />
           <InputForm
             label={"Points Required"}
@@ -165,8 +165,8 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
               handleChange(e);
             }}
             min={0}
-            onKeyDown={(e) => removeForbiddenChars(e)}
-            onPaste={(e) => removeForbiddenChars(e)}
+            onKeyDown={(e) => forbidChars(e)}
+            onPaste={(e) => forbidChars(e)}
           />
           <label className="flex flex-col pb-6">
             <span className="font-semibold mb-2">Image link :</span>
@@ -191,8 +191,8 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
                   handleChange(e);
                 }}
                 value={editCouponData ? editCouponData.totalCount : ""}
-                onKeyDown={(e) => removeForbiddenChars(e)}
-                onPaste={(e) => removeForbiddenChars(e)}
+                onKeyDown={(e) => forbidChars(e)}
+                onPaste={(e) => forbidChars(e)}
                 min={1}
               />
             </div>

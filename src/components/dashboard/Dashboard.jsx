@@ -1,22 +1,21 @@
-import { useState, useEffect } from "react";
+import useFetch from "../../hooks/useFetch";
 
-import swal from "../../utils/swal";
-import makeRequest from "../../utils/makeRequest";
-
+import DashboardSkeleton from "../_helperComponents/DashboardSkeleton";
+import PageTitle from "../_helperComponents/PageTitle";
 import PieChart from "./charts/PieChart";
 import InfoCards from "./InfoCards";
-import DashboardSkeleton from "../_helperComponents/DashboardSkeleton";
 
-function Dashboard() {
-  const [adminData, setAdminData] = useState({});
-  const [loading, setLoading] = useState(true);
+export default function Dashboard() {
+  const { loading, fetchedData } = useFetch("site-admin/admin-dashboard");
 
   let surveyData = {
     labels: ["Total Survey", "Public Survey"],
     datasets: [
       {
         label: "Surveys",
-        data: Object.values(adminData.surveyData ? adminData.surveyData : []),
+        data: Object.values(
+          fetchedData?.data.surveyData ? fetchedData?.data.surveyData : []
+        ),
         backgroundColor: ["rgba(164, 57, 72, 1)", "rgba(234, 82, 95, 1)"],
         hoverOffset: 4,
       },
@@ -29,20 +28,23 @@ function Dashboard() {
       {
         label: "Loyalty Point",
         data: Object.values(
-          adminData.loyaltyPointData ? adminData.loyaltyPointData : []
+          fetchedData?.data.loyaltyPointData
+            ? fetchedData?.data.loyaltyPointData
+            : []
         ),
         backgroundColor: ["rgba(164, 57, 72, 1)", "rgba(234, 82, 95, 1)"],
         hoverOffset: 4,
       },
     ],
   };
+
   let articleData = {
     labels: ["Total Articles", "Public Articles"],
     datasets: [
       {
         label: "Articles",
         data: Object.values(
-          adminData?.articleData ? adminData?.articleData : []
+          fetchedData?.data?.articleData ? fetchedData?.data?.articleData : []
         ),
         backgroundColor: ["rgba(164, 57, 72, 1)", "rgba(234, 82, 95, 1)"],
         hoverOffset: 4,
@@ -62,86 +64,60 @@ function Dashboard() {
     },
   };
 
-  useEffect(() => {
-    let ignore = false;
-
-    async function getAdminData() {
-      try {
-        const response = await makeRequest(
-          "/site-admin/admin-dashboard",
-          "GET"
-        );
-
-        if (!response.isSuccess) {
-          throw new Error(json.message);
-        }
-
-        if (!ignore) {
-          setAdminData(response.data);
-          setLoading(false);
-        }
-      } catch (error) {
-        swal("error", error.message);
-        if (error.message == 204) {
-          setAdminData([]);
-          setLoading(false);
-        }
-      }
-    }
-
-    getAdminData();
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
+  if (fetchedData?.data.length === 0) {
+    return (
+      <div className="flex h-[60vh] font-semibold text-2xl justify-center items-center">
+        No Data to show!
+      </div>
+    );
+  }
 
   return (
     <>
-      {adminData.length === 0 ? (
-        <div className="flex h-[60vh] font-semibold text-2xl justify-center items-center">
-          Ops No Data to show
-        </div>
-      ) : !loading ? (
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <div className="flex flex-col">
-            <div className=" flex w-full">
+      <div className="flex flex-col gap-6">
+        <PageTitle name={"Dashboard"} />
+        {!loading ? (
+          <div className="flex flex-col gap-6">
+            <div className="flex gap-6 w-full">
               <InfoCards
                 title={"Total User"}
-                value={adminData ? adminData?.totalUsers : ""}
+                value={fetchedData?.data ? fetchedData?.data?.totalUsers : ""}
               />
               <InfoCards title={"Active User"} value={5} />
               <InfoCards
                 title={"Total Android Download"}
-                value={adminData ? adminData?.downloadData?.android : ""}
+                value={
+                  fetchedData?.data
+                    ? fetchedData?.data?.downloadData?.android
+                    : ""
+                }
               />
               <InfoCards
                 title={"Total Ios Download"}
-                value={adminData ? adminData?.downloadData?.iOS : ""}
+                value={
+                  fetchedData?.data ? fetchedData?.data?.downloadData?.iOS : ""
+                }
               />
             </div>
 
             <div>
               <div className="grid grid-cols-3 p-6 bg-white mt-5 rounded-lg">
-                {adminData && (
+                {fetchedData?.data && (
                   <PieChart chartData={surveyData} option={option} />
                 )}
-                {adminData && (
+                {fetchedData?.data && (
                   <PieChart chartData={loyaltyData} option={option} />
                 )}
-                {adminData && (
+                {fetchedData?.data && (
                   <PieChart chartData={articleData} option={option} />
                 )}
               </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <DashboardSkeleton />
-      )}
+        ) : (
+          <DashboardSkeleton />
+        )}
+      </div>
     </>
   );
 }
-
-export default Dashboard;

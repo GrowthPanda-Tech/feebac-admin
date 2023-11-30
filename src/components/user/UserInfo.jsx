@@ -63,7 +63,6 @@ export default function UserInfo() {
           setLoading(false);
         }
       } catch (error) {
-        console.error(error);
         if (error.message == 204) {
           setLoading(false);
           setSurveyList([]);

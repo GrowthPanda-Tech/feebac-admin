@@ -140,7 +140,6 @@ export default function Survey() {
         }
 
         const json = await response.json();
-        console.log(json);
 
         if (!json.isSuccess) {
           throw new Error(json.message);
@@ -151,8 +150,6 @@ export default function Survey() {
 
         setLoading(false);
       } catch (error) {
-        console.error(error);
-
         if (error.message == 204) {
           setsurveyData([]);
           setTotalItems(1);

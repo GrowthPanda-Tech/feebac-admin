@@ -73,8 +73,7 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
   const getCouponDetails = async () => {
     try {
       const response = await makeRequest(
-        `/loyalty/get-coupon-details?id=${id}`,
-        "GET"
+        `/loyalty/get-coupon-details?id=${id}`
       );
       if (response.isSuccess) {
         setEditCouponData(response.data);
@@ -84,18 +83,20 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
           tnc: joinArrayWithNewlines(response.data.tnc),
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const getCouponsCategory = async () => {
     try {
-      const response = await makeRequest(`/loyalty/get-coupon-category`, "GET");
+      const response = await makeRequest("loyalty/get-coupon-category");
       if (!response.isSuccess) {
         throw new Error(response.message);
       }
       setOptions(response.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

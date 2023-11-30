@@ -123,7 +123,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
 
   function addValueToNestedArray(arr, index, value) {
     if (index >= 0 && index < arr.length && !arr[index][1].trim()) {
-      console.log("hii,hello");
       arr[index][1] = value;
     }
     return arr;

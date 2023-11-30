@@ -65,13 +65,13 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
   };
   const getCouponsCategory = async () => {
     try {
-      const response = await makeRequest(`/loyalty/get-coupon-category`, "GET");
+      const response = await makeRequest("loyalty/get-coupon-category");
       if (!response.isSuccess) {
         throw new Error(response.message);
       }
       setOptions(response.data);
     } catch (error) {
-      console.log(error);
+      swal("error", error.message);
     }
   };
 

@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import swal from "../../../utils/swal";
 import makeRequest from "../../../utils/makeRequest";
-import formSubmit from "../../../utils/formSubmit";
 import optionIcon from "../../../assets/option-preview.png";
 
-import PageTitle from "../../PageTitle";
-import AlertComponent from "../../AlertComponent/AlertComponent";
+import PageTitle from "../../_helperComponents/PageTitle";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -124,7 +123,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
 
   function addValueToNestedArray(arr, index, value) {
     if (index >= 0 && index < arr.length && !arr[index][1].trim()) {
-      console.log("hii,hello");
       arr[index][1] = value;
     }
     return arr;
@@ -186,6 +184,8 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
   };
 
   const handleImageChange = async (event, index) => {
+    event.preventDefault();
+
     const file = event.target.files[0];
     const name = event.target.name;
 
@@ -193,8 +193,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await formSubmit(
-        event,
+      const response = await makeRequest(
         "survey/upload-option-image",
         "POST",
         formData
@@ -257,19 +256,24 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         "POST",
         questionData
       );
-      if (response.isSuccess) {
-        AlertComponent("success", response);
-        setOptions(initOptions);
-        setQuestionData(initQuestionData);
-        setActiveButtonIndex(1);
 
-        getQuestions();
-      } else {
-        AlertComponent("failed", response);
+      if (!response.isSuccess) {
+        throw new Error(response.message);
       }
+
+      swal("success", response.message);
+
+      setOptions(initOptions);
+      setQuestionData(initQuestionData);
+      setActiveButtonIndex(1);
+
+      //TODO: use state management for this
+      getQuestions();
     } catch (error) {
-      if (error.message >= 500)
-        AlertComponent("error", "", "something has gone wrong");
+      let message = error.message;
+      if (error.message >= 500) message = "Something went wrong!!";
+
+      swal("error", message);
     } finally {
       resetState();
       setInputType(1);
@@ -288,28 +292,28 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         throw new Error(response.message);
       }
 
-      const customAlert = {
-        message: "Survey will start at the scheduled time",
-      };
-
-      AlertComponent("success", customAlert);
+      swal("success", "Survey will start at the scheduled time");
       navigate("/survey");
     } catch (error) {
-      console.error(error);
+      swal("error", error.message);
     }
   };
 
   const handlePublish = async () => {
-    const body = {
-      surveyId,
-      isStartNow: true,
-    };
-    const response = await makeRequest("survey/start-survey", "PATCH", body);
-    if (response.isSuccess) {
-      AlertComponent("success", response);
+    try {
+      const response = await makeRequest("survey/start-survey", "PATCH", {
+        surveyId,
+        isStartNow: true,
+      });
+
+      if (!response.isSuccess) {
+        throw new Error(response.message);
+      }
+
+      swal("success", response.message);
       navigate("/survey");
-    } else {
-      AlertComponent("failed", response);
+    } catch (error) {
+      swal("error", error.message);
     }
   };
 
@@ -317,10 +321,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     getQuestions();
     getFilters();
   }, []);
-
-  console.log(questionData);
-  console.log(previewImages);
-  console.log(options);
 
   return (
     <div className="flex flex-col gap-4">

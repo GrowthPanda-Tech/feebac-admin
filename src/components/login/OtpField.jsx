@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-import removeForbiddenChars from "../../utils/removeForbiddenChars";
+import forbidChars from "../../utils/forbidChars";
 
 export default function OtpField({ quantity, inputData, inputOnChange }) {
   const inputRefs = Array.from({ length: quantity }, () => useRef(null));
@@ -29,8 +29,8 @@ export default function OtpField({ quantity, inputData, inputOnChange }) {
         value={inputData[`i-${index}`] || ""}
         onChange={(event) => handleInputChange(event, index)}
         onKeyUp={(event) => handleKeyUp(event, index)}
-        onKeyDown={(event) => removeForbiddenChars(event)}
-        onPaste={(event) => removeForbiddenChars(event)}
+        onKeyDown={(event) => forbidChars(event)}
+        onPaste={(event) => forbidChars(event)}
         className="w-1/4 login-input px-0 text-center"
         ref={inputRefs[index]}
         required

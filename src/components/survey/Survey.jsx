@@ -2,18 +2,18 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import makeRequest from "../../utils/makeRequest";
+import swal from "../../utils/swal";
 
-import Table from "../table/Table";
-import Thead from "../table/Thead";
-import Trow from "../table/Trow";
-import Tdata from "../table/Tdata";
-import TableDateTime from "../table/TableDateTime";
+import Table from "../_helperComponents/table/Table";
+import Thead from "../_helperComponents/table/Thead";
+import Trow from "../_helperComponents/table/Trow";
+import Tdata from "../_helperComponents/table/Tdata";
+import TableDateTime from "../_helperComponents/table/TableDateTime";
 
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
-import PageTitle from "../PageTitle";
-import Pagination from "../Pagination";
-import PaginationSelect from "../PaginationSelect";
-import AlertComponent from "../AlertComponent/AlertComponent";
+import PageTitle from "../_helperComponents/PageTitle";
+import Pagination from "../_helperComponents/Pagination";
+import PaginationSelect from "../_helperComponents/PaginationSelect";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const HEADERS = [
@@ -109,9 +109,9 @@ export default function Survey() {
       updatedData[index].is_public = !updatedData[index].is_public;
       setsurveyData(updatedData);
 
-      AlertComponent("success", response);
+      swal("success", response.message);
     } catch (error) {
-      AlertComponent("failed", error);
+      swal("failed", error.message);
     }
   };
 
@@ -140,7 +140,6 @@ export default function Survey() {
         }
 
         const json = await response.json();
-        console.log(json);
 
         if (!json.isSuccess) {
           throw new Error(json.message);
@@ -151,8 +150,6 @@ export default function Survey() {
 
         setLoading(false);
       } catch (error) {
-        console.error(error);
-
         if (error.message == 204) {
           setsurveyData([]);
           setTotalItems(1);
@@ -227,10 +224,10 @@ export default function Survey() {
                     <Tdata left> {survey_title} </Tdata>
                     <Tdata capitalize> {category.category_name} </Tdata>
                     <Tdata mono>
-                      <TableDateTime data={start_date} />
+                      <TableDateTime date={start_date} />
                     </Tdata>
                     <Tdata mono>
-                      <TableDateTime data={end_date} />
+                      <TableDateTime date={end_date} />
                     </Tdata>
                     <Tdata>
                       {is_public ? (

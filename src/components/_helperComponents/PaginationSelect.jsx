@@ -1,10 +1,9 @@
-import React from "react";
-
 function PaginationSelect({ setItemsPerPage, setPage, itemsPerPage }) {
   const handleItemsPerPageChange = (event) => {
     setItemsPerPage(parseInt(event.target.value));
     setPage(1);
   };
+
   return (
     <select
       className=" rounded-md border-0 pill-primary"

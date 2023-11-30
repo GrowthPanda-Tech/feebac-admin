@@ -5,13 +5,14 @@ import makeRequest from "../../utils/makeRequest";
 import loyaltyImg from "../../assets/loyalty.png";
 
 //components
-import Table from "../table/Table";
-import Thead from "../table/Thead";
-import Trow from "../table/Trow";
-import Tdata from "../table/Tdata";
-import PageTitle from "../PageTitle";
+import Table from "../_helperComponents/table/Table";
+import Thead from "../_helperComponents/table/Thead";
+import Trow from "../_helperComponents/table/Trow";
+import Tdata from "../_helperComponents/table/Tdata";
+import TableDateTime from "../_helperComponents/table/TableDateTime";
+
+import PageTitle from "../_helperComponents/PageTitle";
 import LoadingSpinner from "../_helperComponents/LoadingSpinner";
-import TableDateTime from "../table/TableDateTime";
 
 const SURVEY_HEADERS = [
   "Title",
@@ -62,7 +63,6 @@ export default function UserInfo() {
           setLoading(false);
         }
       } catch (error) {
-        console.error(error);
         if (error.message == 204) {
           setLoading(false);
           setSurveyList([]);
@@ -124,7 +124,7 @@ export default function UserInfo() {
                       <Trow key={transaction.id}>
                         <Tdata left>{transaction.reason}</Tdata>
                         <Tdata mono>
-                          <TableDateTime data={transaction.dateTime} />
+                          <TableDateTime date={transaction.dateTime} />
                         </Tdata>
                         <Tdata>
                           {transaction.isCredit ? (
@@ -182,11 +182,11 @@ export default function UserInfo() {
                       <Tdata left>{survey.survey_title}</Tdata>
                       <Tdata capitalize>{survey.category.category_name}</Tdata>
                       <Tdata mono>
-                        <TableDateTime data={survey.start_date} />
+                        <TableDateTime date={survey.start_date} />
                       </Tdata>
 
                       <Tdata mono>
-                        <TableDateTime data={survey.end_date} />
+                        <TableDateTime date={survey.end_date} />
                       </Tdata>
                       <Tdata>
                         {survey.total_response > 0 ? (
@@ -203,7 +203,7 @@ export default function UserInfo() {
           </div>
           {!loading && surveyList.length === 0 ? (
             <div className="flex justify-center p-2 opacity-50">
-              User hasn't participated in any surveys yet
+              User hasn&apos;t participated in any surveys yet
             </div>
           ) : null}
         </div>

@@ -1,12 +1,4 @@
-import React from "react";
-
-function Pagination({
-  itemsPerPage,
-  setItemsPerPage,
-  page,
-  setPage,
-  totalItems,
-}) {
+function Pagination({ itemsPerPage, page, setPage, totalItems }) {
   let totalPages = Math.ceil(totalItems / itemsPerPage);
   if (isNaN(totalPages) || totalPages === 0) {
     totalPages = 1;

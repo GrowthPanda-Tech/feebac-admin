@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import PageTitle from "../PageTitle";
+import PageTitle from "../_helperComponents/PageTitle";
 import InsightGrid from "./utilComponents/InsightGrid";
 
 export default function Insights() {

@@ -1,16 +1,14 @@
-import React from "react";
-
-function InfoCards({ title, value }) {
+export default function InfoCards({ title, value }) {
   return (
-    <div className="flex items-center flex-col m-2 mb-4 w-full  text-center">
-      <div className="bg-white relative text-black w-full  rounded-lg">
+    <div className="flex items-center flex-col w-full text-center">
+      <div className="bg-white relative text-black w-full rounded-lg">
         <div className="flex flex-col justify-evenly items-center p-10 text-center h-56 ">
           <h1 className="text-xl font-semibold">{title}</h1>
           <h1 className="text-5xl text-[#EA8552] font-semibold">{value}</h1>
         </div>
-        <div className="absolute bottom-[-1rem] ">
+        <div className="absolute bottom-[-1rem]">
           <svg
-            className="waves"
+            className="waves rounded-b-lg"
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
             viewBox="0 24 150 28"
@@ -36,12 +34,6 @@ function InfoCards({ title, value }) {
                 y="5"
                 fill="rgba(255,255,255,0.3)"
               />
-              {/* <use
-                                xlinkHref="#gentle-wave"
-                                x="48"
-                                y="7"
-                                fill="rgba(255,255,255,0.3)"
-                            /> */}
             </g>
           </svg>
         </div>
@@ -49,5 +41,3 @@ function InfoCards({ title, value }) {
     </div>
   );
 }
-
-export default InfoCards;

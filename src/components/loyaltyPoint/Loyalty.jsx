@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import makeRequest from "../../utils/makeRequest";
 
-import PageTitle from "../PageTitle";
+import PageTitle from "../_helperComponents/PageTitle";
 import LoyaltyPoint from "./LoyaltyPoint";
 import Coupons from "./Coupons";
 import RedeemRequest from "./RedeemRequest";

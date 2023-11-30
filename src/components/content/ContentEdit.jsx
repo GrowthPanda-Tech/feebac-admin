@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import makeRequest from "../../utils/makeRequest";
+import swal from "../../utils/swal";
 
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 import ContentForm from "./ContentForm";
-import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
+import PageTitle from "../_helperComponents/PageTitle";
 
 export default function ContentEdit() {
   const { slug } = useParams();
@@ -48,6 +48,7 @@ export default function ContentEdit() {
     event.preventDefault();
 
     const formData = new FormData();
+
     formData.append("articleId", articleData.article_id);
     formData.append("articleTitle", articleData.article_title);
     formData.append("articleDesctiption", articleData.article_desctiption);
@@ -73,14 +74,14 @@ export default function ContentEdit() {
         formData
       );
 
-      if (response.isSuccess) {
-        AlertComponent("success", response);
-        setTimeout(() => {
-          navigate("/content");
-        }, 1000);
-      } else AlertComponent("failed", response);
+      if (!response.isSuccess) {
+        throw new Error(response.message);
+      }
+
+      swal("success", response.message);
+      navigate(-1);
     } catch (error) {
-      AlertComponent("error", "", error);
+      swal("error", error.message);
     } finally {
       setIsSaving(false);
     }

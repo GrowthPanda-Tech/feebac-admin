@@ -5,7 +5,6 @@ export function TermsAndCondition({ setCouponData, data }) {
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      console.log("hii");
       event.preventDefault();
       setText((prevText) => prevText + "\n");
       setCouponData((prev) => ({

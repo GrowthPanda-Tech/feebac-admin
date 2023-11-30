@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
-import { DateSelect } from "./DateSelect";
 import { TermsAndCondition } from "./TermsAndCondition";
 import { CouponsDetails } from "./CouponsDescription";
 
 import makeRequest from "../../utils/makeRequest";
+import swal from "../../utils/swal";
+import forbidChars from "../../utils/forbidChars";
 
-import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
+import PageTitle from "../_helperComponents/PageTitle";
 import CouponCategory from "./CouponCategory";
-import removeForbiddenChars from "../../utils/removeForbiddenChars";
 
 function InputForm({
   label,
@@ -66,13 +65,13 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
   };
   const getCouponsCategory = async () => {
     try {
-      const response = await makeRequest(`/loyalty/get-coupon-category`, "GET");
+      const response = await makeRequest("loyalty/get-coupon-category");
       if (!response.isSuccess) {
         throw new Error(response.message);
       }
       setOptions(response.data);
     } catch (error) {
-      console.log(error);
+      swal("error", error.message);
     }
   };
 
@@ -82,6 +81,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const response = await makeRequest(
       "/loyalty/add-coupon",
       "POST",
@@ -90,9 +90,9 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
 
     if (response.isSuccess) {
       setLoading(true);
-      AlertComponent("success", response);
+      swal("success", response.message);
       const getData = async () => {
-        const response = await makeRequest(`loyalty/get-all-coupons`, "GET");
+        const response = await makeRequest("loyalty/get-all-coupons");
         if (response.isSuccess) {
           setLoading(false);
           setCouponsData(response.data);
@@ -101,9 +101,10 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
       setShowCouponAddPop(false);
       getData();
     } else {
-      AlertComponent("failed", response);
+      swal("error", response.message);
     }
   };
+
   return (
     <div className="fixed top-0 left-0 w-full flex justify-center overflow-y-scroll items-center update-user h-screen">
       <form onSubmit={handleSubmit}>
@@ -119,8 +120,8 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
             min={0}
             onwheel={(e) => e.target.blur()}
             type={"number"}
-            onKeyDown={(e) => removeForbiddenChars(e)}
-            onPaste={(e) => removeForbiddenChars(e)}
+            onKeyDown={(e) => forbidChars(e)}
+            onPaste={(e) => forbidChars(e)}
           />
           <InputForm
             label={"Points Required"}
@@ -130,8 +131,8 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
               handleChange(e);
             }}
             onwheel={(e) => e.target.blur()}
-            onKeyDown={(e) => removeForbiddenChars(e)}
-            onPaste={(e) => removeForbiddenChars(e)}
+            onKeyDown={(e) => forbidChars(e)}
+            onPaste={(e) => forbidChars(e)}
             min={0}
           />
           <label className="flex flex-col pb-6">
@@ -156,8 +157,8 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
                   handleChange(e);
                 }}
                 onwheel={(e) => e.target.blur()}
-                onKeyDown={(e) => removeForbiddenChars(e)}
-                onPaste={(e) => removeForbiddenChars(e)}
+                onKeyDown={(e) => forbidChars(e)}
+                onPaste={(e) => forbidChars(e)}
                 min={1}
               />
             </div>

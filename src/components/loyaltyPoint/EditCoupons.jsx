@@ -1,15 +1,13 @@
-import { useState } from "react";
-import { DateSelect } from "./DateSelect";
+import { useState, useEffect } from "react";
 import { TermsAndCondition } from "./TermsAndCondition";
 import { CouponsDetails } from "./CouponsDescription";
 
 import makeRequest from "../../utils/makeRequest";
+import swal from "../../utils/swal";
+import forbidChars from "../../utils/forbidChars";
 
-import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
+import PageTitle from "../_helperComponents/PageTitle";
 import CouponCategory from "./CouponCategory";
-import { useEffect } from "react";
-import removeForbiddenChars from "../../utils/removeForbiddenChars";
 
 function InputForm({
   label,
@@ -75,8 +73,7 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
   const getCouponDetails = async () => {
     try {
       const response = await makeRequest(
-        `/loyalty/get-coupon-details?id=${id}`,
-        "GET"
+        `/loyalty/get-coupon-details?id=${id}`
       );
       if (response.isSuccess) {
         setEditCouponData(response.data);
@@ -86,18 +83,20 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
           tnc: joinArrayWithNewlines(response.data.tnc),
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const getCouponsCategory = async () => {
     try {
-      const response = await makeRequest(`/loyalty/get-coupon-category`, "GET");
+      const response = await makeRequest("loyalty/get-coupon-category");
       if (!response.isSuccess) {
         throw new Error(response.message);
       }
       setOptions(response.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -117,7 +116,7 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
 
     if (response.isSuccess) {
       setLoading(true);
-      AlertComponent("success", response);
+      swal("success", response.message);
       const getData = async () => {
         const response = await makeRequest(`loyalty/get-all-coupons`, "GET");
         if (response.isSuccess) {
@@ -128,7 +127,7 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
       setEditPop(false);
       getData();
     } else {
-      AlertComponent("failed", response);
+      swal("error", response.message);
     }
   };
   return (
@@ -155,8 +154,8 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
             }}
             min={0}
             type={"number"}
-            onKeyDown={(e) => removeForbiddenChars(e)}
-            onPaste={(e) => removeForbiddenChars(e)}
+            onKeyDown={(e) => forbidChars(e)}
+            onPaste={(e) => forbidChars(e)}
           />
           <InputForm
             label={"Points Required"}
@@ -167,8 +166,8 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
               handleChange(e);
             }}
             min={0}
-            onKeyDown={(e) => removeForbiddenChars(e)}
-            onPaste={(e) => removeForbiddenChars(e)}
+            onKeyDown={(e) => forbidChars(e)}
+            onPaste={(e) => forbidChars(e)}
           />
           <label className="flex flex-col pb-6">
             <span className="font-semibold mb-2">Image link :</span>
@@ -193,8 +192,8 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
                   handleChange(e);
                 }}
                 value={editCouponData ? editCouponData.totalCount : ""}
-                onKeyDown={(e) => removeForbiddenChars(e)}
-                onPaste={(e) => removeForbiddenChars(e)}
+                onKeyDown={(e) => forbidChars(e)}
+                onPaste={(e) => forbidChars(e)}
                 min={1}
               />
             </div>

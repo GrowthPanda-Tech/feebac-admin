@@ -2,7 +2,7 @@ import { useState } from "react";
 import loginBanner from "../../assets/loginBanner.png";
 
 import makeRequest from "../../utils/makeRequest";
-import removeForbiddenChars from "../../utils/removeForbiddenChars";
+import forbidChars from "../../utils/forbidChars";
 
 import OtpField from "./OtpField";
 import { Spinner } from "@material-tailwind/react";
@@ -137,8 +137,8 @@ export default function Login() {
             placeholder="Enter mobile number"
             value={loginInfo.mobile}
             onChange={(event) => handleChange(event, 10)}
-            onKeyDown={(event) => removeForbiddenChars(event)}
-            onPaste={(event) => removeForbiddenChars(event)}
+            onKeyDown={(event) => forbidChars(event)}
+            onPaste={(event) => forbidChars(event)}
             disabled={!otpStatus}
             className="login-input disabled:cursor-not-allowed disabled:opacity-50"
             required

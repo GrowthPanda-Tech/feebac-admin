@@ -17,7 +17,10 @@ function LargeBtn({ children }) {
 
 export default function Login() {
   const [inputData, setInputData] = useState({});
-  const [loginInfo, setLoginInfo] = useState({ mobile: "", otp: "" });
+  const [loginInfo, setLoginInfo] = useState({
+    mobile: "",
+    isAdminLogin: true,
+  });
   const [alertInfo, setAlertInfo] = useState({ message: "", type: null });
   const [otpStatus, setOtpStatus] = useState(true);
 
@@ -40,42 +43,27 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
+
     try {
-      setLoading(true);
+      const response = await makeRequest("auth/login", "POST", loginInfo);
 
-      const isAdmin = await makeRequest(
-        `site-admin/is-admin?mobile=${loginInfo.mobile}`
-      );
-
-      if (!isAdmin.isSuccess) {
+      if (!response.isSuccess) {
         setLoading(false);
-        throw new Error(isAdmin.message);
+        throw new Error(response.message);
       }
 
-      try {
-        const response = await makeRequest("auth/login", "POST", loginInfo);
-
-        if (!response.isSuccess) {
-          setLoading(false);
-          throw new Error(response.message);
-        }
-
-        setAlertInfo({
-          ...alertInfo,
-          message: response.message,
-          type: "success",
-        });
-
-        setOtpStatus(false);
-        setLoading(false);
-      } catch (error) {
-        throw error;
-      }
-    } catch (error) {
       setAlertInfo({
-        message: error.message,
-        type: "error",
+        ...alertInfo,
+        message: response.message,
+        type: "success",
       });
+
+      setOtpStatus(false);
+    } catch (error) {
+      setAlertInfo({ message: error.message });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,7 +80,7 @@ export default function Login() {
 
     try {
       const response = await makeRequest("auth/verify-otp", "POST", {
-        ...loginInfo,
+        mobile: loginInfo.mobile,
         otp: otp,
       });
 
@@ -101,19 +89,14 @@ export default function Login() {
       }
 
       localStorage.setItem("authToken", response.authToken);
-
-      setLoading(false);
-
       location.replace("/");
     } catch (error) {
-      console.log(error);
-
       setAlertInfo({
-        ...setAlertInfo,
+        ...alertInfo,
         message: error.message,
         type: "error",
       });
-
+    } finally {
       setLoading(false);
     }
   };

@@ -69,14 +69,14 @@ export default function ContentCreate({ surveyId }) {
         formData
       );
 
-      if (response.isSuccess) {
-        swal("success", response);
-        setTimeout(() => {
-          navigate("/content");
-        }, 1200);
-      } else swal("failed", response);
+      if (!response.isSuccess) {
+        throw new Error(response.message);
+      }
+
+      swal("success", response.message);
+      navigate("/content");
     } catch (error) {
-      swal("error", "", error);
+      swal("error", error.message);
     } finally {
       setIsSaving(false);
     }

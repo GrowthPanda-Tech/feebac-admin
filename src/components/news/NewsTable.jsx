@@ -46,17 +46,17 @@ export default function NewsTable() {
         "DELETE"
       );
 
-      if (response.isSuccess) {
-        swal("success", response);
-        const updatedList = newsList.filter((_, index) => index != delInfo.idx);
-        setNewsList(updatedList);
-        setDelPop(false);
-      } else {
-        swal("failed", response);
+      if (!response.isSuccess) {
         throw new Error(response.message);
       }
+
+      swal("success", response.message);
+
+      const updatedList = newsList.filter((_, index) => index != delInfo.idx);
+      setNewsList(updatedList);
+      setDelPop(false);
     } catch (error) {
-      swal("error", "", error);
+      swal("error", error.message);
     }
   };
 
@@ -80,8 +80,6 @@ export default function NewsTable() {
           setTotalItems(response.totalCount);
         }
       } catch (error) {
-        console.error(error);
-
         if (error.message == 204) {
           setLoading(false);
           setNewsList([]);

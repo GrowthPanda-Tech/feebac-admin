@@ -122,7 +122,7 @@ export default function Question({
         });
         setQuestionNumber(questionNumber + 1);
       } catch (error) {
-        swal("error", "", "Server Error");
+        swal("error", "Something went wrong!!");
       }
     }
   };

@@ -258,18 +258,23 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         questionData
       );
 
-      if (response.isSuccess) {
-        swal("success", response.message);
-        setOptions(initOptions);
-        setQuestionData(initQuestionData);
-        setActiveButtonIndex(1);
-
-        getQuestions();
-      } else {
-        swal("error", response.message);
+      if (!response.isSuccess) {
+        throw new Error(response.message);
       }
+
+      swal("success", response.message);
+
+      setOptions(initOptions);
+      setQuestionData(initQuestionData);
+      setActiveButtonIndex(1);
+
+      //TODO: use state management for this
+      getQuestions();
     } catch (error) {
-      if (error.message >= 500) swal("error", "Something went wrong!!");
+      let message = error.message;
+      if (error.message >= 500) message = "Something went wrong!!";
+
+      swal("error", message);
     } finally {
       resetState();
       setInputType(1);
@@ -288,28 +293,28 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         throw new Error(response.message);
       }
 
-      const customAlert = {
-        message: "Survey will start at the scheduled time",
-      };
-
-      swal("success", customAlert);
+      swal("success", "Survey will start at the scheduled time");
       navigate("/survey");
     } catch (error) {
-      console.error(error);
+      swal("error", error.message);
     }
   };
 
   const handlePublish = async () => {
-    const body = {
-      surveyId,
-      isStartNow: true,
-    };
-    const response = await makeRequest("survey/start-survey", "PATCH", body);
-    if (response.isSuccess) {
-      swal("success", response);
+    try {
+      const response = await makeRequest("survey/start-survey", "PATCH", {
+        surveyId,
+        isStartNow: true,
+      });
+
+      if (!response.isSuccess) {
+        throw new Error(response.message);
+      }
+
+      swal("success", response.message);
       navigate("/survey");
-    } else {
-      swal("failed", response);
+    } catch (error) {
+      swal("error", error.message);
     }
   };
 
@@ -317,10 +322,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     getQuestions();
     getFilters();
   }, []);
-
-  console.log(questionData);
-  console.log(previewImages);
-  console.log(options);
 
   return (
     <div className="flex flex-col gap-4">

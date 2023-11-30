@@ -31,7 +31,7 @@ export default function FilterCreate({
       setIsShowFilterCreate(false);
       setTertiaryKeys((prev) => [...prev, response.data]);
     } catch (error) {
-      swal("error", "", error);
+      swal("error", error.message);
     }
   };
 

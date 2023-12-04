@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CategoryContext } from "../../contexts/CategoryContext";
 
 import swal from "../../utils/swal";
@@ -10,6 +10,8 @@ import ContentForm from "./ContentForm";
 import PageTitle from "../_helperComponents/PageTitle";
 
 export default function ContentCreate({ surveyId }) {
+  const { slug } = useParams();
+
   const { categories } = useContext(CategoryContext);
   const initCat = categories[0]?.category_id ? categories[0].category_id : "";
 
@@ -59,6 +61,8 @@ export default function ContentCreate({ surveyId }) {
         articleData.articleImg,
         articleData.articleImg.name
       );
+
+    if (slug) formData.append("surveyId", slug);
 
     try {
       setIsSaving(true);

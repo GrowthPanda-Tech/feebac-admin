@@ -174,7 +174,7 @@ export default function RedeemInfo() {
               />
               <CouponInfo
                 name={"Category"}
-                value={fetchedData?.data.coupon.category}
+                value={fetchedData?.data.coupon.category.name}
               />
               <CouponInfo
                 name={"Coins Requried"}

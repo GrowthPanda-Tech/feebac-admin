@@ -29,6 +29,7 @@ const APPROVEDHEADERS = [
   "Approved By",
   "Actions",
 ];
+
 function Button({ type, setStatus, isActive, onClick }) {
   const handleClick = () => {
     setStatus(type);
@@ -75,7 +76,7 @@ export default function RedeemRequest() {
   useEffect(() => {
     let ignore = false;
 
-    async function fetchrRedeemData() {
+    async function fetchRedeemData() {
       try {
         setLoading(true);
 
@@ -84,17 +85,14 @@ export default function RedeemRequest() {
         );
 
         if (!response.isSuccess) {
-          throw new Error(json.message);
+          throw new Error(response.message);
         }
 
         if (!ignore) {
-          setRedeemData(
-            response.data.filter((item) => item.currentStatus === `${status}`)
-          );
+          setRedeemData(response.data);
           setLoading(false);
         }
       } catch (error) {
-        console.error(error);
         if (error.message == 204) {
           setLoading(false);
           setRedeemData([]);
@@ -102,7 +100,7 @@ export default function RedeemRequest() {
       }
     }
 
-    fetchrRedeemData();
+    fetchRedeemData();
 
     return () => {
       ignore = true;
@@ -124,16 +122,15 @@ export default function RedeemRequest() {
               {redeemData.map(
                 ({
                   id,
-                  coupon,
+                  title,
                   requestBy,
                   createdDate,
                   actionDate,
                   approvedBy,
-                  currentStatus,
                 }) => (
                   <Trow key={id}>
                     <Tdata>{id.split("-").pop()} </Tdata>
-                    <Tdata capitalize> {coupon} </Tdata>
+                    <Tdata capitalize> {title} </Tdata>
                     <Tdata mono>{requestBy.split("-").pop()}</Tdata>
                     <Tdata mono>
                       <div className="flex flex-col gap-2">
@@ -144,9 +141,9 @@ export default function RedeemRequest() {
                     </Tdata>
                     <Tdata capitalize>
                       {status === "pending" ? (
-                        <span className="chip-red">{currentStatus}</span>
+                        <span className="chip-red">{status}</span>
                       ) : (
-                        <span className="chip-green">{currentStatus}</span>
+                        <span className="chip-green">{status}</span>
                       )}
                     </Tdata>
 
@@ -200,7 +197,7 @@ export default function RedeemRequest() {
         )}
         {redeemData.length === 0 ? (
           <div className="flex justify-center items-center p-56 opacity-50">
-            Ops No {status} Request Found !!
+            No {status} requests found !!
           </div>
         ) : null}
       </div>

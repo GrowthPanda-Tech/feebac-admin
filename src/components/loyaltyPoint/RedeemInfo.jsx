@@ -87,8 +87,8 @@ export default function RedeemInfo() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold ">Redeem Information</h1>
-      {fetchedData?.data.currentStatus === "pending" ? (
+      <h1 className="text-2xl font-semibold">Redeem Information</h1>
+      {fetchedData?.data.status === "pending" ? (
         <div className="flex flex-col gap-6">
           <label className="font-semibold">
             <span className="text-lg">Message</span>
@@ -139,8 +139,8 @@ export default function RedeemInfo() {
               name={"Request Date"}
               value={dateConvert(fetchedData?.data.createdDate, "local")}
             />
-            <UserInfo name={"Status"} value={fetchedData?.data.currentStatus} />
-            {fetchedData?.data.currentStatus === "approved" ? (
+            <UserInfo name={"Status"} value={fetchedData?.data.status} />
+            {fetchedData?.data.status === "approved" ? (
               <>
                 <UserInfo name={"Message"} value={fetchedData?.data.message} />
                 <UserInfo name={"Code"} value={fetchedData?.data.couponCode} />

@@ -33,6 +33,8 @@ const CouponCategory = ({
     }
   }, [selectedValueProp]);
 
+  console.log(options);
+
   return (
     <div className="mb-2 flex items-center gap-4">
       <label className="font-semibold ">Select Category for Coupon</label>
@@ -44,8 +46,8 @@ const CouponCategory = ({
       >
         <option value="">Select option</option>
         {options.map((option) => (
-          <option key={option.id} value={option.id}>
-            {option.name}
+          <option key={option.id} value={option.id} className="capitalize">
+            {option.category_name}
           </option>
         ))}
       </select>

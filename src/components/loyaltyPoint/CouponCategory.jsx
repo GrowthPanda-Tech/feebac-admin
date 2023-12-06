@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from "react";
-import makeRequest from "../../utils/makeRequest";
+import { useState, useEffect } from "react";
 
-const CouponCategory = ({
+export default function CouponCategory({
   setAddCouponData,
   options,
-  setOptions,
-  isEdit,
   selectedValueProp,
-}) => {
+}) {
   const [selectedValue, setSelectedValue] = useState(selectedValueProp);
 
   const handleChange = (event) => {
@@ -53,6 +50,4 @@ const CouponCategory = ({
       </select>
     </div>
   );
-};
-
-export default CouponCategory;
+}

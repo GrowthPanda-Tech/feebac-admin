@@ -62,7 +62,7 @@ export default function SurveyEdit() {
   }, []);
 
   return (
-    <>
+    <div className="flex flex-col gap-6">
       {error ? (
         <div className="flex h-[60vh] font-semibold text-2xl justify-center items-center">
           The survey creator has made this Private!!
@@ -156,6 +156,6 @@ export default function SurveyEdit() {
           setSurveyInfo={setSurveyInfo}
         />
       )}
-    </>
+    </div>
   );
 }

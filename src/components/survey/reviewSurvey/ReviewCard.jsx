@@ -29,8 +29,8 @@ export default function ReviewCard({
 
   return (
     <>
-      <div className="p-4">
-        <div className="text-secondary mb-6 justify-between w-full flex font-semibold">
+      <div className="flex flex-col gap-6">
+        <div className="text-secondary justify-between w-full flex font-semibold">
           Question {index + 1} ({type})
           <button
             onClick={() => {

@@ -170,7 +170,7 @@ function LoyaltyPoint() {
                       <Trow key={id}>
                         <Tdata mono>{id.split("-").pop()}</Tdata>
                         <Tdata mono>{affectedUser.split("-").pop()}</Tdata>
-                        <Tdata>{reason ? reason : "-"}</Tdata>
+                        <Tdata>{reason.type}</Tdata>
                         <Tdata mono>
                           <div className="flex flex-col gap-2">
                             <TableDateTime date={dateTime} />

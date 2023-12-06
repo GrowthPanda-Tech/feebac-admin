@@ -93,8 +93,8 @@ export default function SurveyEdit() {
                 }
               />
               <InputHeading
-                title={"Total Question"}
-                value={surveyInfo.totalQuestions}
+                title={"Total Question(s)"}
+                value={surveyInfo.total_questions}
               />
             </div>
 

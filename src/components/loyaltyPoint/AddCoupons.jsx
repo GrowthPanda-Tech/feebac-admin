@@ -44,40 +44,31 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
   const [options, setOptions] = useState([]);
 
   const handleChange = (e) => {
-    if (e.target.name === "description") {
-      setAddCouponData({
-        ...addCouponData,
-        description: "₹" + e.target.value,
-      });
-      return;
-    }
-    if (e.target.name === "totalCount") {
-      setAddCouponData({
-        ...addCouponData,
-        totalCount: parseInt(e.target.value),
-      });
-      return;
-    }
-    setAddCouponData({
-      ...addCouponData,
-      [e.target.name]: e.target.value,
-    });
-  };
-  const getCouponsCategory = async () => {
-    try {
-      const response = await makeRequest("loyalty/get-coupon-category");
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
-      setOptions(response.data);
-    } catch (error) {
-      swal("error", error.message);
-    }
-  };
+    const name = e.target.name;
+    const value = e.target.value;
 
-  useEffect(() => {
-    getCouponsCategory();
-  }, []);
+    switch (name) {
+      case "description":
+        setAddCouponData({
+          ...addCouponData,
+          [name]: "₹" + value,
+        });
+        break;
+
+      case "totalCount":
+        setAddCouponData({
+          ...addCouponData,
+          [name]: parseInt(value),
+        });
+        break;
+
+      default:
+        setAddCouponData({
+          ...addCouponData,
+          [name]: value,
+        });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,6 +95,32 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
       swal("error", response.message);
     }
   };
+
+  useEffect(() => {
+    let ignore = false;
+
+    const getCouponsCategory = async () => {
+      try {
+        const response = await makeRequest("loyalty/get-coupon-category");
+
+        if (!response.isSuccess) {
+          throw new Error(response.message);
+        }
+
+        if (!ignore) {
+          setOptions(response.data);
+        }
+      } catch (error) {
+        swal("error", error.message);
+      }
+    };
+
+    getCouponsCategory();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   return (
     <div className="fixed top-0 left-0 w-full flex justify-center overflow-y-scroll items-center update-user h-screen">
@@ -168,7 +185,6 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
               setOptions={setOptions}
               setAddCouponData={setAddCouponData}
             />
-            {/* <DateSelect setAddCouponData={setAddCouponData} /> */}
           </div>
 
           <div className="flex flex-col gap-4">

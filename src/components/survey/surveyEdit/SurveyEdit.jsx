@@ -98,8 +98,9 @@ export default function SurveyEdit() {
               />
             </div>
 
-            <div className="flex w-full">
-              <p>{surveyInfo.survey_description}</p>
+            <div className="flex w-full items-center gap-6">
+              <h1 className="text-xl font-semibold">Description : </h1>
+              <span>{surveyInfo.survey_description}</span>
             </div>
           </div>
           <div className="flex flex-col items-end gap-4">

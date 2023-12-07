@@ -14,6 +14,7 @@ export default function SubmitButton() {
     const formData = new FormData();
 
     formData.append("image", insightModel.image, insightModel.image.name);
+    formData.append("caption", insightModel.caption);
 
     insightModel.pages.forEach((page) => {
       formData.append("pages", page, page.name);

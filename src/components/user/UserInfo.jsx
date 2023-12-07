@@ -122,7 +122,7 @@ export default function UserInfo() {
                   <tbody>
                     {transactInfo.map((transaction) => (
                       <Trow key={transaction.id}>
-                        <Tdata left>{transaction.reason}</Tdata>
+                        <Tdata left>{transaction.reason.type}</Tdata>
                         <Tdata mono>
                           <TableDateTime date={transaction.dateTime} />
                         </Tdata>

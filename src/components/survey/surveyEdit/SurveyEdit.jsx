@@ -62,7 +62,7 @@ export default function SurveyEdit() {
   }, []);
 
   return (
-    <>
+    <div className="flex flex-col gap-6">
       {error ? (
         <div className="flex h-[60vh] font-semibold text-2xl justify-center items-center">
           The survey creator has made this Private!!
@@ -93,13 +93,14 @@ export default function SurveyEdit() {
                 }
               />
               <InputHeading
-                title={"Total Question"}
-                value={surveyInfo.totalQuestions}
+                title={"Total Question(s)"}
+                value={surveyInfo.total_questions}
               />
             </div>
 
-            <div className="flex w-full">
-              <p>{surveyInfo.survey_description}</p>
+            <div className="flex w-full items-center gap-6">
+              <h1 className="text-xl font-semibold">Description : </h1>
+              <span>{surveyInfo.survey_description}</span>
             </div>
           </div>
           <div className="flex flex-col items-end gap-4">
@@ -155,6 +156,6 @@ export default function SurveyEdit() {
           setSurveyInfo={setSurveyInfo}
         />
       )}
-    </>
+    </div>
   );
 }

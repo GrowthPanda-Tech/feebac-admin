@@ -1,11 +1,13 @@
-import React from "react";
 import Skeleton from "react-loading-skeleton";
 
 function CardSkeleton({ card }) {
   return Array(card)
     .fill(0)
-    .map((_, i) => (
-      <div className="flex relative flex-col justify-between bg-inherit h-[430px] p-0">
+    .map((_, idx) => (
+      <div
+        key={idx}
+        className="flex relative flex-col justify-between bg-inherit h-[430px] p-0"
+      >
         <div className="">
           <Skeleton height={430} containerClassName="flex-1" />
         </div>

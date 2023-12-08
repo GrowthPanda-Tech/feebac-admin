@@ -26,7 +26,7 @@ export default function ProfileForm({ setShow }) {
   const { profile, setProfile } = useContext(ProfileContext);
 
   const [dataState, setDataState] = useState({ ...profile });
-  const [dataUpdate, setDataUpdate] = useState({});
+  const [dataUpdate, setDataUpdate] = useState(null);
   const [imgData, setImgData] = useState({
     isUpdate: false,
     file: null,
@@ -196,9 +196,12 @@ export default function ProfileForm({ setShow }) {
                 </button>
               )}
 
-              <button className="btn-primary">Save Changes</button>
+              {dataUpdate ? (
+                <button className={"btn-primary"}>Save Changes</button>
+              ) : null}
+
               <button
-                className="btn-secondary"
+                className={"btn-secondary"}
                 onClick={() => {
                   setShow((prev) => {
                     !prev;

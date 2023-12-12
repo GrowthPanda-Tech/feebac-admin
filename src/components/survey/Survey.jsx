@@ -111,7 +111,7 @@ export default function Survey() {
 
       swal("success", response.message);
     } catch (error) {
-      swal("failed", error.message);
+      swal("error", error.message);
     }
   };
 

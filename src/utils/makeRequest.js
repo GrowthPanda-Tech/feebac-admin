@@ -18,7 +18,7 @@ export default async function makeRequest(route, method = "GET", body = null) {
     const response = await fetch(`${BASE_URL}/${route}`, request);
     const statusCode = response.status;
 
-    if (!response.ok || statusCode >= 500 || statusCode === 204)
+    if (/* !response.ok || */ statusCode >= 500 || statusCode === 204)
       throw new Error(statusCode);
 
     return await response.json();

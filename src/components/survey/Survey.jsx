@@ -217,6 +217,7 @@ export default function Survey() {
                     start_date,
                     end_date,
                     is_public,
+                    content,
                   },
                   index
                 ) => (
@@ -240,7 +241,7 @@ export default function Survey() {
                       <div className="flex justify-center gap-4">
                         {status === "live" || status === "expired" ? (
                           <div className="flex items-center justify-center gap-4 w-full">
-                            <div className="flex justify-center">
+                            <div className="flex justify-center gap-4">
                               <div className="tool-tip-div group">
                                 <Link to={`details/${survey_id}`}>
                                   <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
@@ -248,6 +249,21 @@ export default function Survey() {
                                 <span className="tool-tip-span -right-[3.4rem] bg-black -top-12 ">
                                   View Response
                                   <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
+                                </span>
+                              </div>
+                              <div className="tool-tip-div group">
+                                <i
+                                  className={`fa-regular fa-newspaper text-xl ${
+                                    !content
+                                      ? "opacity-40 cursor-not-allowed"
+                                      : ""
+                                  }`}
+                                />
+                                <span className="tool-tip-span -right-[3.4rem] bg-black -top-12">
+                                  {content
+                                    ? content.title
+                                    : "No article linked"}
+                                  <span className="tooltip-arrow bottom-[-2px] left-[92%]"></span>
                                 </span>
                               </div>
                             </div>

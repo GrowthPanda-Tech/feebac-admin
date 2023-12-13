@@ -243,7 +243,10 @@ export default function Survey() {
                           <div className="flex items-center justify-center gap-4 w-full">
                             <div className="flex justify-center gap-4">
                               <div className="tool-tip-div group">
-                                <Link to={`details/${survey_id}`}>
+                                <Link
+                                  to={`details/${survey_id}`}
+                                  state={{ from: content }}
+                                >
                                   <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
                                 </Link>
                                 <span className="tool-tip-span -right-[3.4rem] bg-black -top-12 ">
@@ -261,9 +264,9 @@ export default function Survey() {
                                 />
                                 <span className="tool-tip-span -right-[3.4rem] bg-black -top-12">
                                   {content
-                                    ? content.title
+                                    ? "Article Linked"
                                     : "No article linked"}
-                                  <span className="tooltip-arrow bottom-[-2px] left-[92%]"></span>
+                                  <span className="tooltip-arrow bottom-[-2px] left-[30%]"></span>
                                 </span>
                               </div>
                             </div>

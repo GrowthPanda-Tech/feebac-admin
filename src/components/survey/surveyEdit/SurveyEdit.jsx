@@ -9,11 +9,13 @@ import EditSurveyDetails from "./EditSurveyDetails";
 import AddMoreQuestionPop from "./AddMoreQuestionPop";
 import LoadingSpinner from "../../_helperComponents/LoadingSpinner";
 
-function InputHeading({ title, value }) {
+function InputHeading({ title, value, capitalize }) {
   return (
     <div className="grid grid-cols-2 md:w-3/4">
-      <h1 className=" text-xl font-semibold">{title} : </h1>
-      <span className="text-xl">{value}</span>
+      <h1 className="text-xl font-semibold">{title} : </h1>
+      <span className={`text-xl ${capitalize ? "capitalize" : ""}`}>
+        {value}
+      </span>
     </div>
   );
 }

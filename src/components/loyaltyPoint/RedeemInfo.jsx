@@ -179,7 +179,7 @@ export default function RedeemInfo() {
                 value={fetchedData?.data.coupon.category.category_name}
               />
               <CouponInfo
-                name={"Coins Requried"}
+                name={"Coins Required"}
                 value={fetchedData?.data.coupon.value}
               />
             </div>

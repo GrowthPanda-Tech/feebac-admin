@@ -51,7 +51,6 @@ export default function SurveyEdit() {
           setLoading(false);
         }
       } catch (error) {
-        console.error(error);
         setError(true);
       }
     };
@@ -99,11 +98,6 @@ export default function SurveyEdit() {
                 value={surveyInfo.total_questions}
               />
             </div>
-
-            <div className="flex w-full items-center gap-6">
-              <h1 className="text-xl font-semibold">Description : </h1>
-              <span>{surveyInfo.survey_description}</span>
-            </div>
           </div>
           <div className="flex flex-col items-end gap-4">
             <div className="flex items-center gap-4">
@@ -127,6 +121,11 @@ export default function SurveyEdit() {
           </div>
         </div>
       )}
+
+      <div className="flex flex-col gap-2">
+        <h1 className="text-xl font-semibold">About Survey</h1>
+        <span>{surveyInfo.survey_description}</span>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
         {questionList.map((question, index) => (

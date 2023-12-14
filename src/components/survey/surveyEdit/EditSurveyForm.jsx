@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { CategoryContext } from "../../../contexts/CategoryContext";
 
@@ -6,6 +6,8 @@ import dateConvert from "../../../utils/dateConvert";
 import dateToday from "../../../utils/dateToday";
 import makeRequest from "../../../utils/makeRequest";
 import swal from "../../../utils/swal";
+
+import upload from "../../../assets/upload.png";
 
 function Input({ type, min, value, name, onChange }) {
   return (
@@ -40,6 +42,13 @@ export default function EditSurveyForm({
 
   const [surveyData, setSurveyData] = useState(surveyInfo);
   const [updatedData, setUpdatedData] = useState(null);
+  const [imgPreview, setImgPreview] = useState({
+    image_url: `url(${surveyData.image_url})`,
+    featured_image: `url(${surveyData.featured_image})`,
+  });
+
+  const surveyImgRef = useRef(null);
+  const featuredImgRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,8 +60,25 @@ export default function EditSurveyForm({
       return;
     }
 
+    if (name === "image_url" || name === "featured_image") {
+      const file = e.target.files[0];
+
+      setUpdatedData({ ...updatedData, [name]: file });
+      setImgPreview({
+        ...imgPreview,
+        [name]: `url(${URL.createObjectURL(file)})`,
+      });
+
+      return;
+    }
+
     setSurveyData({ ...surveyData, [name]: value });
     setUpdatedData({ ...updatedData, [name]: value });
+  };
+
+  const handleImgDelete = (type) => {
+    setImgPreview({ ...imgPreview, [type]: null });
+    setSurveyData({ ...surveyData, [type]: null });
   };
 
   //TODO: nested API calls?
@@ -155,6 +181,110 @@ export default function EditSurveyForm({
             value={surveyData.loyalty_point}
           />
         </Label>
+      </div>
+
+      {/* Images */}
+      {/* TODO: Needs refactor */}
+      <div className="flex gap-24">
+        <div className="flex flex-col gap-6">
+          <span className="font-semibold text-xl">Upload Image</span>
+          <div
+            className={`relative aspect-square h-64 border-dashed border-2 border-black rounded-xl`}
+            style={{
+              backgroundImage: imgPreview.image_url,
+              backgroundSize: "cover",
+            }}
+          >
+            {!imgPreview.image_url ? (
+              <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
+                <img src={upload} className="w-12" />
+                <div className="flex gap-2">
+                  <span className="font-semibold text-secondary">
+                    Drag & Drop
+                  </span>
+                  <span className="font-semibold">Image</span>
+                </div>
+                <span className="text-xs flex gap-1">
+                  <span>Or</span>
+                  <span
+                    className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
+                    onClick={() => surveyImgRef.current.click()}
+                  >
+                    browse files
+                  </span>
+                  <span>on your computer</span>
+                </span>
+              </div>
+            ) : (
+              <div className="absolute top-0 right-0">
+                <i
+                  className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
+                  onClick={() => handleImgDelete("image_url")}
+                />
+              </div>
+            )}
+          </div>
+
+          <input
+            onChange={handleChange}
+            ref={surveyImgRef}
+            type="file"
+            accept="image/*"
+            name="image_url"
+            hidden
+          />
+        </div>
+
+        <div className="flex flex-col gap-6">
+          <span className="font-semibold text-xl">
+            Upload Image (for featured section)
+          </span>
+          <div
+            className={`relative aspect-video h-64 border-dashed border-2 border-black rounded-xl`}
+            style={{
+              backgroundImage: imgPreview.featured_image,
+              backgroundSize: "cover",
+            }}
+          >
+            {!imgPreview.featured_image ? (
+              <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
+                <img src={upload} className="w-12" />
+                <div className="flex gap-2">
+                  <span className="font-semibold text-secondary">
+                    Drag & Drop
+                  </span>
+                  <span className="font-semibold">Image</span>
+                </div>
+                <span className="text-xs flex gap-1">
+                  <span>Or</span>
+                  <span
+                    className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
+                    onClick={() => featuredImgRef.current.click()}
+                  >
+                    browse files
+                  </span>
+                  <span>on your computer</span>
+                </span>
+              </div>
+            ) : (
+              <div className="absolute top-0 right-0">
+                <i
+                  className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
+                  onClick={() => handleImgDelete("featured_image")}
+                />
+              </div>
+            )}
+          </div>
+
+          <input
+            onChange={handleChange}
+            ref={featuredImgRef}
+            type="file"
+            accept="image/*"
+            name="featured_image"
+            hidden
+          />
+        </div>
       </div>
 
       <div className="flex gap-4">

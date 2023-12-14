@@ -82,18 +82,12 @@ export default function CreateSurveyForm({
   const [profileData, setProfileData] = useState({});
   const [userCount, setUserCount] = useState(0);
   const [filterdUserCount, setFilteredUserCount] = useState(0);
+  const [imgPreview, setImgPreview] = useState({
+    surveyImg: null,
+    featured_image: null,
+  });
 
   const [isDragging, setIsDragging] = useState(false);
-
-  const imgPreview = {
-    survey: surveyData.surveyImg
-      ? `url(${URL.createObjectURL(surveyData.surveyImg)})`
-      : "none",
-    featured: surveyData.featured_image
-      ? // ? `url(${URL.createObjectURL(surveyData.featured_image)})`
-        URL.createObjectURL(surveyData.featured_image)
-      : null,
-  };
 
   const surveyImgRef = useRef(null);
   const featuredImgRef = useRef(null);
@@ -159,11 +153,20 @@ export default function CreateSurveyForm({
     if (name === "surveyImg" || name === "featured_image") {
       const file = e.target.files[0];
       setSurveyData({ ...surveyData, [name]: file });
+      setImgPreview({
+        ...imgPreview,
+        [name]: `url(${URL.createObjectURL(file)})`,
+      });
 
       return;
     }
 
     setSurveyData({ ...surveyData, [name]: value });
+  };
+
+  const handleImgDelete = (type) => {
+    setImgPreview({ ...imgPreview, [type]: null });
+    setSurveyData({ ...surveyData, [type]: null });
   };
 
   const handleDrop = (e) => {
@@ -305,32 +308,45 @@ export default function CreateSurveyForm({
         <div className="flex flex-col gap-6">
           <span className="font-semibold text-xl">Upload Image</span>
           <div
-            className={`aspect-square flex flex-col gap-2 items-center justify-center p-6 border-dashed border-2 border-black rounded-xl ${
+            className={`relative aspect-square h-64 border-dashed border-2 border-black rounded-xl ${
               isDragging ? "bg-white border-secondary" : ""
             }`}
             style={{
-              backgroundImage: imgPreview.survey,
+              backgroundImage: imgPreview.surveyImg,
               backgroundSize: "cover",
             }}
             onDrop={(e) => handleDrop(e)}
             onDragOver={(e) => handleDragover(e)}
             onDragLeave={(e) => handleDragLeave(e)}
           >
-            <img src={upload} className="w-12" />
-            <div className="flex gap-2">
-              <span className="font-semibold text-secondary">Drag & Drop</span>
-              <span className="font-semibold">Image</span>
-            </div>
-            <span className="text-xs flex gap-1">
-              <span>Or</span>
-              <span
-                className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
-                onClick={() => surveyImgRef.current.click()}
-              >
-                browse files
-              </span>
-              <span>on your computer</span>
-            </span>
+            {!imgPreview.surveyImg ? (
+              <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
+                <img src={upload} className="w-12" />
+                <div className="flex gap-2">
+                  <span className="font-semibold text-secondary">
+                    Drag & Drop
+                  </span>
+                  <span className="font-semibold">Image</span>
+                </div>
+                <span className="text-xs flex gap-1">
+                  <span>Or</span>
+                  <span
+                    className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
+                    onClick={() => surveyImgRef.current.click()}
+                  >
+                    browse files
+                  </span>
+                  <span>on your computer</span>
+                </span>
+              </div>
+            ) : (
+              <div className="absolute top-0 right-0">
+                <i
+                  className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
+                  onClick={() => handleImgDelete("surveyImg")}
+                />
+              </div>
+            )}
           </div>
 
           <input
@@ -348,21 +364,19 @@ export default function CreateSurveyForm({
             Upload Image (for featured section)
           </span>
           <div
-            className={`h-40 aspect-video flex flex-col gap-2 items-center justify-center p-2 border-dashed border-2 border-black rounded-xl ${
+            className={`relative aspect-video h-64 border-dashed border-2 border-black rounded-xl ${
               isDragging ? "bg-white border-secondary" : ""
             }`}
-            // style={{
-            //   background: imgPreview.featured,
-            //   backgroundSize: "cover",
-            // }}
+            style={{
+              backgroundImage: imgPreview.featured_image,
+              backgroundSize: "cover",
+            }}
             onDrop={(e) => handleDrop(e)}
             onDragOver={(e) => handleDragover(e)}
             onDragLeave={(e) => handleDragLeave(e)}
           >
-            {imgPreview.featured ? (
-              <img src={imgPreview.featured} className="max-h-full" />
-            ) : (
-              <>
+            {!imgPreview.featured_image ? (
+              <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
                 <img src={upload} className="w-12" />
                 <div className="flex gap-2">
                   <span className="font-semibold text-secondary">
@@ -380,7 +394,14 @@ export default function CreateSurveyForm({
                   </span>
                   <span>on your computer</span>
                 </span>
-              </>
+              </div>
+            ) : (
+              <div className="absolute top-0 right-0">
+                <i
+                  className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
+                  onClick={() => handleImgDelete("featured_image")}
+                />
+              </div>
             )}
           </div>
 

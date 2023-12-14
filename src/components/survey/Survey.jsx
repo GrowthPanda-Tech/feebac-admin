@@ -217,6 +217,7 @@ export default function Survey() {
                     start_date,
                     end_date,
                     is_public,
+                    content,
                   },
                   index
                 ) => (
@@ -240,14 +241,32 @@ export default function Survey() {
                       <div className="flex justify-center gap-4">
                         {status === "live" || status === "expired" ? (
                           <div className="flex items-center justify-center gap-4 w-full">
-                            <div className="flex justify-center">
+                            <div className="flex justify-center gap-4">
                               <div className="tool-tip-div group">
-                                <Link to={`details/${survey_id}`}>
+                                <Link
+                                  to={`details/${survey_id}`}
+                                  state={{ from: content }}
+                                >
                                   <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
                                 </Link>
                                 <span className="tool-tip-span -right-[3.4rem] bg-black -top-12 ">
                                   View Response
                                   <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
+                                </span>
+                              </div>
+                              <div className="tool-tip-div group">
+                                <i
+                                  className={`fa-regular fa-newspaper text-xl ${
+                                    !content
+                                      ? "opacity-40 cursor-not-allowed"
+                                      : ""
+                                  }`}
+                                />
+                                <span className="tool-tip-span -right-[3.4rem] bg-black -top-12">
+                                  {content
+                                    ? "Article Linked"
+                                    : "No article linked"}
+                                  <span className="tooltip-arrow bottom-[-2px] left-[30%]"></span>
                                 </span>
                               </div>
                             </div>

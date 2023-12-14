@@ -1,5 +1,3 @@
-import React from "react";
-
 function FilterLoyalty({
   setSelectedSort,
   selectedSort,
@@ -26,11 +24,12 @@ function FilterLoyalty({
           onChange={(e) => setSelectedReason(e.target.value)}
         >
           <option value="All">All</option>
-          <option value="Survey participation reward">
+          <option value="SURVEY_PARTICIPATION">
             Survey Participation Reward
           </option>
-          <option value="Signup Reward">Signup Reward</option>
-          <option value="Coupon redeem.">Coupon Redeem</option>
+          <option value="SIGNUP">Signup Reward</option>
+          <option value="VOUCHER_REDEEMED">Coupon Redeem</option>
+          <option value="BONUS">Bonus</option>
         </select>
       )}
       {selectedSort === "By Points History" && (

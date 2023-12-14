@@ -51,7 +51,7 @@ function LoyaltyPoint() {
     if (selectedReason === "All" && isCreditMatch) {
       return true;
     } else {
-      return reason === selectedReason && isCreditMatch;
+      return reason.type === selectedReason && isCreditMatch;
     }
   });
 

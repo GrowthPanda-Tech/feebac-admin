@@ -46,8 +46,6 @@ export default function RedeemInfo() {
     `loyalty/get-request-info?id=${slug}`
   );
 
-  console.log(fetchedData);
-
   const [redeemCouponData, setRedeemCouponData] = useState({
     message: "",
     couponCode: "",
@@ -179,7 +177,7 @@ export default function RedeemInfo() {
                 value={fetchedData?.data.coupon.category.category_name}
               />
               <CouponInfo
-                name={"Coins Requried"}
+                name={"Coins Required"}
                 value={fetchedData?.data.coupon.value}
               />
             </div>

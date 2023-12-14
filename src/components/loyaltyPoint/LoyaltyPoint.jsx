@@ -41,7 +41,6 @@ function LoyaltyPoint() {
       setSelectedPointsHistory("All");
     }
   }, [selectedSort]);
-  console.log(selectedReason);
 
   const filteredData = sortedData.filter(({ reason, isCredit }) => {
     const isCreditMatch =

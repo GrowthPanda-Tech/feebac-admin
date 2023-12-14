@@ -6,8 +6,6 @@ function FilterLoyalty({
   selectedReason,
   selectedPointsHistory,
 }) {
-  console.log(selectedSort);
-  console.log(selectedReason);
   return (
     <div className="flex items-center gap-2 ">
       <select

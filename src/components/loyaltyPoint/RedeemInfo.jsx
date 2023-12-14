@@ -46,8 +46,6 @@ export default function RedeemInfo() {
     `loyalty/get-request-info?id=${slug}`
   );
 
-  console.log(fetchedData);
-
   const [redeemCouponData, setRedeemCouponData] = useState({
     message: "",
     couponCode: "",

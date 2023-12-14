@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { CategoryContext } from "../../../contexts/CategoryContext";
 
@@ -7,17 +7,7 @@ import dateToday from "../../../utils/dateToday";
 import makeRequest from "../../../utils/makeRequest";
 import swal from "../../../utils/swal";
 
-function Select({ name, onChange, children }) {
-  return (
-    <select
-      name={name}
-      onChange={onChange}
-      className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3 capitalize"
-    >
-      {children}
-    </select>
-  );
-}
+import upload from "../../../assets/upload.png";
 
 function Input({ type, min, value, name, onChange }) {
   return (
@@ -47,54 +37,60 @@ export default function EditSurveyForm({
   surveyInfo,
   setSurveyInfo,
 }) {
+  const { slug } = useParams();
   const { categories } = useContext(CategoryContext);
 
-  const [isDateChange, setIsDateChange] = useState(false);
-
-  const { slug } = useParams();
-
-  const [surveyData, setSurveyData] = useState({
-    surveyId: surveyInfo?.survey_id,
-    surveyTitle: surveyInfo?.survey_title,
-    startDate: dateConvert(surveyInfo?.start_date, "localISO"),
-    endDate: dateConvert(surveyInfo?.end_date, "localISO"),
-    loyaltyPoint: surveyInfo?.loyalty_point,
-    surveyDescription: surveyInfo?.survey_description,
-    category: surveyInfo?.category.category_id,
-    isUpdateImage: false,
+  const [surveyData, setSurveyData] = useState(surveyInfo);
+  const [updatedData, setUpdatedData] = useState(null);
+  const [imgPreview, setImgPreview] = useState({
+    image_url: `url(${surveyData.image_url})`,
+    featured_image: `url(${surveyData.featured_image})`,
   });
 
-  const [updatedData, setUpdatedData] = useState({
-    ...surveyData,
-    startDate: surveyInfo?.start_date,
-    endDate: surveyInfo?.end_date,
-  });
+  const surveyImgRef = useRef(null);
+  const featuredImgRef = useRef(null);
 
   const handleChange = (e) => {
-    if (e.target.name === "startDate" || e.target.name === "endDate") {
-      setIsDateChange(true);
-      const formattedOutput = dateConvert(e.target.value, "UTC");
-      setUpdatedData({
-        ...updatedData,
-        [e.target.name]: formattedOutput,
+    const { name, value } = e.target;
+
+    if (name === "start_date" || name === "end_date") {
+      const dateUTC = dateConvert(value, "UTC");
+      setUpdatedData({ ...updatedData, [name]: dateUTC });
+
+      return;
+    }
+
+    if (name === "image_url" || name === "featured_image") {
+      const file = e.target.files[0];
+
+      setUpdatedData({ ...updatedData, [name]: file });
+      setImgPreview({
+        ...imgPreview,
+        [name]: `url(${URL.createObjectURL(file)})`,
       });
 
       return;
     }
-    setUpdatedData({ ...updatedData, [e.target.name]: e.target.value });
+
+    setSurveyData({ ...surveyData, [name]: value });
+    setUpdatedData({ ...updatedData, [name]: value });
   };
 
+  const handleImgDelete = (type) => {
+    setImgPreview({ ...imgPreview, [type]: null });
+    setSurveyData({ ...surveyData, [type]: null });
+  };
+
+  //TODO: nested API calls?
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // const dataString = JSON.stringify(profileData);
     const formdata = new FormData();
+
+    formdata.append("survey_id", surveyData.survey_id);
 
     for (const [key, value] of Object.entries(updatedData)) {
       formdata.append(key, value);
     }
-
-    // formdata.append("target", dataString);
 
     try {
       const response = await makeRequest(
@@ -111,6 +107,7 @@ export default function EditSurveyForm({
             setSurveyInfo(response.surveyInfo);
           }
         };
+
         getData();
 
         setSurveyEditPop(false);
@@ -129,16 +126,8 @@ export default function EditSurveyForm({
           <Input
             type={"datetime-local"}
             min={dateToday()}
-            value={
-              !isDateChange
-                ? surveyData
-                  ? surveyData.startDate
-                  : ""
-                : updatedData
-                ? dateConvert(updatedData.startDate, "localISO")
-                : ""
-            }
-            name={"startDate"}
+            value={dateConvert(surveyData.start_date, "localISO")}
+            name={"start_date"}
             onChange={handleChange}
           />
         </Label>
@@ -147,63 +136,155 @@ export default function EditSurveyForm({
           <Input
             type={"datetime-local"}
             min={dateToday()}
-            name={"endDate"}
+            name={"end_date"}
             onChange={handleChange}
-            value={
-              !isDateChange
-                ? surveyData
-                  ? surveyData.endDate
-                  : ""
-                : updatedData
-                ? dateConvert(updatedData.endDate, "localISO")
-                : ""
-            }
+            value={dateConvert(surveyData.end_date, "localISO")}
           />
         </Label>
 
         <Label name={"Survey Title"}>
           <Input
-            name={"surveyTitle"}
-            value={updatedData ? updatedData?.surveyTitle : ""}
+            name={"survey_title"}
+            value={surveyData.survey_title}
             onChange={handleChange}
           />
         </Label>
 
         <Label name={"Survey Description"}>
           <Input
-            name={"surveyDescription"}
-            value={updatedData ? updatedData?.surveyDescription : ""}
+            name={"survey_description"}
+            value={surveyData.survey_description}
             onChange={handleChange}
           />
         </Label>
 
         <Label name={"Select Research Category"}>
-          <Select name={"category"} onChange={handleChange}>
-            <option value={null}>-- Categories --</option>
-            {categories.map((item) => {
-              const value = item.category_id;
-              const selected = value === updatedData.category;
-              return (
-                <option
-                  key={item.category_id}
-                  value={item.category_id}
-                  selected={selected}
-                >
-                  {item.category_name}
-                </option>
-              );
-            })}
-          </Select>
+          <select
+            name="category"
+            value={surveyData.category.category_id}
+            onChange={handleChange}
+            className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3 capitalize"
+          >
+            {categories.map((item) => (
+              <option key={item.category_id} value={item.category_id}>
+                {item.category_name}
+              </option>
+            ))}
+          </select>
         </Label>
 
         <Label name={"Loyalty Points Per Use"}>
           <Input
             type={"number"}
-            name={"loyaltyPoint"}
+            name={"loyalty_point"}
             onChange={handleChange}
-            value={updatedData ? updatedData?.loyaltyPoint : ""}
+            value={surveyData.loyalty_point}
           />
         </Label>
+      </div>
+
+      {/* Images */}
+      {/* TODO: Needs refactor */}
+      <div className="flex gap-24">
+        <div className="flex flex-col gap-6">
+          <span className="font-semibold text-xl">Upload Image</span>
+          <div
+            className={`relative aspect-square h-64 border-dashed border-2 border-black rounded-xl`}
+            style={{
+              backgroundImage: imgPreview.image_url,
+              backgroundSize: "cover",
+            }}
+          >
+            {!imgPreview.image_url ? (
+              <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
+                <img src={upload} className="w-12" />
+                <div className="flex gap-2">
+                  <span className="font-semibold text-secondary">
+                    Drag & Drop
+                  </span>
+                  <span className="font-semibold">Image</span>
+                </div>
+                <span className="text-xs flex gap-1">
+                  <span>Or</span>
+                  <span
+                    className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
+                    onClick={() => surveyImgRef.current.click()}
+                  >
+                    browse files
+                  </span>
+                  <span>on your computer</span>
+                </span>
+              </div>
+            ) : (
+              <div className="absolute top-0 right-0">
+                <i
+                  className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
+                  onClick={() => handleImgDelete("image_url")}
+                />
+              </div>
+            )}
+          </div>
+
+          <input
+            onChange={handleChange}
+            ref={surveyImgRef}
+            type="file"
+            accept="image/*"
+            name="image_url"
+            hidden
+          />
+        </div>
+
+        <div className="flex flex-col gap-6">
+          <span className="font-semibold text-xl">
+            Upload Image (for featured section)
+          </span>
+          <div
+            className={`relative aspect-video h-64 border-dashed border-2 border-black rounded-xl`}
+            style={{
+              backgroundImage: imgPreview.featured_image,
+              backgroundSize: "cover",
+            }}
+          >
+            {!imgPreview.featured_image ? (
+              <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
+                <img src={upload} className="w-12" />
+                <div className="flex gap-2">
+                  <span className="font-semibold text-secondary">
+                    Drag & Drop
+                  </span>
+                  <span className="font-semibold">Image</span>
+                </div>
+                <span className="text-xs flex gap-1">
+                  <span>Or</span>
+                  <span
+                    className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
+                    onClick={() => featuredImgRef.current.click()}
+                  >
+                    browse files
+                  </span>
+                  <span>on your computer</span>
+                </span>
+              </div>
+            ) : (
+              <div className="absolute top-0 right-0">
+                <i
+                  className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
+                  onClick={() => handleImgDelete("featured_image")}
+                />
+              </div>
+            )}
+          </div>
+
+          <input
+            onChange={handleChange}
+            ref={featuredImgRef}
+            type="file"
+            accept="image/*"
+            name="featured_image"
+            hidden
+          />
+        </div>
       </div>
 
       <div className="flex gap-4">

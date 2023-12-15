@@ -55,6 +55,7 @@ export default function EditSurveyForm({
 
     if (name === "start_date" || name === "end_date") {
       const dateUTC = dateConvert(value, "UTC");
+      setSurveyData({ ...surveyData, [name]: value });
       setUpdatedData({ ...updatedData, [name]: dateUTC });
 
       return;

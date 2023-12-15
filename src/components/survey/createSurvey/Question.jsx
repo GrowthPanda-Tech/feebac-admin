@@ -28,10 +28,14 @@ export default function Question({
 }) {
   const { slug } = useParams();
 
+  console.log(surveyInfo);
+
   const [options, setOptions] = useState(["", ""]);
   const [questionNumber, setQuestionNumber] = useState(
-    editAdd ? surveyInfo?.totalQuestions + 1 : 1
+    editAdd ? surveyInfo?.total_questions + 1 : 1
   );
+
+  console.log(questionNumber);
   const [questionData, setQuestionData] = useState({
     surveyId: surveyId,
     questionType: 2,
@@ -197,8 +201,8 @@ export default function Question({
       <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8 w-[50vw]">
         <label className="flex flex-col gap-2">
           <span className="font-bold">
-            Question {editAdd ? surveyInfo?.totalQuestions + 1 : questionNumber}{" "}
-            :
+            Question{" "}
+            {editAdd ? surveyInfo?.total_questions + 1 : questionNumber} :
           </span>
           <Input
             type={"text"}

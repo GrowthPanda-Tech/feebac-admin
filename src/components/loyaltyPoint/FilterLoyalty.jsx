@@ -29,7 +29,7 @@ function FilterLoyalty({
           </option>
           <option value="SIGNUP">Signup Reward</option>
           <option value="VOUCHER_REDEEMED">Coupon Redeem</option>
-          <option value="BONUS">Bonus</option>
+          {/* <option value="BONUS">Bonus</option> */}
         </select>
       )}
       {selectedSort === "By Points History" && (

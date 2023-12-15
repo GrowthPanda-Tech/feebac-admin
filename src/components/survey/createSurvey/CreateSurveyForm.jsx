@@ -308,7 +308,9 @@ export default function CreateSurveyForm({
         <div className="flex flex-col gap-6">
           <span className="font-semibold text-xl">Upload Image</span>
           <div
-            className={`relative aspect-square h-64 border-dashed border-2 border-black rounded-xl ${
+            className={`relative aspect-[9/16] h-80 ${
+              !imgPreview.surveyImg ? "border-dashed" : ""
+            } border-2 border-black rounded-xl ${
               isDragging ? "bg-white border-secondary" : ""
             }`}
             style={{
@@ -322,13 +324,13 @@ export default function CreateSurveyForm({
             {!imgPreview.surveyImg ? (
               <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
                 <img src={upload} className="w-12" />
-                <div className="flex gap-2">
+                <div className="flex flex-col items-center">
                   <span className="font-semibold text-secondary">
                     Drag & Drop
                   </span>
                   <span className="font-semibold">Image</span>
                 </div>
-                <span className="text-xs flex gap-1">
+                <span className="text-xs flex flex-col items-center gap-1">
                   <span>Or</span>
                   <span
                     className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
@@ -344,6 +346,9 @@ export default function CreateSurveyForm({
                 <i
                   className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
                   onClick={() => handleImgDelete("surveyImg")}
+                  style={{
+                    color: "white",
+                  }}
                 />
               </div>
             )}
@@ -364,7 +369,9 @@ export default function CreateSurveyForm({
             Upload Image (for featured section)
           </span>
           <div
-            className={`relative aspect-video h-64 border-dashed border-2 border-black rounded-xl ${
+            className={`relative aspect-[5/4] h-80 ${
+              !imgPreview.surveyImg ? "border-dashed" : ""
+            } border-2 border-black rounded-xl ${
               isDragging ? "bg-white border-secondary" : ""
             }`}
             style={{
@@ -400,6 +407,9 @@ export default function CreateSurveyForm({
                 <i
                   className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
                   onClick={() => handleImgDelete("featured_image")}
+                  style={{
+                    color: "white",
+                  }}
                 />
               </div>
             )}

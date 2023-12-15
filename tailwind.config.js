@@ -9,6 +9,12 @@ export default withMT({
     "./src/components/**/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    extend: {
+      aspectRatio: {
+        "5/4": "5 / 4",
+        "9/16": "9 / 16",
+      },
+    },
     fontFamily: {
       sans: "Poppins",
       mono: "IBM Plex Mono",

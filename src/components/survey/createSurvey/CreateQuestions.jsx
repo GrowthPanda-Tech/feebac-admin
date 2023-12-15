@@ -381,7 +381,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
           </div>
 
           <div className="flex items-center gap-4">
-            {!activeButtonIndex == 0 ? (
+            {/* {!activeButtonIndex == 0 ? (
               <select
                 name="inputType"
                 className="px-3 py-2 border-2 "
@@ -398,7 +398,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
               </select>
             ) : (
               ""
-            )}
+            )} */}
             <input
               type="checkbox"
               className="h-6 w-6 accent-secondary"

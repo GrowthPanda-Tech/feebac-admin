@@ -122,10 +122,12 @@ export default function SurveyEdit() {
         </div>
       )}
 
-      <div className="flex flex-col gap-2">
-        <h1 className="text-xl font-semibold">About Survey</h1>
-        <span>{surveyInfo.survey_description}</span>
-      </div>
+      {!error ? (
+        <div className="flex flex-col gap-2">
+          <h1 className="text-xl font-semibold">About Survey</h1>
+          <span>{surveyInfo.survey_description}</span>
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
         {questionList.map((question, index) => (

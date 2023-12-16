@@ -20,6 +20,7 @@ export default function FilterSlider({ filter, setProfileData }) {
     <div className="w-full">
       {filter && (
         <MultiRangeSlider
+          baseClassName="multi-range-slider-black"
           name={filter?.key_name}
           min={filter?.options[0]}
           max={filter?.options[1]}
@@ -32,9 +33,11 @@ export default function FilterSlider({ filter, setProfileData }) {
           label={false}
           ruler={false}
           style={{
+            backgroundColor: "#fff",
+
             border: "none",
             boxShadow: "none",
-            padding: "15px 10px",
+            padding: "40px 10px",
           }}
           barLeftColor="#979797"
           barInnerColor="#EA525F"

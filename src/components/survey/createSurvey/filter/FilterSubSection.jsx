@@ -83,7 +83,7 @@ export default function FilterSubSection({ filterData, setProfileData }) {
           filterValues[index] ? (
             <div
               key={index}
-              className="flex flex-col gap-4 bg-white p-4 rounded-lg"
+              className="flex flex-col gap-4 bg-white p-4 rounded-lg h-[12rem] overflow-y-scroll"
             >
               <div className="capitalize text-lg font-semibold">
                 {data.key_name}

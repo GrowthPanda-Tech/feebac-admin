@@ -11,7 +11,7 @@ import upload from "../../../assets/upload.png";
 
 //components
 import Filters from "./filter/Filters";
-import PageTitle from "../../_helperComponents/PageTitle";
+import PageTitle from "../../__helperComponents__/PageTitle";
 
 function UserCount({ type, count }) {
   return (

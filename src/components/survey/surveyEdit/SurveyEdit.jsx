@@ -7,7 +7,7 @@ import dateConvert from "../../../utils/dateConvert";
 import ReviewCard from "../reviewSurvey/ReviewCard";
 import EditSurveyDetails from "./EditSurveyDetails";
 import AddMoreQuestionPop from "./AddMoreQuestionPop";
-import LoadingSpinner from "../../_helperComponents/LoadingSpinner";
+import LoadingSpinner from "../../__helperComponents__/LoadingSpinner";
 
 function InputHeading({ title, value, capitalize }) {
   return (

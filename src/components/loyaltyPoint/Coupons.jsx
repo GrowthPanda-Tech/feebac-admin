@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import makeRequest from "../../utils/makeRequest";
 import AddCoupons from "./AddCoupons";
 import Skeleton from "react-loading-skeleton";
-import CardSkeleton from "../_helperComponents/CardSkeleton";
+import CardSkeleton from "../__helperComponents__/CardSkeleton";
 import Card from "./Card";
 function Coupons() {
   const [couponData, setCouponsData] = useState([]);

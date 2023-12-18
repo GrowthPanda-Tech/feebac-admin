@@ -6,7 +6,7 @@ import makeRequest from "../../utils/makeRequest";
 import swal from "../../utils/swal";
 import forbidChars from "../../utils/forbidChars";
 
-import PageTitle from "../_helperComponents/PageTitle";
+import PageTitle from "../__helperComponents__/PageTitle";
 import CouponCategory from "./CouponCategory";
 
 function InputForm({

@@ -6,7 +6,7 @@ import makeRequest from "../../utils/makeRequest";
 import dateConvert from "../../utils/dateConvert";
 import swal from "../../utils/swal";
 
-import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import LoadingSpinner from "../__helperComponents__/LoadingSpinner";
 
 function UserInfo({ name, value }) {
   return (

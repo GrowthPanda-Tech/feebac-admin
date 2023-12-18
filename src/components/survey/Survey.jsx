@@ -4,16 +4,16 @@ import { Link } from "react-router-dom";
 import makeRequest from "../../utils/makeRequest";
 import swal from "../../utils/swal";
 
-import Table from "../_helperComponents/table/Table";
-import Thead from "../_helperComponents/table/Thead";
-import Trow from "../_helperComponents/table/Trow";
-import Tdata from "../_helperComponents/table/Tdata";
-import TableDateTime from "../_helperComponents/table/TableDateTime";
+import Table from "../__helperComponents__/table/Table";
+import Thead from "../__helperComponents__/table/Thead";
+import Trow from "../__helperComponents__/table/Trow";
+import Tdata from "../__helperComponents__/table/Tdata";
+import TableDateTime from "../__helperComponents__/table/TableDateTime";
 
-import LoadingSpinner from "../_helperComponents/LoadingSpinner";
-import PageTitle from "../_helperComponents/PageTitle";
-import Pagination from "../_helperComponents/Pagination";
-import PaginationSelect from "../_helperComponents/PaginationSelect";
+import LoadingSpinner from "../__helperComponents__/LoadingSpinner";
+import PageTitle from "../__helperComponents__/PageTitle";
+import Pagination from "../__helperComponents__/Pagination";
+import PaginationSelect from "../__helperComponents__/PaginationSelect";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const HEADERS = [

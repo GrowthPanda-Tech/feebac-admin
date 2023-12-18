@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import makeRequest from "../../utils/makeRequest";
 
-import Table from "../_helperComponents/table/Table";
-import Thead from "../_helperComponents/table/Thead";
-import Trow from "../_helperComponents/table/Trow";
-import Tdata from "../_helperComponents/table/Tdata";
-import TableDateTime from "../_helperComponents/table/TableDateTime";
-import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import Table from "../__helperComponents__/table/Table";
+import Thead from "../__helperComponents__/table/Thead";
+import Trow from "../__helperComponents__/table/Trow";
+import Tdata from "../__helperComponents__/table/Tdata";
+import TableDateTime from "../__helperComponents__/table/TableDateTime";
+import LoadingSpinner from "../__helperComponents__/LoadingSpinner";
 
 import PieChart from "../dashboard/charts/PieChart";
 import FilterLoyalty from "./FilterLoyalty";

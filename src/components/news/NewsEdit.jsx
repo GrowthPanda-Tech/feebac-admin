@@ -7,7 +7,7 @@ import swal from "../../utils/swal";
 
 //components
 import NewsForm from "./NewsForm";
-import PageTitle from "../_helperComponents/PageTitle";
+import PageTitle from "../__helperComponents__/PageTitle";
 
 export default function NewsEdit() {
   const navigate = useNavigate();

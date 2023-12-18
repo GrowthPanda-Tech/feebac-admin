@@ -1,6 +1,6 @@
 import useFetch from "../../../hooks/useFetch";
 
-import LoadingSpinner from "../../_helperComponents/LoadingSpinner";
+import LoadingSpinner from "../../__helperComponents__/LoadingSpinner";
 import InsightCard from "../helperComponents/InsightCard";
 
 export default function InsightGrid() {

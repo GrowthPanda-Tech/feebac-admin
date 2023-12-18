@@ -8,7 +8,7 @@ import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 //components
 import NewsForm from "./NewsForm";
-import PageTitle from "../_helperComponents/PageTitle";
+import PageTitle from "../__helperComponents__/PageTitle";
 
 export default function NewsCreate() {
   const navigate = useNavigate();

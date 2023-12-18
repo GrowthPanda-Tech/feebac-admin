@@ -5,7 +5,7 @@ import swal from "../../../utils/swal";
 import makeRequest from "../../../utils/makeRequest";
 import optionIcon from "../../../assets/option-preview.png";
 
-import PageTitle from "../../_helperComponents/PageTitle";
+import PageTitle from "../../__helperComponents__/PageTitle";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 

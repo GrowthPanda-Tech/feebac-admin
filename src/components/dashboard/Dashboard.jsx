@@ -1,7 +1,7 @@
 import useFetch from "../../hooks/useFetch";
 
-import DashboardSkeleton from "../_helperComponents/DashboardSkeleton";
-import PageTitle from "../_helperComponents/PageTitle";
+import DashboardSkeleton from "../__helperComponents__/DashboardSkeleton";
+import PageTitle from "../__helperComponents__/PageTitle";
 import PieChart from "./charts/PieChart";
 import InfoCards from "./InfoCards";
 

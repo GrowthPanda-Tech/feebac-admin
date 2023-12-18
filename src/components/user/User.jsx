@@ -4,14 +4,14 @@ import { Link } from "react-router-dom";
 import makeRequest from "../../utils/makeRequest";
 
 //components
-import PageTitle from "../_helperComponents/PageTitle";
-import Table from "../_helperComponents/table/Table";
-import Trow from "../_helperComponents/table/Trow";
-import Thead from "../_helperComponents/table/Thead";
-import Tdata from "../_helperComponents/table/Tdata";
-import Pagination from "../_helperComponents/Pagination";
-import PaginationSelect from "../_helperComponents/PaginationSelect";
-import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import PageTitle from "../__helperComponents__/PageTitle";
+import Table from "../__helperComponents__/table/Table";
+import Trow from "../__helperComponents__/table/Trow";
+import Thead from "../__helperComponents__/table/Thead";
+import Tdata from "../__helperComponents__/table/Tdata";
+import Pagination from "../__helperComponents__/Pagination";
+import PaginationSelect from "../__helperComponents__/PaginationSelect";
+import LoadingSpinner from "../__helperComponents__/LoadingSpinner";
 
 const HEADERS = ["User ID", "Gender", "Loyalty Points", "Location", "Actions"];
 

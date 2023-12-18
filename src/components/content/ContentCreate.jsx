@@ -7,7 +7,7 @@ import makeRequest from "../../utils/makeRequest";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 import ContentForm from "./ContentForm";
-import PageTitle from "../_helperComponents/PageTitle";
+import PageTitle from "../__helperComponents__/PageTitle";
 
 export default function ContentCreate({ surveyId }) {
   const { slug } = useParams();

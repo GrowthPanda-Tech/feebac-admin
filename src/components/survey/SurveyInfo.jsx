@@ -4,8 +4,8 @@ import useFetch from "../../hooks/useFetch";
 import downloadImg from "../../assets/download.svg";
 
 import Response from "./Response";
-import PrimaryButton from "../_helperComponents/PrimaryButton";
-import LoadingSpinner from "../_helperComponents/LoadingSpinner";
+import PrimaryButton from "../__helperComponents__/PrimaryButton";
+import LoadingSpinner from "../__helperComponents__/LoadingSpinner";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const AUTH_TOKEN = localStorage.getItem("authToken");

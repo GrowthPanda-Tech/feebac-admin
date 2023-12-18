@@ -4,6 +4,12 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@helperComps/*": [
+        "./src/components/__helperComponents__/*"
+      ],
+      "@utilComps/*": [
+        "./src/components/__utilComponents__/*"
       ]
     }
   }

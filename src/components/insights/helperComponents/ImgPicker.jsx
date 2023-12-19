@@ -1,8 +1,8 @@
 import { useContext, useState, useRef } from "react";
-import { InsightContext } from "../../../contexts/InsightContext";
+import { InsightContext } from "@/contexts/InsightContext";
 
-import uploadArrow from "../../../assets/upload.png";
-import deleteIcon from "../../../assets/delete.svg";
+import uploadArrow from "@/assets/upload.png";
+import deleteIcon from "@/assets/delete.svg";
 
 export default function ImgPicker({ idx }) {
   const { insightModel, setInsightModel } = useContext(InsightContext);

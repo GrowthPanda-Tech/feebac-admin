@@ -1,4 +1,5 @@
-import PageTitle from "../../__helperComponents__/PageTitle";
+import PageTitle from "@helperComps/PageTitle";
+
 import FormInput from "../helperComponents/FormInput";
 import ImageInput from "../helperComponents/ImageInput";
 import PageFactory from "../helperComponents/PageFactory";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import makeRequest from "../../../utils/makeRequest";
-import swal from "../../../utils/swal";
+import makeRequest from "@/utils/makeRequest";
+import swal from "@/utils/swal";
 
 export default function InsightCard({ data }) {
   const [cardData, setCardData] = useState(data);

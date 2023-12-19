@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { INIT_STATE, InsightContext } from "../../../contexts/InsightContext";
+import { INIT_STATE, InsightContext } from "@/contexts/InsightContext";
 
-import makeRequest from "../../../utils/makeRequest";
-import swal from "../../../utils/swal";
+import makeRequest from "@/utils/makeRequest";
+import swal from "@/utils/swal";
 
 export default function SubmitButton() {
   const { insightModel, setInsightModel } = useContext(InsightContext);

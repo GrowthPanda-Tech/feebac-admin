@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { InsightContext } from "../../../contexts/InsightContext";
+import { InsightContext } from "@/contexts/InsightContext";
 
 import AddPage from "./AddPage";
 import ImgPicker from "./ImgPicker";

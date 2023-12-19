@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { InsightContext } from "../../../contexts/InsightContext";
+import { InsightContext } from "@/contexts/InsightContext";
 
 export default function AddPage() {
   const { insightModel, setInsightModel } = useContext(InsightContext);

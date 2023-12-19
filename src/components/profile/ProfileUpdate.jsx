@@ -1,22 +1,64 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ProfileContext } from "@/contexts/ProfileContext";
 
 import LoadingSpinner from "@helperComps/LoadingSpinner";
 import Input from "@helperComps/Input";
 import Select from "@helperComps/Select";
 
+import makeRequest from "@/utils/makeRequest";
+import swal from "@/utils/swal";
+
 export default function ProfileUpdate() {
   const { loading, fetchedData, setFetchedData, error } =
     useContext(ProfileContext);
 
-  const [disabled, setDisabled] = useState(true);
+  const [userModel, setUserModel] = useState({});
+  const [updateModel, setUpdateModel] = useState(null);
+  const [isUpdate, setIsUpdate] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const spread = { ...fetchedData };
-    spread.userInfo[name] = value;
-    setFetchedData(spread);
+
+    setUserModel((prev) => ({ ...prev, [name]: value }));
+    setUpdateModel((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleSubmit = async () => {
+    setIsUpdate(true);
+
+    try {
+      const response = await makeRequest(
+        "profile/update-profile",
+        "PUT",
+        updateModel
+      );
+
+      if (!response.isSuccess) {
+        throw new Error(response.message);
+      }
+
+      //update context
+      const spread = { ...fetchedData };
+      spread.userInfo = { ...spread.userInfo, ...updateModel };
+      setFetchedData(spread);
+
+      //clear update values
+      setUpdateModel(null);
+
+      swal("success", response.message);
+    } catch (error) {
+      setUserModel(fetchedData.userInfo);
+      swal("error", error.message);
+    } finally {
+      setIsUpdate(false);
+    }
+  };
+
+  useEffect(() => {
+    if (fetchedData) {
+      setUserModel(fetchedData.userInfo);
+    }
+  }, [fetchedData]);
 
   if (loading) return <LoadingSpinner />;
   if (error) return <LoadingSpinner />; //TODO: handle error
@@ -29,7 +71,7 @@ export default function ProfileUpdate() {
         <div className="w-full p-8 mx-2 flex justify-center">
           <img
             className="rounded-full border-double h-56 w-56 border-4 border-[#A43948]"
-            src={fetchedData?.userInfo.profile_pic}
+            src={userModel.profile_pic}
           />
         </div>
       </div>
@@ -38,41 +80,37 @@ export default function ProfileUpdate() {
         <Input
           label={"First Name"}
           name="first_name"
-          value={fetchedData?.userInfo.first_name}
-          disabled={disabled}
+          value={userModel.first_name}
           handleChange={handleChange}
         />
 
         <Input
           label={"Last Name"}
           name="last_name"
-          value={fetchedData?.userInfo.last_name}
-          disabled={disabled}
+          value={userModel.last_name}
           handleChange={handleChange}
         />
 
         <Select
           label={"Gender"}
           name={"gender"}
-          value={fetchedData?.userInfo.gender}
+          value={userModel.gender}
           options={["male", "female"]}
-          disabled={disabled}
           handleChange={handleChange}
         />
 
         <Input
           label={"E-Mail"}
           name="email"
-          value={fetchedData?.userInfo.email}
+          value={userModel.email}
           type="email"
-          disabled={disabled}
           handleChange={handleChange}
         />
 
         <Input
           label={"Phone Number"}
           name="phone"
-          value={fetchedData?.userInfo.mobile}
+          value={userModel.mobile}
           type="number"
           disabled
           handleChange={handleChange}
@@ -81,17 +119,19 @@ export default function ProfileUpdate() {
         <Input
           label={"Date of Birth"}
           name="date_of_birth"
-          value={fetchedData?.userInfo.date_of_birth}
+          value={userModel.date_of_birth}
           type={"date"}
-          disabled={disabled}
           handleChange={handleChange}
         />
 
         <button
-          className="btn-primary mt-5 w-fit"
-          onClick={() => setDisabled(!disabled)}
+          className={`${
+            !updateModel || isUpdate ? "btn-secondary" : "btn-primary"
+          } mt-5 w-fit`}
+          onClick={handleSubmit}
+          disabled={!updateModel || isUpdate ? true : false}
         >
-          {disabled ? "Edit" : "Save Changes"}
+          {isUpdate ? "Updating..." : "Save Changes"}
         </button>
       </div>
     </div>

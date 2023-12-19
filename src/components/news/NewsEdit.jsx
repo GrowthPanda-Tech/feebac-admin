@@ -118,7 +118,7 @@ export default function NewsEdit() {
             className="h-full w-full bg-contain"
             style={{
               backgroundImage: imgPreview,
-              backgroundSize: "cover",
+              backgroundSize: "contain",
             }}
           />
         </div>

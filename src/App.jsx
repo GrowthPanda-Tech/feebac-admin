@@ -1,41 +1,37 @@
 import { Route, Routes } from "react-router-dom";
+
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-// components
-import Header from "./components/header/Header";
-import Login from "./components/login/Login";
-import Navbar from "./components/navbar/Navbar";
-import Dashboard from "./components/dashboard/Dashboard";
-import User from "./components/user/User";
-import UserInfo from "./components/user/UserInfo";
-import Survey from "./components/survey/Survey";
-import SurveyInfo from "./components/survey/SurveyInfo";
-import SurveyContent from "./components/content/SurveyContent";
-import CreateSurvey from "./components/survey/createSurvey/CreateSurvey";
-import SurveyReview from "./components/survey/reviewSurvey/SurveyReview";
-import Content from "./components/content/Content";
-import ContentCreate from "./components/content/ContentCreate";
-import ContentEdit from "./components/content/ContentEdit";
-import NewsTable from "./components/news/NewsTable";
-import NewsCreate from "./components/news/NewsCreate";
-import NewsEdit from "./components/news/NewsEdit";
-import Insights from "./components/insights/Insights";
-import InsightCreate from "./components/insights/utilComponents/InsightCreate";
-import Settings from "./components/settings/Settings";
-import PageNotFound from "./components/pageNotFound/PageNotFound";
-import ProfileUpdate from "./components/header/ProfileUpdate";
-import AddQuestions from "./components/survey/createSurvey/AddQuestions";
-import SurveyEdit from "./components/survey/surveyEdit/SurveyEdit";
-import Loyalty from "./components/loyaltyPoint/Loyalty";
-import RedeemInfo from "./components/loyaltyPoint/RedeemInfo";
+import Header from "@/components/header/Header";
+import Login from "@/components/login/Login";
+import Navbar from "@/components/navbar/Navbar";
+import Dashboard from "@/components/dashboard/Dashboard";
+import User from "@/components/user/User";
+import UserInfo from "@/components/user/UserInfo";
+import Survey from "@/components/survey/Survey";
+import SurveyInfo from "@/components/survey/SurveyInfo";
+import SurveyContent from "@/components/content/SurveyContent";
+import CreateSurvey from "@/components/survey/createSurvey/CreateSurvey";
+import SurveyReview from "@/components/survey/reviewSurvey/SurveyReview";
+import Content from "@/components/content/Content";
+import ContentCreate from "@/components/content/ContentCreate";
+import ContentEdit from "@/components/content/ContentEdit";
+import NewsTable from "@/components/news/NewsTable";
+import NewsCreate from "@/components/news/NewsCreate";
+import NewsEdit from "@/components/news/NewsEdit";
+import Insights from "@/components/insights/Insights";
+import InsightCreate from "@/components/insights/utilComponents/InsightCreate";
+import Settings from "@/components/settings/Settings";
+import PageNotFound from "@/components/pageNotFound/PageNotFound";
+import ProfileUpdate from "@/components/profile/ProfileUpdate";
+import AddQuestions from "@/components/survey/createSurvey/AddQuestions";
+import SurveyEdit from "@/components/survey/surveyEdit/SurveyEdit";
+import Loyalty from "@/components/loyaltyPoint/Loyalty";
+import RedeemInfo from "@/components/loyaltyPoint/RedeemInfo";
 
 export default function App() {
-  const isLoggedIn = localStorage.getItem("authToken");
-
-  if (!isLoggedIn) {
-    return <Login />;
-  }
+  if (!localStorage.getItem("authToken")) return <Login />;
 
   const routes = [
     { path: "/", element: <Dashboard /> },
@@ -68,10 +64,8 @@ export default function App() {
 
   return (
     <>
-      <div className="hidden md:block">
-        <Navbar />
-      </div>
-      <div className="md:ml-80">
+      <Navbar />
+      <div className="ml-80">
         <SkeletonTheme baseColor="#D2D5D4" highlightColor="#BBC4C2">
           <Header />
           <main className="p-10">

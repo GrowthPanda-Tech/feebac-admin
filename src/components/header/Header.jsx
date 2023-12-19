@@ -1,19 +1,22 @@
 import { useContext } from "react";
-import { ProfileContext } from "../../contexts/ProfileContext";
-
 import { Link } from "react-router-dom";
-import defaultUser from "../../assets/defaultUser.png";
+import { ProfileContext } from "@/contexts/ProfileContext";
+
+import defaultUser from "@/assets/defaultUser.png";
 
 export default function Header() {
-  const { profile } = useContext(ProfileContext);
-  const profilePic = profile.profile_pic ? profile.profile_pic : defaultUser;
+  const { fetchedData } = useContext(ProfileContext);
+
+  const profilePic = fetchedData?.userInfo.profile_pic
+    ? fetchedData?.userInfo.profile_pic
+    : defaultUser;
 
   return (
     <header className="flex justify-end py-4 bg-white">
       <div className="flex gap-4 mr-16">
         <div className="flex flex-col items-end">
           <div className="font-bold">
-            {profile.first_name} {profile.last_name}
+            {fetchedData?.userInfo.first_name} {fetchedData?.userInfo.last_name}
           </div>
           <div className="text-grey">Admin</div>
         </div>

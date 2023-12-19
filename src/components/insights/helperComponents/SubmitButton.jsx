@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { INIT_STATE, InsightContext } from "@/contexts/InsightContext";
 
@@ -7,6 +7,7 @@ import swal from "@/utils/swal";
 
 export default function SubmitButton() {
   const { insightModel, setInsightModel } = useContext(InsightContext);
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const navigate = useNavigate();
 
@@ -19,6 +20,8 @@ export default function SubmitButton() {
     insightModel.pages.forEach((page) => {
       formData.append("pages", page, page.name);
     });
+
+    setIsSubmit(true);
 
     try {
       const response = await makeRequest(
@@ -36,16 +39,19 @@ export default function SubmitButton() {
       navigate("/insights");
     } catch (error) {
       swal("error", error.message);
+    } finally {
+      setIsSubmit(false);
     }
   };
 
   return (
     <button
-      className="w-fit py-3 px-7 transition bg-[#EA525F] hover:bg-[#EA8552] text-white font-semibold rounded-xl"
+      className={`${isSubmit ? "btn-secondary" : "btn-primary"} w-fit`}
       type="submit"
       onClick={handleSubmit}
+      disabled={isSubmit ? true : false}
     >
-      Create Insight
+      {isSubmit ? "Submitting..." : "Create Insight"}
     </button>
   );
 }

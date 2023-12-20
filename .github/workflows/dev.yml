@@ -1,4 +1,4 @@
-name: feebac
+name: feebac-staging
 
 on:
   push:
@@ -43,7 +43,7 @@ jobs:
 
       - name: Create environment variable
         run: |
-          echo ${{ secrets.FEEBAC_ENV }} > .env.production
+          echo ${{ secrets.ENV_STAGING }} > .env.staging
 
       - name: Build project
         run: pnpm build

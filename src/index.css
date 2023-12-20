@@ -3,160 +3,193 @@
 @tailwind utilities;
 
 @layer base {
-    body {
-        @apply bg-background;
-    }
+  body {
+    @apply bg-background;
+  }
 }
 
 @layer components {
-    .active {
-        @apply bg-secondary;
-    }
+  .active {
+    @apply bg-secondary;
+  }
 
-    .login-input {
-        @apply border-2 border-accent rounded-3xl py-6 px-12 text-xl;
-    }
+  .login-input {
+    @apply border-2 border-accent rounded-3xl py-6 px-12 text-xl;
+  }
 
-    .input-primary {
-        @apply border border-lighest-grey rounded-xl p-4 font-normal mt-2 outline-2 outline-primary;
-    }
+  .input-primary {
+    @apply border border-lighest-grey rounded-xl p-4 font-normal mt-2 outline-2 outline-primary;
+  }
 
-    .input-article {
-        @apply border-2 border-accent py-3 px-8 rounded-xl bg-white;
-    }
+  .input-article {
+    @apply border-2 border-accent py-3 px-8 rounded-xl bg-white;
+  }
 
-    .input-settings {
-        @apply bg-white border border-[#C9CED6] rounded-md py-4 px-6;
-    }
+  .input-settings {
+    @apply bg-white border border-[#C9CED6] rounded-md py-4 px-6;
+  }
 
-    .heading {
-        @apply text-2xl font-semibold mb-8;
-    }
+  .heading {
+    @apply text-2xl font-semibold mb-8;
+  }
 
-    .btn {
-        @apply px-8 py-3 rounded-xl flex items-center gap-2 font-semibold;
-    }
+  .btn {
+    @apply px-8 py-3 rounded-xl flex items-center gap-2 font-semibold;
+  }
 
-    .btn-primary {
-        @apply bg-secondary text-white btn hover:bg-primary transition;
-    }
+  .btn-primary {
+    @apply bg-secondary text-white btn hover:bg-primary transition disabled:cursor-not-allowed;
+  }
 
-    .btn-secondary {
-        @apply bg-light-grey text-dark-grey btn;
-    }
+  .btn-secondary {
+    @apply bg-light-grey text-dark-grey btn disabled:cursor-not-allowed;
+  }
 
-    .btn-action {
-        @apply bg-[#F1F1F1] rounded-md px-8 py-2 hover:bg-secondary hover:text-white transition;
-    }
+  .btn-action {
+    @apply bg-[#F1F1F1] rounded-md px-8 py-2 hover:bg-secondary hover:text-white transition;
+  }
 
-    .pill-primary {
-        @apply py-2 px-6 bg-white border text-[#EA8552] font-semibold border-[#EA8552] rounded-xl;
-    }
+  .pill-primary {
+    @apply py-2 px-6 bg-white border text-[#EA8552] font-semibold border-[#EA8552] rounded-xl;
+  }
 
-    .pill-secondary {
-        @apply py-2 px-6 bg-white text-[#858585] border border-dark-grey rounded-xl;
-    }
+  .pill-secondary {
+    @apply py-2 px-6 bg-white text-[#858585] border border-dark-grey rounded-xl;
+  }
 
-    .tool-tip-span {
-        @apply pointer-events-none absolute z-20 text-sm text-white rounded-lg p-2 w-max opacity-0 transition-opacity group-hover:opacity-100;
-    }
-    .triangle {
-        @apply w-0 h-0 border-t-[10px] border-t-[#ffffff] border-b-0 border-[10px] border-solid;
-    }
+  .tool-tip-span {
+    @apply pointer-events-none absolute z-20 text-sm text-white rounded-lg p-2 w-max opacity-0 transition-opacity group-hover:opacity-100;
+  }
 
-    .tool-tip-div {
-        @apply relative w-max;
-    }
-    .header {
-        @apply relative text-center text-[white];
-        background: linear-gradient(
-            60deg,
-            rgba(234, 82, 95, 1) 50%,
-            rgba(164, 57, 72, 1) 100%
-        );
-    }
-    .logo {
-        @apply w-[50px] fill-[white] inline-block align-middle pr-[15px];
-    }
-    .inner-header {
-        @apply h-[65vh] w-full m-0 p-0;
-    }
-    .waves {
-        @apply relative w-full h-[15vh] min-h-[100px] max-h-[150px] -mb-0.5;
-    }
-    .toggle-container {
-        @apply flex items-center gap-2.5 p-2.5;
-    }
-    .slider-label {
-        @apply text-base select-none;
-    }
-    .slider {
-        @apply w-[60px] h-[30px] bg-[#ccc] relative cursor-pointer transition-[background-color] duration-[0.3s] ease-[ease-in-out] rounded-[15px];
-    }
-    .slider-thumb {
-        @apply w-[30px] h-[30px] bg-white absolute transition-transform duration-[0.3s] ease-[ease-in-out] rounded-[50%] left-0 top-0;
-    }
-    .slider.active {
-        @apply bg-[#34c11e];
-    }
-    .slider.active .slider-thumb {
-        @apply translate-x-[30px];
-    }
-    .slider.in-active {
-        @apply bg-[#dbdcdb];
-    }
+  .triangle {
+    @apply w-0 h-0 border-t-[10px] border-t-[#ffffff] border-b-0 border-[10px] border-solid;
+  }
 
-    .update-user {
-        @apply bg-[rgba(0,0,0,0.148)] backdrop-blur-[2px] z-[100];
-    }
-    .card-img {
-        @apply bg-[url("../src/assets/couponsbg.png")] bg-no-repeat w-full h-[170px] bg-contain;
-    }
-    .disable-filter {
-        @apply blur-none brightness-[35%] contrast-[110%];
-    }
-    .tooltip-arrow {
-        @apply border-[transparent_transparent_black_transparent]  absolute border-solid border-black border-2 h-3 w-3 transform rotate-45 bg-black;
-    }
-    .chip-red {
-        @apply bg-[#ea525f1f] border text-[#EA525F] border-[#EA525F] rounded-md px-4;
-    }
-    .chip-green {
-        @apply bg-[#49a74024] border text-[#48A740]  border-[#48A740] rounded-md px-4;
-    }
+  .tool-tip-div {
+    @apply relative w-max;
+  }
+
+  .header {
+    @apply relative text-center text-[white];
+    background: linear-gradient(60deg,
+        rgba(234, 82, 95, 1) 50%,
+        rgba(164, 57, 72, 1) 100%);
+  }
+
+  .logo {
+    @apply w-[50px] fill-[white] inline-block align-middle pr-[15px];
+  }
+
+  .inner-header {
+    @apply h-[65vh] w-full m-0 p-0;
+  }
+
+  .waves {
+    @apply relative w-full h-[15vh] min-h-[100px] max-h-[150px] -mb-0.5;
+  }
+
+  .toggle-container {
+    @apply flex items-center gap-2.5 p-2.5;
+  }
+
+  .slider-label {
+    @apply text-base select-none;
+  }
+
+  .slider {
+    @apply w-[60px] h-[30px] bg-[#ccc] relative cursor-pointer transition-[background-color] duration-[0.3s] ease-[ease-in-out] rounded-[15px];
+  }
+
+  .slider-thumb {
+    @apply w-[30px] h-[30px] bg-white absolute transition-transform duration-[0.3s] ease-[ease-in-out] rounded-[50%] left-0 top-0;
+  }
+
+  .slider.active {
+    @apply bg-[#34c11e];
+  }
+
+  .slider.active .slider-thumb {
+    @apply translate-x-[30px];
+  }
+
+  .slider.in-active {
+    @apply bg-[#dbdcdb];
+  }
+
+  .update-user {
+    @apply
+    /* bg-[rgba(0, 0, 0, 0.148)] */
+    backdrop-blur-[2px] z-[100];
+  }
+
+  .card-img {
+    @apply bg-[url("../src/assets/couponsbg.png")] bg-no-repeat w-full h-[170px] bg-contain;
+  }
+
+  .disable-filter {
+    @apply blur-none brightness-[35%] contrast-[110%];
+  }
+
+  .tooltip-arrow {
+    @apply border-[transparent_transparent_black_transparent] absolute border-solid border-black border-2 h-3 w-3 transform rotate-45 bg-black;
+  }
+
+  .chip-red {
+    @apply bg-[#ea525f1f] border text-[#EA525F] border-[#EA525F] rounded-md px-4;
+  }
+
+  .chip-green {
+    @apply bg-[#49a74024] border text-[#48A740] border-[#48A740] rounded-md px-4;
+  }
+
+  .disabled-card {
+    @apply opacity-60 grayscale bg-[#c9c6c6] border shadow-none cursor-not-allowed border-solid border-[#ccc];
+  }
 }
 
 @layer utilities {
-    @variants responsive {
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-    }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
+
 @layer utilities {
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        @apply appearance-none;
-    }
 
-    ::-webkit-scrollbar {
-        @apply w-2 rounded-xl;
-    }
+  input,
+  select,
+  button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
 
-    ::-webkit-scrollbar-track {
-        @apply bg-white p-2;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        @apply bg-light-grey rounded-xl;
-    }
-}
-
-textarea {
+  textarea {
     resize: none;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    @apply appearance-none;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-2 rounded-xl;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-white p-2;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-light-grey rounded-xl;
+  }
 }

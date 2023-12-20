@@ -1,3 +1,3 @@
 export default function QuestionList({ info }) {
-    console.log(info);
+  console.log(info);
 }

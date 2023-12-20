@@ -8,17 +8,24 @@ import { ThemeProvider } from "@material-tailwind/react";
 
 import CategoryContextProvider from "./contexts/CategoryContext.jsx";
 import ProfileContextProvider from "./contexts/ProfileContext.jsx";
+import FilterContextProvider from "./contexts/FilterContext.jsx";
+import InsightContextProvider from "./contexts/InsightContext.jsx";
 
+//TODO: damn..
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <ThemeProvider>
-                <ProfileContextProvider>
-                    <CategoryContextProvider>
-                        <App />
-                    </CategoryContextProvider>
-                </ProfileContextProvider>
-            </ThemeProvider>
-        </BrowserRouter>
-    </React.StrictMode>
+  <React.StrictMode>
+    <BrowserRouter>
+      <ThemeProvider>
+        <ProfileContextProvider>
+          <CategoryContextProvider>
+            <FilterContextProvider>
+              <InsightContextProvider>
+                <App />
+              </InsightContextProvider>
+            </FilterContextProvider>
+          </CategoryContextProvider>
+        </ProfileContextProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );

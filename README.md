@@ -1,14 +1,6 @@
-# Setup
+# FeeBac Dashboard
 
-Make sure you have [Node.js](https://nodejs.org/en/) and [pnpm](https://pnpm.io/installation) installed.  
-Installing node through a package manager like [nvm](https://github.com/nvm-sh/nvm)/[fnm](https://github.com/Schniz/fnm) is highly recommended.
-
-If you are installing through package manager just run in project root and it will automatically install the required node version.
-
-```bash
-nvm install
-nvm use
-```
+Make sure you have [Node.js](https://nodejs.org/en/) and [pnpm](https://pnpm.io/installation) installed.  Use the latest LTS or refer the `.nvmrc` file.
 
 Clone the repo and install the dependencies
 
@@ -17,15 +9,24 @@ pnpm install
 ```
 
 Create an api key for [TinyMCE](https://www.tiny.cloud/auth/signup/) editor.  
-Create a .env file in the project root and add the following to it
+
+Create .env files based on the mode you are currently in (local, production, staging, etc.). Refer [Env Variables and Modes](https://vitejs.dev/guide/env-and-mode) for more info.
 
 ```bash
-VITE_BASE_URL=your_server_url
-VITE_TINY_API_KEY=your_tiny_api_key
+cp .env.sample .env.local
 ```
 
-and run the dev server
+Run the dev server
 
 ```bash
 pnpm run dev
 ```
+
+For a production build, create a separate environment variable. Any env variable WITHOUT the `.local` extension will NOT BE ignored by git.
+
+```bash
+cp .env.sample .env.production
+pnpm build
+```
+
+Deploy the contents of /dist on your desired http server.

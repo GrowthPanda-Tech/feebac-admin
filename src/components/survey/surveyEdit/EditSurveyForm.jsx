@@ -1,245 +1,316 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { CategoryContext } from "../../../contexts/CategoryContext";
 
+import dateConvert from "../../../utils/dateConvert";
+import dateToday from "../../../utils/dateToday";
 import makeRequest from "../../../utils/makeRequest";
-import convertToUTC from "../../../utils/convertToUTC";
-import formSubmit from "../../../utils/formSubmit";
+import swal from "../../../utils/swal";
 
-import AlertComponent from "../../AlertComponent/AlertComponent";
-
-const TODAY = new Date().toISOString().slice(0, 16);
-
-function Select({ name, onChange, children }) {
-    return (
-        <select
-            name={name}
-            onChange={onChange}
-            className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3 capitalize"
-        >
-            {children}
-        </select>
-    );
-}
+import upload from "../../../assets/upload.png";
 
 function Input({ type, min, value, name, onChange }) {
-    return (
-        <input
-            type={type}
-            min={min}
-            name={name}
-            onChange={onChange}
-            value={value}
-            className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3"
-            required
-        />
-    );
+  return (
+    <input
+      type={type}
+      min={min}
+      name={name}
+      onChange={onChange}
+      value={value}
+      className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3"
+      required
+    />
+  );
 }
 
 function Label({ name, children }) {
-    return (
-        <label className="flex items-center gap-2">
-            <span className="font-medium">{name}*</span>
-            {children}
-        </label>
-    );
+  return (
+    <label className="flex items-center gap-2">
+      <span className="font-medium">{name}*</span>
+      {children}
+    </label>
+  );
 }
 
 export default function EditSurveyForm({
-    setSurveyEditPop,
-    surveyInfo,
-    setSurveyInfo,
+  setSurveyEditPop,
+  surveyInfo,
+  setSurveyInfo,
 }) {
-    const { categories } = useContext(CategoryContext);
+  const { slug } = useParams();
+  const { categories } = useContext(CategoryContext);
 
-    const [isDateChange, setIsDateChange] = useState(false);
+  const [surveyData, setSurveyData] = useState(surveyInfo);
+  const [updatedData, setUpdatedData] = useState(null);
+  const [imgPreview, setImgPreview] = useState({
+    image_url: `url(${surveyData.image_url})`,
+    featured_image: `url(${surveyData.featured_image})`,
+  });
 
-    const convertToCalendarFormat = (dateString) => {
-        const date = new Date(dateString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
-        const seconds = String(date.getSeconds()).padStart(2, "0");
-        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-    };
+  const surveyImgRef = useRef(null);
+  const featuredImgRef = useRef(null);
 
-    const convertToLocal = (date) => {
-        const dateObj = new Date(`${date} UTC`);
-        return convertToCalendarFormat(dateObj);
-    };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-    const { slug } = useParams();
-    const [surveyData, setSurveyData] = useState({
-        surveyId: surveyInfo?.survey_id,
-        surveyTitle: surveyInfo?.survey_title,
-        startDate: convertToLocal(surveyInfo?.start_date),
-        endDate: convertToLocal(surveyInfo?.end_date),
-        loyaltyPoint: surveyInfo?.loyalty_point,
-        surveyDescription: surveyInfo?.survey_description,
-        category: surveyInfo?.category.category_id,
-        isUpdateImage: false,
-    });
+    if (name === "start_date" || name === "end_date") {
+      const dateUTC = dateConvert(value, "UTC");
+      setSurveyData({ ...surveyData, [name]: value });
+      setUpdatedData({ ...updatedData, [name]: dateUTC });
 
-    const [updatedData, setUpdatedData] = useState({
-        ...surveyData,
-        startDate: surveyInfo?.start_date,
-        endDate: surveyInfo?.end_date,
-    });
+      return;
+    }
 
-    const handleChange = (e) => {
-        if (e.target.name === "startDate" || e.target.name === "endDate") {
-            setIsDateChange(true);
-            const formattedOutput = convertToUTC(e.target.value);
-            setUpdatedData({
-                ...updatedData,
-                [e.target.name]: formattedOutput,
-            });
+    if (name === "image_url" || name === "featured_image") {
+      const file = e.target.files[0];
 
-            return;
-        }
-        setUpdatedData({ ...updatedData, [e.target.name]: e.target.value });
-    };
+      setUpdatedData({ ...updatedData, [name]: file });
+      setImgPreview({
+        ...imgPreview,
+        [name]: `url(${URL.createObjectURL(file)})`,
+      });
 
-    const handleSubmit = async (event) => {
-        try {
-            const dataString = JSON.stringify(profileData);
-            const formdata = new FormData();
+      return;
+    }
 
-            for (const [key, value] of Object.entries(updatedData)) {
-                formdata.append(key, value);
-            }
+    setSurveyData({ ...surveyData, [name]: value });
+    setUpdatedData({ ...updatedData, [name]: value });
+  };
 
-            formdata.append("target", dataString);
+  const handleImgDelete = (type) => {
+    setImgPreview({ ...imgPreview, [type]: null });
+    setSurveyData({ ...surveyData, [type]: null });
+  };
 
-            const response = await formSubmit(
-                event,
-                "site-admin/update-survey",
-                "PUT",
-                formdata
-            );
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                const getData = async () => {
-                    const response = await makeRequest(
-                        `survey/show-survey?sid=${slug}`,
-                        "GET"
-                    );
-                    if (response.isSuccess) {
-                        setSurveyInfo(response.surveyInfo);
-                    }
-                };
-                getData();
+  //TODO: nested API calls?
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formdata = new FormData();
 
-                setSurveyEditPop(false);
-            } else AlertComponent("failed", response);
-        } catch (error) {
-            AlertComponent("error", "", "Please Enter Valid Value");
-        }
-    };
+    formdata.append("survey_id", surveyData.survey_id);
 
-    return (
-        <div className="flex flex-col p-8 gap-8">
-            <h1 className="heading mb-0"> Edit Survey Details </h1>
+    for (const [key, value] of Object.entries(updatedData)) {
+      formdata.append(key, value);
+    }
 
-            <div className="grid grid-cols-3 gap-8 ">
-                <Label name={"Start Date"}>
-                    <Input
-                        type={"datetime-local"}
-                        min={TODAY}
-                        value={
-                            !isDateChange
-                                ? surveyData
-                                    ? surveyData.startDate
-                                    : ""
-                                : updatedData
-                                ? convertToLocal(updatedData.startDate)
-                                : ""
-                        }
-                        name={"startDate"}
-                        onChange={handleChange}
-                    />
-                </Label>
+    try {
+      const response = await makeRequest(
+        "site-admin/update-survey",
+        "PUT",
+        formdata
+      );
 
-                <Label name={"End Date"}>
-                    <Input
-                        type={"datetime-local"}
-                        min={TODAY}
-                        name={"endDate"}
-                        onChange={handleChange}
-                        value={
-                            !isDateChange
-                                ? surveyData
-                                    ? surveyData.endDate
-                                    : ""
-                                : updatedData
-                                ? convertToLocal(updatedData.endDate)
-                                : ""
-                        }
-                    />
-                </Label>
+      if (response.isSuccess) {
+        swal("success", response.message);
+        const getData = async () => {
+          const response = await makeRequest(`survey/show-survey?sid=${slug}`);
+          if (response.isSuccess) {
+            setSurveyInfo(response.surveyInfo);
+          }
+        };
 
-                <Label name={"Survey Title"}>
-                    <Input
-                        name={"surveyTitle"}
-                        value={updatedData ? updatedData?.surveyTitle : ""}
-                        onChange={handleChange}
-                    />
-                </Label>
+        getData();
 
-                <Label name={"Survey Description"}>
-                    <Input
-                        name={"surveyDescription"}
-                        value={
-                            updatedData ? updatedData?.surveyDescription : ""
-                        }
-                        onChange={handleChange}
-                    />
-                </Label>
+        setSurveyEditPop(false);
+      } else swal("error", response.message);
+    } catch (error) {
+      swal("error", "Please Enter Valid Value");
+    }
+  };
 
-                <Label name={"Select Research Category"}>
-                    <Select name={"category"} onChange={handleChange}>
-                        <option value={null}>-- Categories --</option>
-                        {categories.map((item) => {
-                            const value = item.category_id;
-                            const selected = value === updatedData.category;
-                            return (
-                                <option
-                                    key={item.category_id}
-                                    value={item.category_id}
-                                    selected={selected}
-                                >
-                                    {item.category_name}
-                                </option>
-                            );
-                        })}
-                    </Select>
-                </Label>
+  return (
+    <div className="flex flex-col p-8 gap-8">
+      <h1 className="heading mb-0"> Edit Survey Details </h1>
 
-                <Label name={"Loyalty Points Per Use"}>
-                    <Input
-                        type={"number"}
-                        name={"loyaltyPoint"}
-                        onChange={handleChange}
-                        value={updatedData ? updatedData?.loyaltyPoint : ""}
-                    />
-                </Label>
-            </div>
+      <div className="grid grid-cols-3 gap-8 ">
+        <Label name={"Start Date"}>
+          <Input
+            type={"datetime-local"}
+            min={dateToday()}
+            value={dateConvert(surveyData.start_date, "localISO")}
+            name={"start_date"}
+            onChange={handleChange}
+          />
+        </Label>
 
-            <div className="flex gap-4">
-                <button className="btn-primary w-fit" onClick={handleSubmit}>
-                    Save Changes
-                </button>
-                <button
-                    className="btn-secondary"
-                    onClick={() => {
-                        setSurveyEditPop(false);
-                    }}
-                >
-                    Cancel
-                </button>
-            </div>
+        <Label name={"End Date"}>
+          <Input
+            type={"datetime-local"}
+            min={dateToday()}
+            name={"end_date"}
+            onChange={handleChange}
+            value={dateConvert(surveyData.end_date, "localISO")}
+          />
+        </Label>
+
+        <Label name={"Survey Title"}>
+          <Input
+            name={"survey_title"}
+            value={surveyData.survey_title}
+            onChange={handleChange}
+          />
+        </Label>
+
+        <Label name={"Survey Description"}>
+          <Input
+            name={"survey_description"}
+            value={surveyData.survey_description}
+            onChange={handleChange}
+          />
+        </Label>
+
+        <Label name={"Select Research Category"}>
+          <select
+            name="category"
+            value={surveyData.category.category_id}
+            onChange={handleChange}
+            className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3 capitalize"
+          >
+            {categories.map((item) => (
+              <option key={item.category_id} value={item.category_id}>
+                {item.category_name}
+              </option>
+            ))}
+          </select>
+        </Label>
+
+        <Label name={"Loyalty Points Per Use"}>
+          <Input
+            type={"number"}
+            name={"loyalty_point"}
+            onChange={handleChange}
+            value={surveyData.loyalty_point}
+          />
+        </Label>
+      </div>
+
+      {/* Images */}
+      {/* TODO: Needs refactor */}
+      <div className="flex gap-24">
+        <div className="flex flex-col gap-6">
+          <span className="font-semibold text-xl">Upload Image</span>
+          <div
+            className={`relative aspect-[9/16] h-80 ${
+              !imgPreview.image_url ? "border-dashed" : ""
+            } border-2 border-black rounded-xl`}
+            style={{
+              backgroundImage: imgPreview.image_url,
+              backgroundSize: "cover",
+            }}
+          >
+            {!imgPreview.image_url ? (
+              <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
+                <img src={upload} className="w-12" />
+                <div className="flex flex-col items-center">
+                  <span className="font-semibold text-secondary">
+                    Drag & Drop
+                  </span>
+                  <span className="font-semibold">Image</span>
+                </div>
+                <span className="text-xs flex flex-col items-center gap-1">
+                  <span>Or</span>
+                  <span
+                    className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
+                    onClick={() => surveyImgRef.current.click()}
+                  >
+                    browse files
+                  </span>
+                  <span>on your computer</span>
+                </span>
+              </div>
+            ) : (
+              <div className="absolute top-0 right-0">
+                <i
+                  className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
+                  onClick={() => handleImgDelete("image_url")}
+                  style={{
+                    color: "white",
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          <input
+            onChange={handleChange}
+            ref={surveyImgRef}
+            type="file"
+            accept="image/*"
+            name="image_url"
+            hidden
+          />
         </div>
-    );
+
+        <div className="flex flex-col gap-6">
+          <span className="font-semibold text-xl">
+            Upload Image (for featured section)
+          </span>
+          <div
+            className={`relative aspect-[5/4] h-80 ${
+              !imgPreview.featured_image ? "border-dashed" : ""
+            } border-2 border-black rounded-xl`}
+            style={{
+              backgroundImage: imgPreview.featured_image,
+              backgroundSize: "cover",
+            }}
+          >
+            {!imgPreview.featured_image ? (
+              <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
+                <img src={upload} className="w-12" />
+                <div className="flex gap-2">
+                  <span className="font-semibold text-secondary">
+                    Drag & Drop
+                  </span>
+                  <span className="font-semibold">Image</span>
+                </div>
+                <span className="text-xs flex gap-1">
+                  <span>Or</span>
+                  <span
+                    className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
+                    onClick={() => featuredImgRef.current.click()}
+                  >
+                    browse files
+                  </span>
+                  <span>on your computer</span>
+                </span>
+              </div>
+            ) : (
+              <div className="absolute top-0 right-0">
+                <i
+                  className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
+                  onClick={() => handleImgDelete("featured_image")}
+                  style={{
+                    color: "white",
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          <input
+            onChange={handleChange}
+            ref={featuredImgRef}
+            type="file"
+            accept="image/*"
+            name="featured_image"
+            hidden
+          />
+        </div>
+      </div>
+
+      <div className="flex gap-4">
+        <button className="btn-primary w-fit" onClick={handleSubmit}>
+          Save Changes
+        </button>
+        <button
+          className="btn-secondary"
+          onClick={() => {
+            setSurveyEditPop(false);
+          }}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
 }

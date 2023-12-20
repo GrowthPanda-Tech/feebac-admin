@@ -1,40 +1,16 @@
-import { createContext, useState, useEffect } from "react";
-import makeRequest from "../utils/makeRequest";
+import { createContext } from "react";
+import useFetch from "@/hooks/useFetch";
 
 export const ProfileContext = createContext(null);
 
 export default function ProfileContextProvider({ children }) {
-    const [profile, setProfile] = useState({});
+  const { loading, fetchedData, setFetchedData, error } = useFetch("profile/");
 
-    useEffect(() => {
-        let ignore = false;
-
-        async function getProfile() {
-            try {
-                const response = await makeRequest("profile/");
-
-                if (!response.isSuccess) {
-                    throw new Error(response.message);
-                }
-
-                if (!ignore) {
-                    setProfile(response.userInfo);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        getProfile();
-
-        return () => {
-            ignore = true;
-        };
-    }, []);
-
-    return (
-        <ProfileContext.Provider value={{ profile, setProfile }}>
-            {children}
-        </ProfileContext.Provider>
-    );
+  return (
+    <ProfileContext.Provider
+      value={{ loading, fetchedData, setFetchedData, error }}
+    >
+      {children}
+    </ProfileContext.Provider>
+  );
 }

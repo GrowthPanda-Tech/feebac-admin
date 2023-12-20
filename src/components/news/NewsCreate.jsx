@@ -1,106 +1,109 @@
+import { useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { CategoryContext } from "../../contexts/CategoryContext";
-import { useNavigate } from "react-router-dom";
-import formSubmit from "../../utils/formSubmit";
+
+import swal from "../../utils/swal";
+import makeRequest from "../../utils/makeRequest";
 import defaultImgPreview from "../../assets/defaultImgPreview.png";
 
 //components
 import NewsForm from "./NewsForm";
-import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
+import PageTitle from "../__helperComponents__/PageTitle";
 
 export default function NewsCreate() {
-    const navigate = useNavigate();
-    const { categories } = useContext(CategoryContext);
-    const initCat = categories[0]?.category_id ? categories[0].category_id : "";
+  const navigate = useNavigate();
 
-    const [imgPreview, setImgPreview] = useState(defaultImgPreview);
-    const [newsData, setNewsData] = useState({
-        category: initCat,
-    });
+  const { categories } = useContext(CategoryContext);
 
-    const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
+  const [isSaving, setIsSaving] = useState(false);
+  const [imgPreview, setImgPreview] = useState(defaultImgPreview);
+  const [newsData, setNewsData] = useState({});
 
-        if (name === "newsImage") {
-            const file = event.target.files[0];
-            setNewsData({ ...newsData, newsImage: file });
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
 
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = () => setImgPreview(reader.result);
-                reader.readAsDataURL(file);
-            }
+    if (name === "news_image") {
+      const file = event.target.files[0];
+      setNewsData({ ...newsData, [name]: file });
 
-            return;
-        }
-        setNewsData({ ...newsData, [name]: value });
-    };
+      const reader = new FileReader();
+      reader.onload = () => setImgPreview(reader.result);
+      reader.readAsDataURL(file);
 
-    const handleSubmit = async (event) => {
-        const formdata = new FormData();
+      return;
+    }
 
-        for (const [key, value] of Object.entries(newsData)) {
-            if (key === "newsImage") {
-                formdata.append(
-                    "newsImage",
-                    newsData.newsImage,
-                    newsData.newsImage.name
-                );
+    setNewsData({ ...newsData, [name]: value });
+  };
 
-                continue;
-            }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-            formdata.append(key, value);
-        }
+    const categoryId = newsData.category
+      ? newsData.category
+      : categories[0].category_id;
 
-        try {
-            const response = await formSubmit(
-                event,
-                "news/create-news",
-                "POST",
-                formdata
-            );
+    const formdata = new FormData();
 
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                setTimeout(() => {
-                    navigate("/news");
-                }, 2000);
-            } else {
-                AlertComponent("failed", response);
-                throw new Error(response.message);
-            }
-
-            // alert(response.message);
-        } catch (error) {
-            console.log(error);
-            AlertComponent("error", "", error.message);
-        }
-    };
-
-    return (
-        <div className="flex flex-col gap-8">
-            <PageTitle name={"Create News"} />
-            <div className="flex gap-8">
-                <div className="w-3/4">
-                    <form onSubmit={handleSubmit}>
-                        <NewsForm
-                            newsData={newsData}
-                            handleChange={handleChange}
-                        />
-                        <button className="btn-primary w-fit mt-8">
-                            <i className="fa-solid fa-floppy-disk mr-2"></i>
-                            Publish
-                        </button>
-                    </form>
-                </div>
-
-                <div className="w-1/4 h-60 p-4 rounded-xl bg-white flex items-center justify-center">
-                    <img src={imgPreview} className="max-h-full max-w-full" />
-                </div>
-            </div>
-        </div>
+    formdata.append("title", newsData.title);
+    formdata.append("description", newsData.description);
+    formdata.append("source_url", newsData.source_url);
+    formdata.append("category", categoryId);
+    formdata.append("caption", newsData.caption);
+    formdata.append(
+      "news_image",
+      newsData.news_image,
+      newsData.news_image.name
     );
+
+    try {
+      setIsSaving(true);
+
+      const response = await makeRequest("news/create-news", "POST", formdata);
+
+      if (!response.isSuccess) {
+        throw new Error(response.message);
+      }
+
+      navigate(-1);
+
+      swal("success", response.message);
+    } catch (error) {
+      swal("error", error.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-8">
+      <PageTitle name={"Create News"} />
+
+      <div className="flex gap-8">
+        <div className="w-3/4">
+          <form onSubmit={handleSubmit}>
+            <NewsForm
+              newsData={newsData}
+              handleChange={handleChange}
+              isSaving={isSaving}
+            />
+            <button
+              type="submit"
+              className={` ${
+                isSaving ? "btn-secondary" : "btn-primary"
+              } w-fit mt-8`}
+            >
+              <i className="fa-solid fa-floppy-disk mr-2"></i>
+              {isSaving ? "Publishing" : "Publish"}
+            </button>
+          </form>
+        </div>
+
+        <div className="w-1/4 h-60 p-4 rounded-xl bg-white flex items-center justify-center">
+          <img src={imgPreview} className="max-h-full max-w-full" />
+        </div>
+      </div>
+    </div>
+  );
 }

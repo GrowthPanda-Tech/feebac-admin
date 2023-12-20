@@ -1,136 +1,128 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CategoryContext } from "../../contexts/CategoryContext";
 
-import formSubmit from "../../utils/formSubmit";
-import defaultImgPreview from "../../assets/defaultImgPreview.png";
+import makeRequest from "../../utils/makeRequest";
+import swal from "../../utils/swal";
 
 //components
 import NewsForm from "./NewsForm";
-import PageTitle from "../PageTitle";
-import AlertComponent from "../AlertComponent/AlertComponent";
+import PageTitle from "../__helperComponents__/PageTitle";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+export default function NewsEdit() {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-function NewsEdit() {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const { from } = location.state;
+  const { from } = location.state;
+  const { categories } = useContext(CategoryContext);
 
-    const { categories } = useContext(CategoryContext);
+  const [newsData, setNewsData] = useState({
+    ...from,
+    category: getCategoryId(from.category),
+  });
+  const [imgUpdate, setImgUpdate] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-    const [newsData, setNewsData] = useState({});
-    const [imgPreview, setImgPreview] = useState(defaultImgPreview);
-    const [imgUpdate, setImgUpdate] = useState(false);
+  const imgPreview = newsData.news_image
+    ? `url(${URL.createObjectURL(newsData.news_image)})`
+    : `url(${newsData.image_url})`;
 
-    const editHandleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
+  //TODO: find a more graceful solution
+  function getCategoryId(name) {
+    let categoryId;
 
-        if (name === "newsImage") {
-            const file = event.target.files[0];
-            setNewsData({ ...newsData, newsImage: file });
-            setImgUpdate(true);
+    categories.forEach((category) => {
+      if (category.category_name === name) {
+        categoryId = category.category_id;
+      }
+    });
 
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = () => setImgPreview(reader.result);
-                reader.readAsDataURL(file);
-            }
+    return categoryId;
+  }
 
-            return;
-        }
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
 
-        setNewsData({ ...newsData, [name]: value });
-    };
+    if (name === "news_image") {
+      const file = event.target.files[0];
+      setNewsData({ ...newsData, [name]: file });
+      setImgUpdate(true);
 
-    useEffect(() => {
-        let ignore = false;
+      return;
+    }
 
-        if (!ignore) {
-            let catId;
-            for (let i = 0; i < categories.length; i++) {
-                const category = categories[i];
-                if (category.category_name === from.category) {
-                    catId = category.category_id;
-                }
-            }
-            setNewsData({ ...from, category: catId });
-        }
+    setNewsData({ ...newsData, [name]: value });
+  };
 
-        return () => {
-            ignore = true;
-        };
-    }, []);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-    const handleSubmit = async (event) => {
-        const formdata = new FormData();
+    const formdata = new FormData();
 
-        for (const [key, value] of Object.entries(newsData)) {
-            if (key === "newsImage") {
-                if (imgUpdate) {
-                    formdata.append(
-                        "newsImage",
-                        newsData.newsImage,
-                        newsData.newsImage.name
-                    );
-                }
-                continue;
-            }
-            formdata.append(key, value);
-        }
+    formdata.append("id", newsData.id);
+    formdata.append("title", newsData.title);
+    formdata.append("category", newsData.category);
+    formdata.append("description", newsData.description);
+    formdata.append("source_url", newsData.source_url);
+    formdata.append("caption", newsData.caption);
 
-        try {
-            const response = await formSubmit(
-                event,
-                "news/edit-news",
-                "PUT",
-                formdata
-            );
+    if (imgUpdate) {
+      formdata.append("news_image", newsData.news_image);
+    }
 
-            if (response.isSuccess) {
-                AlertComponent("success", response);
-                setTimeout(() => {
-                    navigate("/news");
-                }, 1000);
-            } else {
-                AlertComponent("failed", response);
-            }
-        } catch (error) {
-            AlertComponent("error", "", error);
-        }
-    };
+    try {
+      setIsSaving(true);
 
-    return (
-        <div className="flex flex-col gap-8">
-            <PageTitle name={"Edit News"} />
-            <div className="flex gap-8">
-                <div className="w-3/4">
-                    <NewsForm
-                        newsData={newsData}
-                        handleChange={editHandleChange}
-                    />
+      const response = await makeRequest("news/edit-news", "PUT", formdata);
 
-                    <button
-                        className="btn-primary w-fit mt-8"
-                        onClick={handleSubmit}
-                    >
-                        <i className="fa-solid fa-floppy-disk mr-2"></i>
-                        Save Changes
-                    </button>
-                </div>
+      if (!response.isSuccess) {
+        throw new Error(response.message);
+      }
 
-                <div className="w-1/4 h-60 p-4 rounded-xl bg-white flex items-center justify-center">
-                    <img
-                        src={
-                            newsData ? BASE_URL + newsData.imageUrl : imgPreview
-                        }
-                        className="max-h-full max-w-full"
-                    />
-                </div>
-            </div>
+      navigate(-1);
+
+      swal("success", response.message);
+    } catch (error) {
+      swal("error", error.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-8">
+      <PageTitle name={"Edit News"} />
+      <div className="flex gap-8">
+        <div className="w-3/4">
+          <NewsForm
+            newsData={newsData}
+            handleChange={handleChange}
+            isSaving={isSaving}
+          />
+
+          <button
+            className={` ${
+              isSaving ? "btn-secondary" : "btn-primary"
+            }  w-fit mt-8 `}
+            onClick={handleSubmit}
+            disabled={isSaving}
+          >
+            <i className="fa-solid fa-floppy-disk mr-2"></i>
+            {isSaving ? "Saving" : "Save Changes"}
+          </button>
         </div>
-    );
-}
 
-export default NewsEdit;
+        <div className="bg-white p-4 w-1/4 h-60 rounded-xl">
+          <div
+            className="h-full w-full bg-contain"
+            style={{
+              backgroundImage: imgPreview,
+              backgroundSize: "contain",
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,49 +1,29 @@
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+const AUTH_TOKEN = localStorage.getItem("authToken");
 
-export default async function makeRequest(
-    route,
-    method = "GET",
-    body = null,
-    timeout = 10000
-) {
-    const request = {
-        method,
-        headers: {
-            authToken: localStorage.getItem("authToken"),
-        },
-    };
+//TODO: implement timeout
+export default async function makeRequest(route, method = "GET", body = null) {
+  const request = {
+    method,
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${AUTH_TOKEN}`,
+    },
+  };
 
-    if (body != null) {
-        request.body = JSON.stringify(body);
-    }
+  if (body)
+    request.body = body instanceof FormData ? body : JSON.stringify(body);
 
-    try {
-        const controller = new AbortController();
-        const signal = controller.signal;
+  try {
+    const response = await fetch(`${BASE_URL}/${route}`, request);
+    const statusCode = response.status;
 
-        setTimeout(() => {
-            controller.abort();
-        }, timeout);
+    if (/* !response.ok || */ statusCode >= 500 || statusCode === 204)
+      throw new Error(statusCode);
 
-        const response = await fetch(`${BASE_URL}/${route}`, {
-            ...request,
-            signal,
-        });
-
-        clearTimeout();
-
-        if (response.status >= 500 || response.status === 204) {
-            throw new Error(response.status);
-        }
-
-        const json = await response.json();
-
-        return json;
-    } catch (error) {
-        if (error.name === "AbortError") {
-            throw new Error("Timeout");
-        } else {
-            throw error;
-        }
-    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }

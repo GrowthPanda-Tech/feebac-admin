@@ -7,12 +7,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -41,27 +41,19 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: 'Create env file'
+      - name: Create environment variable
         run: |
-          echo "${{ secrets.FEEBAC_ENV }}" > .env.production
+          echo ${{ secrets.FEEBAC_ENV }} > .env.production
 
-      - name: Build
+      - name: Build project
         run: pnpm build
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Copy build artifacts
-        run: |
-          cp -r dist/* ${{ runner.workspace }}/dist
-
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@master
+      - name: Copy build artifacts over SCP
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_PRIVATE_KEY }}
-          script: |
-            mkdir -p feebac-admin
-            cp -r ${{ runner.workspace }}/dist/* feebac-admin/
+          source: ${{ runner.workspace }}/feebac-admin/dist/*
+          target: feebac-admin/dev
+          strip_components: 3

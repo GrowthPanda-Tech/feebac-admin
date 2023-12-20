@@ -43,7 +43,9 @@ jobs:
 
       - name: Create environment variable
         run: |
-          echo ${{ secrets.ENV_STAGING }} > .env.staging
+          touch .env
+          echo VITE_BASE_URL=${{ secrets.STAGING_ENDPOINT }} >> .env
+          echo VITE_TINY_API_KEY=${{ secrets.TINY_API_KEY }} >> .env
 
       - name: Build project
         run: pnpm build

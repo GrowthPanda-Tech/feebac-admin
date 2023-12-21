@@ -68,3 +68,5 @@ jobs:
           source: ${{ runner.workspace }}/feebac-admin/dist/*
           target: feebac-admin/${{ github.ref == 'refs/heads/main' && 'main' || 'dev' }}
           strip_components: 3
+          rm: true
+          overwrite: true

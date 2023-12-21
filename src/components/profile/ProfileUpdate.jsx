@@ -63,11 +63,7 @@ export default function ProfileUpdate() {
 
       //update context
       const spread = { ...fetchedData };
-      spread.userInfo = {
-        ...spread.userInfo,
-        ...updateState,
-        profile_pic: response.userInfo.profile_pic,
-      };
+      spread.userInfo = response.userInfo;
       setFetchedData(spread);
 
       //clear update values

@@ -160,7 +160,6 @@
 
 @layer utilities {
 
-  input,
   select,
   button {
     -webkit-appearance: none;

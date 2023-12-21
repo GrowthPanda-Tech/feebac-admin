@@ -66,17 +66,16 @@ export default function ProfileUpdate() {
       spread.userInfo = response.userInfo;
       setFetchedData(spread);
 
-      //clear update values
-      setUpdateState(null);
-
       swal("success", response.message);
     } catch (error) {
       setUserState(fetchedData.userInfo);
-      setUpdateState(null);
       setImgPreview(null);
       swal("error", error.message);
     } finally {
+      setUpdateState(null);
       setIsUpdate(false);
+
+      imgRef.current.value = null;
     }
   };
 

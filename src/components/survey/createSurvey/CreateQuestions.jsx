@@ -64,6 +64,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
   const [inputType, setInputType] = useState(1);
   const [previewImages, setPreviewImages] = useState([null]);
   const [isChecked, setIsChecked] = useState(false);
+  const [isFilterCreate, setIsFilterCreate] = useState(false);
 
   const resetState = () => {
     setOptions(initOptions);
@@ -325,27 +326,35 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
       </div>
 
       <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-4">
-        <div className="flex items-center gap-4 justify-end">
-          <input
-            type="checkbox"
-            className="h-6 w-6 accent-secondary"
-            onClick={handleClick}
-            checked={isChecked}
-          />
-          <Select
-            isChecked={isChecked}
-            name={"profileField"}
-            handleChange={handleChange}
+        <div className="flex items-center gap-12 justify-end">
+          <button
+            className="text-[#EA525F] text-lg font-medium"
+            onClick={() => setIsFilterCreate(true)}
           >
-            <option value="" selected disabled hidden>
-              Select Tertiary Filter
-            </option>
-            {filters.map((filter) => (
-              <option key={filter.id} value={filter.id}>
-                {filter.key_name}
+            Create Filter
+          </button>
+          <div className="flex items-center gap-4">
+            <input
+              type="checkbox"
+              className="h-6 w-6 accent-secondary"
+              onClick={handleClick}
+              checked={isChecked}
+            />
+            <Select
+              isChecked={isChecked}
+              name={"profileField"}
+              handleChange={handleChange}
+            >
+              <option value="" selected disabled hidden>
+                Select Tertiary Filter
               </option>
-            ))}
-          </Select>
+              {filters.map((filter) => (
+                <option key={filter.id} value={filter.id}>
+                  {filter.key_name}
+                </option>
+              ))}
+            </Select>
+          </div>
         </div>
 
         <label className="flex flex-col gap-4">
@@ -540,6 +549,19 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
           </div>
         ))}
       </div>
+
+      {isFilterCreate ? (
+        <div
+          className={`fixed top-0 left-0 w-full flex justify-center items-center update-user h-[100vh]`}
+          onClick={() => setIsFilterCreate(false)}
+        >
+          <TertFilterCreate
+            stopPropgation={(e) => e.stopPropagation()}
+            setIsFilterCreate={setIsFilterCreate}
+            setFilters={setFilters}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

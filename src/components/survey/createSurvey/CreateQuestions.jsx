@@ -298,24 +298,28 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
   }, [surveyId]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <PageTitle name={surveyTitle} />
-        <div className="flex gap-4">
-          <button
-            className="btn-primary w-fit"
-            onClick={() => handlePublish("publish")}
-          >
-            Publish
-          </button>
+    <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-16">
+        <div className="flex items-center justify-between">
+          <PageTitle name={surveyTitle} />
+          <div className="flex gap-4">
+            <button
+              className="btn-primary w-fit"
+              onClick={() => handlePublish("publish")}
+            >
+              Publish
+            </button>
 
-          <button
-            className="btn-primary bg-tertiary w-fit"
-            onClick={() => handlePublish("schedule")}
-          >
-            Schedule
-          </button>
+            <button
+              className="btn-primary bg-tertiary w-fit"
+              onClick={() => handlePublish("schedule")}
+            >
+              Schedule
+            </button>
+          </div>
         </div>
+
+        <PageTitle name={"Survey Questions"} />
       </div>
 
       <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-4">

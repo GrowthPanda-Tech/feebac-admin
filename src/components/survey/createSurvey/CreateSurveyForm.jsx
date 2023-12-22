@@ -1,17 +1,17 @@
 import { useState, useEffect, useContext, useRef } from "react";
-import { CategoryContext } from "../../../contexts/CategoryContext";
+import { CategoryContext } from "@/contexts/CategoryContext";
 
-import dateToday from "../../../utils/dateToday";
-import dateConvert from "../../../utils/dateConvert";
-import swal from "../../../utils/swal";
-import makeRequest from "../../../utils/makeRequest";
-import forbidChars from "../../../utils/forbidChars";
+import swal from "@/utils/swal";
+import dateToday from "@/utils/dateToday";
+import dateConvert from "@/utils/dateConvert";
+import makeRequest from "@/utils/makeRequest";
+import forbidChars from "@/utils/forbidChars";
 
-import upload from "../../../assets/upload.png";
+import upload from "@/assets/upload.png";
 
 //components
 import Filters from "./filter/Filters";
-import PageTitle from "../../__helperComponents__/PageTitle";
+import PageTitle from "@helperComps/PageTitle";
 
 function UserCount({ type, count }) {
   return (

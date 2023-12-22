@@ -2,11 +2,12 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { FilterContext } from "@/contexts/FilterContext";
 
-import swal from "../../../utils/swal";
-import makeRequest from "../../../utils/makeRequest";
-import optionIcon from "../../../assets/option-preview.png";
+import swal from "@/utils/swal";
+import makeRequest from "@/utils/makeRequest";
+import optionIcon from "@/assets/option-preview.png";
 
-import PageTitle from "../../__helperComponents__/PageTitle";
+import PageTitle from "@helperComps/PageTitle";
+import TertFilterCreate from "@utilComps/TertFilterCreate";
 
 function Select({ value, isChecked, name, handleChange, children }) {
   return (

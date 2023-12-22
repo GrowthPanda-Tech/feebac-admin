@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { FilterContext } from "@/contexts/FilterContext";
 
 import swal from "../../../utils/swal";
 import makeRequest from "../../../utils/makeRequest";
 import optionIcon from "../../../assets/option-preview.png";
 
 import PageTitle from "../../__helperComponents__/PageTitle";
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function Select({ value, isChecked, name, handleChange, children }) {
   return (
@@ -46,6 +45,8 @@ function Input({ type, name, value, onChange, disabled }) {
 export default function CreateQuestions({ surveyId, surveyTitle }) {
   const navigate = useNavigate();
 
+  const { fetchedData } = useContext(FilterContext);
+
   const initOptions = ["", ""];
   const initQuestionData = {
     surveyId,
@@ -57,7 +58,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
   const [questions, setQuestions] = useState([]);
   const [questionData, setQuestionData] = useState(initQuestionData);
   const [activeButtonIndex, setActiveButtonIndex] = useState(1);
-  const [filters, setFilters] = useState([]);
+  const [filters, setFilters] = useState(fetchedData.data[2].key);
   const [activeFilterIdx, setActiveFilterIdx] = useState(0);
   const [inputType, setInputType] = useState(1);
   const [previewImages, setPreviewImages] = useState([null]);
@@ -323,6 +324,29 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
       </div>
 
       <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-4">
+        <div className="flex items-center gap-4 justify-end">
+          <input
+            type="checkbox"
+            className="h-6 w-6 accent-secondary"
+            onClick={handleClick}
+            checked={isChecked}
+          />
+          <Select
+            isChecked={isChecked}
+            name={"profileField"}
+            handleChange={handleChange}
+          >
+            <option value="" selected disabled hidden>
+              Select Tertiary Filter
+            </option>
+            {filters.map((filter) => (
+              <option key={filter.id} value={filter.id}>
+                {filter.key_name}
+              </option>
+            ))}
+          </Select>
+        </div>
+
         <label className="flex flex-col gap-4">
           <span className="font-bold">
             {`Question ${questions.length + 1} :`}
@@ -360,48 +384,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             >
               Multiple Answer
             </button>
-          </div>
-
-          <div className="flex items-center gap-4">
-            {/* {!activeButtonIndex == 0 ? (
-              <select
-                name="inputType"
-                className="px-3 py-2 border-2 "
-                onChange={(e) => {
-                  resetState();
-                  setInputType(e.target.value);
-                  setIsChecked(false);
-                }}
-                value={inputType}
-              >
-                <option value={1}>Only Text</option>
-                <option value={2}>Only Image</option>
-                <option value={3}>Both Text and Image</option>
-              </select>
-            ) : (
-              ""
-            )} */}
-            <input
-              type="checkbox"
-              className="h-6 w-6 accent-secondary"
-              onClick={handleClick}
-              checked={isChecked}
-            />
-            <Select
-              isChecked={isChecked}
-              name={"profileField"}
-              handleChange={handleChange}
-              placeholder={"Profile Key"}
-            >
-              <option value="" selected disabled hidden>
-                Profile Keys
-              </option>
-              {filters.map((filter) => (
-                <option key={filter.id} value={filter.id}>
-                  {filter.key_name}
-                </option>
-              ))}
-            </Select>
           </div>
         </div>
         <div className="flex flex-col gap-4">

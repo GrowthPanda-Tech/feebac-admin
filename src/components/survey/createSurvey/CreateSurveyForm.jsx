@@ -89,6 +89,8 @@ export default function CreateSurveyForm({
 
   const [isDragging, setIsDragging] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   const surveyImgRef = useRef(null);
   const featuredImgRef = useRef(null);
 
@@ -96,9 +98,7 @@ export default function CreateSurveyForm({
     try {
       const response = await makeRequest("config/get-profile-key-value");
 
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
+      if (!response.isSuccess) throw new Error(response.message);
 
       setFilters(response.data);
     } catch (error) {
@@ -218,6 +218,8 @@ export default function CreateSurveyForm({
       formdata.append("category", categories[0].category_id);
     }
 
+    setLoading(true);
+
     try {
       const response = await makeRequest(
         "site-admin/create-survey",
@@ -236,6 +238,8 @@ export default function CreateSurveyForm({
       setIsSurveyCreate(response.isSuccess);
     } catch (error) {
       swal("error", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -441,15 +445,22 @@ export default function CreateSurveyForm({
       <div className="flex gap-4">
         {filters.length > 0 ? (
           <button
-            className="btn-primary bg-accent w-fit"
+            className={`${
+              loading ? "btn-secondary" : "btn-primary bg-accent"
+            }  w-fit`}
             onClick={getFilterCount}
+            disabled={loading}
           >
             Get User Count
           </button>
         ) : null}
 
-        <button className="btn-primary w-fit" onClick={handleSubmit}>
-          Create
+        <button
+          className={`${loading ? "btn-secondary" : "btn-primary"} w-fit`}
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Create"}
         </button>
       </div>
     </div>

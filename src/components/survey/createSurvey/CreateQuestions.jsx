@@ -63,41 +63,11 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
   const [previewImages, setPreviewImages] = useState([null]);
   const [isChecked, setIsChecked] = useState(false);
 
-  const request = {
-    headers: { authToken: localStorage.getItem("authToken") },
-  };
-
-  const getQuestions = async () => {
-    try {
-      const response = await fetch(
-        `${BASE_URL}/survey/show-survey?sid=${surveyId}`,
-        request
-      );
-
-      if (response.status >= 500) {
-        throw new Error(response.status);
-      }
-
-      const json = await response.json();
-
-      if (!json.isSuccess) {
-        throw new Error(response.message);
-      }
-
-      setQuestions(json.questionList);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getFilters = async () => {
-    const response = await makeRequest("config/get-profile-key-value", "GET");
-    setFilters(response.data[2].key);
-  };
   const resetState = () => {
     setOptions(initOptions);
     setPreviewImages([null]);
   };
+
   const setQuestionType = (index, questionType, questionValue) => {
     setActiveButtonIndex(index);
     // setIsChecked(false);
@@ -266,9 +236,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
       setOptions(initOptions);
       setQuestionData(initQuestionData);
       setActiveButtonIndex(1);
-
-      //TODO: use state management for this
-      getQuestions();
     } catch (error) {
       let message = error.message;
       if (error.message >= 500) message = "Something went wrong!!";
@@ -280,60 +247,71 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     }
   };
 
-  const handleSchedule = async () => {
+  const handlePublish = async (type) => {
+    const request = { surveyId };
+
+    switch (type) {
+      case "publish":
+        request.isStartNow = true;
+        break;
+
+      case "schedule":
+        request.isStartNow = false;
+        break;
+
+      default:
+        throw new Error("Invalid publish type!!");
+    }
+
     try {
       const response = await makeRequest(
-        "survey/toggle-survey-status",
+        "survey/start-survey",
         "PATCH",
-        { surveyId }
+        request
       );
 
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
-
-      swal("success", "Survey will start at the scheduled time");
-      navigate("/survey");
-    } catch (error) {
-      swal("error", error.message);
-    }
-  };
-
-  const handlePublish = async () => {
-    try {
-      const response = await makeRequest("survey/start-survey", "PATCH", {
-        surveyId,
-        isStartNow: true,
-      });
-
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
+      if (!response.isSuccess) throw new Error(response.message);
 
       swal("success", response.message);
-      navigate("/survey");
+      // navigate("/survey");
     } catch (error) {
       swal("error", error.message);
     }
   };
 
   useEffect(() => {
+    const getQuestions = async () => {
+      try {
+        const response = await makeRequest(
+          `survey/show-survey?sid=${surveyId}`
+        );
+
+        if (!response.isSuccess) throw new Error(response.message);
+
+        setQuestions(response.questionList);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     getQuestions();
-    getFilters();
-  }, []);
+  }, [surveyId]);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <PageTitle name={surveyTitle} />
         <div className="flex gap-4">
-          <button className="btn-primary w-fit" onClick={handlePublish}>
-            Publish Now
+          <button
+            className="btn-primary w-fit"
+            onClick={() => handlePublish("publish")}
+          >
+            Publish
           </button>
 
           <button
             className="btn-primary bg-tertiary w-fit"
-            onClick={handleSchedule}
+            onClick={() => handlePublish("schedule")}
           >
             Schedule
           </button>

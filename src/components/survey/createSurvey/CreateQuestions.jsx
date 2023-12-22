@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { FilterContext } from "@/contexts/FilterContext";
 
-import swal from "../../../utils/swal";
-import makeRequest from "../../../utils/makeRequest";
-import optionIcon from "../../../assets/option-preview.png";
+import swal from "@/utils/swal";
+import makeRequest from "@/utils/makeRequest";
+import optionIcon from "@/assets/option-preview.png";
 
-import PageTitle from "../../__helperComponents__/PageTitle";
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+import PageTitle from "@helperComps/PageTitle";
+import TertFilterCreate from "@utilComps/TertFilterCreate";
 
 function Select({ value, isChecked, name, handleChange, children }) {
   return (
@@ -46,6 +46,8 @@ function Input({ type, name, value, onChange, disabled }) {
 export default function CreateQuestions({ surveyId, surveyTitle }) {
   const navigate = useNavigate();
 
+  const { fetchedData } = useContext(FilterContext);
+
   const initOptions = ["", ""];
   const initQuestionData = {
     surveyId,
@@ -57,47 +59,18 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
   const [questions, setQuestions] = useState([]);
   const [questionData, setQuestionData] = useState(initQuestionData);
   const [activeButtonIndex, setActiveButtonIndex] = useState(1);
-  const [filters, setFilters] = useState([]);
+  const [filters, setFilters] = useState(fetchedData.data[2].key);
   const [activeFilterIdx, setActiveFilterIdx] = useState(0);
   const [inputType, setInputType] = useState(1);
   const [previewImages, setPreviewImages] = useState([null]);
   const [isChecked, setIsChecked] = useState(false);
+  const [isFilterCreate, setIsFilterCreate] = useState(false);
 
-  const request = {
-    headers: { authToken: localStorage.getItem("authToken") },
-  };
-
-  const getQuestions = async () => {
-    try {
-      const response = await fetch(
-        `${BASE_URL}/survey/show-survey?sid=${surveyId}`,
-        request
-      );
-
-      if (response.status >= 500) {
-        throw new Error(response.status);
-      }
-
-      const json = await response.json();
-
-      if (!json.isSuccess) {
-        throw new Error(response.message);
-      }
-
-      setQuestions(json.questionList);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getFilters = async () => {
-    const response = await makeRequest("config/get-profile-key-value", "GET");
-    setFilters(response.data[2].key);
-  };
   const resetState = () => {
     setOptions(initOptions);
     setPreviewImages([null]);
   };
+
   const setQuestionType = (index, questionType, questionValue) => {
     setActiveButtonIndex(index);
     // setIsChecked(false);
@@ -266,9 +239,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
       setOptions(initOptions);
       setQuestionData(initQuestionData);
       setActiveButtonIndex(1);
-
-      //TODO: use state management for this
-      getQuestions();
     } catch (error) {
       let message = error.message;
       if (error.message >= 500) message = "Something went wrong!!";
@@ -280,67 +250,113 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     }
   };
 
-  const handleSchedule = async () => {
+  const handlePublish = async (type) => {
+    const request = { surveyId };
+
+    switch (type) {
+      case "publish":
+        request.isStartNow = true;
+        break;
+
+      case "schedule":
+        request.isStartNow = false;
+        break;
+
+      default:
+        throw new Error("Invalid publish type!!");
+    }
+
     try {
       const response = await makeRequest(
-        "survey/toggle-survey-status",
+        "survey/start-survey",
         "PATCH",
-        { surveyId }
+        request
       );
 
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
-
-      swal("success", "Survey will start at the scheduled time");
-      navigate("/survey");
-    } catch (error) {
-      swal("error", error.message);
-    }
-  };
-
-  const handlePublish = async () => {
-    try {
-      const response = await makeRequest("survey/start-survey", "PATCH", {
-        surveyId,
-        isStartNow: true,
-      });
-
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
+      if (!response.isSuccess) throw new Error(response.message);
 
       swal("success", response.message);
-      navigate("/survey");
+      // navigate("/survey");
     } catch (error) {
       swal("error", error.message);
     }
   };
 
   useEffect(() => {
+    const getQuestions = async () => {
+      try {
+        const response = await makeRequest(
+          `survey/show-survey?sid=${surveyId}`
+        );
+
+        if (!response.isSuccess) throw new Error(response.message);
+
+        setQuestions(response.questionList);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     getQuestions();
-    getFilters();
-  }, []);
+  }, [surveyId]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <PageTitle name={surveyTitle} />
-        <div className="flex gap-4">
-          <button className="btn-primary w-fit" onClick={handlePublish}>
-            Publish Now
-          </button>
+    <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-16">
+        <div className="flex items-center justify-between">
+          <PageTitle name={surveyTitle} />
+          <div className="flex gap-4">
+            <button
+              className="btn-primary w-fit"
+              onClick={() => handlePublish("publish")}
+            >
+              Publish
+            </button>
 
-          <button
-            className="btn-primary bg-tertiary w-fit"
-            onClick={handleSchedule}
-          >
-            Schedule
-          </button>
+            <button
+              className="btn-primary bg-tertiary w-fit"
+              onClick={() => handlePublish("schedule")}
+            >
+              Schedule
+            </button>
+          </div>
         </div>
+
+        <PageTitle name={"Survey Questions"} />
       </div>
 
       <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-4">
+        <div className="flex items-center gap-12 justify-end">
+          <button
+            className="text-[#EA525F] text-lg font-medium"
+            onClick={() => setIsFilterCreate(true)}
+          >
+            Create Filter
+          </button>
+          <div className="flex items-center gap-4">
+            <input
+              type="checkbox"
+              className="h-6 w-6 accent-secondary"
+              onClick={handleClick}
+              checked={isChecked}
+            />
+            <Select
+              isChecked={isChecked}
+              name={"profileField"}
+              handleChange={handleChange}
+            >
+              <option value="" selected disabled hidden>
+                Select Tertiary Filter
+              </option>
+              {filters.map((filter) => (
+                <option key={filter.id} value={filter.id}>
+                  {filter.key_name}
+                </option>
+              ))}
+            </Select>
+          </div>
+        </div>
+
         <label className="flex flex-col gap-4">
           <span className="font-bold">
             {`Question ${questions.length + 1} :`}
@@ -378,48 +394,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             >
               Multiple Answer
             </button>
-          </div>
-
-          <div className="flex items-center gap-4">
-            {/* {!activeButtonIndex == 0 ? (
-              <select
-                name="inputType"
-                className="px-3 py-2 border-2 "
-                onChange={(e) => {
-                  resetState();
-                  setInputType(e.target.value);
-                  setIsChecked(false);
-                }}
-                value={inputType}
-              >
-                <option value={1}>Only Text</option>
-                <option value={2}>Only Image</option>
-                <option value={3}>Both Text and Image</option>
-              </select>
-            ) : (
-              ""
-            )} */}
-            <input
-              type="checkbox"
-              className="h-6 w-6 accent-secondary"
-              onClick={handleClick}
-              checked={isChecked}
-            />
-            <Select
-              isChecked={isChecked}
-              name={"profileField"}
-              handleChange={handleChange}
-              placeholder={"Profile Key"}
-            >
-              <option value="" selected disabled hidden>
-                Profile Keys
-              </option>
-              {filters.map((filter) => (
-                <option key={filter.id} value={filter.id}>
-                  {filter.key_name}
-                </option>
-              ))}
-            </Select>
           </div>
         </div>
         <div className="flex flex-col gap-4">
@@ -575,6 +549,19 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
           </div>
         ))}
       </div>
+
+      {isFilterCreate ? (
+        <div
+          className={`fixed top-0 left-0 w-full flex justify-center items-center update-user h-[100vh]`}
+          onClick={() => setIsFilterCreate(false)}
+        >
+          <TertFilterCreate
+            stopPropgation={(e) => e.stopPropagation()}
+            setIsFilterCreate={setIsFilterCreate}
+            setFilters={setFilters}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

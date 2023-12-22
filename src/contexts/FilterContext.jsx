@@ -10,7 +10,9 @@ export default function FilterContextProvider({ children }) {
   );
 
   return (
-    <FilterContext.Provider value={{ fetchedData, setFetchedData }}>
+    <FilterContext.Provider
+      value={{ loading, fetchedData, setFetchedData, error }}
+    >
       {children}
     </FilterContext.Provider>
   );

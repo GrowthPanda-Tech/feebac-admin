@@ -2,15 +2,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@helperComps/*": [
-        "./src/components/__helperComponents__/*"
-      ],
-      "@utilComps/*": [
-        "./src/components/__utilComponents__/*"
-      ]
+      "@/*": ["./src/*"],
+      "@helperComps/*": ["./src/components/__helperComponents__/*"],
+      "@utilComps/*": ["./src/components/__utilComponents__/*"]
     }
   }
 }

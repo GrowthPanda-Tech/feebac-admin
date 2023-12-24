@@ -71,9 +71,11 @@
 
   .header {
     @apply relative text-center text-[white];
-    background: linear-gradient(60deg,
-        rgba(234, 82, 95, 1) 50%,
-        rgba(164, 57, 72, 1) 100%);
+    background: linear-gradient(
+      60deg,
+      rgba(234, 82, 95, 1) 50%,
+      rgba(164, 57, 72, 1) 100%
+    );
   }
 
   .logo {
@@ -159,7 +161,6 @@
 }
 
 @layer utilities {
-
   select,
   button {
     -webkit-appearance: none;
@@ -176,7 +177,7 @@
     @apply appearance-none;
   }
 
-  input[type=number] {
+  input[type="number"] {
     -moz-appearance: textfield;
   }
 

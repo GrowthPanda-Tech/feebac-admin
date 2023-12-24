@@ -1,6 +1,6 @@
 # FeeBac Dashboard
 
-Make sure you have [Node.js](https://nodejs.org/en/) and [pnpm](https://pnpm.io/installation) installed.  Use the latest LTS or refer the `.nvmrc` file.
+Make sure you have [Node.js](https://nodejs.org/en/) and [pnpm](https://pnpm.io/installation) installed. Use the latest LTS or refer the `.nvmrc` file.
 
 Clone the repo and install the dependencies
 
@@ -8,7 +8,7 @@ Clone the repo and install the dependencies
 pnpm install
 ```
 
-Create an api key for [TinyMCE](https://www.tiny.cloud/auth/signup/) editor.  
+Create an api key for [TinyMCE](https://www.tiny.cloud/auth/signup/) editor.
 
 Create .env files based on the mode you are currently in (local, production, staging, etc.). Refer [Env Variables and Modes](https://vitejs.dev/guide/env-and-mode) for more info.
 

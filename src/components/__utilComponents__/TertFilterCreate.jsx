@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { FilterContext } from "@/contexts/FilterContext";
 
 import makeRequest from "@/utils/makeRequest";
 import swal from "@/utils/swal";
-import { useContext } from "react";
-import { FilterContext } from "@/contexts/FilterContext";
 
 //TODO: Move this to helper
 function Input({ type = "text", name, value, placeholder, handleChange }) {
@@ -64,6 +63,7 @@ export default function TertFilterCreate({
         "POST",
         tertFilterState
       );
+
       if (!response.isSuccess) throw new Error(response.message);
 
       /* State management */

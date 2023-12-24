@@ -40,8 +40,6 @@
     "vite": "^4.3.9"
   },
   "prettier": {
-    "trailingComma": "es5",
-    "tabWidth": 2,
-    "endOfLine": "lf"
+    "trailingComma": "es5"
   }
 }

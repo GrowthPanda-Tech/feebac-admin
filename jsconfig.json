@@ -6,5 +6,6 @@
       "@helperComps/*": ["./src/components/__helperComponents__/*"],
       "@utilComps/*": ["./src/components/__utilComponents__/*"]
     }
-  }
+  },
+  "exclude": ["node_modules", "dist"]
 }

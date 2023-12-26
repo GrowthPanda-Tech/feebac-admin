@@ -66,6 +66,12 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
   const [isChecked, setIsChecked] = useState(false);
   const [isFilterCreate, setIsFilterCreate] = useState(false);
 
+  const [loading, setLoading] = useState({
+    publish: false,
+    schedule: false,
+    save: false,
+  });
+
   const resetState = () => {
     setOptions(initOptions);
     setPreviewImages([null]);
@@ -98,6 +104,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     if (index >= 0 && index < arr.length && !arr[index][1].trim()) {
       arr[index][1] = value;
     }
+
     return arr;
   }
 
@@ -222,6 +229,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
 
   const handleQuestionSubmit = async () => {
     setIsChecked(false);
+    setLoading({ ...loading, save: true });
 
     try {
       const response = await makeRequest(
@@ -230,15 +238,14 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         questionData
       );
 
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
-
-      swal("success", response.message);
+      if (!response.isSuccess) throw new Error(response.message);
 
       setOptions(initOptions);
       setQuestionData(initQuestionData);
       setActiveButtonIndex(1);
+      getQuestions();
+
+      swal("success", response.message);
     } catch (error) {
       let message = error.message;
       if (error.message >= 500) message = "Something went wrong!!";
@@ -247,6 +254,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     } finally {
       resetState();
       setInputType(1);
+      setLoading({ ...loading, save: false });
     }
   };
 
@@ -266,6 +274,8 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         throw new Error("Invalid publish type!!");
     }
 
+    setLoading({ ...loading, [type]: true });
+
     try {
       const response = await makeRequest(
         "survey/start-survey",
@@ -276,53 +286,51 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
       if (!response.isSuccess) throw new Error(response.message);
 
       swal("success", response.message);
-      // navigate("/survey");
+      navigate("/survey");
     } catch (error) {
       swal("error", error.message);
+    } finally {
+      setLoading({ ...loading, [type]: false });
+    }
+  };
+
+  const getQuestions = async () => {
+    try {
+      const response = await makeRequest(`survey/show-survey?sid=${surveyId}`);
+
+      if (!response.isSuccess) throw new Error(response.message);
+
+      setQuestions(response.questionList);
+    } catch (error) {
+      console.error(error);
     }
   };
 
   useEffect(() => {
-    const getQuestions = async () => {
-      try {
-        const response = await makeRequest(
-          `survey/show-survey?sid=${surveyId}`
-        );
-
-        if (!response.isSuccess) throw new Error(response.message);
-
-        setQuestions(response.questionList);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     getQuestions();
-  }, [surveyId]);
+  }, []);
 
   return (
     <div className="flex flex-col gap-12">
-      <div className="flex flex-col gap-16">
-        <div className="flex items-center justify-between">
-          <PageTitle name={surveyTitle} />
-          <div className="flex gap-4">
-            <button
-              className="btn-primary w-fit"
-              onClick={() => handlePublish("publish")}
-            >
-              Publish
-            </button>
+      <div className="flex items-center justify-between">
+        <PageTitle name={surveyTitle} />
+        <div className="flex gap-4">
+          <button
+            className="btn-primary w-fit disabled:cursor-not-allowed disabled:btn-secondary"
+            onClick={() => handlePublish("publish")}
+            disabled={loading.publish || loading.schedule}
+          >
+            {loading.publish ? "Publishing..." : "Publish"}
+          </button>
 
-            <button
-              className="btn-primary bg-tertiary w-fit"
-              onClick={() => handlePublish("schedule")}
-            >
-              Schedule
-            </button>
-          </div>
+          <button
+            className={`btn-primary bg-tertiary w-fit disabled:cursor-not-allowed disabled:btn-secondary`}
+            onClick={() => handlePublish("schedule")}
+            disabled={loading.schedule || loading.publish}
+          >
+            {loading.schedule ? "Scheduling..." : "Schedule"}
+          </button>
         </div>
-
-        <PageTitle name={"Survey Questions"} />
       </div>
 
       <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-4">
@@ -515,8 +523,12 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             </button>
           ) : null}
 
-          <button className="btn-primary w-fit" onClick={handleQuestionSubmit}>
-            Save
+          <button
+            className="btn-primary w-fit disabled:btn-secondary"
+            onClick={handleQuestionSubmit}
+            disabled={loading.save}
+          >
+            {loading.save ? "Saving..." : "Save"}
           </button>
         </div>
       </div>

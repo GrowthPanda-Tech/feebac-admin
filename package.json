@@ -36,10 +36,14 @@
     "eslint-plugin-react-refresh": "^0.3.4",
     "postcss": "^8.4.31",
     "prettier": "3.0.2",
+    "prettier-plugin-tailwindcss": "^0.5.9",
     "tailwindcss": "^3.3.2",
     "vite": "^4.3.9"
   },
   "prettier": {
-    "trailingComma": "es5"
+    "trailingComma": "es5",
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
   }
 }

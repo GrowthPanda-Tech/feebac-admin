@@ -22,6 +22,7 @@ import NewsDelPop from "./utilComponents/NewsDelPop";
 const HEADERS = ["Name", "Category", "Date", "Actions"];
 
 export default function NewsTable() {
+  //Query params
   const [queryParams, setQueryParams] = useState({
     page: 1,
     count: 10,
@@ -32,11 +33,9 @@ export default function NewsTable() {
     `news/get-news?${params}`
   );
 
+  //Rest of the states
   const [totalItems, setTotalItems] = useState(1);
-  const [delInfo, setDelInfo] = useState({
-    id: null,
-    idx: null,
-  });
+  const [delInfo, setDelInfo] = useState({});
   const [delPop, setDelPop] = useState(false);
 
   const handleDelPop = (id, idx) => {
@@ -51,13 +50,15 @@ export default function NewsTable() {
         "DELETE"
       );
 
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
+      if (!response.isSuccess) throw new Error(response.message);
 
       swal("success", response.message);
 
-      //TODO: manage state
+      //update context
+      const spread = { ...fetchedData };
+      spread.data.splice(delInfo.idx, 1);
+      setFetchedData(spread);
+
       setDelPop(false);
     } catch (error) {
       swal("error", error.message);
@@ -70,7 +71,7 @@ export default function NewsTable() {
         <PageTitle name={"News"} />
         <Link to={"create"}>
           <button className="btn-primary">
-            <i className="fa-solid fa-plus"></i>
+            <i className="fa-solid fa-plus" />
             Add News
           </button>
         </Link>

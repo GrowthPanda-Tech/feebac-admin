@@ -23,13 +23,13 @@ export function TermsAndCondition({ setCouponData, data }) {
   }, [data]);
   return (
     <>
-      <label className="font-semibold text-gray-700 flex flex-col pb-1">
+      <label className="flex flex-col pb-1 font-semibold text-gray-700">
         Terms And Condition
         <textarea
           rows="5"
           cols="40"
           value={text}
-          className="border-2  input-article  rounded-lg px-4 py-2 "
+          className="input-article  rounded-lg  border-2 px-4 py-2 "
           onChange={(e) => {
             setText(e.target.value);
             setCouponData((prev) => ({

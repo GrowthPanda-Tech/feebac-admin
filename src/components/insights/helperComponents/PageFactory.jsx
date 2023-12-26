@@ -8,10 +8,10 @@ export default function PageFactory() {
   const { insightModel } = useContext(InsightContext);
 
   return (
-    <div className="flex gap-8 flex-wrap">
+    <div className="flex flex-wrap gap-8">
       {insightModel.pages.map((_, idx) => (
         <div className="flex flex-col gap-3" key={idx}>
-          <span className="text-accent font-medium leading-snug">
+          <span className="font-medium leading-snug text-accent">
             Page {idx + 1}
           </span>
 

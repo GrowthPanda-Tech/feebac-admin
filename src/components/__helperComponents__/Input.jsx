@@ -17,7 +17,7 @@ export default function Input({
         type={type}
         disabled={disabled}
         onChange={handleChange}
-        className="rounded-lg px-4 py-2 w-full border border-[#A6ACBE] disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-white"
+        className="w-full rounded-lg border border-[#A6ACBE] px-4 py-2 disabled:cursor-not-allowed disabled:bg-white disabled:opacity-50"
       />
     </label>
   );

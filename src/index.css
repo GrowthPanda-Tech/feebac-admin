@@ -14,55 +14,55 @@
   }
 
   .login-input {
-    @apply border-2 border-accent rounded-3xl py-6 px-12 text-xl;
+    @apply rounded-3xl border-2 border-accent px-12 py-6 text-xl;
   }
 
   .input-primary {
-    @apply border border-lighest-grey rounded-xl p-4 font-normal mt-2 outline-2 outline-primary;
+    @apply mt-2 rounded-xl border border-lighest-grey p-4 font-normal outline-2 outline-primary;
   }
 
   .input-article {
-    @apply border-2 border-accent py-3 px-8 rounded-xl bg-white;
+    @apply rounded-xl border-2 border-accent bg-white px-8 py-3;
   }
 
   .input-settings {
-    @apply bg-white border border-[#C9CED6] rounded-md py-4 px-6;
+    @apply rounded-md border border-[#C9CED6] bg-white px-6 py-4;
   }
 
   .heading {
-    @apply text-2xl font-semibold mb-8;
+    @apply mb-8 text-2xl font-semibold;
   }
 
   .btn {
-    @apply px-8 py-3 rounded-xl flex items-center gap-2 font-semibold;
+    @apply flex items-center gap-2 rounded-xl px-8 py-3 font-semibold;
   }
 
   .btn-primary {
-    @apply bg-secondary text-white btn hover:bg-primary transition disabled:cursor-not-allowed;
+    @apply btn bg-secondary text-white transition hover:bg-primary disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply bg-light-grey text-dark-grey btn disabled:cursor-not-allowed;
+    @apply btn bg-light-grey text-dark-grey disabled:cursor-not-allowed;
   }
 
   .btn-action {
-    @apply bg-[#F1F1F1] rounded-md px-8 py-2 hover:bg-secondary hover:text-white transition;
+    @apply rounded-md bg-[#F1F1F1] px-8 py-2 transition hover:bg-secondary hover:text-white;
   }
 
   .pill-primary {
-    @apply py-2 px-6 bg-white border text-[#EA8552] font-semibold border-[#EA8552] rounded-xl;
+    @apply rounded-xl border border-[#EA8552] bg-white px-6 py-2 font-semibold text-[#EA8552];
   }
 
   .pill-secondary {
-    @apply py-2 px-6 bg-white text-[#858585] border border-dark-grey rounded-xl;
+    @apply rounded-xl border border-dark-grey bg-white px-6 py-2 text-[#858585];
   }
 
   .tool-tip-span {
-    @apply pointer-events-none absolute z-20 text-sm text-white rounded-lg p-2 w-max opacity-0 transition-opacity group-hover:opacity-100;
+    @apply pointer-events-none absolute z-20 w-max rounded-lg p-2 text-sm text-white opacity-0 transition-opacity group-hover:opacity-100;
   }
 
   .triangle {
-    @apply w-0 h-0 border-t-[10px] border-t-[#ffffff] border-b-0 border-[10px] border-solid;
+    @apply h-0 w-0 border-[10px] border-b-0 border-t-[10px] border-solid border-t-[#ffffff];
   }
 
   .tool-tip-div {
@@ -79,15 +79,15 @@
   }
 
   .logo {
-    @apply w-[50px] fill-[white] inline-block align-middle pr-[15px];
+    @apply inline-block w-[50px] fill-[white] pr-[15px] align-middle;
   }
 
   .inner-header {
-    @apply h-[65vh] w-full m-0 p-0;
+    @apply m-0 h-[65vh] w-full p-0;
   }
 
   .waves {
-    @apply relative w-full h-[15vh] min-h-[100px] max-h-[150px] -mb-0.5;
+    @apply relative -mb-0.5 h-[15vh] max-h-[150px] min-h-[100px] w-full;
   }
 
   .toggle-container {
@@ -95,15 +95,15 @@
   }
 
   .slider-label {
-    @apply text-base select-none;
+    @apply select-none text-base;
   }
 
   .slider {
-    @apply w-[60px] h-[30px] bg-[#ccc] relative cursor-pointer transition-[background-color] duration-[0.3s] ease-[ease-in-out] rounded-[15px];
+    @apply relative h-[30px] w-[60px] cursor-pointer rounded-[15px] bg-[#ccc] transition-[background-color] duration-[0.3s] ease-[ease-in-out];
   }
 
   .slider-thumb {
-    @apply w-[30px] h-[30px] bg-white absolute transition-transform duration-[0.3s] ease-[ease-in-out] rounded-[50%] left-0 top-0;
+    @apply absolute left-0 top-0 h-[30px] w-[30px] rounded-[50%] bg-white transition-transform duration-[0.3s] ease-[ease-in-out];
   }
 
   .slider.active {
@@ -119,13 +119,13 @@
   }
 
   .update-user {
-    @apply bg-[#4f4f4f40]
-    /* backdrop-blur-[2px] */
-    z-[100];
+    @apply /*
+    */ z-[100] bg-[#4f4f4f40]
+    backdrop-blur-[2px];
   }
 
   .card-img {
-    @apply bg-[url("../src/assets/couponsbg.png")] bg-no-repeat w-full h-[170px] bg-contain;
+    @apply h-[170px] w-full bg-[url("../src/assets/couponsbg.png")] bg-contain bg-no-repeat;
   }
 
   .disable-filter {
@@ -133,19 +133,19 @@
   }
 
   .tooltip-arrow {
-    @apply border-[transparent_transparent_black_transparent] absolute border-solid border-black border-2 h-3 w-3 transform rotate-45 bg-black;
+    @apply absolute h-3 w-3 rotate-45 transform border-2 border-solid border-[transparent_transparent_black_transparent] border-black bg-black;
   }
 
   .chip-red {
-    @apply bg-[#ea525f1f] border text-[#EA525F] border-[#EA525F] rounded-md px-4;
+    @apply rounded-md border border-[#EA525F] bg-[#ea525f1f] px-4 text-[#EA525F];
   }
 
   .chip-green {
-    @apply bg-[#49a74024] border text-[#48A740] border-[#48A740] rounded-md px-4;
+    @apply rounded-md border border-[#48A740] bg-[#49a74024] px-4 text-[#48A740];
   }
 
   .disabled-card {
-    @apply opacity-60 grayscale bg-[#c9c6c6] border shadow-none cursor-not-allowed border-solid border-[#ccc];
+    @apply cursor-not-allowed border border-solid border-[#ccc] bg-[#c9c6c6] opacity-60 shadow-none grayscale;
   }
 }
 
@@ -190,6 +190,6 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-light-grey rounded-xl;
+    @apply rounded-xl bg-light-grey;
   }
 }

@@ -2,8 +2,8 @@ import EditSurveyForm from "./EditSurveyForm";
 
 function EditSurveyDetails({ setSurveyEditPop, surveyInfo, setSurveyInfo }) {
   return (
-    <div className="fixed top-0 left-0 w-full flex justify-center items-center update-user h-[100vh] ">
-      <div className="w-[75%] p-8 rounded-md bg-white flex flex-col">
+    <div className="update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center ">
+      <div className="flex w-[75%] flex-col rounded-md bg-white p-8">
         <EditSurveyForm
           setSurveyEditPop={setSurveyEditPop}
           surveyInfo={surveyInfo}

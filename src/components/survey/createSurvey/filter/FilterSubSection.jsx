@@ -83,9 +83,9 @@ export default function FilterSubSection({ filterData, setProfileData }) {
           filterValues[index] ? (
             <div
               key={index}
-              className="flex flex-col gap-4 bg-white p-4 rounded-lg h-[12rem] overflow-y-scroll"
+              className="flex h-[12rem] flex-col gap-4 overflow-y-scroll rounded-lg bg-white p-4"
             >
-              <div className="capitalize text-lg font-semibold">
+              <div className="text-lg font-semibold capitalize">
                 {data.key_name}
               </div>
               {data.is_select ? (

@@ -11,10 +11,10 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
       <div className="flex gap-6">
         <div className="md:w-1/2">
           <label className="flex flex-col">
-            <span className="font-semibold mb-2">Title</span>
+            <span className="mb-2 font-semibold">Title</span>
             <input
               name="title"
-              className={`py-3 px-8 rounded-xl  ${
+              className={`rounded-xl px-8 py-3  ${
                 isSaving ? "bg-light-grey" : ""
               }`}
               value={newsData ? newsData.title : ""}
@@ -33,13 +33,13 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
         </div>
       </div>
       <label className="flex flex-col">
-        <span className="font-semibold mb-2">Source Link</span>
+        <span className="mb-2 font-semibold">Source Link</span>
         <input
           name="source_url"
           type="url"
           placeholder="https://example.com"
           pattern="https://.*"
-          className={`py-3 px-8 rounded-xl  ${isSaving ? "bg-light-grey" : ""}`}
+          className={`rounded-xl px-8 py-3  ${isSaving ? "bg-light-grey" : ""}`}
           value={newsData ? newsData.source_url : ""}
           onChange={handleChange}
           disabled={isSaving}
@@ -48,12 +48,12 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
       </label>
 
       <label className="flex flex-col">
-        <span className="font-semibold mb-2">Image</span>
+        <span className="mb-2 font-semibold">Image</span>
         <input
           name="news_image"
           type="file"
           accept="image/*"
-          className={`py-3 px-8 rounded-xl  ${
+          className={`rounded-xl px-8 py-3  ${
             isSaving ? "bg-light-grey" : "bg-white"
           }`}
           onChange={handleChange}
@@ -63,10 +63,10 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
       </label>
 
       <label className="flex flex-col">
-        <span className="font-semibold mb-2">Caption</span>
+        <span className="mb-2 font-semibold">Caption</span>
         <input
           name="caption"
-          className={`py-3 px-8 rounded-xl  ${isSaving ? "bg-light-grey" : ""}`}
+          className={`rounded-xl px-8 py-3  ${isSaving ? "bg-light-grey" : ""}`}
           value={newsData ? newsData.caption : ""}
           onChange={handleChange}
           required
@@ -75,9 +75,9 @@ export default function NewsForm({ newsData, handleChange, isSaving }) {
       </label>
 
       <label className="flex flex-col">
-        <span className="font-semibold mb-2">Description</span>
+        <span className="mb-2 font-semibold">Description</span>
         <textarea
-          className={`p-8 rounded-xl  ${isSaving ? "bg-light-grey" : ""}`}
+          className={`rounded-xl p-8  ${isSaving ? "bg-light-grey" : ""}`}
           label={"Description"}
           name={"description"}
           rows={10}

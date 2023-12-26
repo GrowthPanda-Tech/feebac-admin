@@ -37,7 +37,7 @@ export default function ImgPicker({ idx }) {
   return (
     //TODO: uh...
     <div
-      className={`relative bg-white text-sm border border-dashed border-[#00000080] rounded-2xl w-40 h-80 flex flex-col px-3 justify-center items-center text-center gap-3`}
+      className={`relative flex h-80 w-40 flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-[#00000080] bg-white px-3 text-center text-sm`}
       style={{
         backgroundImage: background,
         backgroundSize: "cover",
@@ -52,7 +52,7 @@ export default function ImgPicker({ idx }) {
           <span>
             Or{" "}
             <span
-              className="text-secondary cursor-pointer underline"
+              className="cursor-pointer text-secondary underline"
               onClick={() => imgRef.current.click()}
             >
               browse file
@@ -71,7 +71,7 @@ export default function ImgPicker({ idx }) {
       )}
       <img
         src={deleteIcon}
-        className="text-lg cursor-pointer absolute top-0 right-0 p-4"
+        className="absolute right-0 top-0 cursor-pointer p-4 text-lg"
         onClick={handleDelete}
       />
     </div>

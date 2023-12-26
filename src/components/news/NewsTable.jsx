@@ -97,7 +97,7 @@ export default function NewsTable() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex w-full justify-between items-center">
+      <div className="flex w-full items-center justify-between">
         <PageTitle name={"News"} />
         <Link to={"create"}>
           <button className="btn-primary">
@@ -109,7 +109,7 @@ export default function NewsTable() {
       <div className="flex justify-between">
         <input
           type="text"
-          className="pill-primary border-0 w-3/4"
+          className="pill-primary w-3/4 border-0"
           placeholder={`Search in News...`}
           value={searchQuery}
           onChange={(e) => {
@@ -124,7 +124,7 @@ export default function NewsTable() {
         />
       </div>
 
-      <div className="h-[55vh] bg-white overflow-y-scroll">
+      <div className="h-[55vh] overflow-y-scroll bg-white">
         {loading ? (
           <LoadingSpinner />
         ) : (
@@ -139,13 +139,13 @@ export default function NewsTable() {
                     <TableDateTime date={news.create_date} />
                   </Tdata>
                   <Tdata>
-                    <div className="text-xl flex justify-center gap-5">
+                    <div className="flex justify-center gap-5 text-xl">
                       <div className="flex justify-center">
                         <div className="tool-tip-div group">
                           <Link to={news.source_url} target="_blank">
                             <i className="fa-solid fa-link"></i>
                           </Link>
-                          <span className="tool-tip-span -right-[1.8rem] bg-black -top-12 ">
+                          <span className="tool-tip-span -right-[1.8rem] -top-12 bg-black ">
                             Visit Link
                             <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
                           </span>
@@ -161,7 +161,7 @@ export default function NewsTable() {
                           >
                             <i className="fa-solid fa-pen-to-square"></i>
                           </Link>
-                          <span className="tool-tip-span -right-[1.8rem] bg-black -top-12 ">
+                          <span className="tool-tip-span -right-[1.8rem] -top-12 bg-black ">
                             Edit News
                             <span className="tooltip-arrow bottom-[-2px] left-[46%]"></span>
                           </span>
@@ -172,7 +172,7 @@ export default function NewsTable() {
                           <button onClick={() => handleDelPop(news.id, index)}>
                             <i className="fa-solid fa-trash"></i>
                           </button>
-                          <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                          <span className="tool-tip-span -right-[2.8rem] -top-12 bg-black ">
                             Delete News
                             <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
                           </span>
@@ -186,7 +186,7 @@ export default function NewsTable() {
           </Table>
         )}
         {newsList.length === 0 ? (
-          <div className="flex justify-center items-center p-56 opacity-50">
+          <div className="flex items-center justify-center p-56 opacity-50">
             No News Found !!
           </div>
         ) : null}

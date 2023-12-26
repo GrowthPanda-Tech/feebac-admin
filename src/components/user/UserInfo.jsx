@@ -25,7 +25,7 @@ const LOYALTY_HEADERS = ["Type", "Date", "Transaction"];
 
 function PointStats({ name, value }) {
   return (
-    <div className="flex flex-col items-center bg-secondary text-white text-lg w-1/2 py-6 font-medium rounded-xl">
+    <div className="flex w-1/2 flex-col items-center rounded-xl bg-secondary py-6 text-lg font-medium text-white">
       <span> {value} </span>
       <span> {name} </span>
     </div>
@@ -105,13 +105,13 @@ export default function UserInfo() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold p-2 text-secondary border-b border-b-light-grey">
+      <h1 className="border-b border-b-light-grey p-2 text-2xl font-semibold text-secondary">
         {slug}
       </h1>
 
-      <div className="flex flex-col gap-8 mt-2">
+      <div className="mt-2 flex flex-col gap-8">
         <div className="flex h-[33vh] justify-between gap-6">
-          <div className="flex flex-col gap-6 bg-white rounded-xl p-6 w-8/12">
+          <div className="flex w-8/12 flex-col gap-6 rounded-xl bg-white p-6">
             <PageTitle name={"Transaction Ledger"} />
             <div className=" overflow-y-scroll">
               {loading ? (
@@ -145,17 +145,17 @@ export default function UserInfo() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-6 justify-evenly items-center bg-white rounded-xl p-8 w-4/12">
+          <div className="flex w-4/12 flex-col items-center justify-evenly gap-6 rounded-xl bg-white p-8">
             <div className="flex w-full gap-4">
               <PointStats name={"Total Gain"} value={points.totalCredit} />
               <PointStats name={"Total Spend"} value={points.totalSpend} />
             </div>
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col items-center justify-center">
               <img src={loyaltyImg} className="h-12 w-12" />
-              <span className="text-accent text-3xl font-semibold leading-loose">
+              <span className="text-3xl font-semibold leading-loose text-accent">
                 {points.totalCredit - points.totalSpend}
               </span>
-              <span className="text-black text-lg font-medium leading-7">
+              <span className="text-lg font-medium leading-7 text-black">
                 Remaining Points
               </span>
             </div>
@@ -163,14 +163,14 @@ export default function UserInfo() {
         </div>
 
         {/* Participated Surveys Table */}
-        <div className="bg-white rounded-xl ">
-          <div className="p-6 text-xl font-semibold border-b border-b-light-grey flex gap-4">
+        <div className="rounded-xl bg-white ">
+          <div className="flex gap-4 border-b border-b-light-grey p-6 text-xl font-semibold">
             <PageTitle name={"Participated Surveys"} />
-            <span className="bg-secondary rounded-full text-white w-8 h-8 flex items-center justify-center">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-white">
               {surveyList.length}
             </span>
           </div>
-          <div className=" overflow-y-scroll h-[28vh]">
+          <div className=" h-[28vh] overflow-y-scroll">
             {loading ? (
               <LoadingSpinner />
             ) : (

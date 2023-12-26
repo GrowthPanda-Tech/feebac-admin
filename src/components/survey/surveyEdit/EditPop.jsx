@@ -9,7 +9,7 @@ function EditPop({
   setSurveyInfo,
 }) {
   return (
-    <div className="fixed top-0 left-0 w-full flex justify-center items-center update-user h-[100vh] ">
+    <div className="update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center ">
       <div className="flex flex-col">
         <EditQuestion
           surveyId={surveyId}

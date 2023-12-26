@@ -92,7 +92,7 @@ export default function NewsCreate() {
               type="submit"
               className={` ${
                 isSaving ? "btn-secondary" : "btn-primary"
-              } w-fit mt-8`}
+              } mt-8 w-fit`}
             >
               <i className="fa-solid fa-floppy-disk mr-2"></i>
               {isSaving ? "Publishing" : "Publish"}
@@ -100,7 +100,7 @@ export default function NewsCreate() {
           </form>
         </div>
 
-        <div className="w-1/4 h-60 p-4 rounded-xl bg-white flex items-center justify-center">
+        <div className="flex h-60 w-1/4 items-center justify-center rounded-xl bg-white p-4">
           <img src={imgPreview} className="max-h-full max-w-full" />
         </div>
       </div>

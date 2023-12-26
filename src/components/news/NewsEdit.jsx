@@ -104,7 +104,7 @@ export default function NewsEdit() {
           <button
             className={` ${
               isSaving ? "btn-secondary" : "btn-primary"
-            }  w-fit mt-8 `}
+            }  mt-8 w-fit `}
             onClick={handleSubmit}
             disabled={isSaving}
           >
@@ -113,7 +113,7 @@ export default function NewsEdit() {
           </button>
         </div>
 
-        <div className="bg-white p-4 w-1/4 h-60 rounded-xl">
+        <div className="h-60 w-1/4 rounded-xl bg-white p-4">
           <div
             className="h-full w-full bg-contain"
             style={{

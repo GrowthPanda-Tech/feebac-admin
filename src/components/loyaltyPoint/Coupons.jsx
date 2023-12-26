@@ -65,20 +65,20 @@ function Coupons() {
       </div>
 
       {loading && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
+        <div className="grid grid-cols-1 gap-20 md:grid-cols-2 lg:grid-cols-3">
           <CardSkeleton card={6} />
         </div>
       )}
 
       {couponData.length === 0 ? (
-        <div className="flex h-[60vh] font-semibold text-2xl justify-center items-center">
+        <div className="flex h-[60vh] items-center justify-center text-2xl font-semibold">
           No Coupons Avaiable !! Add new
         </div>
       ) : (
         ""
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
+      <div className="grid grid-cols-1 gap-20 md:grid-cols-2 lg:grid-cols-3">
         {couponData.map((data, index) => (
           <Card
             key={index}

@@ -89,9 +89,9 @@ export default function User() {
                       <div className="flex justify-center">
                         <div className="tool-tip-div group">
                           <Link to={user_id}>
-                            <i className="text-xl fa-solid fa-circle-info"></i>
+                            <i className="fa-solid fa-circle-info text-xl"></i>
                           </Link>
-                          <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                          <span className="tool-tip-span -right-[2.8rem] -top-12 bg-black ">
                             See User Info
                             <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
                           </span>

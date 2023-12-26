@@ -12,7 +12,7 @@ export default function TertCreateInput({
       value={value}
       placeholder={placeholder}
       onChange={handleChange}
-      className="w-full bg-background py-5 px-8 rounded-md disabled:cursor-not-allowed"
+      className="w-full rounded-md bg-background px-8 py-5 disabled:cursor-not-allowed"
     />
   );
 }

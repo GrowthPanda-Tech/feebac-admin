@@ -12,12 +12,12 @@ import TertFilterCreate from "@utilComps/TertFilterCreate";
 function Select({ value, isChecked, name, handleChange, children }) {
   return (
     <div
-      className={`flex items-center bg-background rounded-md border border-[#C9C9C9] ${
+      className={`flex items-center rounded-md border border-[#C9C9C9] bg-background ${
         !isChecked && "opacity-50"
       }`}
     >
       <select
-        className="px-3 py-2 appearance-none outline-0"
+        className="appearance-none px-3 py-2 outline-0"
         value={value}
         disabled={!isChecked}
         name={name}
@@ -36,7 +36,7 @@ function Input({ type, name, value, onChange, disabled }) {
       name={name}
       value={value}
       onChange={onChange}
-      className="w-full bg-background py-5 px-8 rounded-md disabled:cursor-not-allowed"
+      className="w-full rounded-md bg-background px-8 py-5 disabled:cursor-not-allowed"
       disabled={disabled}
       onClick={null}
     />
@@ -316,7 +316,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         <PageTitle name={surveyTitle} />
         <div className="flex gap-4">
           <button
-            className="btn-primary w-fit disabled:cursor-not-allowed disabled:btn-secondary"
+            className="btn-primary disabled:btn-secondary w-fit disabled:cursor-not-allowed"
             onClick={() => handlePublish("publish")}
             disabled={loading.publish || loading.schedule}
           >
@@ -324,7 +324,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
           </button>
 
           <button
-            className={`btn-primary bg-tertiary w-fit disabled:cursor-not-allowed disabled:btn-secondary`}
+            className={`btn-primary disabled:btn-secondary w-fit bg-tertiary disabled:cursor-not-allowed`}
             onClick={() => handlePublish("schedule")}
             disabled={loading.schedule || loading.publish}
           >
@@ -333,10 +333,10 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         </div>
       </div>
 
-      <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-4">
-        <div className="flex items-center gap-12 justify-end">
+      <div className="flex flex-col gap-4 rounded-xl bg-white px-8 py-12">
+        <div className="flex items-center justify-end gap-12">
           <button
-            className="text-[#EA525F] text-lg font-medium"
+            className="text-lg font-medium text-[#EA525F]"
             onClick={() => setIsFilterCreate(true)}
           >
             Create Filter
@@ -377,7 +377,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
           />
         </label>
         <div className="flex w-full items-center justify-between">
-          <div className="flex gap-7 h-fit">
+          <div className="flex h-fit gap-7">
             <button
               className={`pill ${
                 activeButtonIndex === 0 ? "pill-primary" : "pill-secondary"
@@ -416,7 +416,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             options.map((option, index) => (
               <div
                 key={index}
-                className="flex gap-8 items-center justify-between"
+                className="flex items-center justify-between gap-8"
               >
                 {inputType == 1 && (
                   <Input
@@ -432,13 +432,13 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                     {previewImages[index] ? (
                       <img
                         src={previewImages[index]}
-                        className="w-32 h-32"
+                        className="h-32 w-32"
                         alt={`Selected Image Preview ${index}`}
                       />
                     ) : (
                       <img
                         src={optionIcon}
-                        className="w-32 h-32"
+                        className="h-32 w-32"
                         alt="Default Image"
                       />
                     )}
@@ -516,7 +516,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
           questionData.questionType !== 4 ? (
             <button
               onClick={() => setOptions([...options, ""])}
-              className="btn-primary bg-white text-black hover:bg-secondary hover:text-white border border-grey w-fit"
+              className="btn-primary w-fit border border-grey bg-white text-black hover:bg-secondary hover:text-white"
             >
               <i className="fa-solid fa-plus"></i>
               <span>Add Options</span>
@@ -524,7 +524,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
           ) : null}
 
           <button
-            className="btn-primary w-fit disabled:btn-secondary"
+            className="btn-primary disabled:btn-secondary w-fit"
             onClick={handleQuestionSubmit}
             disabled={loading.save}
           >
@@ -537,7 +537,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         {questions.map((question, index) => (
           <div
             key={index}
-            className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8"
+            className="flex flex-col gap-8 rounded-xl bg-white px-8 py-12"
           >
             <span className="font-bold">Question {index + 1} :</span>
             <Input type={"text"} value={question.question_title} disabled />
@@ -545,9 +545,9 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
               {Object.values(question.question_values).map((value, index) => (
                 <div key={index} className="flex items-center gap-4">
                   {question.question_type.type_id === 2 ? (
-                    <input type="radio" className="w-4 h-4" disabled />
+                    <input type="radio" className="h-4 w-4" disabled />
                   ) : question.question_type.type_id === 3 ? (
-                    <input type="checkbox" className="w-4 h-4" disabled />
+                    <input type="checkbox" className="h-4 w-4" disabled />
                   ) : (
                     <></>
                   )}
@@ -564,7 +564,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
 
       {isFilterCreate ? (
         <div
-          className={`fixed top-0 left-0 w-full flex justify-center items-center update-user h-[100vh]`}
+          className={`update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center`}
           onClick={() => setIsFilterCreate(false)}
         >
           <TertFilterCreate

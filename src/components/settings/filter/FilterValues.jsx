@@ -49,8 +49,8 @@ export default function FilterValues({
       {isSelect ? (
         <div className="flex flex-col gap-4">
           {options.map((option, index) => (
-            <div key={index} className="flex justify-between items-center">
-              <span className="text-accent font-semibold">{option}</span>
+            <div key={index} className="flex items-center justify-between">
+              <span className="font-semibold text-accent">{option}</span>
               <i
                 className="fa-solid fa-xmark cursor-pointer"
                 onClick={() => handleOptionRemove(index)}
@@ -70,7 +70,7 @@ export default function FilterValues({
             />
           ) : (
             <div
-              className="flex items-center cursor-pointer"
+              className="flex cursor-pointer items-center"
               onClick={() => setAddingOption(true)}
             >
               <i className="fa-solid fa-plus mr-4"></i>

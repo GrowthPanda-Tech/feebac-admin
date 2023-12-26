@@ -90,10 +90,10 @@ export default function ProfileUpdate() {
 
   return (
     <div className="flex gap-4">
-      <div className="rounded-xl flex flex-col gap-6 items-center justify-center md:w-2/5 bg-white shadow-md">
-        <span className="text-xl font-semibold block">Admin Profile</span>
+      <div className="flex flex-col items-center justify-center gap-6 rounded-xl bg-white shadow-md md:w-2/5">
+        <span className="block text-xl font-semibold">Admin Profile</span>
         <img
-          className="rounded-full border-double h-56 w-56 border-4 border-[#A43948] hover:opacity-50 transition cursor-pointer"
+          className="h-56 w-56 cursor-pointer rounded-full border-4 border-double border-[#A43948] transition hover:opacity-50"
           src={imgPreview ? imgPreview : userState.profile_pic}
           onClick={() => imgRef.current.click()}
         />
@@ -107,7 +107,7 @@ export default function ProfileUpdate() {
         />
       </div>
 
-      <div className="md:w-3/5 p-8 bg-white shadow-md flex flex-col gap-6 rounded-xl">
+      <div className="flex flex-col gap-6 rounded-xl bg-white p-8 shadow-md md:w-3/5">
         <Input
           label={"First Name"}
           name="first_name"

@@ -10,7 +10,7 @@ function FilterLoyalty({
     <div className="flex items-center gap-2 ">
       <select
         value={selectedSort}
-        className="pill-primary border-dashed w-50"
+        className="pill-primary w-50 border-dashed"
         onChange={(e) => setSelectedSort(e.target.value)}
       >
         <option value="">{selectedSort === "" ? "Filter" : "Default"}</option>
@@ -20,7 +20,7 @@ function FilterLoyalty({
       {selectedSort === "By Reason" && (
         <select
           value={selectedReason}
-          className="pill-primary border-dashed w-50"
+          className="pill-primary w-50 border-dashed"
           onChange={(e) => setSelectedReason(e.target.value)}
         >
           <option value="All">All</option>
@@ -35,7 +35,7 @@ function FilterLoyalty({
       {selectedSort === "By Points History" && (
         <select
           value={selectedPointsHistory}
-          className="pill-primary border-dashed w-50"
+          className="pill-primary w-50 border-dashed"
           onChange={(e) => setSelectedPointsHistory(e.target.value)}
         >
           <option value="All">All</option>

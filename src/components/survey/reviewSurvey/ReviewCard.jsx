@@ -30,7 +30,7 @@ export default function ReviewCard({
   return (
     <>
       <div className="flex flex-col gap-6">
-        <div className="text-secondary justify-between w-full flex font-semibold">
+        <div className="flex w-full justify-between font-semibold text-secondary">
           Question {index + 1} ({type})
           <button
             onClick={() => {
@@ -40,13 +40,13 @@ export default function ReviewCard({
             <i className="fa-regular fa-pen-to-square text-xl"></i>
           </button>
         </div>
-        <div className="flex rounded-lg  bg-white h-full shadow-xl p-8 flex-col">
-          <div className="flex items-center mb-3">
-            <h2 className="text-black text-lg font-medium">
+        <div className="flex h-full  flex-col rounded-lg bg-white p-8 shadow-xl">
+          <div className="mb-3 flex items-center">
+            <h2 className="text-lg font-medium text-black">
               {question.question_title}
             </h2>
           </div>
-          <div className="flex flex-col justify-evenly flex-grow">
+          <div className="flex flex-grow flex-col justify-evenly">
             {Object.values(question.question_values).map((option, index) => (
               <div key={index} className="flex flex-col gap-2">
                 <div className="mt-4 flex justify-between font-bold">

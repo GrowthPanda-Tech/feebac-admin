@@ -28,7 +28,7 @@ export default function InsightCard({ data }) {
 
   return (
     <div
-      className={`relative border border-[#00000080] p-4 rounded-2xl w-40 h-80 flex items-center justify-center ${
+      className={`relative flex h-80 w-40 items-center justify-center rounded-2xl border border-[#00000080] p-4 ${
         !cardData.is_public ? "disabled-card" : ""
       }`}
       style={{
@@ -40,7 +40,7 @@ export default function InsightCard({ data }) {
       <i
         className={`fa-solid ${
           cardData.is_public ? "fa-eye-slash" : "fa-eye"
-        } absolute top-0 right-0 p-4 cursor-pointer`}
+        } absolute right-0 top-0 cursor-pointer p-4`}
         style={{
           color: "white",
         }}

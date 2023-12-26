@@ -1,7 +1,7 @@
 export default function PrimaryButton({ children, name, handleClick }) {
   return (
     <button
-      className="py-3 px-8 bg-secondary hover:bg-primary transition text-white text-lg font-semibold flex items-center gap-2 rounded-md"
+      className="flex items-center gap-2 rounded-md bg-secondary px-8 py-3 text-lg font-semibold text-white transition hover:bg-primary"
       onClick={handleClick}
     >
       {children}

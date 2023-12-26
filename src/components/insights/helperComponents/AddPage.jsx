@@ -13,13 +13,13 @@ export default function AddPage() {
 
   return (
     <div className="flex flex-col gap-3">
-      <span className="text-[#BABABA] font-medium leading-snug">
+      <span className="font-medium leading-snug text-[#BABABA]">
         Page {insightModel.pages.length + 1}
       </span>
 
-      <div className="bg-transparent border border-dashed border-[#00000080] rounded-2xl w-40 h-80 flex items-center justify-center">
+      <div className="flex h-80 w-40 items-center justify-center rounded-2xl border border-dashed border-[#00000080] bg-transparent">
         <span
-          className="select-none text-[#BCBCBC] text-6xl cursor-pointer"
+          className="cursor-pointer select-none text-6xl text-[#BCBCBC]"
           onClick={handleClick}
         >
           +

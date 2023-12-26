@@ -86,7 +86,7 @@ export default function TertFilterCreate({
   return (
     <div
       onClick={stopPropgation}
-      className="h-[40rem] p-12 bg-white aspect-square shadow-md rounded-xl flex flex-col gap-7"
+      className="flex aspect-square h-[40rem] flex-col gap-7 rounded-xl bg-white p-12 shadow-md"
     >
       <div className="flex justify-between text-xl">
         <span className="font-medium"> Create Filter </span>
@@ -95,13 +95,13 @@ export default function TertFilterCreate({
           disabled={loading}
           className={`${
             loading ? "text-tertiary" : "text-[#EA525F]"
-          } hover:text-black transition font-semibold`}
+          } font-semibold transition hover:text-black`}
         >
           {loading ? "Adding..." : "Done"}
         </button>
       </div>
 
-      <div className="flex flex-col gap-5 p-1 overflow-y-scroll">
+      <div className="flex flex-col gap-5 overflow-y-scroll p-1">
         <TertCreateInput
           name={"name"}
           value={tertFilterState.name}
@@ -130,7 +130,7 @@ export default function TertFilterCreate({
 
       <button
         onClick={handleClick}
-        className="border-2 border-[#EA8552] text-[#EA8552] hover:bg-[#EA8552] hover:text-white transition font-medium w-fit py-3 px-6 rounded-xl"
+        className="w-fit rounded-xl border-2 border-[#EA8552] px-6 py-3 font-medium text-[#EA8552] transition hover:bg-[#EA8552] hover:text-white"
       >
         Add keywords
       </button>

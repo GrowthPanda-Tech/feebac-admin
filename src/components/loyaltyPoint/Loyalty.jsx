@@ -9,7 +9,7 @@ import RedeemRequest from "./RedeemRequest";
 function Pill({ section, isActive, onClick, lenghth }) {
   return (
     <div
-      className={` relative cursor-pointer flex items-center justify-center gap-4 ${
+      className={` relative flex cursor-pointer items-center justify-center gap-4 ${
         isActive ? "pill-primary" : "pill-secondary"
       }`}
       onClick={onClick}
@@ -17,7 +17,7 @@ function Pill({ section, isActive, onClick, lenghth }) {
       {section}
 
       {section === "Redeem Request" ? (
-        <span className=" absolute right-[-16px] top-[-16px] bg-secondary rounded-full text-white w-8 h-8 flex items-center justify-center">
+        <span className=" absolute right-[-16px] top-[-16px] flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-white">
           {lenghth}
         </span>
       ) : (
@@ -61,7 +61,7 @@ export default function Loyalty() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="md:flex md:justify-between items-center">
+      <div className="items-center md:flex md:justify-between">
         <PageTitle
           name={
             visibleSection === "Points Management"

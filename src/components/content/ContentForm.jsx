@@ -7,11 +7,11 @@ const TINY_API_KEY = import.meta.env.VITE_TINY_API_KEY;
 function Select({ label, name, onChange, items, selectedItem, disabled }) {
   return (
     <label className="flex flex-col">
-      <span className="font-semibold mb-2"> {label} </span>
+      <span className="mb-2 font-semibold"> {label} </span>
       <select
         name={name}
         value={selectedItem}
-        className={`capitalize input-article border-none ${
+        className={`input-article border-none capitalize ${
           disabled ? "bg-light-grey" : ""
         } `}
         onChange={onChange}
@@ -33,7 +33,7 @@ function Select({ label, name, onChange, items, selectedItem, disabled }) {
 function Input({ label, name, value, onChange, disabled }) {
   return (
     <label className="flex flex-col">
-      <span className="font-semibold mb-2"> {label} </span>
+      <span className="mb-2 font-semibold"> {label} </span>
       <input
         name={name}
         value={value}
@@ -58,7 +58,7 @@ export default function ContentForm({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col md:flex-row justify-between gap-8">
+      <div className="flex flex-col justify-between gap-8 md:flex-row">
         <div className="md:w-1/2">
           <Input
             label={"Title"}
@@ -90,7 +90,7 @@ export default function ContentForm({
       />
 
       <label className="flex flex-col">
-        <span className="font-semibold mb-2"> Image (Optional) </span>
+        <span className="mb-2 font-semibold"> Image (Optional) </span>
         <input
           name="articleImg"
           type="file"
@@ -112,7 +112,7 @@ export default function ContentForm({
       />
 
       <label className="flex flex-col">
-        <span className="font-semibold mb-2"> Content </span>
+        <span className="mb-2 font-semibold"> Content </span>
         <Editor
           apiKey={TINY_API_KEY}
           onEditorChange={handleEditorChange}

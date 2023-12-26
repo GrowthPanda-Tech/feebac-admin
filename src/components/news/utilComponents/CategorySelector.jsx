@@ -6,11 +6,11 @@ export default function CategorySelector({ value, handleChange, disabled }) {
 
   return (
     <label className="flex flex-col">
-      <span className="font-semibold mb-2"> Category </span>
+      <span className="mb-2 font-semibold"> Category </span>
       <select
         name="category"
         value={value}
-        className={`capitalize py-3 px-8 rounded-xl appearance-none ${
+        className={`appearance-none rounded-xl px-8 py-3 capitalize ${
           disabled ? "bg-light-grey" : "bg-white"
         }`}
         onChange={handleChange}

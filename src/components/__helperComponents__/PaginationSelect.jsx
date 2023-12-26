@@ -6,7 +6,7 @@ function PaginationSelect({ setItemsPerPage, setPage, itemsPerPage }) {
 
   return (
     <select
-      className=" rounded-md border-0 pill-primary"
+      className=" pill-primary rounded-md border-0"
       value={itemsPerPage}
       onChange={handleItemsPerPageChange}
     >

@@ -32,7 +32,7 @@ export default function Categories() {
   };
 
   return (
-    <div className="relative grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-12">
+    <div className="relative grid grid-cols-1 gap-12 md:grid-cols-3 lg:grid-cols-5">
       {categories.map((category, idx) => {
         const id = category.category_id;
         const name = category.category_name;
@@ -45,18 +45,18 @@ export default function Categories() {
         }
 
         return (
-          <div key={id} className="flex flex-col relative">
+          <div key={id} className="relative flex flex-col">
             <img
               src={icon_url}
-              className={`rounded-lg aspect-square ${
+              className={`aspect-square rounded-lg ${
                 !status ? "disabled-card" : ""
               }`}
             />
-            <span className="capitalize text-lg font-medium py-3">{name}</span>
+            <span className="py-3 text-lg font-medium capitalize">{name}</span>
             <i
               className={`fa-solid ${
                 status ? "fa-eye-slash" : "fa-eye"
-              } absolute top-0 right-0 p-4 cursor-pointer`}
+              } absolute right-0 top-0 cursor-pointer p-4`}
               style={{
                 color: "white",
               }}

@@ -168,7 +168,7 @@ export default function Survey() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <PageTitle name={"Survey List"} />
         <Link to={"/survey/create"} className="w-fit">
           <button className="btn-primary">
@@ -186,7 +186,7 @@ export default function Survey() {
         />
         <input
           type="text"
-          className="pill-primary border-0 w-1/2"
+          className="pill-primary w-1/2 border-0"
           placeholder={`Search in ${status} surveys...`}
           value={searchQuery}
           onChange={(e) => {
@@ -201,7 +201,7 @@ export default function Survey() {
         />
       </div>
 
-      <div className=" h-[60vh] bg-white overflow-y-scroll">
+      <div className=" h-[60vh] overflow-y-scroll bg-white">
         {loading ? (
           <LoadingSpinner />
         ) : (
@@ -240,7 +240,7 @@ export default function Survey() {
                     <Tdata>
                       <div className="flex justify-center gap-4">
                         {status === "live" || status === "expired" ? (
-                          <div className="flex items-center justify-center gap-4 w-full">
+                          <div className="flex w-full items-center justify-center gap-4">
                             <div className="flex justify-center gap-4">
                               <div className="tool-tip-div group">
                                 <Link
@@ -249,7 +249,7 @@ export default function Survey() {
                                 >
                                   <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
                                 </Link>
-                                <span className="tool-tip-span -right-[3.4rem] bg-black -top-12 ">
+                                <span className="tool-tip-span -right-[3.4rem] -top-12 bg-black ">
                                   View Response
                                   <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
                                 </span>
@@ -258,11 +258,11 @@ export default function Survey() {
                                 <i
                                   className={`fa-regular fa-newspaper text-xl ${
                                     !content
-                                      ? "opacity-40 cursor-not-allowed"
+                                      ? "cursor-not-allowed opacity-40"
                                       : ""
                                   }`}
                                 />
-                                <span className="tool-tip-span -right-[3.4rem] bg-black -top-12">
+                                <span className="tool-tip-span -right-[3.4rem] -top-12 bg-black">
                                   {content
                                     ? "Article Linked"
                                     : "No article linked"}
@@ -284,7 +284,7 @@ export default function Survey() {
                                       } `}
                                     ></i>
                                   </button>
-                                  <span className="tool-tip-span  -right-[2.8rem] bg-black -top-12 ">
+                                  <span className="tool-tip-span  -right-[2.8rem] -top-12 bg-black ">
                                     {is_public ? "Make Private" : "Make Public"}
                                     <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
                                   </span>
@@ -304,7 +304,7 @@ export default function Survey() {
                                 <Link to={`edit-survey/${survey_id}`}>
                                   <i className="fa-solid fa-pen-to-square text-xl"></i>
                                 </Link>
-                                <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                                <span className="tool-tip-span -right-[2.8rem] -top-12 bg-black ">
                                   Edit Survey
                                   <span className="tooltip-arrow bottom-[-2px] left-[38%]"></span>
                                 </span>
@@ -321,7 +321,7 @@ export default function Survey() {
                                     } `}
                                   ></i>
                                 </button>
-                                <span className="tool-tip-span  -right-[2.8rem] bg-black -top-12 ">
+                                <span className="tool-tip-span  -right-[2.8rem] -top-12 bg-black ">
                                   {is_public ? "Make Private" : "Make Public"}
                                   <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
                                 </span>
@@ -338,7 +338,7 @@ export default function Survey() {
           </Table>
         )}
         {surveyData.length === 0 ? (
-          <div className="flex justify-center items-center p-56 opacity-50">
+          <div className="flex items-center justify-center p-56 opacity-50">
             No Survey Found !!
           </div>
         ) : null}

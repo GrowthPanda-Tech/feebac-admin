@@ -61,7 +61,7 @@ export default function Settings() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="md:flex md:justify-between items-center">
+      <div className="items-center md:flex md:justify-between">
         <PageTitle name={"Settings"} />
         {visibleSection === "category" ? (
           <button

@@ -11,7 +11,7 @@ function Input({ type, name, value, onChange, disabled }) {
       name={name}
       value={value}
       onChange={onChange}
-      className="w-full bg-background py-5 px-8 rounded-md disabled:cursor-not-allowed"
+      className="w-full rounded-md bg-background px-8 py-5 disabled:cursor-not-allowed"
       disabled={disabled}
     />
   );
@@ -175,7 +175,7 @@ export default function Question({
             questions.map((question, index) => (
               <div
                 key={index}
-                className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8"
+                className="flex flex-col gap-8 rounded-xl bg-white px-8 py-12"
               >
                 <span className="font-bold">Question {index + 1} :</span>
                 <Input type={"text"} value={question.questionTitle} disabled />
@@ -183,9 +183,9 @@ export default function Question({
                   {Object.values(question.questionValue).map((value, index) => (
                     <div key={index} className="flex items-center gap-4">
                       {question.questionType === 2 ? (
-                        <input type="radio" className="w-4 h-4" disabled />
+                        <input type="radio" className="h-4 w-4" disabled />
                       ) : question.questionType === 3 ? (
-                        <input type="checkbox" className="w-4 h-4" disabled />
+                        <input type="checkbox" className="h-4 w-4" disabled />
                       ) : (
                         <></>
                       )}
@@ -198,7 +198,7 @@ export default function Question({
         </div>
       )}
 
-      <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8 w-[50vw]">
+      <div className="flex w-[50vw] flex-col gap-8 rounded-xl bg-white px-8 py-12">
         <label className="flex flex-col gap-2">
           <span className="font-bold">
             Question{" "}
@@ -211,7 +211,7 @@ export default function Question({
           />
         </label>
         <div className="flex w-full items-center justify-between">
-          <div className="flex gap-7 h-fit">
+          <div className="flex h-fit gap-7">
             <button
               className={`pill ${
                 activeButtonIndex === 0 ? "pill-primary" : "pill-secondary"
@@ -270,7 +270,7 @@ export default function Question({
           questionData.questionType !== 4 ? (
             <button
               onClick={() => setOptions([...options, ""])}
-              className="btn-primary bg-white text-black hover:bg-secondary hover:text-white border border-grey w-fit"
+              className="btn-primary w-fit border border-grey bg-white text-black hover:bg-secondary hover:text-white"
             >
               <i className="fa-solid fa-plus"></i>
               <span>Add Options</span>

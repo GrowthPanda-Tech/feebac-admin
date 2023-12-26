@@ -10,9 +10,9 @@ export default function FilterOption({ name, index, onFilterClick }) {
 
   return (
     <div
-      className={`capitalize p-2 px-4 ${
+      className={`p-2 px-4 capitalize ${
         clicked ? "bg-secondary text-white" : "bg-white"
-      } w-fit rounded-xl font-medium cursor-pointer`}
+      } w-fit cursor-pointer rounded-xl font-medium`}
       onClick={handleClick}
     >
       {name}

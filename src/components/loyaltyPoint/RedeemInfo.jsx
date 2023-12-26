@@ -15,7 +15,7 @@ function UserInfo({ name, value }) {
         {name}
       </h5>
       <p
-        className={`capitalize font-semibold opacity-50 text-gray-700 ${
+        className={`font-semibold capitalize text-gray-700 opacity-50 ${
           value === "pending" ? `text-[#ff0000]` : ""
         } ${value === "approved" ? `text-green` : ""}`}
       >
@@ -31,7 +31,7 @@ function CouponInfo({ name, value }) {
       <h5 className="text-xl font-semibold tracking-tight text-gray-900">
         {name}
       </h5>
-      <p className="capitalize font-semibold opacity-50 text-gray-700">
+      <p className="font-semibold capitalize text-gray-700 opacity-50">
         {value}
       </p>
     </div>
@@ -94,7 +94,7 @@ export default function RedeemInfo() {
             <span className="text-lg">Message</span>
             <input
               name="message"
-              className="w-full p-5 rounded-lg mt-2"
+              className="mt-2 w-full rounded-lg p-5"
               placeholder="Hola!!"
               type="text"
               onChange={(e) => {
@@ -107,7 +107,7 @@ export default function RedeemInfo() {
             <span className="text-lg">Coupon Code</span>
             <input
               name="couponCode"
-              className="w-full p-5 rounded-lg mt-2"
+              className="mt-2 w-full rounded-lg p-5"
               placeholder="XXX-XXXX-XXX"
               type="text"
               onChange={(e) => {
@@ -130,9 +130,9 @@ export default function RedeemInfo() {
         ""
       )}
       <div className="flex gap-10">
-        <div className="w-1/2 flex flex-col gap-4">
+        <div className="flex w-1/2 flex-col gap-4">
           <span className="text-lg font-semibold">User Details</span>
-          <div className="flex flex-col gap-4 bg-white rounded-xl justify-center p-8">
+          <div className="flex flex-col justify-center gap-4 rounded-xl bg-white p-8">
             <UserInfo name={"Id"} value={slug} />
             <UserInfo name={"User Id"} value={fetchedData?.data.requestBy} />
             <UserInfo
@@ -154,16 +154,16 @@ export default function RedeemInfo() {
             )}
           </div>
         </div>
-        <div className="w-1/2 flex flex-col gap-4">
+        <div className="flex w-1/2 flex-col gap-4">
           <span className="text-lg font-semibold">Coupon Details</span>
 
-          <div className="flex flex-col items-center p-8 gap-4 bg-white justify-center rounded-xl ">
+          <div className="flex flex-col items-center justify-center gap-4 rounded-xl bg-white p-8 ">
             <img
-              className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 "
+              className="h-96 w-full rounded-t-lg object-cover md:h-auto md:w-48 "
               src={fetchedData?.data.coupon.imageUrl}
               alt=""
             />
-            <div className="flex flex-col justify-between w-full gap-4 leading-normal">
+            <div className="flex w-full flex-col justify-between gap-4 leading-normal">
               <CouponInfo
                 name={"Name"}
                 value={fetchedData?.data.coupon.title}

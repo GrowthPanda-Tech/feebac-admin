@@ -90,11 +90,7 @@ export default function NewsTable() {
             }));
           }}
         />
-        {/* <PaginationSelect
-          setItemsPerPage={setItemsPerPage}
-          setPage={setPage}
-          itemsPerPage={itemsPerPage}
-        /> */}
+        <PaginationSelect setQueryParams={setQueryParams} />
       </div>
 
       <div className="h-[55vh] overflow-y-scroll bg-white">

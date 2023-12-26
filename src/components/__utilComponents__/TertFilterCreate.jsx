@@ -1,22 +1,10 @@
 import { useState, useContext } from "react";
 import { FilterContext } from "@/contexts/FilterContext";
 
+import TertCreateInput from "@helperComps/TertCreateInput";
+
 import makeRequest from "@/utils/makeRequest";
 import swal from "@/utils/swal";
-
-//TODO: Move this to helper
-function Input({ type = "text", name, value, placeholder, handleChange }) {
-  return (
-    <input
-      type={type}
-      name={name}
-      value={value}
-      placeholder={placeholder}
-      onChange={handleChange}
-      className="w-full bg-background py-5 px-8 rounded-md disabled:cursor-not-allowed"
-    />
-  );
-}
 
 const INIT_STATE = {
   dataType: 3,
@@ -107,7 +95,7 @@ export default function TertFilterCreate({
       </div>
 
       <div className="flex flex-col gap-5 p-1 overflow-y-scroll">
-        <Input
+        <TertCreateInput
           name={"name"}
           value={tertFilterState.name}
           handleChange={(e) =>
@@ -120,7 +108,7 @@ export default function TertFilterCreate({
           {tertFilterState.options?.map((option, idx) => (
             <div key={idx} className="flex items-center gap-4">
               <span> {idx + 1}. </span>
-              <Input
+              <TertCreateInput
                 value={option}
                 handleChange={(e) => handleChange(e, idx)}
                 placeholder={"Enter Keyword Name"}

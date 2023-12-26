@@ -1,18 +1,18 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+
+import useFetch from "@/hooks/useFetch";
 
 import makeRequest from "@/utils/makeRequest";
 import swal from "@/utils/swal";
 
 //components
 import PageTitle from "@helperComps/PageTitle";
-
 import Table from "@helperComps/table/Table";
 import Thead from "@helperComps/table/Thead";
 import Trow from "@helperComps/table/Trow";
 import Tdata from "@helperComps/table/Tdata";
 import TableDateTime from "@helperComps/table/TableDateTime";
-
 import Pagination from "@helperComps/Pagination";
 import PaginationSelect from "@helperComps/PaginationSelect";
 import LoadingSpinner from "@helperComps/LoadingSpinner";
@@ -22,17 +22,22 @@ import NewsDelPop from "./utilComponents/NewsDelPop";
 const HEADERS = ["Name", "Category", "Date", "Actions"];
 
 export default function NewsTable() {
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [page, setPage] = useState(1);
-  const [newsList, setNewsList] = useState([]);
+  const [queryParams, setQueryParams] = useState({
+    page: 1,
+    count: 10,
+    query: "",
+  });
+  const params = new URLSearchParams(queryParams);
+  const { loading, fetchedData, setFetchedData, error } = useFetch(
+    `news/get-news?${params}`
+  );
+
   const [totalItems, setTotalItems] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
   const [delInfo, setDelInfo] = useState({
     id: null,
     idx: null,
   });
   const [delPop, setDelPop] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const handleDelPop = (id, idx) => {
     setDelInfo({ id, idx });
@@ -52,48 +57,12 @@ export default function NewsTable() {
 
       swal("success", response.message);
 
-      const updatedList = newsList.filter((_, index) => index != delInfo.idx);
-      setNewsList(updatedList);
+      //TODO: manage state
       setDelPop(false);
     } catch (error) {
       swal("error", error.message);
     }
   };
-
-  useEffect(() => {
-    let ignore = false;
-
-    async function getNewsList() {
-      try {
-        setLoading(true);
-        const response = await makeRequest(
-          `news/get-news?page=${page}&count=${itemsPerPage}&query=${searchQuery}`
-        );
-
-        if (!response.isSuccess) {
-          throw new Error(response.message);
-        }
-
-        if (!ignore) {
-          setLoading(false);
-          setNewsList(response.data);
-          setTotalItems(response.totalCount);
-        }
-      } catch (error) {
-        if (error.message == 204) {
-          setLoading(false);
-          setNewsList([]);
-          setTotalItems(1);
-        }
-      }
-    }
-
-    getNewsList();
-
-    return () => {
-      ignore = true;
-    };
-  }, [page, itemsPerPage, searchQuery]);
 
   return (
     <div className="flex flex-col gap-8">
@@ -110,28 +79,35 @@ export default function NewsTable() {
         <input
           type="text"
           className="pill-primary w-3/4 border-0"
-          placeholder={`Search in News...`}
-          value={searchQuery}
+          placeholder={"Search in News..."}
+          value={queryParams.searchQuery}
           onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setPage(1);
+            setQueryParams((prev) => ({
+              ...prev,
+              page: 1,
+              query: e.target.value,
+            }));
           }}
         />
-        <PaginationSelect
+        {/* <PaginationSelect
           setItemsPerPage={setItemsPerPage}
           setPage={setPage}
           itemsPerPage={itemsPerPage}
-        />
+        /> */}
       </div>
 
       <div className="h-[55vh] overflow-y-scroll bg-white">
         {loading ? (
           <LoadingSpinner />
+        ) : error?.message == 204 ? (
+          <div className="flex h-full items-center justify-center opacity-50">
+            No News Found !!
+          </div>
         ) : (
           <Table>
             <Thead headers={HEADERS} />
             <tbody>
-              {newsList.map((news, index) => (
+              {fetchedData?.data.map((news, index) => (
                 <Trow key={news.id}>
                   <Tdata left>{news.title}</Tdata>
                   <Tdata capitalize>{news.category}</Tdata>
@@ -185,19 +161,14 @@ export default function NewsTable() {
             </tbody>
           </Table>
         )}
-        {newsList.length === 0 ? (
-          <div className="flex items-center justify-center p-56 opacity-50">
-            No News Found !!
-          </div>
-        ) : null}
       </div>
-      <Pagination
+      {/* <Pagination
         setItemsPerPage={setItemsPerPage}
         page={page}
         setPage={setPage}
         totalItems={totalItems}
         itemsPerPage={itemsPerPage}
-      />
+      /> */}
       <NewsDelPop
         delPop={delPop}
         setDelPop={setDelPop}

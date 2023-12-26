@@ -42,6 +42,13 @@ export default function TertFilterCreate({
     setTertFilterState(spread);
   };
 
+  const handleDelete = (idx) => {
+    const spread = { ...tertFilterState };
+    spread.options.splice(idx, 1);
+
+    setTertFilterState(spread);
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
 
@@ -113,6 +120,9 @@ export default function TertFilterCreate({
                 handleChange={(e) => handleChange(e, idx)}
                 placeholder={"Enter Keyword Name"}
               />
+              <button onClick={() => handleDelete(idx)}>
+                <i className="fa-regular fa-trash-can text-xl" />
+              </button>
             </div>
           ))}
         </div>

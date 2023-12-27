@@ -101,7 +101,7 @@ export default function NewsForm({ newsData }) {
   //banner image remove handler
   const handleImgRemove = () => {
     setPreview(defaultPreview);
-    setNewsState((prev) => ({ ...prev, banner_image: null }));
+    setNewsState((prev) => ({ ...prev, banner: null }));
     imgRef.current.value = null;
   };
 

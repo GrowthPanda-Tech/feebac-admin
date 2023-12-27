@@ -1,12 +1,16 @@
 import { useContext } from "react";
-import { CategoryContext } from "../../contexts/CategoryContext";
+import { CategoryContext } from "@/contexts/CategoryContext";
 
-import makeRequest from "../../utils/makeRequest";
-import swal from "../../utils/swal";
+//components
+import CategoryCard from "@utilComps/CategoryCard";
+
+//utils
+import makeRequest from "@/utils/makeRequest";
+import swal from "@/utils/swal";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-export default function Categories() {
+export default function Categories({ setIsShowCategoryCreate, setEditIndex }) {
   const { categories, setCategories } = useContext(CategoryContext);
 
   const handleStatus = async (id, idx) => {
@@ -31,8 +35,13 @@ export default function Categories() {
     }
   };
 
+  const handleEdit = (idx) => {
+    setIsShowCategoryCreate(true);
+    setEditIndex(idx);
+  };
+
   return (
-    <div className="relative grid grid-cols-1 gap-12 md:grid-cols-3 lg:grid-cols-5">
+    <div className="grid grid-cols-1 gap-12 md:grid-cols-3 lg:grid-cols-5">
       {categories.map((category, idx) => {
         const id = category.category_id;
         const name = category.category_name;
@@ -45,7 +54,11 @@ export default function Categories() {
         }
 
         return (
-          <div key={id} className="relative flex flex-col">
+          <div key={id} className="flex flex-col">
+            <CategoryCard
+              handleStatus={() => handleStatus(category.category_id, idx)}
+              handleEdit={() => handleEdit(idx)}
+            />
             <img
               src={icon_url}
               className={`aspect-square rounded-lg ${
@@ -53,15 +66,6 @@ export default function Categories() {
               }`}
             />
             <span className="py-3 text-lg font-medium capitalize">{name}</span>
-            <i
-              className={`fa-solid ${
-                status ? "fa-eye-slash" : "fa-eye"
-              } absolute right-0 top-0 cursor-pointer p-4`}
-              style={{
-                color: "white",
-              }}
-              onClick={() => handleStatus(id, idx)}
-            />
           </div>
         );
       })}

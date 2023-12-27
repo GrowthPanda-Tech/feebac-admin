@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { CategoryContext } from "../../../contexts/CategoryContext";
+import { CategoryContext } from "@/contexts/CategoryContext";
 
 export default function CategorySelector({ value, handleChange, disabled }) {
   const { categories } = useContext(CategoryContext);
@@ -10,9 +10,7 @@ export default function CategorySelector({ value, handleChange, disabled }) {
       <select
         name="category"
         value={value}
-        className={`appearance-none rounded-xl px-8 py-3 capitalize ${
-          disabled ? "bg-light-grey" : "bg-white"
-        }`}
+        className="appearance-none rounded-xl border-2 border-[#EA8552] bg-white px-8 py-3 capitalize"
         onChange={handleChange}
         disabled={disabled}
         required

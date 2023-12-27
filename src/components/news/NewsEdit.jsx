@@ -9,7 +9,7 @@ export default function NewsEdit() {
 
   return (
     <div className="flex flex-col gap-8">
-      <PageTitle name={"Create News"} />
+      <PageTitle name={"Edit News"} />
       <NewsForm newsData={from} />
     </div>
   );

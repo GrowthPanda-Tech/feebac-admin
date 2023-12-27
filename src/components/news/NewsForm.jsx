@@ -234,7 +234,7 @@ export default function NewsForm({ newsData }) {
               <button
                 disabled={newsState.banner_type === "video"}
                 onClick={handleImgRemove}
-                className="flex items-center gap-1 font-medium text-secondary disabled:cursor-not-allowed"
+                className="flex items-center gap-1 font-medium text-accent disabled:cursor-not-allowed"
               >
                 <span>Remove Image</span>
                 <img src={trash_can} className="h-4" />

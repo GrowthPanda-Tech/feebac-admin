@@ -107,7 +107,7 @@ export default function NewsTable() {
               {fetchedData?.data.map((news, index) => (
                 <Trow key={news.id}>
                   <Tdata left>{news.title}</Tdata>
-                  <Tdata capitalize>{news.category}</Tdata>
+                  <Tdata capitalize>{news.category.category_name}</Tdata>
                   <Tdata mono>
                     <TableDateTime date={news.created_at} />
                   </Tdata>

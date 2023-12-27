@@ -111,7 +111,8 @@ export default function NewsForm({ newsData }) {
 
     const formdata = new FormData();
     for (const [key, value] of Object.entries(newsState)) {
-      if (!value) continue;
+      if (key !== "banner_type" && value === INIT_STATE[key] && key !== "id")
+        continue;
       formdata.append(key, value);
     }
 

@@ -21,6 +21,7 @@ export default function useFetch(route) {
         }
 
         if (!ignore) {
+          setError(null);
           setFetchedData(response);
           setLoading(false);
         }

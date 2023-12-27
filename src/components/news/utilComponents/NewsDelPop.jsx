@@ -9,7 +9,7 @@ export default function NewsDelPop({ delPop, setDelPop, handleDelete }) {
         <div className="flex justify-center py-2">
           <h2 className="text-xl font-bold">Are you sure?</h2>
         </div>
-        <h3>This action can't be reversed</h3>
+        <h3>This action can&apos;t be reversed</h3>
         <div className="item-center flex justify-center gap-6 p-2">
           <button
             className="btn-secondary"

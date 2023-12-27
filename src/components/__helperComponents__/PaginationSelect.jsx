@@ -1,14 +1,38 @@
-function PaginationSelect({ setItemsPerPage, setPage, itemsPerPage }) {
-  const handleItemsPerPageChange = (event) => {
-    setItemsPerPage(parseInt(event.target.value));
-    setPage(1);
+import { useState } from "react";
+
+function PaginationSelect({
+  setItemsPerPage,
+  setPage,
+  itemsPerPage,
+  setQueryParams,
+}) {
+  const [itemCount, setItemCount] = useState(10);
+
+  const handleChange = (e) => {
+    const newItemCount = parseInt(e.target.value);
+
+    //TODO: is this backwords compatibility?
+    if (setItemsPerPage) {
+      setItemsPerPage(newItemCount);
+    }
+    if (setPage) {
+      setPage(1);
+    }
+
+    //whew
+    setItemCount(newItemCount);
+    setQueryParams((prev) => ({
+      ...prev,
+      count: newItemCount,
+      page: 1,
+    }));
   };
 
   return (
     <select
-      className=" pill-primary rounded-md border-0"
-      value={itemsPerPage}
-      onChange={handleItemsPerPageChange}
+      className="pill-primary rounded-md border-0"
+      value={itemCount}
+      onChange={handleChange}
     >
       <option value={5}>5 per page</option>
       <option value={10}>10 per page</option>

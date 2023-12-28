@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { CategoryContext } from "@/contexts/CategoryContext";
 
 //components
-import CategoryCard from "@utilComps/CategoryCard";
+import ThreeDotMenu from "@utilComps/ThreeDotMenu";
 
 //utils
 import makeRequest from "@/utils/makeRequest";
@@ -55,7 +55,7 @@ export default function Categories({ setIsShowCategoryCreate, setEditIndex }) {
 
           return (
             <div key={category_id} className="flex flex-col">
-              <CategoryCard
+              <ThreeDotMenu
                 handleStatus={() => handleStatus(category_id, idx)}
                 handleEdit={() => handleEdit(idx)}
               />

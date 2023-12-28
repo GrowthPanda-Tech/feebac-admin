@@ -25,9 +25,14 @@ export default function Categories({ setIsShowCategoryCreate, setEditIndex }) {
         throw new Error(response.message);
       }
 
-      const spread = [...categories];
-      spread[idx].is_active = !spread[idx].is_active;
-      setCategories(spread);
+      setCategories((prev) => {
+        return prev.map((category, i) => {
+          if (i === idx) {
+            return { ...category, is_active: !category.is_active };
+          }
+          return category;
+        });
+      });
 
       swal("success", response.message);
     } catch (error) {
@@ -42,33 +47,31 @@ export default function Categories({ setIsShowCategoryCreate, setEditIndex }) {
 
   return (
     <div className="grid grid-cols-1 gap-12 md:grid-cols-3 lg:grid-cols-5">
-      {categories.map((category, idx) => {
-        const id = category.category_id;
-        const name = category.category_name;
-        const status = category.is_active;
+      {categories.map(
+        ({ category_id, category_name, is_active, icon_url }, idx) => {
+          const imageUrl = icon_url.includes("http")
+            ? icon_url
+            : `${BASE_URL}/${icon_url}`;
 
-        let icon_url = category.icon_url;
-
-        if (!category.icon_url.includes("http")) {
-          icon_url = BASE_URL + "/" + icon_url;
+          return (
+            <div key={category_id} className="flex flex-col">
+              <CategoryCard
+                handleStatus={() => handleStatus(category_id, idx)}
+                handleEdit={() => handleEdit(idx)}
+              />
+              <img
+                src={imageUrl}
+                className={`aspect-square rounded-lg ${
+                  !is_active ? "disabled-card" : ""
+                }`}
+              />
+              <span className="py-3 text-lg font-medium capitalize">
+                {category_name}
+              </span>
+            </div>
+          );
         }
-
-        return (
-          <div key={id} className="flex flex-col">
-            <CategoryCard
-              handleStatus={() => handleStatus(category.category_id, idx)}
-              handleEdit={() => handleEdit(idx)}
-            />
-            <img
-              src={icon_url}
-              className={`aspect-square rounded-lg ${
-                !status ? "disabled-card" : ""
-              }`}
-            />
-            <span className="py-3 text-lg font-medium capitalize">{name}</span>
-          </div>
-        );
-      })}
+      )}
     </div>
   );
 }

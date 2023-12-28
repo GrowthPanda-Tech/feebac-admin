@@ -68,17 +68,18 @@ export default function CategoryForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const route = editIndex
+    const isEdit = editIndex !== null && editIndex !== undefined;
+    const route = isEdit
       ? "site-admin/update-category"
       : "site-admin/add-category";
-    const method = editIndex ? "PUT" : "POST";
+    const method = isEdit ? "PUT" : "POST";
 
     const formdata = new FormData();
     for (const [key, value] of Object.entries(category)) {
       const isCategoryId = key === "category_id";
       const isUnchanged = value === INIT_STATE[key];
 
-      if (!isUnchanged || (editIndex && isCategoryId)) {
+      if (!isUnchanged || (isEdit && isCategoryId)) {
         formdata.append(key, value);
       }
     }
@@ -95,7 +96,7 @@ export default function CategoryForm({
       swal("success", response.message);
 
       setCategories((prev) => {
-        const updatedCategories = editIndex
+        const updatedCategories = isEdit
           ? prev.map((category, index) =>
               index === editIndex ? response.data : category
             )

@@ -13,12 +13,12 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 export default function Categories({ setIsShowCategoryCreate, setEditIndex }) {
   const { categories, setCategories } = useContext(CategoryContext);
 
-  const handleStatus = async (id, idx) => {
+  const handleStatus = async (category_id, idx) => {
     try {
       const response = await makeRequest(
         "site-admin/toggle-category-status",
         "PATCH",
-        { categoryId: parseInt(id) }
+        { categoryId: parseInt(category_id) }
       );
 
       if (!response.isSuccess) {

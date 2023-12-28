@@ -169,7 +169,7 @@ export default function NewsForm({ newsData }) {
 
           {newsState.banner_type === "video" ? (
             <AccentInput
-              label={"Video URL"}
+              label={"Banner URL (Video)"}
               name="banner"
               type="url"
               pattern="https://.*"

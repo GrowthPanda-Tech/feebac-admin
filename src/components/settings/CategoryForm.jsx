@@ -27,9 +27,10 @@ export default function CategoryForm({
     };
   }, [categories, editIndex]);
 
-  const INIT_PREVIEW = useMemo(() => {
-    return INIT_STATE.icon_url ? INIT_STATE.icon_url : defaultImgPreview;
-  }, [INIT_STATE.icon_url]);
+  const INIT_PREVIEW = useMemo(
+    () => INIT_STATE.icon_url ?? defaultImgPreview,
+    [INIT_STATE.icon_url]
+  );
 
   const [category, setCategory] = useState(INIT_STATE);
   const [imgPreview, setImgPreview] = useState(INIT_PREVIEW);
@@ -64,8 +65,8 @@ export default function CategoryForm({
     setIsShowCategoryCreate(false);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     const route = editIndex
       ? "site-admin/update-category"
@@ -74,10 +75,12 @@ export default function CategoryForm({
 
     const formdata = new FormData();
     for (const [key, value] of Object.entries(category)) {
-      if (value === INIT_STATE[key] && key !== "category_id") {
-        continue;
+      const isCategoryId = key === "category_id";
+      const isUnchanged = value === INIT_STATE[key];
+
+      if (!isUnchanged || (editIndex && isCategoryId)) {
+        formdata.append(key, value);
       }
-      formdata.append(key, value);
     }
 
     setLoading(true);
@@ -85,19 +88,21 @@ export default function CategoryForm({
     try {
       const response = await makeRequest(route, method, formdata);
 
-      if (!response.isSuccess) throw new Error(response.message);
+      if (!response.isSuccess) {
+        throw new Error(response.message);
+      }
 
       swal("success", response.message);
 
-      if (editIndex) {
-        setCategories((prev) =>
-          prev.map((category, index) =>
-            index === editIndex ? response.data : category
-          )
-        );
-      } else {
-        setCategories((prev) => [...prev, response.data]);
-      }
+      setCategories((prev) => {
+        const updatedCategories = editIndex
+          ? prev.map((category, index) =>
+              index === editIndex ? response.data : category
+            )
+          : [...prev, response.data];
+
+        return updatedCategories;
+      });
 
       setEditIndex(null);
       setIsShowCategoryCreate(false);

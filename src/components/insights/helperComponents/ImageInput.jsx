@@ -1,14 +1,17 @@
-import { useContext, useRef } from "react";
-import { InsightContext } from "@/contexts/InsightContext";
+import { useRef } from "react";
 
-export default function ImageInput() {
-  const { insightModel, setInsightModel } = useContext(InsightContext);
-
+export default function ImageInput({ image, setter }) {
   const imgRef = useRef(null);
+
+  const fileName = !image
+    ? ""
+    : image instanceof File
+    ? image.name
+    : image.split("/").pop();
 
   const handleChange = (e) => {
     const file = e.target.files[0];
-    setInsightModel({ ...insightModel, image: file });
+    setter((prev) => ({ ...prev, image: file }));
   };
 
   return (
@@ -24,7 +27,7 @@ export default function ImageInput() {
       />
 
       <div className="flex justify-between rounded-xl border border-[#1D1D1D] bg-white px-10 py-5">
-        <span>{insightModel.image ? insightModel.image.name : " "}</span>
+        <span>{fileName}</span>
         <span
           className="cursor-pointer font-semibold text-secondary hover:text-primary"
           onClick={() => imgRef.current.click()}

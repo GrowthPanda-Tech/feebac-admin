@@ -1,7 +1,13 @@
 import { useState } from "react";
 import MenuButton from "@helperComps/MenuButton";
 
-export default function ThreeDotMenu({ handleStatus, handleEdit }) {
+export default function ThreeDotMenu({
+  handleStatus,
+  handleEdit,
+  isShowDelete,
+  handleDelete,
+  loading,
+}) {
   const [isShowMenu, setIsShowMenu] = useState(false);
 
   const toggleMenu = () => setIsShowMenu(!isShowMenu);
@@ -14,8 +20,19 @@ export default function ThreeDotMenu({ handleStatus, handleEdit }) {
       />
       {isShowMenu && (
         <div className="absolute right-0 top-12 flex flex-col rounded-lg border bg-white shadow-md">
-          <MenuButton name={"Toggle Status"} handler={handleStatus} />
-          <MenuButton name={"Edit"} handler={handleEdit} />
+          <MenuButton
+            name={"Toggle Status"}
+            handler={handleStatus}
+            loading={loading}
+          />
+          <MenuButton name={"Edit"} handler={handleEdit} loading={loading} />
+          {isShowDelete && (
+            <MenuButton
+              name={"Delete"}
+              handler={handleDelete}
+              loading={loading}
+            />
+          )}
         </div>
       )}
     </div>

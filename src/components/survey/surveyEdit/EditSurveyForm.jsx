@@ -17,7 +17,7 @@ function Input({ type, min, value, name, onChange }) {
       name={name}
       onChange={onChange}
       value={value}
-      className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3"
+      className="h-fit w-2/3 rounded-xl border border-[#858585] bg-[#F6F6F6] px-5 py-2"
       required
     />
   );
@@ -119,7 +119,7 @@ export default function EditSurveyForm({
   };
 
   return (
-    <div className="flex flex-col p-8 gap-8">
+    <div className="flex flex-col gap-8 p-8">
       <h1 className="heading mb-0"> Edit Survey Details </h1>
 
       <div className="grid grid-cols-3 gap-8 ">
@@ -164,7 +164,7 @@ export default function EditSurveyForm({
             name="category"
             value={surveyData.category.category_id}
             onChange={handleChange}
-            className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3 capitalize"
+            className="h-fit w-2/3 rounded-xl border border-[#858585] bg-[#F6F6F6] px-5 py-2 capitalize"
           >
             {categories.map((item) => (
               <option key={item.category_id} value={item.category_id}>
@@ -188,18 +188,18 @@ export default function EditSurveyForm({
       {/* TODO: Needs refactor */}
       <div className="flex gap-24">
         <div className="flex flex-col gap-6">
-          <span className="font-semibold text-xl">Upload Image</span>
+          <span className="text-xl font-semibold">Upload Image</span>
           <div
             className={`relative aspect-[9/16] h-80 ${
               !imgPreview.image_url ? "border-dashed" : ""
-            } border-2 border-black rounded-xl`}
+            } rounded-xl border-2 border-black`}
             style={{
               backgroundImage: imgPreview.image_url,
               backgroundSize: "cover",
             }}
           >
             {!imgPreview.image_url ? (
-              <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
+              <div className="flex h-full flex-col items-center justify-center gap-2 p-6">
                 <img src={upload} className="w-12" />
                 <div className="flex flex-col items-center">
                   <span className="font-semibold text-secondary">
@@ -207,10 +207,10 @@ export default function EditSurveyForm({
                   </span>
                   <span className="font-semibold">Image</span>
                 </div>
-                <span className="text-xs flex flex-col items-center gap-1">
+                <span className="flex flex-col items-center gap-1 text-xs">
                   <span>Or</span>
                   <span
-                    className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
+                    className={`cursor-pointer font-semibold text-secondary underline hover:text-primary`}
                     onClick={() => surveyImgRef.current.click()}
                   >
                     browse files
@@ -219,9 +219,9 @@ export default function EditSurveyForm({
                 </span>
               </div>
             ) : (
-              <div className="absolute top-0 right-0">
+              <div className="absolute right-0 top-0">
                 <i
-                  className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
+                  className="fa-solid fa-trash-can cursor-pointer p-4 text-xl"
                   onClick={() => handleImgDelete("image_url")}
                   style={{
                     color: "white",
@@ -242,20 +242,20 @@ export default function EditSurveyForm({
         </div>
 
         <div className="flex flex-col gap-6">
-          <span className="font-semibold text-xl">
+          <span className="text-xl font-semibold">
             Upload Image (for featured section)
           </span>
           <div
             className={`relative aspect-[5/4] h-80 ${
               !imgPreview.featured_image ? "border-dashed" : ""
-            } border-2 border-black rounded-xl`}
+            } rounded-xl border-2 border-black`}
             style={{
               backgroundImage: imgPreview.featured_image,
               backgroundSize: "cover",
             }}
           >
             {!imgPreview.featured_image ? (
-              <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
+              <div className="flex h-full flex-col items-center justify-center gap-2 p-6">
                 <img src={upload} className="w-12" />
                 <div className="flex gap-2">
                   <span className="font-semibold text-secondary">
@@ -263,10 +263,10 @@ export default function EditSurveyForm({
                   </span>
                   <span className="font-semibold">Image</span>
                 </div>
-                <span className="text-xs flex gap-1">
+                <span className="flex gap-1 text-xs">
                   <span>Or</span>
                   <span
-                    className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
+                    className={`cursor-pointer font-semibold text-secondary underline hover:text-primary`}
                     onClick={() => featuredImgRef.current.click()}
                   >
                     browse files
@@ -275,9 +275,9 @@ export default function EditSurveyForm({
                 </span>
               </div>
             ) : (
-              <div className="absolute top-0 right-0">
+              <div className="absolute right-0 top-0">
                 <i
-                  className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
+                  className="fa-solid fa-trash-can cursor-pointer p-4 text-xl"
                   onClick={() => handleImgDelete("featured_image")}
                   style={{
                     color: "white",

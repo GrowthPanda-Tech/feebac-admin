@@ -14,7 +14,7 @@ export default function Select({
         value={value}
         disabled={disabled}
         onChange={handleChange}
-        className="capitalize rounded-lg appearance-none bg-white px-4 py-2 w-full border border-[#A6ACBE] disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-full appearance-none rounded-lg border border-[#A6ACBE] bg-white px-4 py-2 capitalize disabled:cursor-not-allowed disabled:opacity-50"
       >
         {options.map((option, index) => (
           <option key={index}>{option}</option>

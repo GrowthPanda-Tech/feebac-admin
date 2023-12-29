@@ -1,47 +1,93 @@
-import { useState, useContext } from "react";
-import { CategoryContext } from "../../contexts/CategoryContext";
+import { useState, useContext, useMemo } from "react";
+import { CategoryContext } from "@/contexts/CategoryContext";
 
-import defaultImgPreview from "../../assets/defaultImgPreview.png";
-import swal from "../../utils/swal";
-import makeRequest from "../../utils/makeRequest";
+//utils
+import swal from "@/utils/swal";
+import makeRequest from "@/utils/makeRequest";
+import fileReader from "@/utils/fileReader";
 
-export default function CategoryForm({ setIsShowCategoryCreate }) {
-  const [newCategory, setNewCategory] = useState({});
-  const [imgPreview, setImgPreview] = useState(defaultImgPreview);
+//assets
+import defaultImgPreview from "@/assets/defaultImgPreview.png";
 
+export default function CategoryForm({
+  setIsShowCategoryCreate,
+  editIndex,
+  setEditIndex,
+}) {
   const { categories, setCategories } = useContext(CategoryContext);
 
-  const onChange = (event) => {
-    if (event.target.name === "categoryName") {
-      setNewCategory({
-        ...newCategory,
-        categoryName: event.target.value,
-      });
-      return;
-    }
+  const INIT_STATE = useMemo(() => {
+    const { category_id, category_name, icon_url } =
+      categories[editIndex] || {};
 
-    //TODO: can i export this to utils?
-    const file = event.target.files[0];
-    setNewCategory({ ...newCategory, categoryImg: file });
+    return {
+      category_id: category_id || null,
+      category_name: category_name || "",
+      icon_url: icon_url || null,
+    };
+  }, [categories, editIndex]);
 
-    const reader = new FileReader();
-    reader.onload = () => setImgPreview(reader.result);
-    reader.readAsDataURL(file);
+  const INIT_PREVIEW = useMemo(
+    () => INIT_STATE.icon_url ?? defaultImgPreview,
+    [INIT_STATE.icon_url]
+  );
+
+  const [category, setCategory] = useState(INIT_STATE);
+  const [imgPreview, setImgPreview] = useState(INIT_PREVIEW);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setCategory((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleImgChange = async (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setCategory((prev) => ({ ...prev, icon_url: file }));
+
+      try {
+        const preview = await fileReader(file);
+        setImgPreview(preview);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    setEditIndex(null);
+    setIsShowCategoryCreate(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const isEdit = editIndex !== null && editIndex !== undefined;
+    const route = isEdit
+      ? "site-admin/update-category"
+      : "site-admin/add-category";
+    const method = isEdit ? "PUT" : "POST";
 
     const formdata = new FormData();
-    formdata.append("categoryName", newCategory.categoryName);
-    formdata.append("categoryImg", newCategory.categoryImg);
+    for (const [key, value] of Object.entries(category)) {
+      const isCategoryId = key === "category_id";
+      const isUnchanged = value === INIT_STATE[key];
+
+      if (!isUnchanged || (isEdit && isCategoryId)) {
+        formdata.append(key, value);
+      }
+    }
+
+    setLoading(true);
 
     try {
-      const response = await makeRequest(
-        "site-admin/add-category",
-        "POST",
-        formdata
-      );
+      const response = await makeRequest(route, method, formdata);
 
       if (!response.isSuccess) {
         throw new Error(response.message);
@@ -49,34 +95,43 @@ export default function CategoryForm({ setIsShowCategoryCreate }) {
 
       swal("success", response.message);
 
-      const newCategories = categories.slice();
-      newCategories.push(response.data);
-      setCategories(newCategories);
+      setCategories((prev) => {
+        const updatedCategories = isEdit
+          ? prev.map((category, index) =>
+              index === editIndex ? response.data : category
+            )
+          : [...prev, response.data];
 
+        return updatedCategories;
+      });
+
+      setEditIndex(null);
       setIsShowCategoryCreate(false);
     } catch (error) {
       swal("error", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="bg-white rounded-xl mb-8 p-8 flex flex-col md:flex-row gap-8">
-      <div className=" w-full md:w-1/5 flex justify-center items-center border rounded-xl">
+    <div className="mb-8 flex w-[60rem] flex-col items-center gap-11 rounded-xl bg-white p-8 md:flex-row">
+      <div className="flex aspect-square w-1/5 items-center justify-center rounded-xl border">
         <img src={imgPreview} />
       </div>
-      <div className="w-full md:w-4/5">
+      <div className="w-4/5">
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col h-full justify-evenly gap-4"
+          className="flex h-full flex-col justify-evenly gap-6"
         >
           <label className="flex flex-col font-semibold">
             Enter Category Name *
             <input
               type="text"
-              name="categoryName"
+              name="category_name"
               className="input-primary"
-              onChange={onChange}
-              required
+              value={category.category_name}
+              onChange={handleChange}
             />
           </label>
           <label className="flex flex-col font-semibold">
@@ -85,16 +140,21 @@ export default function CategoryForm({ setIsShowCategoryCreate }) {
               type="file"
               className="input-primary"
               accept="image/*"
-              name="categoryImg"
-              onChange={onChange}
-              required
+              name="icon_url"
+              onChange={handleImgChange}
             />
           </label>
-          <div className="flex flex-col md:flex-row gap-4">
-            <button className="btn-primary"> Save </button>
+          <div className="flex flex-col gap-4 md:flex-row">
             <button
-              className="btn-secondary"
-              onClick={() => setIsShowCategoryCreate(false)}
+              className="btn-primary disabled:btn-secondary disabled:cursor-not-allowed"
+              disabled={loading}
+            >
+              {loading ? "Saving..." : "Save"}
+            </button>
+            <button
+              className="btn-secondary disabled:cursor-not-allowed"
+              onClick={handleCancel}
+              disabled={loading}
             >
               Cancel
             </button>

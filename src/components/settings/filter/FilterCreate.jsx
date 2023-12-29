@@ -4,7 +4,7 @@ import makeRequest from "../../../utils/makeRequest";
 function Label({ name, children }) {
   return (
     <label className="flex flex-col">
-      <span className="font-medium text-lg mb-2"> {name} </span>
+      <span className="mb-2 text-lg font-medium"> {name} </span>
       {children}
     </label>
   );
@@ -36,7 +36,7 @@ export default function FilterCreate({
   };
 
   return (
-    <div className="p-10 bg-white rounded-md flex flex-col gap-6">
+    <div className="flex flex-col gap-6 rounded-md bg-white p-10">
       <Label name={"Filter Name"}>
         <input
           name="name"

@@ -121,7 +121,7 @@ export default function ContentEdit() {
   return (
     <div className="flex flex-col gap-8">
       <PageTitle name={"Edit Article"} />
-      <div className="flex flex-col-reverse md:flex-row gap-8">
+      <div className="flex flex-col-reverse gap-8 md:flex-row">
         <div className="md:w-3/4">
           <ContentForm
             articleData={articleData}
@@ -134,7 +134,7 @@ export default function ContentEdit() {
             onClick={handleSubmit}
             className={`${
               isSaving ? "btn-secondary" : "btn-primary"
-            }  w-fit mt-8`}
+            }  mt-8 w-fit`}
             disabled={isSaving}
           >
             <i className="fa-solid fa-pen-to-square mr-2"></i>
@@ -142,7 +142,7 @@ export default function ContentEdit() {
           </button>
         </div>
 
-        <div className="md:w-1/4 h-60 p-4 rounded-xl bg-white flex items-center justify-center">
+        <div className="flex h-60 items-center justify-center rounded-xl bg-white p-4 md:w-1/4">
           <img
             src={articleData.image_url ? articleData.image_url : imgPreview}
             className="max-h-full max-w-full"

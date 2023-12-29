@@ -31,7 +31,7 @@ export default function OtpField({ quantity, inputData, inputOnChange }) {
         onKeyUp={(event) => handleKeyUp(event, index)}
         onKeyDown={(event) => forbidChars(event)}
         onPaste={(event) => forbidChars(event)}
-        className="w-1/4 login-input px-0 text-center"
+        className="login-input w-1/4 px-0 text-center"
         ref={inputRefs[index]}
         required
       />

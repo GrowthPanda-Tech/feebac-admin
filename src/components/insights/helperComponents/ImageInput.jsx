@@ -12,8 +12,8 @@ export default function ImageInput() {
   };
 
   return (
-    <div className="flex gap-4 flex-col">
-      <span className="text-lg capitalize font-semibold">Background Image</span>
+    <div className="flex flex-col gap-4">
+      <span className="text-lg font-semibold capitalize">Background Image</span>
       <input
         name="image"
         type="file"
@@ -23,10 +23,10 @@ export default function ImageInput() {
         hidden
       />
 
-      <div className="bg-white border border-[#1D1D1D] rounded-xl py-5 px-10 flex justify-between">
+      <div className="flex justify-between rounded-xl border border-[#1D1D1D] bg-white px-10 py-5">
         <span>{insightModel.image ? insightModel.image.name : " "}</span>
         <span
-          className="text-secondary cursor-pointer hover:text-primary font-semibold"
+          className="cursor-pointer font-semibold text-secondary hover:text-primary"
           onClick={() => imgRef.current.click()}
         >
           Upload

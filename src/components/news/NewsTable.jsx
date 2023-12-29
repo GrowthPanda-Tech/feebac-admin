@@ -1,38 +1,42 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-import makeRequest from "../../utils/makeRequest";
-import swal from "../../utils/swal";
+import useFetch from "@/hooks/useFetch";
+
+import makeRequest from "@/utils/makeRequest";
+import swal from "@/utils/swal";
 
 //components
-import PageTitle from "../__helperComponents__/PageTitle";
-
-import Table from "../__helperComponents__/table/Table";
-import Thead from "../__helperComponents__/table/Thead";
-import Trow from "../__helperComponents__/table/Trow";
-import Tdata from "../__helperComponents__/table/Tdata";
-import TableDateTime from "../__helperComponents__/table/TableDateTime";
-
-import Pagination from "../__helperComponents__/Pagination";
-import PaginationSelect from "../__helperComponents__/PaginationSelect";
-import LoadingSpinner from "../__helperComponents__/LoadingSpinner";
+import PageTitle from "@helperComps/PageTitle";
+import Table from "@helperComps/table/Table";
+import Thead from "@helperComps/table/Thead";
+import Trow from "@helperComps/table/Trow";
+import Tdata from "@helperComps/table/Tdata";
+import TableDateTime from "@helperComps/table/TableDateTime";
+import Pagination from "@helperComps/Pagination";
+import PaginationSelect from "@helperComps/PaginationSelect";
+import LoadingSpinner from "@helperComps/LoadingSpinner";
 
 import NewsDelPop from "./utilComponents/NewsDelPop";
 
 const HEADERS = ["Name", "Category", "Date", "Actions"];
 
 export default function NewsTable() {
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [page, setPage] = useState(1);
-  const [newsList, setNewsList] = useState([]);
-  const [totalItems, setTotalItems] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [delInfo, setDelInfo] = useState({
-    id: null,
-    idx: null,
+  //Query params
+  const [queryParams, setQueryParams] = useState({
+    page: 1,
+    count: 10,
+    query: "",
   });
+  const params = new URLSearchParams(queryParams);
+  const { loading, fetchedData, setFetchedData, error } = useFetch(
+    `news/get-news?${params}`
+  );
+
+  //Rest of the states
+  const [totalItems, setTotalItems] = useState(1);
+  const [delInfo, setDelInfo] = useState({});
   const [delPop, setDelPop] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const handleDelPop = (id, idx) => {
     setDelInfo({ id, idx });
@@ -46,62 +50,28 @@ export default function NewsTable() {
         "DELETE"
       );
 
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
+      if (!response.isSuccess) throw new Error(response.message);
 
       swal("success", response.message);
 
-      const updatedList = newsList.filter((_, index) => index != delInfo.idx);
-      setNewsList(updatedList);
+      //update context
+      const spread = { ...fetchedData };
+      spread.data.splice(delInfo.idx, 1);
+      setFetchedData(spread);
+
       setDelPop(false);
     } catch (error) {
       swal("error", error.message);
     }
   };
 
-  useEffect(() => {
-    let ignore = false;
-
-    async function getNewsList() {
-      try {
-        setLoading(true);
-        const response = await makeRequest(
-          `news/get-news?page=${page}&count=${itemsPerPage}&query=${searchQuery}`
-        );
-
-        if (!response.isSuccess) {
-          throw new Error(response.message);
-        }
-
-        if (!ignore) {
-          setLoading(false);
-          setNewsList(response.data);
-          setTotalItems(response.totalCount);
-        }
-      } catch (error) {
-        if (error.message == 204) {
-          setLoading(false);
-          setNewsList([]);
-          setTotalItems(1);
-        }
-      }
-    }
-
-    getNewsList();
-
-    return () => {
-      ignore = true;
-    };
-  }, [page, itemsPerPage, searchQuery]);
-
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex w-full justify-between items-center">
+      <div className="flex w-full items-center justify-between">
         <PageTitle name={"News"} />
         <Link to={"create"}>
           <button className="btn-primary">
-            <i className="fa-solid fa-plus"></i>
+            <i className="fa-solid fa-plus" />
             Add News
           </button>
         </Link>
@@ -109,43 +79,46 @@ export default function NewsTable() {
       <div className="flex justify-between">
         <input
           type="text"
-          className="pill-primary border-0 w-3/4"
-          placeholder={`Search in News...`}
-          value={searchQuery}
+          className="pill-primary w-3/4 border-0"
+          placeholder={"Search in News..."}
+          value={queryParams.searchQuery}
           onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setPage(1);
+            setQueryParams((prev) => ({
+              ...prev,
+              page: 1,
+              query: e.target.value,
+            }));
           }}
         />
-        <PaginationSelect
-          setItemsPerPage={setItemsPerPage}
-          setPage={setPage}
-          itemsPerPage={itemsPerPage}
-        />
+        <PaginationSelect setQueryParams={setQueryParams} />
       </div>
 
-      <div className="h-[55vh] bg-white overflow-y-scroll">
+      <div className="h-[55vh] overflow-y-scroll bg-white">
         {loading ? (
           <LoadingSpinner />
+        ) : error?.message == 204 ? (
+          <div className="flex h-full items-center justify-center opacity-50">
+            No News Found !!
+          </div>
         ) : (
           <Table>
             <Thead headers={HEADERS} />
             <tbody>
-              {newsList.map((news, index) => (
+              {fetchedData?.data.map((news, index) => (
                 <Trow key={news.id}>
                   <Tdata left>{news.title}</Tdata>
-                  <Tdata capitalize>{news.category}</Tdata>
+                  <Tdata capitalize>{news.category.category_name}</Tdata>
                   <Tdata mono>
                     <TableDateTime date={news.created_at} />
                   </Tdata>
                   <Tdata>
-                    <div className="text-xl flex justify-center gap-5">
+                    <div className="flex justify-center gap-5 text-xl">
                       <div className="flex justify-center">
                         <div className="tool-tip-div group">
                           <Link to={news.source_url} target="_blank">
                             <i className="fa-solid fa-link"></i>
                           </Link>
-                          <span className="tool-tip-span -right-[1.8rem] bg-black -top-12 ">
+                          <span className="tool-tip-span -right-[1.8rem] -top-12 bg-black ">
                             Visit Link
                             <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
                           </span>
@@ -161,7 +134,7 @@ export default function NewsTable() {
                           >
                             <i className="fa-solid fa-pen-to-square"></i>
                           </Link>
-                          <span className="tool-tip-span -right-[1.8rem] bg-black -top-12 ">
+                          <span className="tool-tip-span -right-[1.8rem] -top-12 bg-black ">
                             Edit News
                             <span className="tooltip-arrow bottom-[-2px] left-[46%]"></span>
                           </span>
@@ -172,7 +145,7 @@ export default function NewsTable() {
                           <button onClick={() => handleDelPop(news.id, index)}>
                             <i className="fa-solid fa-trash"></i>
                           </button>
-                          <span className="tool-tip-span -right-[2.8rem] bg-black -top-12 ">
+                          <span className="tool-tip-span -right-[2.8rem] -top-12 bg-black ">
                             Delete News
                             <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
                           </span>
@@ -185,19 +158,14 @@ export default function NewsTable() {
             </tbody>
           </Table>
         )}
-        {newsList.length === 0 ? (
-          <div className="flex justify-center items-center p-56 opacity-50">
-            No News Found !!
-          </div>
-        ) : null}
       </div>
-      <Pagination
+      {/* <Pagination
         setItemsPerPage={setItemsPerPage}
         page={page}
         setPage={setPage}
         totalItems={totalItems}
         itemsPerPage={itemsPerPage}
-      />
+      /> */}
       <NewsDelPop
         delPop={delPop}
         setDelPop={setDelPop}

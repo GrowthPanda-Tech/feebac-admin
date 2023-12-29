@@ -14,7 +14,7 @@ function Input({ type, name, value, onChange }) {
       name={name}
       value={value}
       onChange={onChange}
-      className="w-full bg-background py-5 px-8 rounded-md"
+      className="w-full rounded-md bg-background px-8 py-5"
       required
     />
   );
@@ -128,7 +128,7 @@ export default function EditQuestion({
 
   return (
     <form onSubmit={handleQuestionSubmit}>
-      <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8 w-[50vw]">
+      <div className="flex w-[50vw] flex-col gap-8 rounded-xl bg-white px-8 py-12">
         <label className="flex flex-col gap-2">
           <span className="font-bold">Question {questionNo + 1} :</span>
           <Input
@@ -139,7 +139,7 @@ export default function EditQuestion({
           />
         </label>
         <div className="flex w-full items-center justify-between">
-          <div className="flex gap-7 h-fit">
+          <div className="flex h-fit gap-7">
             <button
               type="button"
               className={`pill ${
@@ -202,7 +202,7 @@ export default function EditQuestion({
             <button
               type="button"
               onClick={() => setOptions([...options, ""])}
-              className="btn-primary bg-white text-black hover:bg-secondary hover:text-white border border-grey w-fit"
+              className="btn-primary w-fit border border-grey bg-white text-black hover:bg-secondary hover:text-white"
             >
               <i className="fa-solid fa-plus"></i>
               <span>Add Options</span>

@@ -112,7 +112,7 @@ export default function RedeemRequest() {
       <PageTitle name={"Request List"} />
       <ButtonComponent setStatus={setStatus} />
 
-      <div className=" bg-white h-[50vh] overflow-y-scroll">
+      <div className=" h-[50vh] overflow-y-scroll bg-white">
         {loading ? (
           <LoadingSpinner />
         ) : (
@@ -154,11 +154,11 @@ export default function RedeemRequest() {
                             <div className="flex justify-center gap-4">
                               {status === "pending" ? (
                                 <Link to={`redeem/${id}`}>
-                                  <i className="text-xl fa-solid fa-circle-info"></i>
+                                  <i className="fa-solid fa-circle-info text-xl"></i>
                                 </Link>
                               ) : null}
                             </div>
-                            <span className="tool-tip-span -right-[4.8rem] bg-black -top-12 ">
+                            <span className="tool-tip-span -right-[4.8rem] -top-12 bg-black ">
                               See Redeem Request
                               <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
                             </span>
@@ -177,9 +177,9 @@ export default function RedeemRequest() {
                         <div className="flex justify-center">
                           <div className="tool-tip-div group">
                             <Link to={`redeem/${id}`}>
-                              <i className="text-xl fa-solid fa-circle-info"></i>
+                              <i className="fa-solid fa-circle-info text-xl"></i>
                             </Link>
-                            <span className="tool-tip-span -right-[3.8rem] bg-black -top-12 ">
+                            <span className="tool-tip-span -right-[3.8rem] -top-12 bg-black ">
                               See Approved Info
                               <span className="tooltip-arrow bottom-[-2px] left-[47%]"></span>
                             </span>
@@ -196,7 +196,7 @@ export default function RedeemRequest() {
           </Table>
         )}
         {redeemData.length === 0 ? (
-          <div className="flex justify-center items-center p-56 opacity-50">
+          <div className="flex items-center justify-center p-56 opacity-50">
             No {status} requests found !!
           </div>
         ) : null}

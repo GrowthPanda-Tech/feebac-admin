@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { ProfileContext } from "@/contexts/ProfileContext";
 
 import LoadingSpinner from "@helperComps/LoadingSpinner";
@@ -7,30 +7,54 @@ import Select from "@helperComps/Select";
 
 import makeRequest from "@/utils/makeRequest";
 import swal from "@/utils/swal";
+import fileReader from "@/utils/fileReader";
 
 export default function ProfileUpdate() {
   const { loading, fetchedData, setFetchedData, error } =
     useContext(ProfileContext);
 
-  const [userModel, setUserModel] = useState({});
-  const [updateModel, setUpdateModel] = useState(null);
+  const [userState, setUserState] = useState({});
+  const [updateState, setUpdateState] = useState(null);
   const [isUpdate, setIsUpdate] = useState(false);
+  const [imgPreview, setImgPreview] = useState(null);
+
+  const imgRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setUserModel((prev) => ({ ...prev, [name]: value }));
-    setUpdateModel((prev) => ({ ...prev, [name]: value }));
+    setUserState((prev) => ({ ...prev, [name]: value }));
+    setUpdateState((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      try {
+        const preview = await fileReader(file);
+
+        setImgPreview(preview);
+        setUpdateState({ ...updateState, profile_pic: file });
+      } catch (error) {
+        console.error("Error reading file: ", error);
+      }
+    }
   };
 
   const handleSubmit = async () => {
+    const formdata = new FormData();
+    for (const [key, value] of Object.entries(updateState)) {
+      formdata.append(key, value);
+    }
+
     setIsUpdate(true);
 
     try {
       const response = await makeRequest(
         "profile/update-profile",
         "PUT",
-        updateModel
+        formdata
       );
 
       if (!response.isSuccess) {
@@ -39,24 +63,25 @@ export default function ProfileUpdate() {
 
       //update context
       const spread = { ...fetchedData };
-      spread.userInfo = { ...spread.userInfo, ...updateModel };
+      spread.userInfo = response.userInfo;
       setFetchedData(spread);
-
-      //clear update values
-      setUpdateModel(null);
 
       swal("success", response.message);
     } catch (error) {
-      setUserModel(fetchedData.userInfo);
+      setUserState(fetchedData.userInfo);
+      setImgPreview(null);
       swal("error", error.message);
     } finally {
+      setUpdateState(null);
       setIsUpdate(false);
+
+      imgRef.current.value = null;
     }
   };
 
   useEffect(() => {
     if (fetchedData) {
-      setUserModel(fetchedData.userInfo);
+      setUserState(fetchedData.userInfo);
     }
   }, [fetchedData]);
 
@@ -64,37 +89,43 @@ export default function ProfileUpdate() {
   if (error) return <LoadingSpinner />; //TODO: handle error
 
   return (
-    <div className="flex">
-      <div className="rounded-xl flex flex-col items-center justify-center md:w-2/5 p-4 sm:p-6 lg:p-8 bg-white shadow-md">
-        <span className="text-xl font-semibold block">Admin Profile</span>
-
-        <div className="w-full p-8 mx-2 flex justify-center">
-          <img
-            className="rounded-full border-double h-56 w-56 border-4 border-[#A43948]"
-            src={userModel.profile_pic}
-          />
-        </div>
+    <div className="flex gap-4">
+      <div className="flex flex-col items-center justify-center gap-6 rounded-xl bg-white shadow-md md:w-2/5">
+        <span className="block text-xl font-semibold">Admin Profile</span>
+        <img
+          className="h-56 w-56 cursor-pointer rounded-full border-4 border-double border-[#A43948] transition hover:opacity-50"
+          src={imgPreview ? imgPreview : userState.profile_pic}
+          onClick={() => imgRef.current.click()}
+        />
+        <input
+          name="profile_pic"
+          ref={imgRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          hidden
+        />
       </div>
 
-      <div className="md:w-3/5 p-8 bg-white lg:ml-4 shadow-md flex flex-col gap-6 rounded-xl">
+      <div className="flex flex-col gap-6 rounded-xl bg-white p-8 shadow-md md:w-3/5">
         <Input
           label={"First Name"}
           name="first_name"
-          value={userModel.first_name}
+          value={userState.first_name}
           handleChange={handleChange}
         />
 
         <Input
           label={"Last Name"}
           name="last_name"
-          value={userModel.last_name}
+          value={userState.last_name}
           handleChange={handleChange}
         />
 
         <Select
           label={"Gender"}
           name={"gender"}
-          value={userModel.gender}
+          value={userState.gender}
           options={["male", "female"]}
           handleChange={handleChange}
         />
@@ -102,7 +133,7 @@ export default function ProfileUpdate() {
         <Input
           label={"E-Mail"}
           name="email"
-          value={userModel.email}
+          value={userState.email}
           type="email"
           handleChange={handleChange}
         />
@@ -110,7 +141,7 @@ export default function ProfileUpdate() {
         <Input
           label={"Phone Number"}
           name="phone"
-          value={userModel.mobile}
+          value={userState.mobile}
           type="number"
           disabled
           handleChange={handleChange}
@@ -119,17 +150,17 @@ export default function ProfileUpdate() {
         <Input
           label={"Date of Birth"}
           name="date_of_birth"
-          value={userModel.date_of_birth}
+          value={userState.date_of_birth}
           type={"date"}
           handleChange={handleChange}
         />
 
         <button
           className={`${
-            !updateModel || isUpdate ? "btn-secondary" : "btn-primary"
+            !updateState || isUpdate ? "btn-secondary" : "btn-primary"
           } mt-5 w-fit`}
           onClick={handleSubmit}
-          disabled={!updateModel || isUpdate ? true : false}
+          disabled={!updateState || isUpdate ? true : false}
         >
           {isUpdate ? "Updating..." : "Save Changes"}
         </button>

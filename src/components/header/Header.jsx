@@ -12,8 +12,8 @@ export default function Header() {
     : defaultUser;
 
   return (
-    <header className="flex justify-end py-4 bg-white">
-      <div className="flex gap-4 mr-16">
+    <header className="flex justify-end bg-white py-4">
+      <div className="mr-16 flex gap-4">
         <div className="flex flex-col items-end">
           <div className="font-bold">
             {fetchedData?.userInfo.first_name} {fetchedData?.userInfo.last_name}

@@ -9,7 +9,7 @@ import { Spinner } from "@material-tailwind/react";
 
 function LargeBtn({ children }) {
   return (
-    <button className="bg-primary flex justify-center items-center transition hover:bg-accent text-white py-6 text-xl rounded-3xl font-semibold">
+    <button className="flex items-center justify-center rounded-3xl bg-primary py-6 text-xl font-semibold text-white transition hover:bg-accent">
       {children}
     </button>
   );
@@ -102,16 +102,16 @@ export default function Login() {
   };
 
   return (
-    <div className="flex w-full h-screen p-28 bg-white">
-      <div className="w-1/2 aspect-square">
-        <img src={loginBanner} className="h-full mx-auto" alt="loading" />
+    <div className="flex h-screen w-full bg-white p-28">
+      <div className="aspect-square w-1/2">
+        <img src={loginBanner} className="mx-auto h-full" alt="loading" />
       </div>
 
       {/* Separation bar */}
       <div className="w-0.5 bg-black"></div>
 
-      <div className="w-1/2 flex flex-col px-16 gap-6 justify-center">
-        <div className="text-secondary text-3xl font-bold">Login as Admin</div>
+      <div className="flex w-1/2 flex-col justify-center gap-6 px-16">
+        <div className="text-3xl font-bold text-secondary">Login as Admin</div>
 
         <form className="flex flex-col gap-6" onSubmit={handleLogin}>
           <input

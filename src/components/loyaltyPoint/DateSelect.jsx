@@ -61,11 +61,11 @@ export function DateSelect({ setAddCouponData }) {
 
   return (
     <div className="mb-2 flex items-center justify-between ">
-      <label className="font-semibold mb-2">Select Coupon End Date:</label>
+      <label className="mb-2 font-semibold">Select Coupon End Date:</label>
       <select
         value={selectedOption}
         onChange={handleSelectChange}
-        className="px-2 py-2 ml-2 border input-article w-40 rounded-md"
+        className="input-article ml-2 w-40 rounded-md border px-2 py-2"
         required
       >
         <option value="">Select Date</option>

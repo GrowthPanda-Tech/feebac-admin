@@ -1,23 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { FilterContext } from "@/contexts/FilterContext";
 
-import swal from "../../../utils/swal";
-import makeRequest from "../../../utils/makeRequest";
-import optionIcon from "../../../assets/option-preview.png";
+import swal from "@/utils/swal";
+import makeRequest from "@/utils/makeRequest";
+import optionIcon from "@/assets/option-preview.png";
 
-import PageTitle from "../../__helperComponents__/PageTitle";
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+import PageTitle from "@helperComps/PageTitle";
+import TertFilterCreate from "@utilComps/TertFilterCreate";
 
 function Select({ value, isChecked, name, handleChange, children }) {
   return (
     <div
-      className={`flex items-center bg-background rounded-md border border-[#C9C9C9] ${
+      className={`flex items-center rounded-md border border-[#C9C9C9] bg-background ${
         !isChecked && "opacity-50"
       }`}
     >
       <select
-        className="px-3 py-2 appearance-none outline-0"
+        className="appearance-none px-3 py-2 outline-0"
         value={value}
         disabled={!isChecked}
         name={name}
@@ -36,7 +36,7 @@ function Input({ type, name, value, onChange, disabled }) {
       name={name}
       value={value}
       onChange={onChange}
-      className="w-full bg-background py-5 px-8 rounded-md disabled:cursor-not-allowed"
+      className="w-full rounded-md bg-background px-8 py-5 disabled:cursor-not-allowed"
       disabled={disabled}
       onClick={null}
     />
@@ -45,6 +45,8 @@ function Input({ type, name, value, onChange, disabled }) {
 
 export default function CreateQuestions({ surveyId, surveyTitle }) {
   const navigate = useNavigate();
+
+  const { fetchedData } = useContext(FilterContext);
 
   const initOptions = ["", ""];
   const initQuestionData = {
@@ -57,47 +59,24 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
   const [questions, setQuestions] = useState([]);
   const [questionData, setQuestionData] = useState(initQuestionData);
   const [activeButtonIndex, setActiveButtonIndex] = useState(1);
-  const [filters, setFilters] = useState([]);
+  const [filters, setFilters] = useState(fetchedData.data[2].key);
   const [activeFilterIdx, setActiveFilterIdx] = useState(0);
   const [inputType, setInputType] = useState(1);
   const [previewImages, setPreviewImages] = useState([null]);
   const [isChecked, setIsChecked] = useState(false);
+  const [isFilterCreate, setIsFilterCreate] = useState(false);
 
-  const request = {
-    headers: { authToken: localStorage.getItem("authToken") },
-  };
+  const [loading, setLoading] = useState({
+    publish: false,
+    schedule: false,
+    save: false,
+  });
 
-  const getQuestions = async () => {
-    try {
-      const response = await fetch(
-        `${BASE_URL}/survey/show-survey?sid=${surveyId}`,
-        request
-      );
-
-      if (response.status >= 500) {
-        throw new Error(response.status);
-      }
-
-      const json = await response.json();
-
-      if (!json.isSuccess) {
-        throw new Error(response.message);
-      }
-
-      setQuestions(json.questionList);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getFilters = async () => {
-    const response = await makeRequest("config/get-profile-key-value", "GET");
-    setFilters(response.data[2].key);
-  };
   const resetState = () => {
     setOptions(initOptions);
     setPreviewImages([null]);
   };
+
   const setQuestionType = (index, questionType, questionValue) => {
     setActiveButtonIndex(index);
     // setIsChecked(false);
@@ -125,6 +104,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     if (index >= 0 && index < arr.length && !arr[index][1].trim()) {
       arr[index][1] = value;
     }
+
     return arr;
   }
 
@@ -249,6 +229,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
 
   const handleQuestionSubmit = async () => {
     setIsChecked(false);
+    setLoading({ ...loading, save: true });
 
     try {
       const response = await makeRequest(
@@ -257,18 +238,14 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         questionData
       );
 
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
-
-      swal("success", response.message);
+      if (!response.isSuccess) throw new Error(response.message);
 
       setOptions(initOptions);
       setQuestionData(initQuestionData);
       setActiveButtonIndex(1);
-
-      //TODO: use state management for this
       getQuestions();
+
+      swal("success", response.message);
     } catch (error) {
       let message = error.message;
       if (error.message >= 500) message = "Something went wrong!!";
@@ -277,70 +254,117 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     } finally {
       resetState();
       setInputType(1);
+      setLoading({ ...loading, save: false });
     }
   };
 
-  const handleSchedule = async () => {
+  const handlePublish = async (type) => {
+    const request = { surveyId };
+
+    switch (type) {
+      case "publish":
+        request.isStartNow = true;
+        break;
+
+      case "schedule":
+        request.isStartNow = false;
+        break;
+
+      default:
+        throw new Error("Invalid publish type!!");
+    }
+
+    setLoading({ ...loading, [type]: true });
+
     try {
       const response = await makeRequest(
-        "survey/toggle-survey-status",
+        "survey/start-survey",
         "PATCH",
-        { surveyId }
+        request
       );
 
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
-
-      swal("success", "Survey will start at the scheduled time");
-      navigate("/survey");
-    } catch (error) {
-      swal("error", error.message);
-    }
-  };
-
-  const handlePublish = async () => {
-    try {
-      const response = await makeRequest("survey/start-survey", "PATCH", {
-        surveyId,
-        isStartNow: true,
-      });
-
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
+      if (!response.isSuccess) throw new Error(response.message);
 
       swal("success", response.message);
       navigate("/survey");
     } catch (error) {
       swal("error", error.message);
+    } finally {
+      setLoading({ ...loading, [type]: false });
+    }
+  };
+
+  const getQuestions = async () => {
+    try {
+      const response = await makeRequest(`survey/show-survey?sid=${surveyId}`);
+
+      if (!response.isSuccess) throw new Error(response.message);
+
+      setQuestions(response.questionList);
+    } catch (error) {
+      console.error(error);
     }
   };
 
   useEffect(() => {
     getQuestions();
-    getFilters();
   }, []);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-12">
       <div className="flex items-center justify-between">
         <PageTitle name={surveyTitle} />
         <div className="flex gap-4">
-          <button className="btn-primary w-fit" onClick={handlePublish}>
-            Publish Now
+          <button
+            className="btn-primary disabled:btn-secondary w-fit disabled:cursor-not-allowed"
+            onClick={() => handlePublish("publish")}
+            disabled={loading.publish || loading.schedule}
+          >
+            {loading.publish ? "Publishing..." : "Publish"}
           </button>
 
           <button
-            className="btn-primary bg-tertiary w-fit"
-            onClick={handleSchedule}
+            className={`btn-primary disabled:btn-secondary w-fit bg-tertiary disabled:cursor-not-allowed`}
+            onClick={() => handlePublish("schedule")}
+            disabled={loading.schedule || loading.publish}
           >
-            Schedule
+            {loading.schedule ? "Scheduling..." : "Schedule"}
           </button>
         </div>
       </div>
 
-      <div className="bg-white px-8 py-12 rounded-xl flex flex-col gap-4">
+      <div className="flex flex-col gap-4 rounded-xl bg-white px-8 py-12">
+        <div className="flex items-center justify-end gap-12">
+          <button
+            className="text-lg font-medium text-[#EA525F]"
+            onClick={() => setIsFilterCreate(true)}
+          >
+            Create Filter
+          </button>
+          <div className="flex items-center gap-4">
+            <input
+              type="checkbox"
+              className="h-6 w-6 accent-secondary"
+              onClick={handleClick}
+              checked={isChecked}
+            />
+            <Select
+              isChecked={isChecked}
+              name={"profileField"}
+              handleChange={handleChange}
+            >
+              <option value="" selected disabled hidden>
+                Select Tertiary Filter
+              </option>
+              {filters.map((filter) => (
+                <option key={filter.id} value={filter.id}>
+                  {filter.key_name}
+                </option>
+              ))}
+            </Select>
+          </div>
+        </div>
+
         <label className="flex flex-col gap-4">
           <span className="font-bold">
             {`Question ${questions.length + 1} :`}
@@ -353,7 +377,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
           />
         </label>
         <div className="flex w-full items-center justify-between">
-          <div className="flex gap-7 h-fit">
+          <div className="flex h-fit gap-7">
             <button
               className={`pill ${
                 activeButtonIndex === 0 ? "pill-primary" : "pill-secondary"
@@ -379,48 +403,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
               Multiple Answer
             </button>
           </div>
-
-          <div className="flex items-center gap-4">
-            {/* {!activeButtonIndex == 0 ? (
-              <select
-                name="inputType"
-                className="px-3 py-2 border-2 "
-                onChange={(e) => {
-                  resetState();
-                  setInputType(e.target.value);
-                  setIsChecked(false);
-                }}
-                value={inputType}
-              >
-                <option value={1}>Only Text</option>
-                <option value={2}>Only Image</option>
-                <option value={3}>Both Text and Image</option>
-              </select>
-            ) : (
-              ""
-            )} */}
-            <input
-              type="checkbox"
-              className="h-6 w-6 accent-secondary"
-              onClick={handleClick}
-              checked={isChecked}
-            />
-            <Select
-              isChecked={isChecked}
-              name={"profileField"}
-              handleChange={handleChange}
-              placeholder={"Profile Key"}
-            >
-              <option value="" selected disabled hidden>
-                Profile Keys
-              </option>
-              {filters.map((filter) => (
-                <option key={filter.id} value={filter.id}>
-                  {filter.key_name}
-                </option>
-              ))}
-            </Select>
-          </div>
         </div>
         <div className="flex flex-col gap-4">
           {questionData.questionType === 1 ? (
@@ -434,7 +416,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
             options.map((option, index) => (
               <div
                 key={index}
-                className="flex gap-8 items-center justify-between"
+                className="flex items-center justify-between gap-8"
               >
                 {inputType == 1 && (
                   <Input
@@ -450,13 +432,13 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                     {previewImages[index] ? (
                       <img
                         src={previewImages[index]}
-                        className="w-32 h-32"
+                        className="h-32 w-32"
                         alt={`Selected Image Preview ${index}`}
                       />
                     ) : (
                       <img
                         src={optionIcon}
-                        className="w-32 h-32"
+                        className="h-32 w-32"
                         alt="Default Image"
                       />
                     )}
@@ -534,15 +516,19 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
           questionData.questionType !== 4 ? (
             <button
               onClick={() => setOptions([...options, ""])}
-              className="btn-primary bg-white text-black hover:bg-secondary hover:text-white border border-grey w-fit"
+              className="btn-primary w-fit border border-grey bg-white text-black hover:bg-secondary hover:text-white"
             >
               <i className="fa-solid fa-plus"></i>
               <span>Add Options</span>
             </button>
           ) : null}
 
-          <button className="btn-primary w-fit" onClick={handleQuestionSubmit}>
-            Save
+          <button
+            className="btn-primary disabled:btn-secondary w-fit"
+            onClick={handleQuestionSubmit}
+            disabled={loading.save}
+          >
+            {loading.save ? "Saving..." : "Save"}
           </button>
         </div>
       </div>
@@ -551,7 +537,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         {questions.map((question, index) => (
           <div
             key={index}
-            className="bg-white px-8 py-12 rounded-xl flex flex-col gap-8"
+            className="flex flex-col gap-8 rounded-xl bg-white px-8 py-12"
           >
             <span className="font-bold">Question {index + 1} :</span>
             <Input type={"text"} value={question.question_title} disabled />
@@ -559,9 +545,9 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
               {Object.values(question.question_values).map((value, index) => (
                 <div key={index} className="flex items-center gap-4">
                   {question.question_type.type_id === 2 ? (
-                    <input type="radio" className="w-4 h-4" disabled />
+                    <input type="radio" className="h-4 w-4" disabled />
                   ) : question.question_type.type_id === 3 ? (
-                    <input type="checkbox" className="w-4 h-4" disabled />
+                    <input type="checkbox" className="h-4 w-4" disabled />
                   ) : (
                     <></>
                   )}
@@ -575,6 +561,19 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
           </div>
         ))}
       </div>
+
+      {isFilterCreate ? (
+        <div
+          className={`update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center`}
+          onClick={() => setIsFilterCreate(false)}
+        >
+          <TertFilterCreate
+            stopPropgation={(e) => e.stopPropagation()}
+            setIsFilterCreate={setIsFilterCreate}
+            setFilters={setFilters}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

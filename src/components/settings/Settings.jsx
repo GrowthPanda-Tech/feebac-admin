@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 
-import makeRequest from "../../utils/makeRequest";
+import makeRequest from "@/utils/makeRequest";
 
 //components
-import PageTitle from "../__helperComponents__/PageTitle";
+import PageTitle from "@helperComps/PageTitle";
 import CategoryForm from "./CategoryForm";
 import Categories from "./Categories";
 import Profiles from "./filter/Profiles";
@@ -32,6 +32,7 @@ export default function Settings() {
     isSelect: true,
     options: [],
   });
+  const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
     let ignore = false;
@@ -60,8 +61,8 @@ export default function Settings() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="md:flex md:justify-between items-center">
+    <div className="relative flex flex-col gap-6">
+      <div className="items-center md:flex md:justify-between">
         <PageTitle name={"Settings"} />
         {visibleSection === "category" ? (
           <button
@@ -96,7 +97,15 @@ export default function Settings() {
       </div>
 
       {isShowCategoryCreate && visibleSection === "category" ? (
-        <CategoryForm setIsShowCategoryCreate={setIsShowCategoryCreate} />
+        <div
+          className={`update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center`}
+        >
+          <CategoryForm
+            setIsShowCategoryCreate={setIsShowCategoryCreate}
+            editIndex={editIndex}
+            setEditIndex={setEditIndex}
+          />
+        </div>
       ) : null}
 
       {isShowFilterCreate && visibleSection === "filter" ? (
@@ -109,7 +118,10 @@ export default function Settings() {
       ) : null}
 
       {visibleSection === "category" ? (
-        <Categories />
+        <Categories
+          setIsShowCategoryCreate={setIsShowCategoryCreate}
+          setEditIndex={setEditIndex}
+        />
       ) : (
         <Profiles tertiaryKeys={tertiaryKeys} />
       )}

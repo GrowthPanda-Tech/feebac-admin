@@ -33,7 +33,7 @@ function Pagination({ itemsPerPage, page, setPage, totalItems }) {
         pageNumbers.push(renderPageButton(1));
         if (page - leftOffset > 2) {
           pageNumbers.push(
-            <button className={`px-4 py-2 rounded-md `} disabled>
+            <button className={`rounded-md px-4 py-2 `} disabled>
               ...
             </button>
           );
@@ -47,7 +47,7 @@ function Pagination({ itemsPerPage, page, setPage, totalItems }) {
       if (page + rightOffset < totalPages) {
         if (page + rightOffset < totalPages - 1) {
           pageNumbers.push(
-            <button className={`px-4 py-2 rounded-md `} disabled>
+            <button className={`rounded-md px-4 py-2 `} disabled>
               ...
             </button>
           );
@@ -63,7 +63,7 @@ function Pagination({ itemsPerPage, page, setPage, totalItems }) {
     return (
       <button
         key={pageNumber}
-        className={`px-4 py-2 border rounded-md ${
+        className={`rounded-md border px-4 py-2 ${
           pageNumber === page ? "pill-primary" : "pill-secondary"
         }`}
         onClick={() => setPage(pageNumber)}
@@ -74,9 +74,9 @@ function Pagination({ itemsPerPage, page, setPage, totalItems }) {
   };
 
   return (
-    <div className="flex justify-center space-x-4 mt-4">
+    <div className="mt-4 flex justify-center space-x-4">
       <button
-        className="px-4 py-2 border rounded-md pill-primary disabled:cursor-not-allowed"
+        className="pill-primary rounded-md border px-4 py-2 disabled:cursor-not-allowed"
         onClick={handlePrevClick}
         disabled={page === 1}
       >
@@ -84,7 +84,7 @@ function Pagination({ itemsPerPage, page, setPage, totalItems }) {
       </button>
       {renderPageNumbers()}
       <button
-        className="px-4 py-2 border rounded-md pill-primary disabled:cursor-not-allowed"
+        className="pill-primary rounded-md border px-4 py-2 disabled:cursor-not-allowed"
         onClick={handleNextClick}
         disabled={page === totalPages}
       >

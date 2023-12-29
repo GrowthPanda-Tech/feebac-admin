@@ -1,16 +1,16 @@
 export default function NewsDelPop({ delPop, setDelPop, handleDelete }) {
   return (
     <div
-      className={`fixed top-0 left-0 w-full flex justify-center items-center update-user  h-[100vh] ${
+      className={`update-user fixed left-0 top-0 flex h-[100vh] w-full items-center  justify-center ${
         !delPop && "hidden"
       }`}
     >
-      <div className="flex flex-col justify-center text-center m-auto md:w-[28%] bg-white p-4 gap-6 rounded-lg">
+      <div className="m-auto flex flex-col justify-center gap-6 rounded-lg bg-white p-4 text-center md:w-[28%]">
         <div className="flex justify-center py-2">
           <h2 className="text-xl font-bold">Are you sure?</h2>
         </div>
-        <h3>This action can't be reversed</h3>
-        <div className="flex item-center justify-center p-2 gap-6">
+        <h3>This action can&apos;t be reversed</h3>
+        <div className="item-center flex justify-center gap-6 p-2">
           <button
             className="btn-secondary"
             onClick={() => {

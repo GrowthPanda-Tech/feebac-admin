@@ -65,14 +65,14 @@ export default function SurveyEdit() {
   return (
     <div className="flex flex-col gap-6">
       {error ? (
-        <div className="flex h-[60vh] font-semibold text-2xl justify-center items-center">
+        <div className="flex h-[60vh] items-center justify-center text-2xl font-semibold">
           The survey creator has made this Private!!
         </div>
       ) : loading ? (
         <LoadingSpinner />
       ) : (
         <div className="flex justify-between ">
-          <div className="flex flex-col md:w-1/2 gap-6">
+          <div className="flex flex-col gap-6 md:w-1/2">
             <div className="">
               <InputHeading
                 title={"Survey Title"}
@@ -129,7 +129,7 @@ export default function SurveyEdit() {
         </div>
       ) : null}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
+      <div className="grid grid-cols-1 gap-20 md:grid-cols-2 lg:grid-cols-3">
         {questionList.map((question, index) => (
           <ReviewCard
             key={index}

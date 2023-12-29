@@ -6,7 +6,7 @@ export default function StatusChip({ status }) {
   }
 
   return (
-    <span className={`${style} border rounded-md px-4`}>
+    <span className={`${style} rounded-md border px-4`}>
       {status ? "Public" : "Private"}
     </span>
   );

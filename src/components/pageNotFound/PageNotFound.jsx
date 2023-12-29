@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function PageNotFound() {
   return (
     <>
-      <div className="flex flex-col justify-center h-auto items-center">
+      <div className="flex h-auto flex-col items-center justify-center">
         <img
           className="h-auto md:h-[70vh]"
           src={pageNotFoundImage}

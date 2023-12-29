@@ -61,7 +61,7 @@ export default function SurveyReview() {
 
   return (
     <>
-      <div className="flex flex-row-reverse justify-between w-full ">
+      <div className="flex w-full flex-row-reverse justify-between ">
         {surveyInfo && (
           <div className="flex flex-col gap-6">
             <button className="btn-primary w-fit" onClick={handlePublish}>
@@ -73,7 +73,7 @@ export default function SurveyReview() {
           </div>
         )}
 
-        <div className="flex flex-col md:w-1/2 gap-6">
+        <div className="flex flex-col gap-6 md:w-1/2">
           {surveyInfo && (
             <div className="">
               <InputHeading
@@ -102,7 +102,7 @@ export default function SurveyReview() {
       </div>
 
       {surveyInfo && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
+        <div className="grid grid-cols-1 gap-20 md:grid-cols-2 lg:grid-cols-3">
           {questionList &&
             questionList.map((question, index) => (
               <ReviewCard

@@ -1,7 +1,7 @@
 export default function Tdata({ children, left, capitalize, mono }) {
   return (
     <td
-      className={`py-6 px-4 ${left && "text-left"} ${
+      className={`px-4 py-6 ${left && "text-left"} ${
         capitalize && "capitalize"
       } ${mono && "font-mono"}`}
     >

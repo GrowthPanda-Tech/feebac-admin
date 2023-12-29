@@ -66,7 +66,7 @@ export default function Dashboard() {
 
   if (fetchedData?.data.length === 0) {
     return (
-      <div className="flex h-[60vh] font-semibold text-2xl justify-center items-center">
+      <div className="flex h-[60vh] items-center justify-center text-2xl font-semibold">
         No Data to show!
       </div>
     );
@@ -78,7 +78,7 @@ export default function Dashboard() {
         <PageTitle name={"Dashboard"} />
         {!loading ? (
           <div className="flex flex-col gap-6">
-            <div className="flex gap-6 w-full">
+            <div className="flex w-full gap-6">
               <InfoCards
                 title={"Total User"}
                 value={fetchedData?.data ? fetchedData?.data?.totalUsers : ""}
@@ -101,7 +101,7 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <div className="grid grid-cols-3 p-6 bg-white mt-5 rounded-lg">
+              <div className="mt-5 grid grid-cols-3 rounded-lg bg-white p-6">
                 {fetchedData?.data && (
                   <PieChart chartData={surveyData} option={option} />
                 )}

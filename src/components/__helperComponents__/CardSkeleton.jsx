@@ -6,13 +6,13 @@ function CardSkeleton({ card }) {
     .map((_, idx) => (
       <div
         key={idx}
-        className="flex relative flex-col justify-between bg-inherit h-[430px] p-0"
+        className="relative flex h-[430px] flex-col justify-between bg-inherit p-0"
       >
         <div className="">
           <Skeleton height={430} containerClassName="flex-1" />
         </div>
 
-        <div className="absolute bottom-0 gap-4 left-0 p-2">
+        <div className="absolute bottom-0 left-0 gap-4 p-2">
           <Skeleton
             count={1}
             height={200}

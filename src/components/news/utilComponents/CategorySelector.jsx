@@ -1,18 +1,16 @@
 import { useContext } from "react";
-import { CategoryContext } from "../../../contexts/CategoryContext";
+import { CategoryContext } from "@/contexts/CategoryContext";
 
 export default function CategorySelector({ value, handleChange, disabled }) {
   const { categories } = useContext(CategoryContext);
 
   return (
     <label className="flex flex-col">
-      <span className="font-semibold mb-2"> Category </span>
+      <span className="mb-2 font-semibold"> Category </span>
       <select
         name="category"
         value={value}
-        className={`capitalize py-3 px-8 rounded-xl appearance-none ${
-          disabled ? "bg-light-grey" : "bg-white"
-        }`}
+        className="appearance-none rounded-xl border-2 border-[#EA8552] bg-white px-8 py-3 capitalize"
         onChange={handleChange}
         disabled={disabled}
         required

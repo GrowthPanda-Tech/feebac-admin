@@ -15,7 +15,7 @@ function NavList({ link, title, icon }) {
   return (
     <NavLink
       to={link}
-      className={`${isActive} px-16 py-4 text-white leading-6 tracking-wide flex items-center gap-8`}
+      className={`${isActive} flex items-center gap-8 px-16 py-4 leading-6 tracking-wide text-white`}
     >
       <img src={icon} className="w-6" />
       <span> {title} </span>
@@ -45,7 +45,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="overflow-y-scroll no-scrollbar bg-primary h-screen w-80 fixed flex flex-col justify-between">
+    <div className="no-scrollbar fixed flex h-screen w-80 flex-col justify-between overflow-y-scroll bg-primary">
       <div>
         <img src={dashboard} className="w-full p-12 " />
         {navItems.map((item, index) => (
@@ -58,7 +58,7 @@ export default function Navbar() {
         ))}
       </div>
       <div
-        className="leading-6 tracking-wide flex items-center gap-8 bg-secondary hover:bg-accent cursor-pointer transition px-16 py-4 mb-12 text-white w-full"
+        className="mb-12 flex w-full cursor-pointer items-center gap-8 bg-secondary px-16 py-4 leading-6 tracking-wide text-white transition hover:bg-accent"
         onClick={handleLogout}
       >
         <img src={logout} className="w-6" />

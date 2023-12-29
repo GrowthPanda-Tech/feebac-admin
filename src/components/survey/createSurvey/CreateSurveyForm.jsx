@@ -1,22 +1,22 @@
 import { useState, useEffect, useContext, useRef } from "react";
-import { CategoryContext } from "../../../contexts/CategoryContext";
+import { CategoryContext } from "@/contexts/CategoryContext";
 
-import dateToday from "../../../utils/dateToday";
-import dateConvert from "../../../utils/dateConvert";
-import swal from "../../../utils/swal";
-import makeRequest from "../../../utils/makeRequest";
-import forbidChars from "../../../utils/forbidChars";
+import swal from "@/utils/swal";
+import dateToday from "@/utils/dateToday";
+import dateConvert from "@/utils/dateConvert";
+import makeRequest from "@/utils/makeRequest";
+import forbidChars from "@/utils/forbidChars";
 
-import upload from "../../../assets/upload.png";
+import upload from "@/assets/upload.png";
 
 //components
 import Filters from "./filter/Filters";
-import PageTitle from "../../__helperComponents__/PageTitle";
+import PageTitle from "@helperComps/PageTitle";
 
 function UserCount({ type, count }) {
   return (
-    <div className="flex gap-4 items-center">
-      <span className="font-medium text-xl">
+    <div className="flex items-center gap-4">
+      <span className="text-xl font-medium">
         {type === "total"
           ? "Total Registered Users"
           : type === "filter"
@@ -27,7 +27,7 @@ function UserCount({ type, count }) {
       <span
         className={`${
           type === "filter" ? "bg-secondary text-white" : "bg-white"
-        } font-medium py-2 px-5 rounded-md`}
+        } rounded-md px-5 py-2 font-medium`}
       >
         {count}
       </span>
@@ -41,7 +41,7 @@ function Select({ name, value, onChange, children }) {
       name={name}
       value={value}
       onChange={onChange}
-      className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3 capitalize"
+      className="h-fit w-2/3 rounded-xl border border-[#858585] bg-[#F6F6F6] px-5 py-2 capitalize"
     >
       {children}
     </select>
@@ -55,7 +55,7 @@ function Input({ type, min, name, onChange }) {
       min={min}
       name={name}
       onChange={onChange}
-      className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3"
+      className="h-fit w-2/3 rounded-xl border border-[#858585] bg-[#F6F6F6] px-5 py-2"
       required
     />
   );
@@ -89,6 +89,8 @@ export default function CreateSurveyForm({
 
   const [isDragging, setIsDragging] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   const surveyImgRef = useRef(null);
   const featuredImgRef = useRef(null);
 
@@ -96,9 +98,7 @@ export default function CreateSurveyForm({
     try {
       const response = await makeRequest("config/get-profile-key-value");
 
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
+      if (!response.isSuccess) throw new Error(response.message);
 
       setFilters(response.data);
     } catch (error) {
@@ -218,6 +218,8 @@ export default function CreateSurveyForm({
       formdata.append("category", categories[0].category_id);
     }
 
+    setLoading(true);
+
     try {
       const response = await makeRequest(
         "site-admin/create-survey",
@@ -236,6 +238,8 @@ export default function CreateSurveyForm({
       setIsSurveyCreate(response.isSuccess);
     } catch (error) {
       swal("error", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -297,7 +301,7 @@ export default function CreateSurveyForm({
             onChange={handleChange}
             onKeyDown={(event) => forbidChars(event)}
             onPaste={(event) => forbidChars(event)}
-            className="bg-[#F6F6F6] border border-[#858585] rounded-xl py-2 px-5 h-fit w-2/3"
+            className="h-fit w-2/3 rounded-xl border border-[#858585] bg-[#F6F6F6] px-5 py-2"
             required
           />
         </Label>
@@ -306,12 +310,12 @@ export default function CreateSurveyForm({
       {/* TODO: refactor */}
       <div className="flex gap-24">
         <div className="flex flex-col gap-6">
-          <span className="font-semibold text-xl">Upload Image</span>
+          <span className="text-xl font-semibold">Upload Image</span>
           <div
             className={`relative aspect-[9/16] h-80 ${
               !imgPreview.surveyImg ? "border-dashed" : ""
-            } border-2 border-black rounded-xl ${
-              isDragging ? "bg-white border-secondary" : ""
+            } rounded-xl border-2 border-black ${
+              isDragging ? "border-secondary bg-white" : ""
             }`}
             style={{
               backgroundImage: imgPreview.surveyImg,
@@ -322,7 +326,7 @@ export default function CreateSurveyForm({
             onDragLeave={(e) => handleDragLeave(e)}
           >
             {!imgPreview.surveyImg ? (
-              <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
+              <div className="flex h-full flex-col items-center justify-center gap-2 p-6">
                 <img src={upload} className="w-12" />
                 <div className="flex flex-col items-center">
                   <span className="font-semibold text-secondary">
@@ -330,10 +334,10 @@ export default function CreateSurveyForm({
                   </span>
                   <span className="font-semibold">Image</span>
                 </div>
-                <span className="text-xs flex flex-col items-center gap-1">
+                <span className="flex flex-col items-center gap-1 text-xs">
                   <span>Or</span>
                   <span
-                    className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
+                    className={`cursor-pointer font-semibold text-secondary underline hover:text-primary`}
                     onClick={() => surveyImgRef.current.click()}
                   >
                     browse files
@@ -342,9 +346,9 @@ export default function CreateSurveyForm({
                 </span>
               </div>
             ) : (
-              <div className="absolute top-0 right-0">
+              <div className="absolute right-0 top-0">
                 <i
-                  className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
+                  className="fa-solid fa-trash-can cursor-pointer p-4 text-xl"
                   onClick={() => handleImgDelete("surveyImg")}
                   style={{
                     color: "white",
@@ -365,14 +369,14 @@ export default function CreateSurveyForm({
         </div>
 
         <div className="flex flex-col gap-6">
-          <span className="font-semibold text-xl">
+          <span className="text-xl font-semibold">
             Upload Image (for featured section)
           </span>
           <div
             className={`relative aspect-[5/4] h-80 ${
               !imgPreview.surveyImg ? "border-dashed" : ""
-            } border-2 border-black rounded-xl ${
-              isDragging ? "bg-white border-secondary" : ""
+            } rounded-xl border-2 border-black ${
+              isDragging ? "border-secondary bg-white" : ""
             }`}
             style={{
               backgroundImage: imgPreview.featured_image,
@@ -383,7 +387,7 @@ export default function CreateSurveyForm({
             onDragLeave={(e) => handleDragLeave(e)}
           >
             {!imgPreview.featured_image ? (
-              <div className="h-full flex flex-col gap-2 items-center justify-center p-6">
+              <div className="flex h-full flex-col items-center justify-center gap-2 p-6">
                 <img src={upload} className="w-12" />
                 <div className="flex gap-2">
                   <span className="font-semibold text-secondary">
@@ -391,10 +395,10 @@ export default function CreateSurveyForm({
                   </span>
                   <span className="font-semibold">Image</span>
                 </div>
-                <span className="text-xs flex gap-1">
+                <span className="flex gap-1 text-xs">
                   <span>Or</span>
                   <span
-                    className={`text-secondary font-semibold cursor-pointer hover:text-primary underline`}
+                    className={`cursor-pointer font-semibold text-secondary underline hover:text-primary`}
                     onClick={() => featuredImgRef.current.click()}
                   >
                     browse files
@@ -403,9 +407,9 @@ export default function CreateSurveyForm({
                 </span>
               </div>
             ) : (
-              <div className="absolute top-0 right-0">
+              <div className="absolute right-0 top-0">
                 <i
-                  className="fa-solid fa-trash-can text-xl p-4 cursor-pointer"
+                  className="fa-solid fa-trash-can cursor-pointer p-4 text-xl"
                   onClick={() => handleImgDelete("featured_image")}
                   style={{
                     color: "white",
@@ -441,15 +445,22 @@ export default function CreateSurveyForm({
       <div className="flex gap-4">
         {filters.length > 0 ? (
           <button
-            className="btn-primary bg-accent w-fit"
+            className={`${
+              loading ? "btn-secondary" : "btn-primary bg-accent"
+            }  w-fit`}
             onClick={getFilterCount}
+            disabled={loading}
           >
             Get User Count
           </button>
         ) : null}
 
-        <button className="btn-primary w-fit" onClick={handleSubmit}>
-          Create
+        <button
+          className={`${loading ? "btn-secondary" : "btn-primary"} w-fit`}
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Create"}
         </button>
       </div>
     </div>

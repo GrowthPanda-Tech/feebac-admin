@@ -60,7 +60,7 @@ export default function SurveyInfo() {
           <h1 className="text-2xl font-semibold">
             {fetchedData?.surveyData.survey_title}
           </h1>
-          <span className="text-[#A43948] font-semibold">
+          <span className="font-semibold text-[#A43948]">
             {fetchedData?.surveyData.total_response} Complete Response
             {fetchedData?.surveyData.total_response != 1 ? "s" : ""}
           </span>
@@ -68,7 +68,7 @@ export default function SurveyInfo() {
         <div className="flex gap-2">
           {!from ? (
             <Link to={`/content/create-content/${slug}`}>
-              <button className="py-3 px-8 bg-secondary hover:bg-primary transition text-white text-lg font-semibold flex items-center gap-2 rounded-md">
+              <button className="flex items-center gap-2 rounded-md bg-secondary px-8 py-3 text-lg font-semibold text-white transition hover:bg-primary">
                 Create Survey Article
               </button>
             </Link>
@@ -80,14 +80,14 @@ export default function SurveyInfo() {
       </div>
 
       {from ? (
-        <div className="flex gap-2 items-center">
-          <span className="font-medium text-xl">Linked Content :</span>
+        <div className="flex items-center gap-2">
+          <span className="text-xl font-medium">Linked Content :</span>
           <span>{from.title}</span>
           <span>({from.type})</span>
         </div>
       ) : null}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
+      <div className="grid grid-cols-1 gap-20 md:grid-cols-2 lg:grid-cols-3">
         {fetchedData?.data.map((question, index) => (
           <Response key={index} index={index} question={question} />
         ))}

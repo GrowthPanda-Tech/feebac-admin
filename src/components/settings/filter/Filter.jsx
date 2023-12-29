@@ -6,12 +6,12 @@ export default function Filter({ dataTypeId, filter }) {
   const [options, setOptions] = useState(filter.options);
 
   return (
-    <div className="h-fit bg-white py-6 px-8 flex gap-4 flex-col rounded-md border border-[#DDD]">
+    <div className="flex h-fit flex-col gap-4 rounded-md border border-[#DDD] bg-white px-8 py-6">
       <div
-        className="cursor-pointer flex items-center justify-between"
+        className="flex cursor-pointer items-center justify-between"
         onClick={() => setIsExpand(!isExpand)}
       >
-        <span className="font-medium text-lg capitalize">
+        <span className="text-lg font-medium capitalize">
           {filter.key_name}
         </span>
         <i className={`fa-solid fa-angles-${!isExpand ? "down" : "up"}`}></i>

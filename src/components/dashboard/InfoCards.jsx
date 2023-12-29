@@ -1,10 +1,10 @@
 export default function InfoCards({ title, value }) {
   return (
-    <div className="flex items-center flex-col w-full text-center">
-      <div className="bg-white relative text-black w-full rounded-lg">
-        <div className="flex flex-col justify-evenly items-center p-10 text-center h-56 ">
+    <div className="flex w-full flex-col items-center text-center">
+      <div className="relative w-full rounded-lg bg-white text-black">
+        <div className="flex h-56 flex-col items-center justify-evenly p-10 text-center ">
           <h1 className="text-xl font-semibold">{title}</h1>
-          <h1 className="text-5xl text-[#EA8552] font-semibold">{value}</h1>
+          <h1 className="text-5xl font-semibold text-[#EA8552]">{value}</h1>
         </div>
         <div className="absolute bottom-[-1rem]">
           <svg

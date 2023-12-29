@@ -4,7 +4,7 @@ export default function SurveyDetails({ info }) {
       {info && (
         <div className="flex flex-col gap-4">
           <h1 className="heading">{info.survey_title}</h1>
-          <p className="capitalize font-semibold">
+          <p className="font-semibold capitalize">
             {info?.category.category_name && info.category.category_name}
           </p>
           <div>

@@ -129,15 +129,15 @@ function LoyaltyPoint() {
   };
 
   return (
-    <div className="w-full flex flex-col ">
-      <div className="w-full flex justify-between gap-6">
-        <div className="w-3/4 h-auto flex flex-col gap-4 ">
-          <div className="flex justify-between w-full gap-10">
-            <div className="bg-[#EA525F] p-16 w-[80%]  rounded-lg items-center  justify-center flex flex-col text-white">
+    <div className="flex w-full flex-col ">
+      <div className="flex w-full justify-between gap-6">
+        <div className="flex h-auto w-3/4 flex-col gap-4 ">
+          <div className="flex w-full justify-between gap-10">
+            <div className="flex w-[80%] flex-col  items-center justify-center  rounded-lg bg-[#EA525F] p-16 text-white">
               <h2 className="text-5xl">{data ? data.totalCredit : 0}</h2>
               <h3 className="text-3xl">Total Gain</h3>
             </div>
-            <div className="bg-[#EA525F] rounded-lg w-[80%] items-center justify-center flex flex-col  text-white">
+            <div className="flex w-[80%] flex-col items-center justify-center rounded-lg bg-[#EA525F]  text-white">
               <h2 className="text-5xl ">{data ? data.totalSpend : 0}</h2>
               <h3 className="text-3xl">Total Spend</h3>
             </div>
@@ -191,7 +191,7 @@ function LoyaltyPoint() {
             )}
           </div>
         </div>
-        <div className="w-1/4 flex flex-col items-center  rounded-lg p-8 h-fit  bg-white">
+        <div className="flex h-fit w-1/4 flex-col  items-center rounded-lg bg-white  p-8">
           <h2 className=" text-2xl font-semibold ">Points Statisticts</h2>
           <PieChart
             chartData={pointsData}

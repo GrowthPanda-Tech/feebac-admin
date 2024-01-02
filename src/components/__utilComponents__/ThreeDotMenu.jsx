@@ -1,9 +1,12 @@
 import { useState, useMemo } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import MenuButton from "@helperComps/MenuButton";
 
 class MenuItem {
   constructor(name, handler) {
-    this.key = crypto.randomUUID();
+    // this.key = crypto.randomUUID();
+    this.key = uuidv4();
     this.name = name;
     this.handler = handler;
   }
@@ -25,6 +28,8 @@ export default function ThreeDotMenu({
     ],
     [handleStatus, handleEdit, handleDelete],
   );
+
+  console.log(menuItems);
 
   return (
     <div className="relative z-10">

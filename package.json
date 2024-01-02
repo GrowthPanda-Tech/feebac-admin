@@ -41,7 +41,6 @@
     "vite": "^4.3.9"
   },
   "prettier": {
-    "trailingComma": "es5",
     "plugins": [
       "prettier-plugin-tailwindcss"
     ]

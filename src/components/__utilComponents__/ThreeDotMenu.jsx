@@ -29,8 +29,6 @@ export default function ThreeDotMenu({
     [handleStatus, handleEdit, handleDelete],
   );
 
-  console.log(menuItems);
-
   return (
     <div className="relative z-10">
       <i

@@ -61,7 +61,7 @@ export default function CategoryDelete({ index, setShowDelete }) {
           <span className="capitalize">{category_name}</span> has{" "}
           <span className="font-medium">{survey} Surveys</span>,{" "}
           <span className="font-medium">{article} Long Form Articles</span> and{" "}
-          <span className="font-medium">{news} Case Studies</span> attached with
+          <span className="font-medium">{news} Quick Reads</span> attached with
           it. They will be moved into the General category.
         </span>
       </div>

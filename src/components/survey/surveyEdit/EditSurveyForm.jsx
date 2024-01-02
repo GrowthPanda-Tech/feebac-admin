@@ -97,7 +97,7 @@ export default function EditSurveyForm({
       const response = await makeRequest(
         "site-admin/update-survey",
         "PUT",
-        formdata
+        formdata,
       );
 
       if (response.isSuccess) {

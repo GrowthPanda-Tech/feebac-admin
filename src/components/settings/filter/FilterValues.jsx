@@ -14,7 +14,7 @@ export default function FilterValues({
   const handleOptionRemove = async (index) => {
     const response = await makeRequest(
       `config/delete-profile-key-option?dataType=3&key=${filterId}&option=${options[index]}`,
-      "DELETE"
+      "DELETE",
     );
     response.isSuccess && setOptions(response.data.options);
   };
@@ -29,7 +29,7 @@ export default function FilterValues({
     const response = await makeRequest(
       "config/add-profile-options",
       "POST",
-      request
+      request,
     );
 
     setOptions(response.data);

@@ -6,7 +6,7 @@ export const FilterContext = createContext(null);
 
 export default function FilterContextProvider({ children }) {
   const { loading, fetchedData, setFetchedData, error } = useFetch(
-    "config/get-profile-key-value"
+    "config/get-profile-key-value",
   );
 
   return (

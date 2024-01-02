@@ -61,7 +61,7 @@ export default function ContentEdit() {
       formData.append(
         "articleImg",
         imgUpdate.articleImg,
-        imgUpdate.articleImg.name
+        imgUpdate.articleImg.name,
       );
     }
 
@@ -71,7 +71,7 @@ export default function ContentEdit() {
       const response = await makeRequest(
         "/site-admin/update-article",
         "PUT",
-        formData
+        formData,
       );
 
       if (!response.isSuccess) {
@@ -93,7 +93,7 @@ export default function ContentEdit() {
     async function getArticleInfo() {
       try {
         const response = await makeRequest(
-          `site-admin/show-article-info?articleId=${slug}`
+          `site-admin/show-article-info?articleId=${slug}`,
         );
 
         if (!response.isSuccess) {

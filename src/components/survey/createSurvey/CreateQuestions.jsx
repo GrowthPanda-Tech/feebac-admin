@@ -176,7 +176,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
       const response = await makeRequest(
         "survey/upload-option-image",
         "POST",
-        formData
+        formData,
       );
 
       if (response.isSuccess) {
@@ -235,7 +235,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
       const response = await makeRequest(
         "survey/add-question",
         "POST",
-        questionData
+        questionData,
       );
 
       if (!response.isSuccess) throw new Error(response.message);
@@ -280,7 +280,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
       const response = await makeRequest(
         "survey/start-survey",
         "PATCH",
-        request
+        request,
       );
 
       if (!response.isSuccess) throw new Error(response.message);
@@ -492,7 +492,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                       ? filters[activeFilterIdx].options.map(
                           (filter, index) => (
                             <option key={index}>{filter}</option>
-                          )
+                          ),
                         )
                       : null}
                   </Select>

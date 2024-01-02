@@ -22,7 +22,7 @@ export default function InsightCard({ data, cardIndex, setter }) {
       const response = await makeRequest(
         "insights/toggle-insights-status",
         "PATCH",
-        { id: cardData.id }
+        { id: cardData.id },
       );
 
       if (!response.isSuccess) {
@@ -54,7 +54,7 @@ export default function InsightCard({ data, cardIndex, setter }) {
       const response = await makeRequest(
         `insights/delete-insights?id=${id}`,
         "DELETE",
-        { id }
+        { id },
       );
 
       if (!response.isSuccess) {

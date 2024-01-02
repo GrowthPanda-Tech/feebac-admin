@@ -76,7 +76,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
     const response = await makeRequest(
       "/loyalty/add-coupon",
       "POST",
-      addCouponData
+      addCouponData,
     );
 
     if (response.isSuccess) {

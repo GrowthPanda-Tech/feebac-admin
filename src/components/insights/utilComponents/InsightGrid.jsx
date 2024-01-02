@@ -5,7 +5,7 @@ import InsightCard from "../helperComponents/InsightCard";
 
 export default function InsightGrid() {
   const { loading, fetchedData, setFetchedData, error } = useFetch(
-    "insights/get-all-insights?count=&page=1"
+    "insights/get-all-insights?count=&page=1",
   );
 
   if (loading) return <LoadingSpinner />;

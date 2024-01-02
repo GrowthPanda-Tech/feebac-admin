@@ -81,7 +81,7 @@ export default function RedeemRequest() {
         setLoading(true);
 
         const response = await makeRequest(
-          `/loyalty/get-all-redeem-request?status=${status}`
+          `/loyalty/get-all-redeem-request?status=${status}`,
         );
 
         if (!response.isSuccess) {
@@ -190,7 +190,7 @@ export default function RedeemRequest() {
                       ""
                     )}
                   </Trow>
-                )
+                ),
               )}
             </tbody>
           </Table>

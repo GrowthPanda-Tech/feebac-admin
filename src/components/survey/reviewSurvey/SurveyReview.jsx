@@ -49,7 +49,7 @@ export default function SurveyReview() {
     const response = await makeRequest(
       "/survey/toggle-survey-status",
       "PATCH",
-      body
+      body,
     );
     alert(response.message);
     if (response.isSuccess) location.replace("/survey");

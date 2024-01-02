@@ -32,7 +32,7 @@ export default function Content() {
       const response = await makeRequest(
         "article/toggle-article-status",
         "PATCH",
-        { articleId }
+        { articleId },
       );
 
       if (!response.isSuccess) {
@@ -58,7 +58,7 @@ export default function Content() {
       try {
         setLoading(true);
         const response = await makeRequest(
-          `site-admin/get-article-list?page=${page}&count=${itemsPerPage}&query=${searchQuery}`
+          `site-admin/get-article-list?page=${page}&count=${itemsPerPage}&query=${searchQuery}`,
         );
 
         if (!response.isSuccess) {
@@ -133,7 +133,7 @@ export default function Content() {
                     category,
                     created_date,
                   },
-                  index
+                  index,
                 ) => (
                   <Trow key={article_id}>
                     <Tdata left>{article_title}</Tdata>
@@ -184,7 +184,7 @@ export default function Content() {
                       </div>
                     </Tdata>
                   </Trow>
-                )
+                ),
               )}
             </tbody>
           </Table>

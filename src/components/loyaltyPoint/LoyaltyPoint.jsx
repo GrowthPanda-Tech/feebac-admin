@@ -184,7 +184,7 @@ function LoyaltyPoint() {
                           )}
                         </Tdata>
                       </Trow>
-                    )
+                    ),
                   )}
                 </tbody>
               </Table>

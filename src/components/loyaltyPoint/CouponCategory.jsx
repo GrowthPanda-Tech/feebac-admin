@@ -19,7 +19,7 @@ export default function CouponCategory({
 
   useEffect(() => {
     const selectedOption = options.find(
-      (option) => option.name === selectedValueProp
+      (option) => option.name === selectedValueProp,
     );
 
     let selectedOptions = selectedOption

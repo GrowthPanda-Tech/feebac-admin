@@ -54,7 +54,7 @@ export default function ProfileUpdate() {
       const response = await makeRequest(
         "profile/update-profile",
         "PUT",
-        formdata
+        formdata,
       );
 
       if (!response.isSuccess) {

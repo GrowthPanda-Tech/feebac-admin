@@ -18,7 +18,7 @@ export default function Categories({ setIsShowCategoryCreate, setEditIndex }) {
       const response = await makeRequest(
         "site-admin/toggle-category-status",
         "PATCH",
-        { categoryId: parseInt(category_id) }
+        { categoryId: parseInt(category_id) },
       );
 
       if (!response.isSuccess) {
@@ -70,7 +70,7 @@ export default function Categories({ setIsShowCategoryCreate, setEditIndex }) {
               </span>
             </div>
           );
-        }
+        },
       )}
     </div>
   );

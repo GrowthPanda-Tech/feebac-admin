@@ -21,7 +21,7 @@ export default function FilterCreate({
       const response = await makeRequest(
         "config/add-profile-key-value",
         "POST",
-        filterVals
+        filterVals,
       );
 
       if (!response.isSuccess) {

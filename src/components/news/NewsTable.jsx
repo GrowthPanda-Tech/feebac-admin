@@ -30,7 +30,7 @@ export default function NewsTable() {
   });
   const params = new URLSearchParams(queryParams);
   const { loading, fetchedData, setFetchedData, error } = useFetch(
-    `news/get-news?${params}`
+    `news/get-news?${params}`,
   );
 
   //Rest of the states
@@ -47,7 +47,7 @@ export default function NewsTable() {
     try {
       const response = await makeRequest(
         `news/delete-news?id=${delInfo.id}`,
-        "DELETE"
+        "DELETE",
       );
 
       if (!response.isSuccess) throw new Error(response.message);

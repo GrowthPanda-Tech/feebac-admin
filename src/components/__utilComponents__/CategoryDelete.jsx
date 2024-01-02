@@ -51,10 +51,10 @@ export default function CategoryDelete({ index, setShowDelete }) {
     <div className="flex w-[25vw] flex-col items-center justify-between gap-6 rounded-xl bg-white p-8">
       <div className="flex flex-col items-center gap-4">
         <img src={delete_icon} alt="delete_icon" className="w-fit" />
-        <span className="text-xl font-medium">
-          Are you sure you want to delete &quot;
-          <span className="capitalize">{category_name}</span>&quot;?
-        </span>
+        <div className="flex flex-col items-center text-xl font-medium">
+          <span>Are you sure you want to delete</span>
+          <span className="capitalize">{category_name} ?</span>
+        </div>
 
         {/* TODO: should I make a component for this? */}
         <span className="font-light opacity-50">

@@ -19,6 +19,7 @@ import trash_can from "@/assets/trash_can.png";
 
 export default function NewsForm({ newsData }) {
   const { categories } = useContext(CategoryContext);
+
   const imgRef = useRef(null);
   const navigate = useNavigate();
 
@@ -110,9 +111,14 @@ export default function NewsForm({ newsData }) {
     e.preventDefault();
 
     const formdata = new FormData();
+
     for (const [key, value] of Object.entries(newsState)) {
-      if (key !== "banner_type" && value === INIT_STATE[key] && key !== "id")
-        continue;
+      //if creating skip id
+      if (!newsData && key === "id") continue;
+
+      //if editing send data dynamically
+      if (newsData && value === INIT_STATE[key] && key !== "id") continue;
+
       formdata.append(key, value);
     }
 
@@ -255,7 +261,7 @@ export default function NewsForm({ newsData }) {
 
       <button
         className="btn-primary disabled:btn-secondary w-fit disabled:cursor-not-allowed"
-        disabled={loading}
+        disabled={loading || INIT_STATE === newsState}
         onClick={handleSubmit}
       >
         {loading ? "Publishing..." : "Publish"}

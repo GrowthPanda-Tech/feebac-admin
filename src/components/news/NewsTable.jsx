@@ -30,7 +30,7 @@ export default function NewsTable() {
   });
   const params = new URLSearchParams(queryParams);
   const { loading, fetchedData, setFetchedData, error } = useFetch(
-    `news/get-news?${params}`,
+    `news/get-news-admin?${params}`,
   );
 
   //Rest of the states

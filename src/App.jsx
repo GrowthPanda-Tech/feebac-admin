@@ -21,7 +21,8 @@ import NewsTable from "@/components/news/NewsTable";
 import NewsCreate from "@/components/news/NewsCreate";
 import NewsEdit from "@/components/news/NewsEdit";
 import Insights from "@/components/insights/Insights";
-import InsightCreate from "@/components/insights/utilComponents/InsightCreate";
+import InsightCreate from "./components/insights/InsightCreate";
+import InsightEdit from "@/components/insights/InsightEdit";
 import Settings from "@/components/settings/Settings";
 import PageNotFound from "@/components/pageNotFound/PageNotFound";
 import ProfileUpdate from "@/components/profile/ProfileUpdate";
@@ -56,6 +57,7 @@ export default function App() {
     { path: "news/edit/:slug", element: <NewsEdit /> },
     { path: "insights", element: <Insights /> },
     { path: "insights/create", element: <InsightCreate /> },
+    { path: "insights/edit", element: <InsightEdit /> },
     { path: "loyalty-point", element: <Loyalty /> },
     { path: "loyalty-point/redeem/:slug", element: <RedeemInfo /> },
     { path: "settings", element: <Settings /> },

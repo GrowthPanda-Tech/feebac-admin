@@ -14,7 +14,7 @@ export default function Dashboard() {
       {
         label: "Surveys",
         data: Object.values(
-          fetchedData?.data.surveyData ? fetchedData?.data.surveyData : []
+          fetchedData?.data.surveyData ? fetchedData?.data.surveyData : [],
         ),
         backgroundColor: ["rgba(164, 57, 72, 1)", "rgba(234, 82, 95, 1)"],
         hoverOffset: 4,
@@ -30,7 +30,7 @@ export default function Dashboard() {
         data: Object.values(
           fetchedData?.data.loyaltyPointData
             ? fetchedData?.data.loyaltyPointData
-            : []
+            : [],
         ),
         backgroundColor: ["rgba(164, 57, 72, 1)", "rgba(234, 82, 95, 1)"],
         hoverOffset: 4,
@@ -44,7 +44,7 @@ export default function Dashboard() {
       {
         label: "Articles",
         data: Object.values(
-          fetchedData?.data?.articleData ? fetchedData?.data?.articleData : []
+          fetchedData?.data?.articleData ? fetchedData?.data?.articleData : [],
         ),
         backgroundColor: ["rgba(164, 57, 72, 1)", "rgba(234, 82, 95, 1)"],
         hoverOffset: 4,

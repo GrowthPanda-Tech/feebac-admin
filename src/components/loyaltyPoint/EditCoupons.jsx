@@ -73,7 +73,7 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
   const getCouponDetails = async () => {
     try {
       const response = await makeRequest(
-        `/loyalty/get-coupon-details?id=${id}`
+        `/loyalty/get-coupon-details?id=${id}`,
       );
       if (response.isSuccess) {
         setEditCouponData(response.data);
@@ -111,7 +111,7 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
     const response = await makeRequest(
       "/loyalty/update-coupon",
       "PUT",
-      editCouponData
+      editCouponData,
     );
 
     if (response.isSuccess) {

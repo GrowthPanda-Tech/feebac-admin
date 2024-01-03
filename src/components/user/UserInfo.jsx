@@ -51,7 +51,7 @@ export default function UserInfo() {
         setLoading(true);
 
         const response = await makeRequest(
-          `site-admin/get-user-info?userId=${slug}`
+          `site-admin/get-user-info?userId=${slug}`,
         );
 
         if (!response.isSuccess) {
@@ -75,7 +75,7 @@ export default function UserInfo() {
         // setLoading(false);
 
         const response = await makeRequest(
-          `loyalty/get-loyalty-transaction?user=${slug}`
+          `loyalty/get-loyalty-transaction?user=${slug}`,
         );
 
         if (!response.isSuccess) {

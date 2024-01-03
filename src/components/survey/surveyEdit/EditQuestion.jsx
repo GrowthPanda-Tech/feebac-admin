@@ -39,16 +39,16 @@ export default function EditQuestion({
   });
 
   const [options, setOptions] = useState(
-    Object.values(updatedQuestionData.questionValue)
+    Object.values(updatedQuestionData.questionValue),
   );
   const [activeButtonIndex, setActiveButtonIndex] = useState(
-    updatedQuestionData.questionType - 1
+    updatedQuestionData.questionType - 1,
   );
 
   const setQuestionType = (
     index,
     questionType,
-    questionValue = updatedQuestionData.questionValue
+    questionValue = updatedQuestionData.questionValue,
   ) => {
     setActiveButtonIndex(index);
 
@@ -102,7 +102,7 @@ export default function EditQuestion({
       const response = await makeRequest(
         "survey/update-question",
         "PUT",
-        updatedQuestionData
+        updatedQuestionData,
       );
 
       if (response.isSuccess) {

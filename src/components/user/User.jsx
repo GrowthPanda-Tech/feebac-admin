@@ -29,7 +29,7 @@ export default function User() {
       try {
         setLoading(true);
         const response = await makeRequest(
-          `site-admin/get-all-user?page=${page}&count=${itemsPerPage}`
+          `site-admin/get-all-user?page=${page}&count=${itemsPerPage}`,
         );
 
         if (!response.isSuccess) {
@@ -99,7 +99,7 @@ export default function User() {
                       </div>
                     </Tdata>
                   </Trow>
-                )
+                ),
               )}
             </tbody>
           </Table>

@@ -12,7 +12,7 @@ function CouponToggle({ couponInfo, couponId, setCouponsData }) {
     const response = await makeRequest(
       "/loyalty/toggle-coupon-status",
       "PATCH",
-      body
+      body,
     );
     if (response.isSuccess) {
       setIsActive(!isActive);

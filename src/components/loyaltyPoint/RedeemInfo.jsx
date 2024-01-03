@@ -43,7 +43,7 @@ export default function RedeemInfo() {
   const navigate = useNavigate();
 
   const { loading, fetchedData } = useFetch(
-    `loyalty/get-request-info?id=${slug}`
+    `loyalty/get-request-info?id=${slug}`,
   );
 
   const [redeemCouponData, setRedeemCouponData] = useState({

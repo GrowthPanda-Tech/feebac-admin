@@ -4,20 +4,22 @@ import LoadingSpinner from "@helperComps/LoadingSpinner";
 import InsightCard from "../helperComponents/InsightCard";
 
 export default function InsightGrid() {
-  const { loading, fetchedData } = useFetch(
-    "insights/get-all-insights?count=&page=1"
+  const { loading, fetchedData, setFetchedData, error } = useFetch(
+    "insights/get-all-insights?count=&page=1",
   );
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  //TODO: handle error
+  if (loading) return <LoadingSpinner />;
+  if (error) return <LoadingSpinner />; //TODO: handle error
 
   return (
     <div className="flex flex-wrap gap-8">
-      {fetchedData?.data.map((insight) => (
-        <InsightCard key={insight.id} data={insight} />
+      {fetchedData?.data.map((insight, idx) => (
+        <InsightCard
+          key={insight.id}
+          data={insight}
+          cardIndex={idx}
+          setter={setFetchedData}
+        />
       ))}
     </div>
   );

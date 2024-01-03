@@ -94,7 +94,7 @@ export default function FilterSubSection({ filterData, setProfileData }) {
                 <FilterSlider filter={data} setProfileData={setProfileData} />
               )}
             </div>
-          ) : null
+          ) : null,
         )}
       </div>
     </div>

@@ -32,7 +32,7 @@ export default function Question({
 
   const [options, setOptions] = useState(["", ""]);
   const [questionNumber, setQuestionNumber] = useState(
-    editAdd ? surveyInfo?.total_questions + 1 : 1
+    editAdd ? surveyInfo?.total_questions + 1 : 1,
   );
 
   console.log(questionNumber);
@@ -88,13 +88,13 @@ export default function Question({
         const response = await makeRequest(
           "survey/add-question",
           "POST",
-          questionData
+          questionData,
         );
         if (response.isSuccess) {
           swal("success", response.message);
           const getData = async () => {
             const response = await makeRequest(
-              `survey/show-survey?sid=${slug}`
+              `survey/show-survey?sid=${slug}`,
             );
             if (response.isSuccess) {
               setQuestionList(response.questionList);
@@ -113,7 +113,7 @@ export default function Question({
         const response = await makeRequest(
           "survey/add-question",
           "POST",
-          questionData
+          questionData,
         );
         alert(response.message);
 

@@ -98,7 +98,7 @@ export default function Survey() {
       const response = await makeRequest(
         "survey/toggle-survey-status",
         "PATCH",
-        { surveyId }
+        { surveyId },
       );
 
       if (!response.isSuccess) {
@@ -132,7 +132,7 @@ export default function Survey() {
 
         const response = await fetch(
           `${BASE_URL}/site-admin/get-all-survey?time=${status}&query=${searchQuery}&page=${page}&count=${itemsPerPage}`,
-          request
+          request,
         );
 
         if (response.status >= 500 || response.status === 204) {
@@ -219,7 +219,7 @@ export default function Survey() {
                     is_public,
                     content,
                   },
-                  index
+                  index,
                 ) => (
                   <Trow key={survey_id}>
                     <Tdata left> {survey_title} </Tdata>
@@ -332,7 +332,7 @@ export default function Survey() {
                       </div>
                     </Tdata>
                   </Trow>
-                )
+                ),
               )}
             </tbody>
           </Table>

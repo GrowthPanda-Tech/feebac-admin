@@ -109,7 +109,7 @@ export default function CreateSurveyForm({
   const getUserCount = async () => {
     try {
       const response = await makeRequest(
-        "site-admin/get-target-profile-count?target={}"
+        "site-admin/get-target-profile-count?target={}",
       );
 
       if (!response.isSuccess) {
@@ -127,7 +127,7 @@ export default function CreateSurveyForm({
 
     try {
       const response = await makeRequest(
-        `site-admin/get-target-profile-count?target=${filterCount}`
+        `site-admin/get-target-profile-count?target=${filterCount}`,
       );
 
       if (!response.isSuccess) {
@@ -224,7 +224,7 @@ export default function CreateSurveyForm({
       const response = await makeRequest(
         "site-admin/create-survey",
         "POST",
-        formdata
+        formdata,
       );
 
       if (!response.isSuccess) {

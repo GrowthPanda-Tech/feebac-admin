@@ -59,7 +59,7 @@ export default function ContentCreate({ surveyId }) {
       formData.append(
         "articleImg",
         articleData.articleImg,
-        articleData.articleImg.name
+        articleData.articleImg.name,
       );
 
     if (slug) formData.append("surveyId", slug);
@@ -70,7 +70,7 @@ export default function ContentCreate({ surveyId }) {
       const response = await makeRequest(
         "site-admin/create-article",
         "POST",
-        formData
+        formData,
       );
 
       if (!response.isSuccess) {

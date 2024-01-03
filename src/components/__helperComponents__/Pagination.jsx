@@ -35,7 +35,7 @@ function Pagination({ itemsPerPage, page, setPage, totalItems }) {
           pageNumbers.push(
             <button className={`rounded-md px-4 py-2 `} disabled>
               ...
-            </button>
+            </button>,
           );
         }
       }
@@ -49,7 +49,7 @@ function Pagination({ itemsPerPage, page, setPage, totalItems }) {
           pageNumbers.push(
             <button className={`rounded-md px-4 py-2 `} disabled>
               ...
-            </button>
+            </button>,
           );
         }
         pageNumbers.push(renderPageButton(totalPages));

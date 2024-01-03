@@ -29,7 +29,7 @@ export default function CategoryForm({
 
   const INIT_PREVIEW = useMemo(
     () => INIT_STATE.icon_url ?? defaultImgPreview,
-    [INIT_STATE.icon_url]
+    [INIT_STATE.icon_url],
   );
 
   const [category, setCategory] = useState(INIT_STATE);
@@ -98,7 +98,7 @@ export default function CategoryForm({
       setCategories((prev) => {
         const updatedCategories = isEdit
           ? prev.map((category, index) =>
-              index === editIndex ? response.data : category
+              index === editIndex ? response.data : category,
             )
           : [...prev, response.data];
 

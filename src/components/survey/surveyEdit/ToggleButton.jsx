@@ -10,7 +10,7 @@ export default function ToggleButton({ status, surveyId }) {
       const response = await makeRequest(
         "/survey/toggle-survey-status",
         "PATCH",
-        { surveyId }
+        { surveyId },
       );
 
       if (!response.isSuccess) {

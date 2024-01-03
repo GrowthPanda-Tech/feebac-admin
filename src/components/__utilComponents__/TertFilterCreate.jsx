@@ -56,7 +56,7 @@ export default function TertFilterCreate({
       const response = await makeRequest(
         "config/add-profile-key-value",
         "POST",
-        tertFilterState
+        tertFilterState,
       );
 
       if (!response.isSuccess) throw new Error(response.message);

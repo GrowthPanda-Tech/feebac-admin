@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
-import makeRequest from "../utils/makeRequest";
+
+import makeRequest from "@/utils/makeRequest";
 
 export const CategoryContext = createContext(null);
 
@@ -18,7 +19,7 @@ export default function CategoryContextProvider({ children }) {
         }
 
         if (!ignore) {
-          setCategories(response.categoryList);
+          setCategories(response.data);
         }
       } catch (error) {
         console.error(error);

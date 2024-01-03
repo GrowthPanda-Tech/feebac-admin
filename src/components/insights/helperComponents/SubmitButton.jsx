@@ -1,57 +1,56 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { INIT_STATE, InsightContext } from "@/contexts/InsightContext";
 
 import makeRequest from "@/utils/makeRequest";
 import swal from "@/utils/swal";
 
-export default function SubmitButton() {
-  const { insightModel, setInsightModel } = useContext(InsightContext);
-  const [isSubmit, setIsSubmit] = useState(false);
-
+export default function SubmitButton({ data }) {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    const formData = new FormData();
+    const formdata = new FormData();
 
-    formData.append("image", insightModel.image, insightModel.image.name);
-    formData.append("caption", insightModel.caption);
+    if (data.id) formdata.append("id", data.id);
+    if (data.image instanceof File) formdata.append("image", data.image);
+    if (data.id && data.remove_page.length > 0)
+      formdata.append("remove_page", data.remove_page);
 
-    insightModel.pages.forEach((page) => {
-      formData.append("pages", page, page.name);
-    });
+    //append only files. not links
+    data.pages
+      .filter((item) => item instanceof File)
+      .forEach((file) => {
+        formdata.append("pages", file);
+      });
 
-    setIsSubmit(true);
+    const route = data.id
+      ? "insights/update-insights"
+      : "insights/create-insights";
+    const method = data.id ? "PUT" : "POST";
+
+    setLoading(true);
 
     try {
-      const response = await makeRequest(
-        "insights/create-insights",
-        "POST",
-        formData
-      );
-
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
+      const response = await makeRequest(route, method, formdata);
+      if (!response.isSuccess) throw new Error(response.message);
 
       swal("success", response.message);
-      setInsightModel(INIT_STATE);
       navigate("/insights");
     } catch (error) {
       swal("error", error.message);
     } finally {
-      setIsSubmit(false);
+      setLoading(false);
     }
   };
 
   return (
     <button
-      className={`${isSubmit ? "btn-secondary" : "btn-primary"} w-fit`}
+      className="btn-primary disabled:btn-secondary w-fit"
       type="submit"
       onClick={handleSubmit}
-      disabled={isSubmit ? true : false}
+      disabled={loading}
     >
-      {isSubmit ? "Submitting..." : "Create Insight"}
+      {loading ? "Submitting..." : "Submit"}
     </button>
   );
 }

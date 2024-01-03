@@ -4,6 +4,7 @@ import makeRequest from "@/utils/makeRequest";
 
 //components
 import PageTitle from "@helperComps/PageTitle";
+import CategoryDelete from "@utilComps/CategoryDelete";
 import CategoryForm from "./CategoryForm";
 import Categories from "./Categories";
 import Profiles from "./filter/Profiles";
@@ -12,9 +13,8 @@ import FilterCreate from "./filter/FilterCreate";
 function Pill({ section, isActive, onClick }) {
   return (
     <div
-      className={`cursor-pointer ${
-        isActive ? "pill-primary" : "pill-secondary"
-      }`}
+      className={`cursor-pointer ${isActive ? "pill-primary" : "pill-secondary"
+        }`}
       onClick={onClick}
     >
       {section}
@@ -32,6 +32,8 @@ export default function Settings() {
     isSelect: true,
     options: [],
   });
+  const [showDelete, setShowDelete] = useState(false);
+  const [delIndex, setDelIndex] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
@@ -96,6 +98,17 @@ export default function Settings() {
         />
       </div>
 
+      {visibleSection === "category" ? (
+        <Categories
+          setIsShowCategoryCreate={setIsShowCategoryCreate}
+          setEditIndex={setEditIndex}
+          setShowDelete={setShowDelete}
+          setDeleteIndex={setDelIndex}
+        />
+      ) : (
+        <Profiles tertiaryKeys={tertiaryKeys} />
+      )}
+
       {isShowCategoryCreate && visibleSection === "category" ? (
         <div
           className={`update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center`}
@@ -108,6 +121,14 @@ export default function Settings() {
         </div>
       ) : null}
 
+      {showDelete && visibleSection === "category" ? (
+        <div
+          className={`update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center`}
+        >
+          <CategoryDelete index={delIndex} setShowDelete={setShowDelete} />
+        </div>
+      ) : null}
+
       {isShowFilterCreate && visibleSection === "filter" ? (
         <FilterCreate
           filterVals={filterVals}
@@ -116,15 +137,6 @@ export default function Settings() {
           setIsShowFilterCreate={setIsShowFilterCreate}
         />
       ) : null}
-
-      {visibleSection === "category" ? (
-        <Categories
-          setIsShowCategoryCreate={setIsShowCategoryCreate}
-          setEditIndex={setEditIndex}
-        />
-      ) : (
-        <Profiles tertiaryKeys={tertiaryKeys} />
-      )}
     </div>
   );
 }

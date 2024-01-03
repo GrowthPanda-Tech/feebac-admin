@@ -17,7 +17,7 @@ export default function SurveyInfo() {
   const { from } = location.state;
 
   const { loading, fetchedData } = useFetch(
-    `survey/get-survey-result?surveyId=${slug}`
+    `survey/get-survey-result?surveyId=${slug}`,
   );
 
   const handleClick = async () => {
@@ -30,7 +30,7 @@ export default function SurveyInfo() {
     try {
       const response = await fetch(
         `${BASE_URL}/site-admin/download-response?surveyId=${slug}`,
-        request
+        request,
       );
 
       if (response.status >= 500) {

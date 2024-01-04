@@ -86,18 +86,12 @@ export default function InsightCard({ data, cardIndex, setter }) {
     backgroundSize: "cover",
   };
 
-  const cardClasses = `flex h-80 w-40 flex-col rounded-2xl border border-black ${!cardData.is_public ? "disabled-card" : ""
-    }`;
+  const cardClasses = `flex h-80 w-40 flex-col rounded-2xl border border-black ${
+    !cardData.is_public ? "disabled-card" : ""
+  }`;
 
   return (
     <div className="relative">
-      <ThreeDotMenu
-        handleStatus={handleStatus}
-        handleEdit={handleEdit}
-        isShowDelete
-        handleDelete={handleDelete}
-        loading={loading}
-      />
       {cardData.survey ? (
         <Tooltip
           content={cardData.survey.title}
@@ -108,12 +102,19 @@ export default function InsightCard({ data, cardIndex, setter }) {
         >
           <Link to={`/survey/details/${cardData.survey.id}`}>
             <i
-              className="fa-regular fa-clipboard absolute left-0 top-0 cursor-pointer p-4 text-2xl"
+              className="fa-regular fa-clipboard absolute left-0 top-0 z-10 cursor-pointer p-4 text-2xl"
               style={{ color: "#ffffff" }}
             />
           </Link>
         </Tooltip>
       ) : null}
+      <ThreeDotMenu
+        handleStatus={handleStatus}
+        handleEdit={handleEdit}
+        isShowDelete
+        handleDelete={handleDelete}
+        loading={loading}
+      />
       <div className={cardClasses} style={cardStyle}>
         <img className="my-auto p-4" src={cardData.pages[0]} />
       </div>

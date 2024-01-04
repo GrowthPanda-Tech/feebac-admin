@@ -10,10 +10,10 @@ export default function InsightEdit() {
 
   const [editData, setEditData] = useState({
     id: state.id,
-    is_public: false,
-    survey: null,
+    survey: state.survey || "",
     image: state.image,
     pages: state.pages,
+    is_public: false,
     remove_page: [],
   });
 

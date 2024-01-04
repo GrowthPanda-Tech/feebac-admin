@@ -6,7 +6,12 @@ import makeRequest from "@/utils/makeRequest";
 import swal from "@/utils/swal";
 
 //components
+import { Tooltip } from "@material-tailwind/react";
 import ThreeDotMenu from "@utilComps/ThreeDotMenu";
+
+//assets
+import surveyToolTip from "@/assets/clipboard.png";
+import { Link } from "react-router-dom";
 
 export default function InsightCard({ data, cardIndex, setter }) {
   const navigate = useNavigate();
@@ -87,7 +92,7 @@ export default function InsightCard({ data, cardIndex, setter }) {
   }`;
 
   return (
-    <div>
+    <div className="relative">
       <ThreeDotMenu
         handleStatus={handleStatus}
         handleEdit={handleEdit}
@@ -95,6 +100,22 @@ export default function InsightCard({ data, cardIndex, setter }) {
         handleDelete={handleDelete}
         loading={loading}
       />
+      {cardData.survey ? (
+        <Tooltip
+          content={cardData.survey}
+          animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0, y: 25 },
+          }}
+        >
+          <Link to={`/survey/details/${cardData.survey}`}>
+            <i
+              className="fa-regular fa-clipboard absolute left-0 top-0 cursor-pointer p-4 text-2xl"
+              style={{ color: "#ffffff" }}
+            />
+          </Link>
+        </Tooltip>
+      ) : null}
       <div className={cardClasses} style={cardStyle}>
         <img className="my-auto p-4" src={cardData.pages[0]} />
       </div>

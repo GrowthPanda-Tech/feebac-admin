@@ -51,7 +51,7 @@ export default function ContentCreate({ surveyId }) {
 
     const formData = new FormData();
     formData.append("articleTitle", articleData.article_title);
-    formData.append("articleDesctiption", articleData.article_desctiption);
+    formData.append("articleDescription", articleData.article_description);
     formData.append("articleContent", articleData.article_content);
     formData.append("category", articleData.category);
     formData.append("caption", articleData.caption);

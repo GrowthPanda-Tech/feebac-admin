@@ -1,19 +1,19 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import makeRequest from "../../utils/makeRequest";
-import swal from "../../utils/swal";
+import makeRequest from "@/utils/makeRequest";
+import swal from "@/utils/swal";
 
 // component imports
-import PageTitle from "../__helperComponents__/PageTitle";
-import Table from "../__helperComponents__/table/Table";
-import Thead from "../__helperComponents__/table/Thead";
-import Trow from "../__helperComponents__/table/Trow";
-import Tdata from "../__helperComponents__/table/Tdata";
-import TableDateTime from "../__helperComponents__/table/TableDateTime";
-import Pagination from "../__helperComponents__/Pagination";
-import PaginationSelect from "../__helperComponents__/PaginationSelect";
-import LoadingSpinner from "../__helperComponents__/LoadingSpinner";
+import PageTitle from "@helperComps/PageTitle";
+import Table from "@helperComps/table/Table";
+import Thead from "@helperComps/table/Thead";
+import Trow from "@helperComps/table/Trow";
+import Tdata from "@helperComps/table/Tdata";
+import TableDateTime from "@helperComps/table/TableDateTime";
+import Pagination from "@helperComps/Pagination";
+import PaginationSelect from "@helperComps/PaginationSelect";
+import LoadingSpinner from "@helperComps/LoadingSpinner";
 
 const HEADERS = ["Name", "Status", "Category", "Creation Date", "Actions"];
 
@@ -95,7 +95,7 @@ export default function Content() {
         <Link to={"create"}>
           <button className="btn-primary">
             <i className="fa-solid fa-plus"></i>
-            Add New Article
+            Create
           </button>
         </Link>
       </div>
@@ -191,7 +191,7 @@ export default function Content() {
         )}
         {articleList.length === 0 ? (
           <div className="flex items-center justify-center p-56 opacity-50">
-            Ops No Article Found !!
+            No Article found !!
           </div>
         ) : null}
       </div>

@@ -17,11 +17,9 @@ export default function InsightEdit() {
     remove_page: [],
   });
 
-  console.log(editData);
-
   return (
     <div className="flex flex-col gap-8">
-      <PageTitle name={"Edit Insight"} />
+      <PageTitle name={"Edit Case Study"} />
       <InsightForm data={editData} setter={setEditData} />
     </div>
   );

@@ -11,7 +11,7 @@ export default function InsightCreate() {
 
   return (
     <div className="flex flex-col gap-8">
-      <PageTitle name={"Create Insight"} />
+      <PageTitle name={"Create Case Study"} />
       <InsightForm data={createData} setter={setCreateData} />
     </div>
   );

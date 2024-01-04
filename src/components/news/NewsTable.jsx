@@ -34,7 +34,6 @@ export default function NewsTable() {
   );
 
   //Rest of the states
-  const [totalItems, setTotalItems] = useState(1);
   const [delInfo, setDelInfo] = useState({});
   const [delPop, setDelPop] = useState(false);
 
@@ -159,13 +158,12 @@ export default function NewsTable() {
           </Table>
         )}
       </div>
-      {/* <Pagination
-        setItemsPerPage={setItemsPerPage}
-        page={page}
-        setPage={setPage}
-        totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
-      /> */}
+      <Pagination
+        page={queryParams.page}
+        itemsPerPage={queryParams.count}
+        setter={setQueryParams}
+        totalItems={fetchedData?.totalCount}
+      />
       <NewsDelPop
         delPop={delPop}
         setDelPop={setDelPop}

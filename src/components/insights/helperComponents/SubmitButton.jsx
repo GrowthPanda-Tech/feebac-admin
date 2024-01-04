@@ -11,12 +11,18 @@ export default function SubmitButton({ data }) {
   const handleSubmit = async () => {
     const formdata = new FormData();
 
+    //TODO: refactor
     if (data.id) formdata.append("id", data.id);
+
+    if (data.survey && data.survey !== "")
+      formdata.append("survey", data.survey);
+
     if (data.image instanceof File) formdata.append("image", data.image);
+
     if (data.id && data.remove_page.length > 0)
       formdata.append("remove_page", data.remove_page);
 
-    //append only files. not links
+    //only appends files ensuring create and edit aren't affected
     data.pages
       .filter((item) => item instanceof File)
       .forEach((file) => {

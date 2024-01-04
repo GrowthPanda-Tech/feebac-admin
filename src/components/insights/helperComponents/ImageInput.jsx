@@ -15,7 +15,7 @@ export default function ImageInput({ image, setter }) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex w-2/3 flex-col gap-4">
       <span className="text-lg font-semibold capitalize">Background Image</span>
       <input
         name="image"
@@ -26,8 +26,8 @@ export default function ImageInput({ image, setter }) {
         hidden
       />
 
-      <div className="flex justify-between rounded-xl border border-[#1D1D1D] bg-white px-10 py-5">
-        <span>{fileName}</span>
+      <div className="flex justify-between gap-10 rounded-xl border border-[#1D1D1D] bg-white px-10 py-5">
+        <span className="truncate">{fileName}</span>
         <span
           className="cursor-pointer font-semibold text-secondary hover:text-primary"
           onClick={() => imgRef.current.click()}

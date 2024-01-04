@@ -5,6 +5,7 @@ import InsightForm from "./utilComponents/InsightForm";
 
 export default function InsightCreate() {
   const [createData, setCreateData] = useState({
+    survey: "",
     image: null,
     pages: [],
   });

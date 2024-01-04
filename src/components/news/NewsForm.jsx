@@ -6,11 +6,13 @@ import { CategoryContext } from "@/contexts/CategoryContext";
 import CategorySelector from "./utilComponents/CategorySelector";
 import AccentInput from "@helperComps/AccentInput";
 import BannerTypeSlider from "@utilComps/BannerTypeSlider";
+import Counter from "@helperComps/Counter";
 
 //utils
 import swal from "@/utils/swal";
 import makeRequest from "@/utils/makeRequest";
 import fileReader from "@/utils/fileReader";
+import calculateLength from "@/utils/calculateLength";
 
 //assets
 import defaultPreview from "@/assets/defaultImgPreview.png";
@@ -66,10 +68,15 @@ export default function NewsForm({ newsData }) {
   /* event handlers */
 
   //input handler
-  const handleChange = async (e) => {
-    let { name, value } = e.target;
+  const handleChange = async (e, type, max) => {
+    const { name } = e.target;
+    let { value } = e.target;
 
     if (name === "category") value = parseInt(value);
+
+    if (type === "char" && value.length > max) return;
+    if (type === "word" && calculateLength("word", value) > max) return;
+
     setNewsState((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -149,8 +156,9 @@ export default function NewsForm({ newsData }) {
               <AccentInput
                 name="title"
                 value={newsState.title}
-                handleChange={handleChange}
+                handleChange={(e) => handleChange(e, "char", 200)}
                 disabled={loading}
+                count={{ max: 200, type: "char" }}
               />
             </div>
             <div className="w-1/2">
@@ -196,7 +204,13 @@ export default function NewsForm({ newsData }) {
           />
 
           <label className="flex flex-col gap-2">
-            <span className="font-semibold">Description</span>
+            <div className="flex justify-between">
+              <span className="font-semibold">Description</span>
+              <Counter
+                count={calculateLength("word", newsState.description)}
+                max={80}
+              />
+            </div>
             <textarea
               className="rounded-xl border-2 border-[#EA8552] p-8"
               label={"Description"}
@@ -204,7 +218,7 @@ export default function NewsForm({ newsData }) {
               rows={10}
               disabled={loading}
               value={newsState.description}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e, "word", 80)}
               required
             />
           </label>
@@ -219,10 +233,9 @@ export default function NewsForm({ newsData }) {
           </div>
 
           <div
-            className={`flex flex-col gap-4 transition ${
-              newsState.banner_type === "video" &&
+            className={`flex flex-col gap-4 transition ${newsState.banner_type === "video" &&
               "cursor-not-allowed opacity-50"
-            }`}
+              }`}
           >
             <div className="flex h-60 items-center justify-center rounded-xl bg-white p-4 shadow-md">
               <img src={preview} className="max-h-full max-w-full" />

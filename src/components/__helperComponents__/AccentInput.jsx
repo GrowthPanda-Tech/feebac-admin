@@ -1,3 +1,6 @@
+import calculateLength from "@/utils/calculateLength";
+import Counter from "./Counter";
+
 export default function AccentInput({
   label,
   name,
@@ -7,12 +10,18 @@ export default function AccentInput({
   ref,
   value,
   disabled = false,
+  count,
   handleChange,
   required = false,
 }) {
   return (
     <label className="flex flex-col gap-2">
-      <span className="font-semibold capitalize">{label ? label : name}</span>
+      <div className="flex justify-between">
+        <span className="font-semibold capitalize">{label ? label : name}</span>
+        {count ? (
+          <Counter count={calculateLength(count.type, value)} max={count.max} />
+        ) : null}
+      </div>
       <input
         name={name}
         type={type}

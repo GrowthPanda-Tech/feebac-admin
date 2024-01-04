@@ -14,7 +14,7 @@ export default function SurveyInfo() {
   const { slug } = useParams();
 
   const location = useLocation();
-  const { from } = location.state;
+  const { from } = location.state || {};
 
   const { loading, fetchedData } = useFetch(
     `survey/get-survey-result?surveyId=${slug}`,

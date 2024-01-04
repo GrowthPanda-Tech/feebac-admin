@@ -23,7 +23,7 @@ export default function calculateLength(type, text) {
 
       if (trimmedText === "") return 0;
 
-      const words = trimmedText.split(" ");
+      const words = trimmedText.split(/\s+/);
       return words.length;
     }
 

@@ -1,8 +1,15 @@
+import { v4 as uuidv4 } from "uuid";
+
 export default function AddPage({ pageCount, setter }) {
   const handlePageAdd = () => {
+    const page = {
+      element: null,
+      uuid: uuidv4(),
+    };
+
     setter((prev) => {
       const getter = { ...prev };
-      getter.pages = [...prev.pages, ""];
+      getter.pages = [...prev.pages, page];
       return getter;
     });
   };

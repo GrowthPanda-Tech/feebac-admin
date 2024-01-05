@@ -35,7 +35,7 @@ export default function ImgPicker({ bg, page, setter, idx }) {
 
         setter((prev) => {
           const getter = { ...prev };
-          getter.pages[idx] = file;
+          getter.pages[idx].element = file;
           return getter;
         });
       } catch (error) {
@@ -46,7 +46,7 @@ export default function ImgPicker({ bg, page, setter, idx }) {
 
   const handleDelete = () => {
     setter((prev) => {
-      const deletedPage = prev.pages[idx];
+      const deletedPage = prev.pages[idx].element;
       const updatedRemovePage = prev.remove_page
         ? [...prev.remove_page, deletedPage]
         : [deletedPage];
@@ -57,8 +57,6 @@ export default function ImgPicker({ bg, page, setter, idx }) {
         remove_page: updatedRemovePage,
       };
     });
-
-    setPreview(null);
   };
 
   return (

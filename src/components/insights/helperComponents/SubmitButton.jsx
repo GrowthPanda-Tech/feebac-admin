@@ -15,7 +15,7 @@ export default function SubmitButton({ data }) {
     if (data.id) formdata.append("id", data.id);
 
     if (data.survey && data.survey !== "")
-      formdata.append("survey", data.survey.id);
+      formdata.append("survey", data.survey);
 
     if (data.image instanceof File) formdata.append("image", data.image);
 

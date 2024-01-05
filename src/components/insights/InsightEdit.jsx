@@ -11,7 +11,7 @@ export default function InsightEdit() {
 
   const [editData, setEditData] = useState({
     id: state.id,
-    survey: state.survey || "",
+    survey: state.survey ? state.survey.id : "",
     image: state.image,
     pages: initWithUUID(state.pages),
     is_public: false,

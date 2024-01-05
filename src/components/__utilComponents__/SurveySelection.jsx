@@ -1,9 +1,7 @@
 import useFetch from "@/hooks/useFetch";
 
 export default function SurveySelection({ survey, setter }) {
-  const { fetchedData } = useFetch(
-    "site-admin/get-all-survey?time=live&page=1&count=100",
-  );
+  const { fetchedData } = useFetch("site-admin/get-all-survey?type=linkable");
 
   const handleChange = (e) => {
     setter((prev) => ({ ...prev, survey: e.target.value }));

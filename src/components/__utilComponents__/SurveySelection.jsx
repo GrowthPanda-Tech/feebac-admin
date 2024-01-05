@@ -1,8 +1,6 @@
 import useFetch from "@/hooks/useFetch";
 
 export default function SurveySelection({ survey, setter }) {
-  console.log(survey);
-
   const { fetchedData } = useFetch(
     "site-admin/get-all-survey?time=live&page=1&count=100",
   );

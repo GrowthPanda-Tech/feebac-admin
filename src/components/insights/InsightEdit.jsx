@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { initWithUUID } from "@/utils/initWithUUID";
 
 import PageTitle from "@helperComps/PageTitle";
 import InsightForm from "./utilComponents/InsightForm";
@@ -12,7 +13,7 @@ export default function InsightEdit() {
     id: state.id,
     survey: state.survey || "",
     image: state.image,
-    pages: state.pages,
+    pages: initWithUUID(state.pages),
     is_public: false,
     remove_page: [],
   });

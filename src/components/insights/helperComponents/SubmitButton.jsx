@@ -24,7 +24,7 @@ export default function SubmitButton({ data }) {
 
     //only appends files ensuring create and edit aren't affected
     data.pages
-      .filter((item) => item instanceof File)
+      .filter(({ element }) => element instanceof File)
       .forEach((file) => {
         formdata.append("pages", file);
       });

@@ -9,7 +9,7 @@ export default function InsightForm({ data, setter }) {
     <>
       <div className="flex gap-10">
         <ImageInput image={data.image} setter={setter} />
-        <SurveySelection survey={data.survey} setter={setter} />
+        <SurveySelection survey={data.survey.id} setter={setter} />
       </div>
       <PageFactory data={data} setter={setter} />
       <SubmitButton data={data} setter={setter} />

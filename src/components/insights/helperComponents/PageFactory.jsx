@@ -6,8 +6,8 @@ export default function PageFactory({ data, setter }) {
 
   return (
     <div className="flex flex-wrap gap-8">
-      {pages.map((page, idx) => (
-        <div className="flex flex-col gap-3" key={idx}>
+      {pages.map(({ element: page, uuid }, idx) => (
+        <div className="flex flex-col gap-3" key={uuid}>
           <span className="font-medium leading-snug text-accent">
             Page {idx + 1}
           </span>

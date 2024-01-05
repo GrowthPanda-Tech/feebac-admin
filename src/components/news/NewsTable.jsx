@@ -34,7 +34,6 @@ export default function NewsTable() {
   );
 
   //Rest of the states
-  const [totalItems, setTotalItems] = useState(1);
   const [delInfo, setDelInfo] = useState({});
   const [delPop, setDelPop] = useState(false);
 
@@ -68,11 +67,11 @@ export default function NewsTable() {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex w-full items-center justify-between">
-        <PageTitle name={"News"} />
+        <PageTitle name={"Quick Reads"} />
         <Link to={"create"}>
           <button className="btn-primary">
             <i className="fa-solid fa-plus" />
-            Add News
+            Create
           </button>
         </Link>
       </div>
@@ -80,7 +79,7 @@ export default function NewsTable() {
         <input
           type="text"
           className="pill-primary w-3/4 border-0"
-          placeholder={"Search in News..."}
+          placeholder={"Search"}
           value={queryParams.searchQuery}
           onChange={(e) => {
             setQueryParams((prev) => ({
@@ -98,7 +97,7 @@ export default function NewsTable() {
           <LoadingSpinner />
         ) : error?.message == 204 ? (
           <div className="flex h-full items-center justify-center opacity-50">
-            No News Found !!
+            No Case Studies found !!
           </div>
         ) : (
           <Table>
@@ -134,8 +133,8 @@ export default function NewsTable() {
                           >
                             <i className="fa-solid fa-pen-to-square"></i>
                           </Link>
-                          <span className="tool-tip-span -right-[1.8rem] -top-12 bg-black ">
-                            Edit News
+                          <span className="tool-tip-span -right-[0.5rem] -top-12 bg-black ">
+                            Edit
                             <span className="tooltip-arrow bottom-[-2px] left-[46%]"></span>
                           </span>
                         </div>
@@ -145,8 +144,8 @@ export default function NewsTable() {
                           <button onClick={() => handleDelPop(news.id, index)}>
                             <i className="fa-solid fa-trash"></i>
                           </button>
-                          <span className="tool-tip-span -right-[2.8rem] -top-12 bg-black ">
-                            Delete News
+                          <span className="tool-tip-span -right-[1.2rem] -top-12 bg-black ">
+                            Delete
                             <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
                           </span>
                         </div>
@@ -159,13 +158,12 @@ export default function NewsTable() {
           </Table>
         )}
       </div>
-      {/* <Pagination
-        setItemsPerPage={setItemsPerPage}
-        page={page}
-        setPage={setPage}
-        totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
-      /> */}
+      <Pagination
+        page={queryParams.page}
+        itemsPerPage={queryParams.count}
+        setter={setQueryParams}
+        totalItems={fetchedData?.totalCount}
+      />
       <NewsDelPop
         delPop={delPop}
         setDelPop={setDelPop}

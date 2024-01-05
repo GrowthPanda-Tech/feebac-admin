@@ -169,11 +169,11 @@ export default function Survey() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <PageTitle name={"Survey List"} />
+        <PageTitle name={"Surveys"} />
         <Link to={"/survey/create"} className="w-fit">
           <button className="btn-primary">
             <i className="fa-solid fa-plus"></i>
-            Create a Survey
+            Create
           </button>
         </Link>
       </div>

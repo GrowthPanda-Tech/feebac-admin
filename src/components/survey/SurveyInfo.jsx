@@ -1,4 +1,5 @@
-import { Link, useParams, useLocation } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useState } from "react";
 
 import useFetch from "../../hooks/useFetch";
 import downloadImg from "../../assets/download.svg";
@@ -13,12 +14,13 @@ const AUTH_TOKEN = localStorage.getItem("authToken");
 export default function SurveyInfo() {
   const { slug } = useParams();
 
-  const location = useLocation();
-  const { from } = location.state;
-
   const { loading, fetchedData } = useFetch(
     `survey/get-survey-result?surveyId=${slug}`,
   );
+
+  const { surveyData, content, data } = fetchedData || {};
+
+  const [downloading, setDownloading] = useState(false);
 
   const handleClick = async () => {
     const request = {
@@ -26,6 +28,8 @@ export default function SurveyInfo() {
         Authorization: AUTH_TOKEN,
       },
     };
+
+    setDownloading(true);
 
     try {
       const response = await fetch(
@@ -41,17 +45,18 @@ export default function SurveyInfo() {
 
       const a = document.createElement("a");
       const url = window.URL.createObjectURL(blob);
+
       a.href = url;
       a.download = `${slug}.xlsx`;
       a.click();
     } catch (error) {
       console.error(error);
+    } finally {
+      setDownloading(false);
     }
   };
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  if (loading) return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col gap-6">
@@ -66,24 +71,27 @@ export default function SurveyInfo() {
           </span>
         </div>
         <div className="flex gap-2">
-          {!from ? (
+          {!content ? (
             <Link to={`/content/create-content/${slug}`}>
-              <button className="flex items-center gap-2 rounded-md bg-secondary px-8 py-3 text-lg font-semibold text-white transition hover:bg-primary">
-                Create Survey Article
-              </button>
+              <button className="btn-primary bg-accent">Attach Article</button>
             </Link>
           ) : null}
-          <PrimaryButton name={"Export"} handleClick={handleClick}>
-            <img src={downloadImg} />
-          </PrimaryButton>
+          <button
+            className="btn-primary disabled:btn-secondary"
+            disabled={downloading}
+            onClick={handleClick}
+          >
+            <i className="fa-solid fa-cloud-arrow-down" />
+            {downloading ? "Exporting..." : "Export"}
+          </button>
         </div>
       </div>
 
-      {from ? (
+      {content ? (
         <div className="flex items-center gap-2">
           <span className="text-xl font-medium">Linked Content :</span>
-          <span>{from.title}</span>
-          <span>({from.type})</span>
+          <span>{content.title}</span>
+          <span>({content.type})</span>
         </div>
       ) : null}
 

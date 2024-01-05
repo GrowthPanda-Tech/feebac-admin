@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 //utils
 import makeRequest from "@/utils/makeRequest";
 import swal from "@/utils/swal";
 
 //components
+import { Tooltip } from "@material-tailwind/react";
 import ThreeDotMenu from "@utilComps/ThreeDotMenu";
+
+//assets
 
 export default function InsightCard({ data, cardIndex, setter }) {
   const navigate = useNavigate();
@@ -87,7 +91,23 @@ export default function InsightCard({ data, cardIndex, setter }) {
   }`;
 
   return (
-    <div>
+    <div className="relative">
+      {cardData.survey ? (
+        <Tooltip
+          content={cardData.survey.title}
+          animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0, y: 25 },
+          }}
+        >
+          <Link to={`/survey/details/${cardData.survey.id}`}>
+            <i
+              className="fa-regular fa-clipboard absolute left-0 top-0 z-10 cursor-pointer p-4 text-2xl"
+              style={{ color: "#ffffff" }}
+            />
+          </Link>
+        </Tooltip>
+      ) : null}
       <ThreeDotMenu
         handleStatus={handleStatus}
         handleEdit={handleEdit}

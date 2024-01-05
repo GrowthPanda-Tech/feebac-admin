@@ -1,11 +1,6 @@
 import { useState } from "react";
 
-function PaginationSelect({
-  setItemsPerPage,
-  setPage,
-  itemsPerPage,
-  setQueryParams,
-}) {
+function PaginationSelect({ setItemsPerPage, setPage, setQueryParams }) {
   const [itemCount, setItemCount] = useState(10);
 
   const handleChange = (e) => {

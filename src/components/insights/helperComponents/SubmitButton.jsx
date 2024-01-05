@@ -11,16 +11,29 @@ export default function SubmitButton({ data }) {
   const handleSubmit = async () => {
     const formdata = new FormData();
 
+    //TODO: refactor
     if (data.id) formdata.append("id", data.id);
-    if (data.image instanceof File) formdata.append("image", data.image);
-    if (data.id && data.remove_page.length > 0)
-      formdata.append("remove_page", data.remove_page);
 
-    //append only files. not links
+    if (data.survey && data.survey !== "")
+      formdata.append("survey", data.survey.id);
+
+    if (data.image instanceof File) formdata.append("image", data.image);
+
+    if (data.id && Array.isArray(data.remove_page)) {
+      const stringsToRemove = data.remove_page.filter(
+        (item) => typeof item === "string" || item instanceof String,
+      );
+
+      if (stringsToRemove.length > 0) {
+        formdata.append("remove_page", stringsToRemove);
+      }
+    }
+
+    //only appends files ensuring create and edit aren't affected
     data.pages
-      .filter((item) => item instanceof File)
-      .forEach((file) => {
-        formdata.append("pages", file);
+      .filter((page) => page.element instanceof File)
+      .forEach((page) => {
+        formdata.append("pages", page.element);
       });
 
     const route = data.id

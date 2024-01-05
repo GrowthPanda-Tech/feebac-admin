@@ -1,4 +1,4 @@
-function Pagination({ itemsPerPage, page, setPage, totalItems }) {
+function Pagination({ itemsPerPage, page, setPage, totalItems, setter }) {
   let totalPages = Math.ceil(totalItems / itemsPerPage);
   if (isNaN(totalPages) || totalPages === 0) {
     totalPages = 1;
@@ -6,14 +6,33 @@ function Pagination({ itemsPerPage, page, setPage, totalItems }) {
 
   const handlePrevClick = () => {
     if (page > 1) {
-      setPage(page - 1);
+      if (!setter) {
+        setPage(page - 1);
+        return;
+      }
+
+      setter((prev) => ({ ...prev, page: page - 1 }));
     }
   };
 
   const handleNextClick = () => {
     if (page < totalPages) {
-      setPage(page + 1);
+      if (!setter) {
+        setPage(page + 1);
+        return;
+      }
+
+      setter((prev) => ({ ...prev, page: page + 1 }));
     }
+  };
+
+  const handlePageClick = (pageNumber) => {
+    if (!setter) {
+      setPage(pageNumber);
+      return;
+    }
+
+    setter((prev) => ({ ...prev, page: pageNumber }));
   };
 
   const renderPageNumbers = () => {
@@ -63,10 +82,9 @@ function Pagination({ itemsPerPage, page, setPage, totalItems }) {
     return (
       <button
         key={pageNumber}
-        className={`rounded-md border px-4 py-2 ${
-          pageNumber === page ? "pill-primary" : "pill-secondary"
-        }`}
-        onClick={() => setPage(pageNumber)}
+        className={`rounded-md border px-4 py-2 ${pageNumber === page ? "pill-primary" : "pill-secondary"
+          }`}
+        onClick={() => handlePageClick(pageNumber)}
       >
         {pageNumber}
       </button>

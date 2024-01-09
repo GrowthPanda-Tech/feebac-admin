@@ -6,26 +6,51 @@ export default function FilterMultiSelect({
   options,
   searchTerm,
   setParamObj,
+  setTarget,
 }) {
   const [checked, setChecked] = useState([]);
   const filteredResults = searchObjects(options, searchTerm);
 
   const handleClick = useCallback(
     (uuid, checked, value) => {
+      //set checked array state
       setChecked((prev) => {
         if (!checked) return prev.filter((id) => id !== uuid);
         return [...prev, uuid];
       });
 
+      //set target object data (for targeting duh...)
+      setTarget((prev) => {
+        if (!checked) {
+          const update = prev
+            ? prev[keyName].filter((item) => item !== value)
+            : null;
+
+          //delete key if update array length is 0
+          const updatedTarget = { ...prev, [keyName]: update };
+          if (update && update.length === 0) {
+            delete updatedTarget[keyName];
+          }
+
+          return updatedTarget;
+        }
+
+        return {
+          ...prev,
+          [keyName]: prev[keyName] ? [...prev[keyName], value] : [value],
+        };
+      });
+
+      //set query param (for location data)
       setParamObj((prev) => {
         const curr = prev[keyName];
 
         if (!checked) {
           const update = curr
             ? curr
-              .split(",")
-              .filter((item) => item !== value)
-              .join(",") || null
+                .split(",")
+                .filter((item) => item !== value)
+                .join(",") || null
             : null;
 
           return { ...prev, [keyName]: update };
@@ -34,7 +59,7 @@ export default function FilterMultiSelect({
         return { ...prev, [keyName]: curr ? `${curr},${value}` : value };
       });
     },
-    [keyName, setParamObj],
+    [keyName, setTarget, setParamObj],
   );
 
   return (

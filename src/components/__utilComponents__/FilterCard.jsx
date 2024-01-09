@@ -9,7 +9,8 @@ import swal from "@/utils/swal";
 import FilterSearchBar from "@helperComps/FilterSearchBar";
 import FilterMultiSelect from "@helperComps/FilterMultiSelect";
 
-export default function Filtercard({ data, route, setParamObj }) {
+
+export default function Filtercard({ data, route, setParamObj, setTarget }) {
   const { key_name, is_select, options } = data;
   const { setFetchedData } = useContext(FilterContext);
 
@@ -74,6 +75,7 @@ export default function Filtercard({ data, route, setParamObj }) {
             options={options}
             searchTerm={searchTerm}
             setParamObj={setParamObj}
+            setTarget={setTarget}
           />
         </>
       ) : null}

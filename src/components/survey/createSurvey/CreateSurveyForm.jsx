@@ -70,7 +70,7 @@ export default function CreateSurveyForm({
 
   const [loading, setLoading] = useState(false);
   const [surveyData, setSurveyData] = useState({});
-  const [profileData, setProfileData] = useState({});
+  const [target, setTarget] = useState({});
   const [imgPreview, setImgPreview] = useState({
     surveyImg: null,
     featured_image: null,
@@ -108,12 +108,28 @@ export default function CreateSurveyForm({
     setSurveyData({ ...surveyData, [type]: null });
   };
 
+  const handleCount = async () => {
+    setLoading(true);
+    try {
+      const response = await makeRequest(
+        `site-admin/get-target-profile-count?target=${JSON.stringify(target)}`,
+      );
+      if (!response.isSuccess) throw new Error(response.message);
+
+      console.log(response);
+    } catch (error) {
+      swal("error", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const formdata = new FormData();
 
-    formdata.append("target", JSON.stringify(profileData));
+    formdata.append("target", JSON.stringify(target));
 
     for (const [key, value] of Object.entries(surveyData)) {
       formdata.append(key, value);
@@ -312,15 +328,12 @@ export default function CreateSurveyForm({
       </div>
 
       {/* Filter Section */}
-      <div className="flex gap-8">
-        {fetchedData?.data[0].key.map((data) => (
-          <Filtercard
-            key={data.id}
-            data={data}
-            route={route}
-            setParamObj={setParamObj}
-          />
-        ))}
+      <FilterSection
+        route={route}
+        setParamObj={setParamObj}
+        setTarget={setTarget}
+      />
+
       </div>
 
       <button

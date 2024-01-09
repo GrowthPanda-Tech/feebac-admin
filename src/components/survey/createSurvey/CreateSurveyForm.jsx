@@ -1,16 +1,21 @@
 import { useState, useContext, useRef } from "react";
 import { CategoryContext } from "@/contexts/CategoryContext";
+import { FilterContext } from "@/contexts/FilterContext";
 
+//utils
 import swal from "@/utils/swal";
 import dateToday from "@/utils/dateToday";
 import dateConvert from "@/utils/dateConvert";
 import makeRequest from "@/utils/makeRequest";
 import forbidChars from "@/utils/forbidChars";
+import { makeParams } from "@/utils/makeParams";
 
+//assets
 import upload from "@/assets/upload.png";
 
 //components
 import PageTitle from "@helperComps/PageTitle";
+import Filtercard from "@utilComps/FilterCard";
 
 function Select({ name, value, onChange, children }) {
   return (
@@ -54,13 +59,22 @@ export default function CreateSurveyForm({
 }) {
   const { categories } = useContext(CategoryContext);
 
+  //Filter destructuring
+  const { fetchedData } = useContext(FilterContext);
+
+  //Location filter params
+  const [paramObj, setParamObj] = useState({ country: null, state: null });
+  console.log(paramObj);
+  const params = makeParams(paramObj);
+  const route = `config/get-profile-key-value?${params}`;
+
+  const [loading, setLoading] = useState(false);
   const [surveyData, setSurveyData] = useState({});
   const [profileData, setProfileData] = useState({});
   const [imgPreview, setImgPreview] = useState({
     surveyImg: null,
     featured_image: null,
   });
-  const [loading, setLoading] = useState(false);
 
   const surveyImgRef = useRef(null);
   const featuredImgRef = useRef(null);
@@ -295,6 +309,18 @@ export default function CreateSurveyForm({
             hidden
           />
         </div>
+      </div>
+
+      {/* Filter Section */}
+      <div className="flex gap-8">
+        {fetchedData?.data[0].key.map((data) => (
+          <Filtercard
+            key={data.id}
+            data={data}
+            route={route}
+            setParamObj={setParamObj}
+          />
+        ))}
       </div>
 
       <button

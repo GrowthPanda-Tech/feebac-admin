@@ -1,6 +1,8 @@
 import { useState, useCallback } from "react";
 import { searchObjects } from "@/utils/searchObjects";
 
+const LOCATION_KEYS = ["country", "state", "city"];
+
 export default function FilterMultiSelect({
   keyName,
   options,
@@ -68,7 +70,7 @@ export default function FilterMultiSelect({
         <label key={id} className="flex items-center gap-2">
           <input
             type="checkbox"
-            value={id}
+            value={LOCATION_KEYS.includes(keyName) ? id : name}
             className="w-4"
             onChange={(e) => handleClick(id, e.target.checked, e.target.value)}
             checked={checked.includes(id)}

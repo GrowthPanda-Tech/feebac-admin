@@ -9,6 +9,7 @@ import swal from "@/utils/swal";
 import FilterSearchBar from "@helperComps/FilterSearchBar";
 import FilterMultiSelect from "@helperComps/FilterMultiSelect";
 
+const LOCATION_KEYS = ["country", "state", "city"];
 
 export default function Filtercard({ data, route, setParamObj, setTarget }) {
   const { key_name, is_select, options } = data;
@@ -58,14 +59,16 @@ export default function Filtercard({ data, route, setParamObj, setTarget }) {
     <div className="no-scrollbar flex aspect-square w-80 flex-col gap-4 overflow-y-scroll rounded-lg bg-white p-8 shadow-lg">
       <div className="flex justify-between font-medium">
         <span className="capitalize">{key_name}</span>
-        <button
-          type="button"
-          className="text-secondary transition hover:text-black disabled:text-black"
-          onClick={handleLocationFetch}
-          disabled={loading}
-        >
-          {loading ? "Fetching..." : "Done"}
-        </button>
+        {LOCATION_KEYS.includes(key_name) ? (
+          <button
+            type="button"
+            className="text-secondary transition hover:text-black disabled:text-black disabled:opacity-50"
+            onClick={handleLocationFetch}
+            disabled={loading}
+          >
+            {loading ? "Fetching..." : "Done"}
+          </button>
+        ) : null}
       </div>
       {is_select ? (
         <>

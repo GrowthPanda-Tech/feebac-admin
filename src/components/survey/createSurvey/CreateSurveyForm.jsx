@@ -1,6 +1,5 @@
-import { useState, useContext, useRef } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { CategoryContext } from "@/contexts/CategoryContext";
-import { FilterContext } from "@/contexts/FilterContext";
 
 //utils
 import swal from "@/utils/swal";
@@ -15,9 +14,9 @@ import upload from "@/assets/upload.png";
 
 //components
 import PageTitle from "@helperComps/PageTitle";
-import Filtercard from "@utilComps/FilterCard";
 import Button from "@helperComps/Button";
 import FilterSection from "./FilterSection";
+import TargetCountSection from "./TargetCountSection";
 
 function Select({ name, value, onChange, children }) {
   return (
@@ -61,9 +60,6 @@ export default function CreateSurveyForm({
 }) {
   const { categories } = useContext(CategoryContext);
 
-  //Filter destructuring
-  const { fetchedData } = useContext(FilterContext);
-
   //Location filter params
   const [paramObj, setParamObj] = useState({ country: null, state: null });
   const params = makeParams(paramObj);
@@ -72,6 +68,7 @@ export default function CreateSurveyForm({
   const [loading, setLoading] = useState(false);
   const [surveyData, setSurveyData] = useState({});
   const [target, setTarget] = useState({});
+  const [count, setCount] = useState({ total: 0, target: 0 });
   const [imgPreview, setImgPreview] = useState({
     surveyImg: null,
     featured_image: null,
@@ -111,13 +108,13 @@ export default function CreateSurveyForm({
 
   const handleCount = async () => {
     setLoading(true);
+
     try {
       const response = await makeRequest(
         `site-admin/get-target-profile-count?target=${JSON.stringify(target)}`,
       );
       if (!response.isSuccess) throw new Error(response.message);
-
-      console.log(response);
+      setCount((prev) => ({ ...prev, target: response.data }));
     } catch (error) {
       swal("error", error.message);
     } finally {
@@ -160,6 +157,30 @@ export default function CreateSurveyForm({
       setLoading(false);
     }
   };
+
+  //TODO: get rid of this
+  useEffect(() => {
+    let ignore = false;
+
+    const getTotalCount = async () => {
+      try {
+        const response = await makeRequest(
+          "site-admin/get-target-profile-count?target={}",
+        );
+        if (!response.isSuccess) throw new Error(response.message);
+
+        if (!ignore) setCount((prev) => ({ ...prev, total: response.data }));
+      } catch (error) {
+        swal("error", error.message);
+      }
+    };
+
+    getTotalCount();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   return (
     <div className="flex flex-col gap-8">
@@ -327,6 +348,9 @@ export default function CreateSurveyForm({
           />
         </div>
       </div>
+
+      {/* Target Count Section */}
+      <TargetCountSection count={count} />
 
       {/* Filter Section */}
       <FilterSection

@@ -131,7 +131,7 @@ export default function Survey() {
         setLoading(true);
 
         const response = await fetch(
-          `${BASE_URL}/site-admin/get-all-survey?type=${status}&query=${searchQuery}&page=${page}&count=${itemsPerPage}`,
+          `${BASE_URL}/site-admin/get-all-survey?time=${status}&query=${searchQuery}&page=${page}&count=${itemsPerPage}`,
           request,
         );
 

@@ -16,6 +16,8 @@ import upload from "@/assets/upload.png";
 //components
 import PageTitle from "@helperComps/PageTitle";
 import Filtercard from "@utilComps/FilterCard";
+import Button from "@helperComps/Button";
+import FilterSection from "./FilterSection";
 
 function Select({ name, value, onChange, children }) {
   return (
@@ -64,7 +66,6 @@ export default function CreateSurveyForm({
 
   //Location filter params
   const [paramObj, setParamObj] = useState({ country: null, state: null });
-  console.log(paramObj);
   const params = makeParams(paramObj);
   const route = `config/get-profile-key-value?${params}`;
 
@@ -334,15 +335,15 @@ export default function CreateSurveyForm({
         setTarget={setTarget}
       />
 
+      <div className="flex gap-6">
+        <Button
+          loading={loading}
+          handler={handleCount}
+          action={"get user count"}
+          secondary
+        />
+        <Button loading={loading} handler={handleSubmit} action={"create"} />
       </div>
-
-      <button
-        className={`${loading ? "btn-secondary" : "btn-primary"} w-fit`}
-        onClick={handleSubmit}
-        disabled={loading}
-      >
-        {loading ? "Submitting..." : "Create"}
-      </button>
     </div>
   );
 }

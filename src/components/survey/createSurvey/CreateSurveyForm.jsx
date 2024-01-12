@@ -1,39 +1,22 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { CategoryContext } from "@/contexts/CategoryContext";
 
+//utils
 import swal from "@/utils/swal";
 import dateToday from "@/utils/dateToday";
 import dateConvert from "@/utils/dateConvert";
 import makeRequest from "@/utils/makeRequest";
 import forbidChars from "@/utils/forbidChars";
+import { makeParams } from "@/utils/makeParams";
 
+//assets
 import upload from "@/assets/upload.png";
 
 //components
-import Filters from "./filter/Filters";
 import PageTitle from "@helperComps/PageTitle";
-
-function UserCount({ type, count }) {
-  return (
-    <div className="flex items-center gap-4">
-      <span className="text-xl font-medium">
-        {type === "total"
-          ? "Total Registered Users"
-          : type === "filter"
-          ? "Filtered Users"
-          : null}
-        :
-      </span>
-      <span
-        className={`${
-          type === "filter" ? "bg-secondary text-white" : "bg-white"
-        } rounded-md px-5 py-2 font-medium`}
-      >
-        {count}
-      </span>
-    </div>
-  );
-}
+import Button from "@helperComps/Button";
+import FilterSection from "./FilterSection";
+import TargetCountSection from "./TargetCountSection";
 
 function Select({ name, value, onChange, children }) {
   return (
@@ -77,68 +60,22 @@ export default function CreateSurveyForm({
 }) {
   const { categories } = useContext(CategoryContext);
 
-  const [filters, setFilters] = useState([]);
+  //Location filter params
+  const [paramObj, setParamObj] = useState({ country: null, state: null });
+  const params = makeParams(paramObj);
+  const route = `config/get-profile-key-value?${params}`;
+
+  const [loading, setLoading] = useState(false);
   const [surveyData, setSurveyData] = useState({});
-  const [profileData, setProfileData] = useState({});
-  const [userCount, setUserCount] = useState(0);
-  const [filterdUserCount, setFilteredUserCount] = useState(0);
+  const [target, setTarget] = useState({});
+  const [count, setCount] = useState({ total: 0, target: 0 });
   const [imgPreview, setImgPreview] = useState({
     surveyImg: null,
     featured_image: null,
   });
 
-  const [isDragging, setIsDragging] = useState(false);
-
-  const [loading, setLoading] = useState(false);
-
   const surveyImgRef = useRef(null);
   const featuredImgRef = useRef(null);
-
-  const getFilters = async () => {
-    try {
-      const response = await makeRequest("config/get-profile-key-value");
-
-      if (!response.isSuccess) throw new Error(response.message);
-
-      setFilters(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getUserCount = async () => {
-    try {
-      const response = await makeRequest(
-        "site-admin/get-target-profile-count?target={}",
-      );
-
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
-
-      setUserCount(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getFilterCount = async () => {
-    const filterCount = JSON.stringify(profileData);
-
-    try {
-      const response = await makeRequest(
-        `site-admin/get-target-profile-count?target=${filterCount}`,
-      );
-
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
-
-      setFilteredUserCount(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -169,53 +106,31 @@ export default function CreateSurveyForm({
     setSurveyData({ ...surveyData, [type]: null });
   };
 
-  const handleDrop = (e) => {
-    e.preventDefault();
+  const handleCount = async () => {
+    setLoading(true);
 
-    if (e.dataTransfer.items) {
-      [...e.dataTransfer.items].forEach((item) => {
-        if (item.kind === "file") {
-          const file = item.getAsFile();
-          setSurveyData({ ...surveyData, surveyImg: file });
-        }
-      });
-    } else {
-      [...e.dataTransfer.files].forEach((file) => {
-        setSurveyData({ ...surveyData, surveyImg: file });
-      });
+    try {
+      const response = await makeRequest(
+        `site-admin/get-target-profile-count?target=${JSON.stringify(target)}`,
+      );
+      if (!response.isSuccess) throw new Error(response.message);
+      setCount((prev) => ({ ...prev, target: response.data }));
+    } catch (error) {
+      swal("error", error.message);
+    } finally {
+      setLoading(false);
     }
-
-    setIsDragging(false);
-  };
-
-  const handleDragover = (e) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e) => {
-    setIsDragging(false);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const dataString = JSON.stringify(profileData);
     const formdata = new FormData();
 
+    formdata.append("target", JSON.stringify(target));
+
     for (const [key, value] of Object.entries(surveyData)) {
-      if (key === "surveyImg") {
-        formdata.append(key, value, value.name);
-        continue;
-      }
-
       formdata.append(key, value);
-    }
-
-    formdata.append("target", dataString);
-
-    if (!surveyData.category) {
-      formdata.append("category", categories[0].category_id);
     }
 
     setLoading(true);
@@ -243,10 +158,28 @@ export default function CreateSurveyForm({
     }
   };
 
-  //TODO: replace with useFetch hook
+  //TODO: get rid of this
   useEffect(() => {
-    getFilters();
-    getUserCount();
+    let ignore = false;
+
+    const getTotalCount = async () => {
+      try {
+        const response = await makeRequest(
+          "site-admin/get-target-profile-count?target={}",
+        );
+        if (!response.isSuccess) throw new Error(response.message);
+
+        if (!ignore) setCount((prev) => ({ ...prev, total: response.data }));
+      } catch (error) {
+        swal("error", error.message);
+      }
+    };
+
+    getTotalCount();
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   return (
@@ -312,18 +245,11 @@ export default function CreateSurveyForm({
         <div className="flex flex-col gap-6">
           <span className="text-xl font-semibold">Upload Image</span>
           <div
-            className={`relative aspect-[9/16] h-80 ${
-              !imgPreview.surveyImg ? "border-dashed" : ""
-            } rounded-xl border-2 border-black ${
-              isDragging ? "border-secondary bg-white" : ""
-            }`}
+            className="relative aspect-[9/16] h-80 rounded-xl border-2 border-dashed border-black"
             style={{
               backgroundImage: imgPreview.surveyImg,
               backgroundSize: "cover",
             }}
-            onDrop={(e) => handleDrop(e)}
-            onDragOver={(e) => handleDragover(e)}
-            onDragLeave={(e) => handleDragLeave(e)}
           >
             {!imgPreview.surveyImg ? (
               <div className="flex h-full flex-col items-center justify-center gap-2 p-6">
@@ -373,18 +299,11 @@ export default function CreateSurveyForm({
             Upload Image (for featured section)
           </span>
           <div
-            className={`relative aspect-[5/4] h-80 ${
-              !imgPreview.surveyImg ? "border-dashed" : ""
-            } rounded-xl border-2 border-black ${
-              isDragging ? "border-secondary bg-white" : ""
-            }`}
+            className="relative aspect-[5/4] h-80 rounded-xl border-2 border-dashed border-black"
             style={{
               backgroundImage: imgPreview.featured_image,
               backgroundSize: "cover",
             }}
-            onDrop={(e) => handleDrop(e)}
-            onDragOver={(e) => handleDragover(e)}
-            onDragLeave={(e) => handleDragLeave(e)}
           >
             {!imgPreview.featured_image ? (
               <div className="flex h-full flex-col items-center justify-center gap-2 p-6">
@@ -430,38 +349,24 @@ export default function CreateSurveyForm({
         </div>
       </div>
 
-      <div className="flex gap-16">
-        <UserCount type={"total"} count={userCount} />
-        <UserCount type={"filter"} count={filterdUserCount} />
-      </div>
+      {/* Target Count Section */}
+      <TargetCountSection count={count} />
 
-      <Filters
-        filters={filters}
-        profileData={profileData}
-        setProfileData={setProfileData}
-        setFilteredUserCount={setFilteredUserCount}
+      {/* Filter Section */}
+      <FilterSection
+        route={route}
+        setParamObj={setParamObj}
+        setTarget={setTarget}
       />
 
-      <div className="flex gap-4">
-        {filters.length > 0 ? (
-          <button
-            className={`${
-              loading ? "btn-secondary" : "btn-primary bg-accent"
-            }  w-fit`}
-            onClick={getFilterCount}
-            disabled={loading}
-          >
-            Get User Count
-          </button>
-        ) : null}
-
-        <button
-          className={`${loading ? "btn-secondary" : "btn-primary"} w-fit`}
-          onClick={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? "Submitting..." : "Create"}
-        </button>
+      <div className="flex gap-6">
+        <Button
+          loading={loading}
+          handler={handleCount}
+          action={"get user count"}
+          secondary
+        />
+        <Button loading={loading} handler={handleSubmit} action={"create"} />
       </div>
     </div>
   );

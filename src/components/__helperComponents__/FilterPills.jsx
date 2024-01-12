@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-export default function FilterOption({ name, index, onFilterClick }) {
+export default function FilterPills({ name, handlePillClick }) {
   const [clicked, setClicked] = useState(false);
 
   const handleClick = () => {
-    setClicked(!clicked);
-    onFilterClick(index, clicked);
+    handlePillClick(name);
+    setClicked((prev) => !prev);
   };
 
   return (

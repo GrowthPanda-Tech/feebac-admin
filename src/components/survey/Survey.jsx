@@ -1,19 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import makeRequest from "../../utils/makeRequest";
-import swal from "../../utils/swal";
+import makeRequest from "@/utils/makeRequest";
+import swal from "@/utils/swal";
 
-import Table from "../__helperComponents__/table/Table";
-import Thead from "../__helperComponents__/table/Thead";
-import Trow from "../__helperComponents__/table/Trow";
-import Tdata from "../__helperComponents__/table/Tdata";
-import TableDateTime from "../__helperComponents__/table/TableDateTime";
-
-import LoadingSpinner from "../__helperComponents__/LoadingSpinner";
-import PageTitle from "../__helperComponents__/PageTitle";
-import Pagination from "../__helperComponents__/Pagination";
-import PaginationSelect from "../__helperComponents__/PaginationSelect";
+import Table from "@helperComps/table/Table";
+import Thead from "@helperComps/table/Thead";
+import Trow from "@helperComps/table/Trow";
+import Tdata from "@helperComps/table/Tdata";
+import TableDateTime from "@helperComps/table/TableDateTime";
+import LoadingSpinner from "@helperComps/LoadingSpinner";
+import PageTitle from "@helperComps/PageTitle";
+import Pagination from "@helperComps/Pagination";
+import PaginationSelect from "@helperComps/PaginationSelect";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const HEADERS = [
@@ -80,6 +79,14 @@ function ButtonComponent({ setStatus, setPage, setSearchQuery }) {
         isActive={activeButton === 3}
         onClick={() => handleClick(3)}
       />
+      <Button
+        type={"draft"}
+        setPage={setPage}
+        setSearchQuery={setSearchQuery}
+        setStatus={setStatus}
+        isActive={activeButton === 4}
+        onClick={() => handleClick(4)}
+      />
     </div>
   );
 }
@@ -127,9 +134,9 @@ export default function Survey() {
     };
 
     async function fetchSurveyData() {
-      try {
-        setLoading(true);
+      setLoading(true);
 
+      try {
         const response = await fetch(
           `${BASE_URL}/site-admin/get-all-survey?type=${status}&query=${searchQuery}&page=${page}&count=${itemsPerPage}`,
           request,
@@ -140,20 +147,15 @@ export default function Survey() {
         }
 
         const json = await response.json();
-
-        if (!json.isSuccess) {
-          throw new Error(json.message);
-        }
+        if (!json.isSuccess) throw new Error(json.message);
 
         setsurveyData(json.data);
         setTotalItems(json.totalCount);
-
         setLoading(false);
       } catch (error) {
         if (error.message == 204) {
           setsurveyData([]);
           setTotalItems(1);
-
           setLoading(false);
         }
       }
@@ -256,11 +258,10 @@ export default function Survey() {
                               </div>
                               <div className="tool-tip-div group">
                                 <i
-                                  className={`fa-regular fa-newspaper text-xl ${
-                                    !content
+                                  className={`fa-regular fa-newspaper text-xl ${!content
                                       ? "cursor-not-allowed opacity-40"
                                       : ""
-                                  }`}
+                                    }`}
                                 />
                                 <span className="tool-tip-span -right-[3.4rem] -top-12 bg-black">
                                   {content
@@ -279,9 +280,8 @@ export default function Survey() {
                                     }
                                   >
                                     <i
-                                      className={`fa-solid ${
-                                        is_public ? "fa-eye-slash" : "fa-eye"
-                                      } `}
+                                      className={`fa-solid ${is_public ? "fa-eye-slash" : "fa-eye"
+                                        } `}
                                     ></i>
                                   </button>
                                   <span className="tool-tip-span  -right-[2.8rem] -top-12 bg-black ">
@@ -297,7 +297,7 @@ export default function Survey() {
                         ) : (
                           ""
                         )}
-                        {status === "upcoming" ? (
+                        {status === "upcoming" || status === "draft" ? (
                           <div className="flex justify-center gap-4">
                             <div className="flex justify-center">
                               <div className="tool-tip-div group">
@@ -316,9 +316,8 @@ export default function Survey() {
                                   onClick={() => handleSatus(survey_id, index)}
                                 >
                                   <i
-                                    className={`fa-regular ${
-                                      is_public ? " fa-eye-slash " : "fa-eye"
-                                    } `}
+                                    className={`fa-regular ${is_public ? " fa-eye-slash " : "fa-eye"
+                                      } `}
                                   ></i>
                                 </button>
                                 <span className="tool-tip-span  -right-[2.8rem] -top-12 bg-black ">

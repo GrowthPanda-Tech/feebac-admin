@@ -166,15 +166,14 @@ export default function EditQuestion({
           </div>
         </div>
         <div className="flex flex-col gap-4">
-          {updatedQuestionData.questionType === 1 ? (
-            <></>
-          ) : (
-            options.map((option, index) => (
+          {updatedQuestionData.questionType === 1
+            ? null
+            : options.map((option, index) => (
               <div key={index} className="flex items-center justify-between">
                 <Input
                   type={"text"}
                   name={"questionValue"}
-                  value={option}
+                  value={Array.isArray(option) ? option[0] : option}
                   onChange={(e) => handleOptionChange(e, index)}
                 />
 
@@ -190,8 +189,7 @@ export default function EditQuestion({
                   </button>
                 )}
               </div>
-            ))
-          )}
+            ))}
         </div>
         <div className="flex justify-between">
           {updatedQuestionData.questionType !== 1 ? (

@@ -6,14 +6,13 @@ export default function ReviewCard({
   question,
   surveyId,
   setQuestionList,
-  questionList,
   setSurveyInfo,
 }) {
-  const questionType = question.question_type.type_name;
-
   const [editPop, setEditPop] = useState(false);
 
+  const questionType = question.question_type.type_name;
   let type = "Text-Answer";
+
   switch (questionType) {
     case "radio":
       type = "Single-Choice";
@@ -44,7 +43,9 @@ export default function ReviewCard({
           <h2 className="text-black">{question.question_title}</h2>
           <div className="flex flex-col gap-6 opacity-60">
             {Object.values(question.question_values).map((option, index) => (
-              <div key={index}>{option}</div>
+              <div key={index}>
+                {Array.isArray(option) ? option[0] : option}
+              </div>
             ))}
           </div>
         </div>

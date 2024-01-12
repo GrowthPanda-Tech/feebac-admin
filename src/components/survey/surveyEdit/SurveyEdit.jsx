@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import pencil_edit from "@/assets/pencil_edit.png";
 
 import makeRequest from "@/utils/makeRequest";
 import dateConvert from "@/utils/dateConvert";
+import { surveyActions } from "@/utils/buttonHandlers";
 
 import LoadingSpinner from "@helperComps/LoadingSpinner";
 import ReviewCard from "../reviewSurvey/ReviewCard";
@@ -14,6 +15,7 @@ import PageTitle from "@helperComps/PageTitle";
 
 export default function SurveyEdit() {
   const { slug } = useParams();
+  const navigate = useNavigate();
 
   const [surveyInfo, setSurveyInfo] = useState({});
   const [questionList, setQuestionList] = useState([]);
@@ -21,6 +23,10 @@ export default function SurveyEdit() {
   const [surveyEditPop, setSurveyEditPop] = useState(false);
   const [questionAddPop, setQuestionAddPop] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [actionloader, setActionloader] = useState({
+    publish: false,
+    schedule: false,
+  });
 
   useEffect(() => {
     let ignore = false;
@@ -134,16 +140,37 @@ export default function SurveyEdit() {
       )}
 
       {/* Action Buttons */}
-      {!surveyInfo.status.isLive ? (
+      {!surveyInfo?.status?.isLive ? (
         <div className="flex justify-center gap-6">
           <button
             type="button"
-            className="btn-primary bg-white text-black/50 hover:text-white"
+            className="btn-primary disabled:btn-secondary bg-white text-black/50 hover:text-white"
+            disabled={actionloader.schedule || actionloader.publish}
+            onClick={() =>
+              surveyActions(
+                "publish",
+                surveyInfo.survey_id,
+                setActionloader,
+                navigate,
+              )
+            }
           >
-            Publish
+            {actionloader.publish ? "Publishing..." : "Publish"}
           </button>
-          <button type="button" className="btn-primary">
-            Schedule
+          <button
+            type="button"
+            className="btn-primary disabled:btn-secondary"
+            disabled={actionloader.schedule || actionloader.publish}
+            onClick={() =>
+              surveyActions(
+                "schedule",
+                surveyInfo.survey_id,
+                setActionloader,
+                navigate,
+              )
+            }
+          >
+            {actionloader.schedule ? "Scheduling..." : "Schedule"}
           </button>
         </div>
       ) : null}

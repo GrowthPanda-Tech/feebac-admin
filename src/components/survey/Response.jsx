@@ -1,6 +1,6 @@
 export default function Response({ index, question }) {
   const type =
-    question.questionType === "radio" ? "Single-choice" : "Multi-choice";
+    question.question_type === "radio" ? "Single-choice" : "Multi-choice";
 
   return (
     <div className="flex flex-col gap-4">
@@ -9,7 +9,7 @@ export default function Response({ index, question }) {
       </div>
       <div className="h-full rounded-xl bg-white p-8 shadow-lg">
         <div className="mb-8 text-lg font-semibold leading-snug">
-          {question.questionTitle}
+          {question.question_title}
         </div>
         {question.options.map((option, index) => (
           <div key={index} className="flex flex-col gap-2">

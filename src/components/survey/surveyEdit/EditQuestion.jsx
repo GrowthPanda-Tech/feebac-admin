@@ -2,10 +2,8 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 //utils
-import makeRequest from "../../../utils/makeRequest";
-import swal from "../../../utils/swal";
-
-//components
+import makeRequest from "@/utils/makeRequest";
+import swal from "@/utils/swal";
 
 function Input({ type, name, value, onChange }) {
   return (
@@ -41,6 +39,7 @@ export default function EditQuestion({
   const [options, setOptions] = useState(
     Object.values(updatedQuestionData.questionValue),
   );
+
   const [activeButtonIndex, setActiveButtonIndex] = useState(
     updatedQuestionData.questionType - 1,
   );
@@ -142,27 +141,24 @@ export default function EditQuestion({
           <div className="flex h-fit gap-7">
             <button
               type="button"
-              className={`pill ${
-                activeButtonIndex === 0 ? "pill-primary" : "pill-secondary"
-              }`}
+              className={`pill ${activeButtonIndex === 0 ? "pill-primary" : "pill-secondary"
+                }`}
               onClick={() => setQuestionType(0, 1, {})}
             >
               Text Answer
             </button>
             <button
               type="button"
-              className={`pill ${
-                activeButtonIndex === 1 ? "pill-primary" : "pill-secondary"
-              }`}
+              className={`pill ${activeButtonIndex === 1 ? "pill-primary" : "pill-secondary"
+                }`}
               onClick={() => setQuestionType(1, 2)}
             >
               One Answer
             </button>
             <button
               type="button"
-              className={`pill ${
-                activeButtonIndex === 2 ? "pill-primary" : "pill-secondary"
-              }`}
+              className={`pill ${activeButtonIndex === 2 ? "pill-primary" : "pill-secondary"
+                }`}
               onClick={() => setQuestionType(2, 3)}
             >
               Multiple Answer

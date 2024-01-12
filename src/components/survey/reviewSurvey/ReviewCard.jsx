@@ -54,11 +54,9 @@ export default function ReviewCard({
         <EditPop
           question={question}
           setEditPop={setEditPop}
-          type={type}
           surveyId={surveyId}
           questionNo={index}
           setQuestionList={setQuestionList}
-          questionList={questionList}
           setSurveyInfo={setSurveyInfo}
         />
       )}

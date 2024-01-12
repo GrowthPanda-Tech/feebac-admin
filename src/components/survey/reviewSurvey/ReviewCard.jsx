@@ -29,7 +29,7 @@ export default function ReviewCard({
 
   return (
     <>
-      <div className="flex w-96 flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <div className="flex w-full justify-between font-semibold text-secondary">
           Question {index + 1} ({type})
           <button

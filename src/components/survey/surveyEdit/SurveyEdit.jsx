@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
+import pencil_edit from "@/assets/pencil_edit.png";
+
 import makeRequest from "@/utils/makeRequest";
 import dateConvert from "@/utils/dateConvert";
 
@@ -8,17 +10,7 @@ import LoadingSpinner from "@helperComps/LoadingSpinner";
 import ReviewCard from "../reviewSurvey/ReviewCard";
 import EditSurveyDetails from "./EditSurveyDetails";
 import AddMoreQuestionPop from "./AddMoreQuestionPop";
-
-function InputHeading({ title, value, capitalize }) {
-  return (
-    <div className="grid grid-cols-2 md:w-3/4">
-      <h1 className="text-xl font-semibold">{title} : </h1>
-      <span className={`text-xl ${capitalize ? "capitalize" : ""}`}>
-        {value}
-      </span>
-    </div>
-  );
-}
+import PageTitle from "@helperComps/PageTitle";
 
 export default function SurveyEdit() {
   const { slug } = useParams();
@@ -59,61 +51,58 @@ export default function SurveyEdit() {
 
   if (loading) return <LoadingSpinner />;
 
+  //Date and time
+  const localStartDate = dateConvert(surveyInfo.start_date, "local");
+  const localEndDate = dateConvert(surveyInfo.end_date, "local");
+
+  const [startDate, startTime] = localStartDate.split(",");
+  const [endDate, endTime] = localEndDate.split(",");
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-10">
       <div className="flex justify-between">
-        <div className="flex flex-col md:w-1/2">
-          <InputHeading
-            title={"Survey Title"}
-            value={surveyInfo.survey_title}
-          />
-          <InputHeading
-            title={"Start Date & Time"}
-            value={
-              surveyInfo ? dateConvert(surveyInfo.start_date, "local") : null
-            }
-          />
-          <InputHeading
-            title={"End Date & Time"}
-            value={
-              surveyInfo ? dateConvert(surveyInfo.end_date, "local") : null
-            }
-          />
-          <InputHeading
-            title={"Total Question(s)"}
-            value={surveyInfo.total_questions}
-          />
+        {/* Survey Info */}
+        <div className="flex flex-col gap-4">
+          <div className="flex gap-4">
+            <PageTitle name={surveyInfo?.survey_title} />
+            <button type="button" onClick={() => setSurveyEditPop(true)}>
+              <img src={pencil_edit} alt="Edit Survey" className="w-6" />
+            </button>
+          </div>
+
+          <span className="font-semibold capitalize">
+            {surveyInfo?.category?.category_name}
+          </span>
+
+          <div className="flex flex-col gap-1">
+            <span className="font-semibold">{`${startDate} - ${endDate}`}</span>
+            <span className="font-medium text-[#858585]">{`${startTime} - ${endTime}`}</span>
+          </div>
+
+          <div className="flex items-center gap-2 font-semibold capitalize">
+            <span> {surveyInfo?.loyalty_point} </span>
+            <span className="font-medium">loyalty points</span>
+          </div>
         </div>
-        <div className="flex flex-col items-end gap-4">
-          {surveyInfo?.status?.isLive ? (
-            <div className="flex items-center gap-4">
-              <button
-                className="btn-primary bg-tertiary"
-                onClick={() => setSurveyEditPop(true)}
-              >
-                Edit Survey Details
-              </button>
-            </div>
-          ) : null}
-        </div>
+
+        {/* Add question button */}
+        <button
+          className="btn-primary h-fit w-fit"
+          onClick={() => setQuestionAddPop(true)}
+        >
+          <i className="fa-solid fa-plus" />
+          Question
+        </button>
       </div>
 
       {!loading ? (
         <div className="flex flex-col gap-2">
-          <h1 className="text-xl font-semibold">About Survey</h1>
+          <h1 className="font-semibold">About Survey</h1>
           <span>{surveyInfo.survey_description}</span>
         </div>
       ) : null}
 
-      <button
-        className="btn-primary w-fit"
-        onClick={() => setQuestionAddPop(true)}
-      >
-        <i className="fa-solid fa-plus" />
-        Question
-      </button>
-
-      <div className="grid grid-cols-1 gap-20 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-3 gap-x-28 gap-y-12">
         {questionList.map((question, index) => (
           <ReviewCard
             key={index}
@@ -143,6 +132,21 @@ export default function SurveyEdit() {
           setSurveyInfo={setSurveyInfo}
         />
       )}
+
+      {/* Action Buttons */}
+      {!surveyInfo.status.isLive ? (
+        <div className="flex justify-center gap-6">
+          <button
+            type="button"
+            className="btn-primary bg-white text-black/50 hover:text-white"
+          >
+            Publish
+          </button>
+          <button type="button" className="btn-primary">
+            Schedule
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

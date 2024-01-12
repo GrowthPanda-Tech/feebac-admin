@@ -258,10 +258,11 @@ export default function Survey() {
                               </div>
                               <div className="tool-tip-div group">
                                 <i
-                                  className={`fa-regular fa-newspaper text-xl ${!content
+                                  className={`fa-regular fa-newspaper text-xl ${
+                                    !content
                                       ? "cursor-not-allowed opacity-40"
                                       : ""
-                                    }`}
+                                  }`}
                                 />
                                 <span className="tool-tip-span -right-[3.4rem] -top-12 bg-black">
                                   {content
@@ -280,8 +281,9 @@ export default function Survey() {
                                     }
                                   >
                                     <i
-                                      className={`fa-solid ${is_public ? "fa-eye-slash" : "fa-eye"
-                                        } `}
+                                      className={`fa-solid ${
+                                        is_public ? "fa-eye-slash" : "fa-eye"
+                                      } `}
                                     ></i>
                                   </button>
                                   <span className="tool-tip-span  -right-[2.8rem] -top-12 bg-black ">
@@ -310,22 +312,27 @@ export default function Survey() {
                                 </span>
                               </div>
                             </div>
-                            <div className="flex justify-center">
-                              <div className="tool-tip-div group">
-                                <button
-                                  onClick={() => handleSatus(survey_id, index)}
-                                >
-                                  <i
-                                    className={`fa-regular ${is_public ? " fa-eye-slash " : "fa-eye"
+                            {status !== "draft" ? (
+                              <div className="flex justify-center">
+                                <div className="tool-tip-div group">
+                                  <button
+                                    onClick={() =>
+                                      handleSatus(survey_id, index)
+                                    }
+                                  >
+                                    <i
+                                      className={`fa-regular ${
+                                        is_public ? " fa-eye-slash " : "fa-eye"
                                       } `}
-                                  ></i>
-                                </button>
-                                <span className="tool-tip-span  -right-[2.8rem] -top-12 bg-black ">
-                                  {is_public ? "Make Private" : "Make Public"}
-                                  <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
-                                </span>
+                                    ></i>
+                                  </button>
+                                  <span className="tool-tip-span  -right-[2.8rem] -top-12 bg-black ">
+                                    {is_public ? "Make Private" : "Make Public"}
+                                    <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
+                                  </span>
+                                </div>
                               </div>
-                            </div>
+                            ) : null}
                           </div>
                         ) : null}
                       </div>

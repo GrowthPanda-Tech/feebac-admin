@@ -33,6 +33,7 @@ export default function NewsForm({ newsData }) {
       title,
       description,
       source_url,
+      source_name,
       category,
       caption,
       banner_type,
@@ -46,6 +47,7 @@ export default function NewsForm({ newsData }) {
       title: title || "",
       description: description || "",
       source_url: source_url || "",
+      source_name: source_name || "",
       category: category?.category_id || defaultCategory,
       caption: caption || "",
       banner_type: banner_type || "image",
@@ -156,8 +158,8 @@ export default function NewsForm({ newsData }) {
               <AccentInput
                 name="title"
                 value={newsState.title}
-                handleChange={(e) => handleChange(e, "char", 200)}
                 disabled={loading}
+                handleChange={(e) => handleChange(e, "char", 200)}
                 count={{ max: 200, type: "char" }}
               />
             </div>
@@ -193,6 +195,16 @@ export default function NewsForm({ newsData }) {
               handleChange={handleChange}
             />
           ) : null}
+
+          <AccentInput
+            label={"Source Name (Optional)"}
+            name="source_name"
+            placeholder="The New York Times"
+            value={newsState.source_name}
+            disabled={loading}
+            handleChange={(e) => handleChange(e, "char", 50)}
+            count={{ max: 50, type: "char" }}
+          />
 
           <AccentInput
             label={"Caption (Optional)"}

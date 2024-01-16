@@ -9,19 +9,18 @@ export default function FilterValues({ id, options, filterIdx }) {
   const [newOptions, setNewOption] = useState("");
 
   const { fetchedData, setFetchedData } = useFilterContext();
+  const initState = structuredClone(fetchedData);
 
   const handleOptionRemove = async (index) => {
     const option = options[index];
     const params = new URLSearchParams({ id, option });
     const url = `config/delete-profile-key-option?${params}`;
 
-    const initState = structuredClone(fetchedData);
-
     try {
       //optimistically update state
       setFetchedData((prev) => {
-        const curr = { ...prev };
-        const currArr = [...curr.data[2].key[filterIdx].options];
+        const curr = structuredClone(prev);
+        const currArr = structuredClone(curr.data[2].key[filterIdx].options);
 
         if (index >= 0 && index < currArr.length) {
           currArr.splice(index, 1);
@@ -40,10 +39,8 @@ export default function FilterValues({ id, options, filterIdx }) {
   };
 
   const handleOptionAdd = async () => {
-    const optionsArr = newOptions.split(",");
+    const optionsArr = newOptions.replace(/\s*,\s*/g, ",").split(",");
     const request = { id, newOptions: optionsArr };
-
-    const initState = structuredClone(fetchedData);
 
     try {
       //optimistically update state
@@ -79,7 +76,7 @@ export default function FilterValues({ id, options, filterIdx }) {
   return (
     <div className="flex flex-col gap-4">
       {options.map((option, index) => (
-        <div key={index} className="flex items-center justify-between">
+        <div key={option} className="flex items-center justify-between">
           <span className="font-semibold text-accent">{option}</span>
           <i
             className="fa-solid fa-xmark cursor-pointer"

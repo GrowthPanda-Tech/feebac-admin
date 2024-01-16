@@ -40,6 +40,7 @@ export default function EditSurveyForm({
   const { slug } = useParams();
   const { categories } = useContext(CategoryContext);
 
+  const [loading, setLoading] = useState(false);
   const [surveyData, setSurveyData] = useState(surveyInfo);
   const [updatedData, setUpdatedData] = useState(null);
   const [imgPreview, setImgPreview] = useState({
@@ -93,6 +94,8 @@ export default function EditSurveyForm({
       formdata.append(key, value);
     }
 
+    setLoading(true);
+
     try {
       const response = await makeRequest(
         "site-admin/update-survey",
@@ -115,6 +118,8 @@ export default function EditSurveyForm({
       } else swal("error", response.message);
     } catch (error) {
       swal("error", "Please Enter Valid Value");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -190,9 +195,8 @@ export default function EditSurveyForm({
         <div className="flex flex-col gap-6">
           <span className="text-xl font-semibold">Upload Image</span>
           <div
-            className={`relative aspect-[9/16] h-80 ${
-              !imgPreview.image_url ? "border-dashed" : ""
-            } rounded-xl border-2 border-black`}
+            className={`relative aspect-[9/16] h-80 ${!imgPreview.image_url ? "border-dashed" : ""
+              } rounded-xl border-2 border-black`}
             style={{
               backgroundImage: imgPreview.image_url,
               backgroundSize: "cover",
@@ -246,9 +250,8 @@ export default function EditSurveyForm({
             Upload Image (for featured section)
           </span>
           <div
-            className={`relative aspect-[5/4] h-80 ${
-              !imgPreview.featured_image ? "border-dashed" : ""
-            } rounded-xl border-2 border-black`}
+            className={`relative aspect-[5/4] h-80 ${!imgPreview.featured_image ? "border-dashed" : ""
+              } rounded-xl border-2 border-black`}
             style={{
               backgroundImage: imgPreview.featured_image,
               backgroundSize: "cover",
@@ -299,14 +302,19 @@ export default function EditSurveyForm({
       </div>
 
       <div className="flex gap-4">
-        <button className="btn-primary w-fit" onClick={handleSubmit}>
-          Save Changes
+        <button
+          className="btn-primary disabled:btn-secondary w-fit"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? "Saving..." : "Save Changes"}
         </button>
         <button
           className="btn-secondary"
           onClick={() => {
             setSurveyEditPop(false);
           }}
+          disabled={loading}
         >
           Cancel
         </button>

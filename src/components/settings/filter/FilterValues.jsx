@@ -1,38 +1,70 @@
 import { useState } from "react";
-import makeRequest from "../../../utils/makeRequest";
+import { useFilterContext } from "@/contexts/FilterContext";
 
-export default function FilterValues({
-  dataTypeId,
-  filterId,
-  isSelect,
-  options,
-  setOptions,
-}) {
+import makeRequest from "@/utils/makeRequest";
+import swal from "@/utils/swal";
+
+export default function FilterValues({ id, options, filterIdx }) {
   const [addingOption, setAddingOption] = useState(false);
-  const [newOption, setNewOption] = useState("");
+  const [newOptions, setNewOption] = useState("");
+
+  const { fetchedData, setFetchedData } = useFilterContext();
 
   const handleOptionRemove = async (index) => {
-    const response = await makeRequest(
-      `config/delete-profile-key-option?dataType=3&key=${filterId}&option=${options[index]}`,
-      "DELETE",
-    );
-    response.isSuccess && setOptions(response.data.options);
+    const option = options[index];
+    const params = new URLSearchParams({ id, option });
+    const url = `config/delete-profile-key-option?${params}`;
+
+    const initState = structuredClone(fetchedData);
+
+    try {
+      //optimistically update state
+      setFetchedData((prev) => {
+        const curr = { ...prev };
+        const currArr = [...curr.data[2].key[filterIdx].options];
+
+        if (index >= 0 && index < currArr.length) {
+          currArr.splice(index, 1);
+        }
+
+        curr.data[2].key[filterIdx].options = currArr;
+        return curr;
+      });
+
+      const response = await makeRequest(url, "DELETE");
+      if (!response.isSuccess) throw new Error(response.message);
+    } catch (error) {
+      setFetchedData(initState);
+      swal("error", error.message);
+    }
   };
 
   const handleOptionAdd = async () => {
-    const request = {
-      dataType: 3,
-      key: filterId,
-      newOptions: [newOption],
-    };
+    const optionsArr = newOptions.split(",");
+    const request = { id, newOptions: optionsArr };
 
-    const response = await makeRequest(
-      "config/add-profile-options",
-      "POST",
-      request,
-    );
+    const initState = structuredClone(fetchedData);
 
-    setOptions(response.data);
+    try {
+      //optimistically update state
+      setFetchedData((prev) => {
+        const curr = { ...prev };
+        const currArr = [...curr.data[2].key[filterIdx].options, ...optionsArr];
+        curr.data[2].key[filterIdx].options = currArr;
+
+        return curr;
+      });
+
+      const response = await makeRequest(
+        "config/add-profile-options",
+        "POST",
+        request,
+      );
+      if (!response.isSuccess) throw new Error(response.message);
+    } catch (error) {
+      setFetchedData(initState);
+      console.error(error);
+    }
   };
 
   const handleKey = (event) => {
@@ -45,45 +77,36 @@ export default function FilterValues({
   };
 
   return (
-    <>
-      {isSelect ? (
-        <div className="flex flex-col gap-4">
-          {options.map((option, index) => (
-            <div key={index} className="flex items-center justify-between">
-              <span className="font-semibold text-accent">{option}</span>
-              <i
-                className="fa-solid fa-xmark cursor-pointer"
-                onClick={() => handleOptionRemove(index)}
-              ></i>
-            </div>
-          ))}
-
-          {addingOption ? (
-            <input
-              autoFocus
-              className="input-settings"
-              placeholder="Add a value or press Esc"
-              type="text"
-              value={newOption}
-              onChange={(e) => setNewOption(e.target.value)}
-              onKeyUp={(event) => handleKey(event)}
-            />
-          ) : (
-            <div
-              className="flex cursor-pointer items-center"
-              onClick={() => setAddingOption(true)}
-            >
-              <i className="fa-solid fa-plus mr-4"></i>
-              <span> Add More Values </span>
-            </div>
-          )}
+    <div className="flex flex-col gap-4">
+      {options.map((option, index) => (
+        <div key={index} className="flex items-center justify-between">
+          <span className="font-semibold text-accent">{option}</span>
+          <i
+            className="fa-solid fa-xmark cursor-pointer"
+            onClick={() => handleOptionRemove(index)}
+          />
         </div>
+      ))}
+
+      {addingOption ? (
+        <input
+          autoFocus
+          className="rounded-md border border-[#C9CED6] bg-white px-6 py-4"
+          placeholder="Add values or press Esc"
+          type="text"
+          value={newOptions}
+          onChange={(e) => setNewOption(e.target.value)}
+          onKeyUp={(event) => handleKey(event)}
+        />
       ) : (
-        <div className="flex justify-evenly">
-          <div>{options[0]}</div>
-          <div>{options[1]}</div>
+        <div
+          className="flex cursor-pointer items-center"
+          onClick={() => setAddingOption(true)}
+        >
+          <i className="fa-solid fa-plus mr-4" />
+          <span> Add More Values </span>
         </div>
       )}
-    </>
+    </div>
   );
 }

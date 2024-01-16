@@ -281,22 +281,18 @@ export default function Survey() {
                                   >
                                     <i
                                       className={`fa-solid ${is_public ? "fa-eye-slash" : "fa-eye"
-                                        } `}
-                                    ></i>
+                                        }`}
+                                    />
                                   </button>
-                                  <span className="tool-tip-span  -right-[2.8rem] -top-12 bg-black ">
+                                  <span className="tool-tip-span -right-[2.8rem] -top-12 bg-black ">
                                     {is_public ? "Make Private" : "Make Public"}
                                     <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
                                   </span>
                                 </div>
                               </div>
-                            ) : (
-                              ""
-                            )}
+                            ) : null}
                           </div>
-                        ) : (
-                          ""
-                        )}
+                        ) : null}
                         {status === "upcoming" || status === "draft" ? (
                           <div className="flex justify-center gap-4">
                             <div className="flex justify-center">

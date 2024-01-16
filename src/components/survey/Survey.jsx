@@ -306,22 +306,26 @@ export default function Survey() {
                                 </span>
                               </div>
                             </div>
-                            <div className="flex justify-center">
-                              <div className="tool-tip-div group">
-                                <button
-                                  onClick={() => handleSatus(survey_id, index)}
-                                >
-                                  <i
-                                    className={`fa-regular ${is_public ? " fa-eye-slash " : "fa-eye"
-                                      } `}
-                                  ></i>
-                                </button>
-                                <span className="tool-tip-span  -right-[2.8rem] -top-12 bg-black ">
-                                  {is_public ? "Make Private" : "Make Public"}
-                                  <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
-                                </span>
+                            {status !== "draft" ? (
+                              <div className="flex justify-center">
+                                <div className="tool-tip-div group">
+                                  <button
+                                    onClick={() =>
+                                      handleSatus(survey_id, index)
+                                    }
+                                  >
+                                    <i
+                                      className={`fa-regular ${is_public ? " fa-eye-slash " : "fa-eye"
+                                        } `}
+                                    ></i>
+                                  </button>
+                                  <span className="tool-tip-span  -right-[2.8rem] -top-12 bg-black ">
+                                    {is_public ? "Make Private" : "Make Public"}
+                                    <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
+                                  </span>
+                                </div>
                               </div>
-                            </div>
+                            ) : null}
                           </div>
                         ) : null}
                       </div>

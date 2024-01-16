@@ -16,6 +16,7 @@ export default function SurveyInfo() {
   const { surveyInfo, content, questionList } = fetchedData || {};
   const { survey_title, total_response } = surveyInfo || {};
 
+  //loading state for download button
   const [downloading, setDownloading] = useState(false);
 
   if (loading) return <LoadingSpinner />;
@@ -33,11 +34,13 @@ export default function SurveyInfo() {
         <div className="flex gap-2">
           {!content ? (
             <Link to={`/content/create-content/${slug}`}>
-              <button className="btn-primary bg-accent">Attach Article</button>
+              <button className="btn-primary h-fit whitespace-nowrap bg-accent">
+                Attach Article
+              </button>
             </Link>
           ) : null}
           <button
-            className="btn-primary disabled:btn-secondary"
+            className="btn-primary disabled:btn-secondary h-fit"
             disabled={downloading}
             onClick={() =>
               handleDownload(

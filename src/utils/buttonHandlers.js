@@ -1,6 +1,9 @@
 import makeRequest from "./makeRequest";
 import swal from "./swal";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+const AUTH_TOKEN = localStorage.getItem("authToken");
+
 export async function surveyActions(type, surveyId, setLoading, navigate) {
   const route = "survey/start-survey";
   const method = "PATCH";
@@ -21,5 +24,36 @@ export async function surveyActions(type, surveyId, setLoading, navigate) {
     swal("error", error.message);
   } finally {
     setLoading((prev) => ({ ...prev, [type]: false }));
+  }
+}
+
+export async function handleDownload(setDownloading, route, fileName) {
+  const request = {
+    headers: {
+      Authorization: `Bearer ${AUTH_TOKEN}`,
+    },
+  };
+
+  setDownloading(true);
+
+  try {
+    const response = await fetch(`${BASE_URL}/${route}`, request);
+
+    if (response.status >= 500) {
+      throw new Error(response.status);
+    }
+
+    const blob = await response.blob();
+
+    const a = document.createElement("a");
+    const url = window.URL.createObjectURL(blob);
+
+    a.href = url;
+    a.download = `${fileName}.xlsx`;
+    a.click();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setDownloading(false);
   }
 }

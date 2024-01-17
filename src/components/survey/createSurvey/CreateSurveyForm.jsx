@@ -140,7 +140,7 @@ export default function CreateSurveyForm({
 
     for (const [key, value] of Object.entries(surveyData)) {
       if (key === "category" && !value) {
-        formdata.append(key, categories.categoryList[0].category_id);
+        formdata.append(key, categories[0].category_id);
         continue;
       }
 

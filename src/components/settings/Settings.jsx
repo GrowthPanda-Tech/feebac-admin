@@ -116,11 +116,15 @@ export default function Settings() {
       ) : null}
 
       {isShowFilterCreate && visibleSection === "filter" ? (
-        <FilterCreate
-          filterVals={filterVals}
-          setFilterVals={setFilterVals}
-          setIsShowFilterCreate={setIsShowFilterCreate}
-        />
+        <div
+          className={`update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center`}
+        >
+          <FilterCreate
+            filterVals={filterVals}
+            setFilterVals={setFilterVals}
+            setIsShowFilterCreate={setIsShowFilterCreate}
+          />
+        </div>
       ) : null}
     </div>
   );

@@ -1,5 +1,5 @@
-import swal from "../../../utils/swal";
-import makeRequest from "../../../utils/makeRequest";
+import swal from "@/utils/swal";
+import makeRequest from "@/utils/makeRequest";
 
 function Label({ name, children }) {
   return (
@@ -36,7 +36,7 @@ export default function FilterCreate({
   };
 
   return (
-    <div className="flex flex-col gap-6 rounded-md bg-white p-10">
+    <div className="flex w-[60rem] flex-col gap-6 rounded-md bg-white p-10">
       <Label name={"Filter Name"}>
         <input
           name="name"

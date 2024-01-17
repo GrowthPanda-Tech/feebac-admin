@@ -135,14 +135,13 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     if (name === "keywords") {
       const updatedOptions = [...options];
       const answerVal = updatedOptions[index];
-      if (inputType == 3) {
-        updatedOptions[index] = [...answerVal, value];
-      } else if (inputType == 2) {
-        const imgVal = previewImages[index];
-        updatedOptions[index] = [imgVal, value];
+
+      if (Array.isArray(answerVal)) {
+        answerVal[1] = value;
       } else {
         updatedOptions[index] = [answerVal, value];
       }
+
       arrangeOptions(updatedOptions);
       setOptions(updatedOptions);
 
@@ -480,7 +479,6 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
 
                 {isChecked ? (
                   <Select
-                    // value={""}
                     isChecked={isChecked}
                     handleChange={(event) => handleChange(event, index)}
                     name={"keywords"}
@@ -488,17 +486,11 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
                     <option value="" disabled selected hidden>
                       Keywords
                     </option>
-                    {filters[activeFilterIdx]
-                      ? filters[activeFilterIdx].options.map(
-                          (filter, index) => (
-                            <option key={index}>{filter}</option>
-                          ),
-                        )
-                      : null}
+                    {filters[activeFilterIdx]?.options?.map((filter, index) => (
+                      <option key={index}>{filter}</option>
+                    ))}
                   </Select>
-                ) : (
-                  <></>
-                )}
+                ) : null}
 
                 {options.length <= 2 ? (
                   <></>

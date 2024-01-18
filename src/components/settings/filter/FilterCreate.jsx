@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useFilterContext } from "@/contexts/FilterContext";
+
 import swal from "@/utils/swal";
 import makeRequest from "@/utils/makeRequest";
 
@@ -13,10 +16,16 @@ function Label({ name, children }) {
 export default function FilterCreate({
   filterVals,
   setFilterVals,
-  setTertiaryKeys,
   setIsShowFilterCreate,
 }) {
-  const handleSubmit = async () => {
+  const { setFetchedData } = useFilterContext();
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    setLoading(true);
+
     try {
       const response = await makeRequest(
         "config/add-profile-key-value",
@@ -28,10 +37,27 @@ export default function FilterCreate({
         throw new Error(response.message);
       }
 
+      setFetchedData((prev) => {
+        const currTert = [...prev.data[2].key];
+        const updatedTert = [...currTert, response.data];
+
+        return {
+          ...prev,
+          data: [
+            ...prev.data.slice(0, 2),
+            {
+              ...prev.data[2],
+              key: updatedTert,
+            },
+          ],
+        };
+      });
+
       setIsShowFilterCreate(false);
-      setTertiaryKeys((prev) => [...prev, response.data]);
     } catch (error) {
       swal("error", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,23 +69,34 @@ export default function FilterCreate({
             required
             name="name"
             className="input-settings"
-            onChange={(event) =>
+            onChange={(event) => {
+              const enteredVal = event.target.value.trim();
+
+              if (enteredVal === "") {
+                event.target.value = "";
+              }
+
               setFilterVals({
                 ...filterVals,
-                name: event.target.value,
-              })
-            }
+                name: enteredVal,
+              });
+            }}
           />
         </Label>
 
         <div className="flex gap-4">
-          <button type="submit" className="btn-primary">
-            Add
+          <button
+            type="submit"
+            className="btn-primary disabled:btn-secondary"
+            disabled={loading}
+          >
+            {loading ? "Adding..." : "Add"}
           </button>
           <button
             type="button"
             className="btn-secondary"
             onClick={() => setIsShowFilterCreate(false)}
+            disabled={loading}
           >
             Cancel
           </button>

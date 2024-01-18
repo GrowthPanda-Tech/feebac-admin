@@ -39,14 +39,22 @@ export default function FilterValues({ id, options, filterIdx }) {
   };
 
   const handleOptionAdd = async () => {
+    const optionsSet = new Set();
+
     const optionsArr = newOptions.replace(/\s*,\s*/g, ",").split(",");
-    const request = { id, newOptions: optionsArr };
+    optionsArr.forEach((element) => optionsSet.add(element));
+    const optionsSetArr = Array.from(optionsSet);
+
+    const request = { id, newOptions: optionsSetArr };
 
     try {
       //optimistically update state
       setFetchedData((prev) => {
         const curr = { ...prev };
-        const currArr = [...curr.data[2].key[filterIdx].options, ...optionsArr];
+        const currArr = [
+          ...curr.data[2].key[filterIdx].options,
+          ...optionsSetArr,
+        ];
         curr.data[2].key[filterIdx].options = currArr;
 
         return curr;

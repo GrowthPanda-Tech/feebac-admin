@@ -85,13 +85,18 @@ export default function EditSurveyForm({
 
   //TODO: nested API calls?
   const handleSubmit = async (event) => {
+    if (!updatedData) {
+      swal("error", "Missing fields");
+      return;
+    }
+
     event.preventDefault();
     const formdata = new FormData();
 
     formdata.append("survey_id", surveyData.survey_id);
 
     for (const [key, value] of Object.entries(updatedData)) {
-      formdata.append(key, value);
+      if (value) formdata.append(key, value);
     }
 
     setLoading(true);
@@ -195,8 +200,9 @@ export default function EditSurveyForm({
         <div className="flex flex-col gap-6">
           <span className="text-xl font-semibold">Upload Image</span>
           <div
-            className={`relative aspect-[9/16] h-80 ${!imgPreview.image_url ? "border-dashed" : ""
-              } rounded-xl border-2 border-black`}
+            className={`relative aspect-[9/16] h-80 ${
+              !imgPreview.image_url ? "border-dashed" : ""
+            } rounded-xl border-2 border-black`}
             style={{
               backgroundImage: imgPreview.image_url,
               backgroundSize: "cover",
@@ -250,8 +256,9 @@ export default function EditSurveyForm({
             Upload Image (for featured section)
           </span>
           <div
-            className={`relative aspect-[5/4] h-80 ${!imgPreview.featured_image ? "border-dashed" : ""
-              } rounded-xl border-2 border-black`}
+            className={`relative aspect-[5/4] h-80 ${
+              !imgPreview.featured_image ? "border-dashed" : ""
+            } rounded-xl border-2 border-black`}
             style={{
               backgroundImage: imgPreview.featured_image,
               backgroundSize: "cover",

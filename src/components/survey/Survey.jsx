@@ -13,6 +13,13 @@ import LoadingSpinner from "@helperComps/LoadingSpinner";
 import PageTitle from "@helperComps/PageTitle";
 import Pagination from "@helperComps/Pagination";
 import PaginationSelect from "@helperComps/PaginationSelect";
+import SurveyRerun from "../__utilComponents__/SureyRerun";
+
+//assets
+import survey_rerun from "@/assets/survey_rerun.svg";
+import survey_article from "@/assets/article_linked.svg";
+import survey_edit from "@/assets/survey_edit.svg";
+import survey_results from "@/assets/survey_results.svg";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const HEADERS = [
@@ -92,13 +99,26 @@ function ButtonComponent({ setStatus, setPage, setSearchQuery }) {
 }
 
 export default function Survey() {
-  const [surveyData, setsurveyData] = useState([]);
+  const [surveyData, setSurveyData] = useState([]);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalItems, setTotalItems] = useState(1);
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState("live");
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [confirmRerun, setConfirmRerun] = useState(false);
+  const [rerunInfo, setRerunInfo] = useState({
+    survey_id: null,
+    start_date: null,
+    end_date: null,
+    table_index: null,
+  });
+
+  const handleRerun = (survey_id, start_date, end_date, table_index) => {
+    setConfirmRerun(true);
+    setRerunInfo({ survey_id, start_date, end_date, table_index });
+  };
 
   const handleSatus = async (surveyId, index) => {
     try {
@@ -114,7 +134,7 @@ export default function Survey() {
 
       const updatedData = [...surveyData];
       updatedData[index].is_public = !updatedData[index].is_public;
-      setsurveyData(updatedData);
+      setSurveyData(updatedData);
 
       swal("success", response.message);
     } catch (error) {
@@ -149,12 +169,12 @@ export default function Survey() {
         const json = await response.json();
         if (!json.isSuccess) throw new Error(json.message);
 
-        setsurveyData(json.data);
+        setSurveyData(json.data);
         setTotalItems(json.totalCount);
         setLoading(false);
       } catch (error) {
         if (error.message == 204) {
-          setsurveyData([]);
+          setSurveyData([]);
           setTotalItems(1);
           setLoading(false);
         }
@@ -234,7 +254,7 @@ export default function Survey() {
                     </Tdata>
                     <Tdata>
                       {is_public ? (
-                        <span className=" chip-green">Public</span>
+                        <span className="chip-green">Public</span>
                       ) : (
                         <span className="chip-red">Private</span>
                       )}
@@ -249,19 +269,25 @@ export default function Survey() {
                                   to={`details/${survey_id}`}
                                   state={{ from: content }}
                                 >
-                                  <i className="fa-solid fa-square-poll-horizontal text-xl"></i>
+                                  <img
+                                    src={survey_results}
+                                    alt="survey_results"
+                                  />
                                 </Link>
                                 <span className="tool-tip-span -right-[3.4rem] -top-12 bg-black ">
                                   View Response
-                                  <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
+                                  <span className="tooltip-arrow bottom-[-2px] left-[45%]" />
                                 </span>
                               </div>
                               <div className="tool-tip-div group">
-                                <i
-                                  className={`fa-regular fa-newspaper text-xl ${!content
+                                <img
+                                  src={survey_article}
+                                  alt="survey_article"
+                                  className={`cursor-pointer ${
+                                    !content
                                       ? "cursor-not-allowed opacity-40"
                                       : ""
-                                    }`}
+                                  }`}
                                 />
                                 <span className="tool-tip-span -right-[3.4rem] -top-12 bg-black">
                                   {content
@@ -280,8 +306,9 @@ export default function Survey() {
                                     }
                                   >
                                     <i
-                                      className={`fa-solid ${is_public ? "fa-eye-slash" : "fa-eye"
-                                        }`}
+                                      className={`fa-solid text-xl ${
+                                        is_public ? "fa-eye-slash" : "fa-eye"
+                                      }`}
                                     />
                                   </button>
                                   <span className="tool-tip-span -right-[2.8rem] -top-12 bg-black ">
@@ -291,6 +318,21 @@ export default function Survey() {
                                 </div>
                               </div>
                             ) : null}
+                            {status === "expired" ? (
+                              <img
+                                src={survey_rerun}
+                                alt="survey_rerun"
+                                className="cursor-pointer"
+                                onClick={() =>
+                                  handleRerun(
+                                    survey_id,
+                                    start_date,
+                                    end_date,
+                                    index,
+                                  )
+                                }
+                              />
+                            ) : null}
                           </div>
                         ) : null}
                         {status === "upcoming" || status === "draft" ? (
@@ -298,7 +340,7 @@ export default function Survey() {
                             <div className="flex justify-center">
                               <div className="tool-tip-div group">
                                 <Link to={`edit-survey/${survey_id}`}>
-                                  <i className="fa-solid fa-pen-to-square text-xl"></i>
+                                  <img src={survey_edit} alt="survey_edit" />
                                 </Link>
                                 <span className="tool-tip-span -right-[2.8rem] -top-12 bg-black ">
                                   Edit Survey
@@ -315,8 +357,9 @@ export default function Survey() {
                                     }
                                   >
                                     <i
-                                      className={`fa-regular ${is_public ? " fa-eye-slash " : "fa-eye"
-                                        } `}
+                                      className={`fa-regular ${
+                                        is_public ? " fa-eye-slash " : "fa-eye"
+                                      } `}
                                     ></i>
                                   </button>
                                   <span className="tool-tip-span  -right-[2.8rem] -top-12 bg-black ">
@@ -342,6 +385,17 @@ export default function Survey() {
           </div>
         ) : null}
       </div>
+
+      {/* Re-run survey modal */}
+      {confirmRerun ? (
+        <SurveyRerun
+          setConfirmRerun={setConfirmRerun}
+          rerunInfo={rerunInfo}
+          setRerunInfo={setRerunInfo}
+          setSurveyData={setSurveyData}
+        />
+      ) : null}
+
       <Pagination
         page={page}
         setPage={setPage}

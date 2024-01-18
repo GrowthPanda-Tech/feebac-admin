@@ -36,31 +36,35 @@ export default function FilterCreate({
   };
 
   return (
-    <div className="flex w-[60rem] flex-col gap-6 rounded-md bg-white p-10">
-      <Label name={"Filter Name"}>
-        <input
-          name="name"
-          className="input-settings"
-          onChange={(event) =>
-            setFilterVals({
-              ...filterVals,
-              name: event.target.value,
-            })
-          }
-        />
-      </Label>
+    <form onSubmit={handleSubmit}>
+      <div className="flex w-[60rem] flex-col gap-6 rounded-md bg-white p-10">
+        <Label name={"Filter Name"}>
+          <input
+            required
+            name="name"
+            className="input-settings"
+            onChange={(event) =>
+              setFilterVals({
+                ...filterVals,
+                name: event.target.value,
+              })
+            }
+          />
+        </Label>
 
-      <div className="flex gap-4">
-        <button className="btn-primary" onClick={handleSubmit}>
-          Add
-        </button>
-        <button
-          className="btn-secondary"
-          onClick={() => setIsShowFilterCreate(false)}
-        >
-          Cancel
-        </button>
+        <div className="flex gap-4">
+          <button type="submit" className="btn-primary">
+            Add
+          </button>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => setIsShowFilterCreate(false)}
+          >
+            Cancel
+          </button>
+        </div>
       </div>
-    </div>
+    </form>
   );
 }

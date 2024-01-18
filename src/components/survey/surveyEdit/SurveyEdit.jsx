@@ -141,7 +141,7 @@ export default function SurveyEdit() {
       )}
 
       {/* Action Buttons */}
-      {!surveyInfo?.status?.isLive ? (
+      {!surveyInfo?.status?.isLive && !surveyInfo?.is_public ? (
         <div className="flex justify-center gap-6 p-6">
           <button
             type="button"

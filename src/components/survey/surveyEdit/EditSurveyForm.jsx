@@ -86,7 +86,7 @@ export default function EditSurveyForm({
   //TODO: nested API calls?
   const handleSubmit = async (event) => {
     if (!updatedData) {
-      swal("error", "Missing fields");
+      swal("error", "Blank image fields are not allowed");
       return;
     }
 

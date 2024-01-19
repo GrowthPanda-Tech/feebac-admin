@@ -3,6 +3,8 @@ import { useState } from "react";
 
 import useFetch from "@/hooks/useFetch";
 
+import swal from "@/utils/swal";
+
 import Response from "./Response";
 import LoadingSpinner from "@helperComps/LoadingSpinner";
 
@@ -39,9 +41,9 @@ export default function SurveyInfo() {
         request,
       );
 
-      if (response.status >= 500) {
-        throw new Error(response.status);
-      }
+      const { status } = response;
+
+      if (status >= 500 || status >= 400) throw new Error(status);
 
       const blob = await response.blob();
 
@@ -52,7 +54,10 @@ export default function SurveyInfo() {
       a.download = `${slug}.xlsx`;
       a.click();
     } catch (error) {
-      console.error(error);
+      const { message } = error;
+
+      if (message >= 400) swal("error", "Bad Request!!");
+      if (message >= 500) swal("error", "Something went wrong!!");
     } finally {
       setDownloading(false);
     }

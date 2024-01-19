@@ -43,7 +43,15 @@ export default function SurveyInfo() {
 
       const { status } = response;
 
-      if (status >= 500 || status >= 400) throw new Error(status);
+      if (status >= 400) {
+        const json = await response.json();
+        const { message } = json;
+        throw new Error(message);
+      }
+
+      if (status >= 500) {
+        throw new Error("Something went wrong!!");
+      }
 
       const blob = await response.blob();
 
@@ -54,10 +62,7 @@ export default function SurveyInfo() {
       a.download = `${slug}.xlsx`;
       a.click();
     } catch (error) {
-      const { message } = error;
-
-      if (message >= 400) swal("error", "Bad Request!!");
-      if (message >= 500) swal("error", "Something went wrong!!");
+      swal("error", error.message);
     } finally {
       setDownloading(false);
     }

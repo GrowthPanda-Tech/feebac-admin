@@ -31,7 +31,7 @@ export default function SurveyEdit() {
   useEffect(() => {
     let ignore = false;
 
-    const getData = async () => {
+    async function fetchSurveyData() {
       setLoading(true);
 
       try {
@@ -45,10 +45,11 @@ export default function SurveyEdit() {
         }
       } catch (error) {
         console.error(error);
+        setLoading(false);
       }
-    };
+    }
 
-    getData();
+    fetchSurveyData();
 
     return () => {
       ignore = true;
@@ -65,7 +66,7 @@ export default function SurveyEdit() {
   const [endDate, endTime] = localEndDate.split(",");
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-grow flex-col gap-10">
       <div className="flex justify-between">
         {/* Survey Info */}
         <div className="flex flex-col gap-4">
@@ -86,7 +87,7 @@ export default function SurveyEdit() {
           </div>
 
           <div className="flex items-center gap-2 font-semibold capitalize">
-            <span> {surveyInfo?.loyalty_point} </span>
+            <span> {surveyInfo?.loyalty_point || 0} </span>
             <span className="font-medium">loyalty points</span>
           </div>
         </div>
@@ -140,8 +141,8 @@ export default function SurveyEdit() {
       )}
 
       {/* Action Buttons */}
-      {!surveyInfo?.status?.isLive ? (
-        <div className="flex justify-center gap-6">
+      {!surveyInfo?.status?.isLive && !surveyInfo?.is_public ? (
+        <div className="flex justify-center gap-6 p-6">
           <button
             type="button"
             className="btn-primary disabled:btn-secondary bg-white text-black/50 hover:text-white"

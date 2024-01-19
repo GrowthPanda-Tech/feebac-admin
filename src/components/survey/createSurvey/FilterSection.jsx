@@ -21,7 +21,7 @@ export default function FilterSection({ route, setParamObj, setTarget }) {
       {fetchedData?.data.map(({ id, dataType, key }) => (
         <div key={id} className="flex flex-col gap-4">
           <h1 className="text-xl font-medium">{dataType} filters</h1>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
             {key.map(({ id, key_name }) => (
               <FilterPills
                 key={id}

@@ -40,6 +40,7 @@ export default function EditSurveyForm({
   const { slug } = useParams();
   const { categories } = useContext(CategoryContext);
 
+  const [loading, setLoading] = useState(false);
   const [surveyData, setSurveyData] = useState(surveyInfo);
   const [updatedData, setUpdatedData] = useState(null);
   const [imgPreview, setImgPreview] = useState({
@@ -84,14 +85,21 @@ export default function EditSurveyForm({
 
   //TODO: nested API calls?
   const handleSubmit = async (event) => {
+    if (!updatedData) {
+      swal("error", "Blank image fields are not allowed");
+      return;
+    }
+
     event.preventDefault();
     const formdata = new FormData();
 
     formdata.append("survey_id", surveyData.survey_id);
 
     for (const [key, value] of Object.entries(updatedData)) {
-      formdata.append(key, value);
+      if (value) formdata.append(key, value);
     }
+
+    setLoading(true);
 
     try {
       const response = await makeRequest(
@@ -115,6 +123,8 @@ export default function EditSurveyForm({
       } else swal("error", response.message);
     } catch (error) {
       swal("error", "Please Enter Valid Value");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -299,14 +309,19 @@ export default function EditSurveyForm({
       </div>
 
       <div className="flex gap-4">
-        <button className="btn-primary w-fit" onClick={handleSubmit}>
-          Save Changes
+        <button
+          className="btn-primary disabled:btn-secondary w-fit"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? "Saving..." : "Save Changes"}
         </button>
         <button
           className="btn-secondary"
           onClick={() => {
             setSurveyEditPop(false);
           }}
+          disabled={loading}
         >
           Cancel
         </button>

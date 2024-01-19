@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
-
-import makeRequest from "@/utils/makeRequest";
+import { useState } from "react";
+import { useFilterContext } from "@/contexts/FilterContext";
 
 //components
 import PageTitle from "@helperComps/PageTitle";
 import CategoryDelete from "@utilComps/CategoryDelete";
 import CategoryForm from "./CategoryForm";
 import Categories from "./Categories";
-import Profiles from "./filter/Profiles";
+import Filter from "./filter/Filter";
 import FilterCreate from "./filter/FilterCreate";
 
 function Pill({ section, isActive, onClick }) {
@@ -26,7 +25,6 @@ export default function Settings() {
   const [isShowCategoryCreate, setIsShowCategoryCreate] = useState(false);
   const [isShowFilterCreate, setIsShowFilterCreate] = useState(false);
   const [visibleSection, setVisibleSection] = useState("category");
-  const [tertiaryKeys, setTertiaryKeys] = useState([]);
   const [filterVals, setFilterVals] = useState({
     dataType: 3,
     isSelect: true,
@@ -36,31 +34,9 @@ export default function Settings() {
   const [delIndex, setDelIndex] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
 
-  useEffect(() => {
-    let ignore = false;
-
-    async function getTertiaryKeys() {
-      try {
-        const response = await makeRequest(`config/get-profile-key-value`);
-
-        if (!response.isSuccess) {
-          throw new Error(response.message);
-        }
-
-        if (!ignore) {
-          setTertiaryKeys(response.data[2].key);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    getTertiaryKeys();
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
+  //tertiary profile keys
+  const { fetchedData } = useFilterContext();
+  const { data: filterData } = fetchedData || {};
 
   return (
     <div className="relative flex flex-col gap-6">
@@ -106,7 +82,17 @@ export default function Settings() {
           setDeleteIndex={setDelIndex}
         />
       ) : (
-        <Profiles tertiaryKeys={tertiaryKeys} />
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+          {filterData[2]?.key?.map(({ id, key_name, options }, index) => (
+            <Filter
+              key={id}
+              id={id}
+              keyName={key_name}
+              options={options}
+              filterIdx={index}
+            />
+          ))}
+        </div>
       )}
 
       {isShowCategoryCreate && visibleSection === "category" ? (
@@ -130,12 +116,15 @@ export default function Settings() {
       ) : null}
 
       {isShowFilterCreate && visibleSection === "filter" ? (
-        <FilterCreate
-          filterVals={filterVals}
-          setFilterVals={setFilterVals}
-          setTertiaryKeys={setTertiaryKeys}
-          setIsShowFilterCreate={setIsShowFilterCreate}
-        />
+        <div
+          className={`update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center`}
+        >
+          <FilterCreate
+            filterVals={filterVals}
+            setFilterVals={setFilterVals}
+            setIsShowFilterCreate={setIsShowFilterCreate}
+          />
+        </div>
       ) : null}
     </div>
   );

@@ -66,7 +66,16 @@ export default function CreateSurveyForm({
   const route = `config/get-profile-key-value?${params}`;
 
   const [loading, setLoading] = useState(false);
-  const [surveyData, setSurveyData] = useState({});
+  const [surveyData, setSurveyData] = useState({
+    startDate: null,
+    endData: null,
+    surveyTitle: "",
+    surveyDescription: "",
+    loyaltyPoint: "",
+    category: null,
+    surveyImg: null,
+    featured_image: null,
+  });
   const [target, setTarget] = useState({});
   const [count, setCount] = useState({ total: 0, target: 0 });
   const [imgPreview, setImgPreview] = useState({
@@ -130,6 +139,11 @@ export default function CreateSurveyForm({
     formdata.append("target", JSON.stringify(target));
 
     for (const [key, value] of Object.entries(surveyData)) {
+      if (key === "category" && !value) {
+        formdata.append(key, categories[0].category_id);
+        continue;
+      }
+
       formdata.append(key, value);
     }
 

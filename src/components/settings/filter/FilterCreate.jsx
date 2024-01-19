@@ -1,5 +1,8 @@
-import swal from "../../../utils/swal";
-import makeRequest from "../../../utils/makeRequest";
+import { useState } from "react";
+import { useFilterContext } from "@/contexts/FilterContext";
+
+import swal from "@/utils/swal";
+import makeRequest from "@/utils/makeRequest";
 
 function Label({ name, children }) {
   return (
@@ -13,10 +16,16 @@ function Label({ name, children }) {
 export default function FilterCreate({
   filterVals,
   setFilterVals,
-  setTertiaryKeys,
   setIsShowFilterCreate,
 }) {
-  const handleSubmit = async () => {
+  const { setFetchedData } = useFilterContext();
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    setLoading(true);
+
     try {
       const response = await makeRequest(
         "config/add-profile-key-value",
@@ -28,39 +37,71 @@ export default function FilterCreate({
         throw new Error(response.message);
       }
 
+      setFetchedData((prev) => {
+        const currTert = [...prev.data[2].key];
+        const updatedTert = [...currTert, response.data];
+
+        return {
+          ...prev,
+          data: [
+            ...prev.data.slice(0, 2),
+            {
+              ...prev.data[2],
+              key: updatedTert,
+            },
+          ],
+        };
+      });
+
       setIsShowFilterCreate(false);
-      setTertiaryKeys((prev) => [...prev, response.data]);
     } catch (error) {
       swal("error", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col gap-6 rounded-md bg-white p-10">
-      <Label name={"Filter Name"}>
-        <input
-          name="name"
-          className="input-settings"
-          onChange={(event) =>
-            setFilterVals({
-              ...filterVals,
-              name: event.target.value,
-            })
-          }
-        />
-      </Label>
+    <form onSubmit={handleSubmit}>
+      <div className="flex w-[60rem] flex-col gap-6 rounded-md bg-white p-10">
+        <Label name={"Filter Name"}>
+          <input
+            required
+            name="name"
+            className="input-settings"
+            onChange={(event) => {
+              const enteredVal = event.target.value.trim();
 
-      <div className="flex gap-4">
-        <button className="btn-primary" onClick={handleSubmit}>
-          Add
-        </button>
-        <button
-          className="btn-secondary"
-          onClick={() => setIsShowFilterCreate(false)}
-        >
-          Cancel
-        </button>
+              if (enteredVal === "") {
+                event.target.value = "";
+              }
+
+              setFilterVals({
+                ...filterVals,
+                name: enteredVal,
+              });
+            }}
+          />
+        </Label>
+
+        <div className="flex gap-4">
+          <button
+            type="submit"
+            className="btn-primary disabled:btn-secondary"
+            disabled={loading}
+          >
+            {loading ? "Adding..." : "Add"}
+          </button>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => setIsShowFilterCreate(false)}
+            disabled={loading}
+          >
+            Cancel
+          </button>
+        </div>
       </div>
-    </div>
+    </form>
   );
 }

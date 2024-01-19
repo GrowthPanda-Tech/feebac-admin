@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { FilterContext } from "@/contexts/FilterContext";
 
@@ -38,29 +38,30 @@ function Input({ type, name, value, onChange, disabled }) {
       onChange={onChange}
       className="w-full rounded-md bg-background px-8 py-5 disabled:cursor-not-allowed"
       disabled={disabled}
-      onClick={null}
+      required
     />
   );
 }
+
+const INIT_OPTIONS = ["", ""];
 
 export default function CreateQuestions({ surveyId, surveyTitle }) {
   const navigate = useNavigate();
 
   const { fetchedData } = useContext(FilterContext);
 
-  const initOptions = ["", ""];
-  const initQuestionData = {
-    surveyId,
-    questionTitle: "",
-    questionType: 2,
-  };
+  //can't be declared outside
+  const INIT_QUESTION = useMemo(
+    () => ({ surveyId, questionTitle: "", questionType: 2 }),
+    [surveyId],
+  );
 
-  const [options, setOptions] = useState(initOptions);
+  const [options, setOptions] = useState(INIT_OPTIONS);
   const [questions, setQuestions] = useState([]);
-  const [questionData, setQuestionData] = useState(initQuestionData);
+  const [questionData, setQuestionData] = useState(INIT_QUESTION);
   const [activeButtonIndex, setActiveButtonIndex] = useState(1);
   const [filters, setFilters] = useState(fetchedData.data[2].key);
-  const [activeFilterIdx, setActiveFilterIdx] = useState(0);
+  const [activeFilterIdx, setActiveFilterIdx] = useState(null);
   const [inputType, setInputType] = useState(1);
   const [previewImages, setPreviewImages] = useState([null]);
   const [isChecked, setIsChecked] = useState(false);
@@ -73,7 +74,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
   });
 
   const resetState = () => {
-    setOptions(initOptions);
+    setOptions(INIT_OPTIONS);
     setPreviewImages([null]);
   };
 
@@ -85,7 +86,7 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
       const updatedQuestionData = { ...questionData };
       updatedQuestionData.questionValue = {};
       setQuestionData({ ...updatedQuestionData, questionType });
-      setOptions(initOptions);
+      setOptions(INIT_OPTIONS);
       return;
     }
 
@@ -135,14 +136,13 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
     if (name === "keywords") {
       const updatedOptions = [...options];
       const answerVal = updatedOptions[index];
-      if (inputType == 3) {
-        updatedOptions[index] = [...answerVal, value];
-      } else if (inputType == 2) {
-        const imgVal = previewImages[index];
-        updatedOptions[index] = [imgVal, value];
+
+      if (Array.isArray(answerVal)) {
+        answerVal[1] = value;
       } else {
         updatedOptions[index] = [answerVal, value];
       }
+
       arrangeOptions(updatedOptions);
       setOptions(updatedOptions);
 
@@ -218,7 +218,10 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
       }
       setOptions(originalOptions);
       arrangeOptions(originalOptions);
+      return;
     }
+
+    //TODO: manage state to reset filter dropdown values
   };
 
   const handleRemoveOption = (index) => {
@@ -240,8 +243,8 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
 
       if (!response.isSuccess) throw new Error(response.message);
 
-      setOptions(initOptions);
-      setQuestionData(initQuestionData);
+      setOptions(INIT_OPTIONS);
+      setQuestionData(INIT_QUESTION);
       setActiveButtonIndex(1);
       getQuestions();
 
@@ -333,205 +336,208 @@ export default function CreateQuestions({ surveyId, surveyTitle }) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 rounded-xl bg-white px-8 py-12">
-        <div className="flex items-center justify-end gap-12">
-          <button
-            className="text-lg font-medium text-[#EA525F]"
-            onClick={() => setIsFilterCreate(true)}
-          >
-            Create Filter
-          </button>
-          <div className="flex items-center gap-4">
-            <input
-              type="checkbox"
-              className="h-6 w-6 accent-secondary"
-              onClick={handleClick}
-              checked={isChecked}
-            />
-            <Select
-              isChecked={isChecked}
-              name={"profileField"}
-              handleChange={handleChange}
-            >
-              <option value="" selected disabled hidden>
-                Select Tertiary Filter
-              </option>
-              {filters.map((filter) => (
-                <option key={filter.id} value={filter.id}>
-                  {filter.key_name}
-                </option>
-              ))}
-            </Select>
-          </div>
-        </div>
-
-        <label className="flex flex-col gap-4">
-          <span className="font-bold">
-            {`Question ${questions.length + 1} :`}
-          </span>
-          <Input
-            type={"text"}
-            name={"questionTitle"}
-            onChange={handleChange}
-            value={questionData.questionTitle}
-          />
-        </label>
-        <div className="flex w-full items-center justify-between">
-          <div className="flex h-fit gap-7">
+      <form onSubmit={handleQuestionSubmit}>
+        <div className="flex flex-col gap-4 rounded-xl bg-white px-8 py-12">
+          <div className="flex items-center justify-end gap-12">
             <button
-              className={`pill ${
-                activeButtonIndex === 0 ? "pill-primary" : "pill-secondary"
-              }`}
-              onClick={() => setQuestionType(0, 1, {})}
+              type="button"
+              className="text-lg font-medium text-[#EA525F]"
+              onClick={() => setIsFilterCreate(true)}
             >
-              Text Answer
+              Create Filter
             </button>
-            <button
-              className={`pill ${
-                activeButtonIndex === 1 ? "pill-primary" : "pill-secondary"
-              }`}
-              onClick={() => setQuestionType(1, 2)}
-            >
-              One Answer
-            </button>
-            <button
-              className={`pill ${
-                activeButtonIndex === 2 ? "pill-primary" : "pill-secondary"
-              }`}
-              onClick={() => setQuestionType(2, 3)}
-            >
-              Multiple Answer
-            </button>
-          </div>
-        </div>
-        <div className="flex flex-col gap-4">
-          {questionData.questionType === 1 ? (
-            <></>
-          ) : questionData.questionType === 4 ? (
-            <>
-              <Input type={"text"} value={"Yes"} disabled />
-              <Input type={"text"} value={"No"} disabled />
-            </>
-          ) : (
-            options.map((option, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between gap-8"
+            <div className="flex items-center gap-4">
+              <input
+                type="checkbox"
+                className="h-6 w-6 accent-secondary"
+                onClick={handleClick}
+                checked={isChecked}
+              />
+              <Select
+                isChecked={isChecked}
+                name={"profileField"}
+                handleChange={handleChange}
               >
-                {inputType == 1 && (
-                  <Input
-                    type="text"
-                    name="questionValue"
-                    value={Array.isArray(option) ? option[0] : option}
-                    onChange={(event) => handleChange(event, index)}
-                  />
-                )}
+                <option value="" selected disabled hidden>
+                  Select Tertiary Filter
+                </option>
+                {filters.map((filter) => (
+                  <option key={filter.id} value={filter.id}>
+                    {filter.key_name}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          </div>
 
-                {inputType == 3 || inputType == 2 ? (
-                  <div className="relative">
-                    {previewImages[index] ? (
-                      <img
-                        src={previewImages[index]}
-                        className="h-32 w-32"
-                        alt={`Selected Image Preview ${index}`}
-                      />
-                    ) : (
-                      <img
-                        src={optionIcon}
-                        className="h-32 w-32"
-                        alt="Default Image"
-                      />
-                    )}
-                  </div>
-                ) : (
-                  <></>
-                )}
-
-                {inputType == 2 && (
-                  <input
-                    name="onlyImage"
-                    type="file"
-                    className=" absolute w-32 p-12 opacity-0"
-                    accept="image/*"
-                    onChange={(event) => {
-                      handleImageChange(event, index);
-                      handleChange(event, index);
-                    }}
-                  />
-                )}
-
-                {inputType == 3 && (
-                  <>
-                    <input
-                      type="file"
-                      name="imgAndText"
-                      accept="image/*"
-                      className=" absolute w-28 p-10 opacity-0  "
-                      onChange={(event) => handleImageChange(event, index)}
-                    />
+          <label className="flex flex-col gap-4">
+            <span className="font-bold">
+              {`Question ${questions.length + 1} :`}
+            </span>
+            <Input
+              type={"text"}
+              name={"questionTitle"}
+              onChange={handleChange}
+              value={questionData.questionTitle}
+            />
+          </label>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex h-fit gap-7">
+              <button
+                type="button"
+                className={`pill ${
+                  activeButtonIndex === 0 ? "pill-primary" : "pill-secondary"
+                }`}
+                onClick={() => setQuestionType(0, 1, {})}
+              >
+                Text Answer
+              </button>
+              <button
+                type="button"
+                className={`pill ${
+                  activeButtonIndex === 1 ? "pill-primary" : "pill-secondary"
+                }`}
+                onClick={() => setQuestionType(1, 2)}
+              >
+                One Answer
+              </button>
+              <button
+                type="button"
+                className={`pill ${
+                  activeButtonIndex === 2 ? "pill-primary" : "pill-secondary"
+                }`}
+                onClick={() => setQuestionType(2, 3)}
+              >
+                Multiple Answer
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-col gap-4">
+            {questionData.questionType === 1 ? (
+              <></>
+            ) : questionData.questionType === 4 ? (
+              <>
+                <Input type={"text"} value={"Yes"} disabled />
+                <Input type={"text"} value={"No"} disabled />
+              </>
+            ) : (
+              options.map((option, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between gap-8"
+                >
+                  {inputType == 1 && (
                     <Input
                       type="text"
-                      name="imgAndText"
+                      name="questionValue"
                       value={Array.isArray(option) ? option[0] : option}
                       onChange={(event) => handleChange(event, index)}
                     />
-                  </>
-                )}
+                  )}
 
-                {isChecked ? (
-                  <Select
-                    // value={""}
-                    isChecked={isChecked}
-                    handleChange={(event) => handleChange(event, index)}
-                    name={"keywords"}
-                  >
-                    <option value="" disabled selected hidden>
-                      Keywords
-                    </option>
-                    {filters[activeFilterIdx]
-                      ? filters[activeFilterIdx].options.map(
-                          (filter, index) => (
-                            <option key={index}>{filter}</option>
-                          ),
-                        )
-                      : null}
-                  </Select>
-                ) : (
-                  <></>
-                )}
+                  {inputType == 3 || inputType == 2 ? (
+                    <div className="relative">
+                      {previewImages[index] ? (
+                        <img
+                          src={previewImages[index]}
+                          className="h-32 w-32"
+                          alt={`Selected Image Preview ${index}`}
+                        />
+                      ) : (
+                        <img
+                          src={optionIcon}
+                          className="h-32 w-32"
+                          alt="Default Image"
+                        />
+                      )}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
 
-                {options.length <= 2 ? (
-                  <></>
-                ) : (
-                  <button onClick={() => handleRemoveOption(index)}>
-                    <i className="fa-regular fa-trash-can text-xl text-black"></i>
-                  </button>
-                )}
-              </div>
-            ))
-          )}
-        </div>
-        <div className="flex justify-between">
-          {questionData.questionType !== 1 &&
-          questionData.questionType !== 4 ? (
+                  {inputType == 2 && (
+                    <input
+                      name="onlyImage"
+                      type="file"
+                      className=" absolute w-32 p-12 opacity-0"
+                      accept="image/*"
+                      onChange={(event) => {
+                        handleImageChange(event, index);
+                        handleChange(event, index);
+                      }}
+                    />
+                  )}
+
+                  {inputType == 3 && (
+                    <>
+                      <input
+                        type="file"
+                        name="imgAndText"
+                        accept="image/*"
+                        className=" absolute w-28 p-10 opacity-0  "
+                        onChange={(event) => handleImageChange(event, index)}
+                      />
+                      <Input
+                        type="text"
+                        name="imgAndText"
+                        value={Array.isArray(option) ? option[0] : option}
+                        onChange={(event) => handleChange(event, index)}
+                      />
+                    </>
+                  )}
+
+                  {isChecked ? (
+                    <Select
+                      isChecked={isChecked}
+                      handleChange={(event) => handleChange(event, index)}
+                      name={"keywords"}
+                    >
+                      <option value="" disabled selected hidden>
+                        Keywords
+                      </option>
+                      {filters[activeFilterIdx]?.options?.map(
+                        (filter, index) => (
+                          <option key={index}>{filter}</option>
+                        ),
+                      )}
+                    </Select>
+                  ) : null}
+
+                  {options.length <= 2 ? (
+                    <></>
+                  ) : (
+                    <button onClick={() => handleRemoveOption(index)}>
+                      <i className="fa-regular fa-trash-can text-xl text-black"></i>
+                    </button>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+          <div className="flex justify-between">
+            {questionData.questionType !== 1 &&
+            questionData.questionType !== 4 ? (
+              <button
+                type="button"
+                onClick={() => setOptions([...options, ""])}
+                className="btn-primary w-fit border border-grey bg-white text-black hover:bg-secondary hover:text-white"
+              >
+                <i className="fa-solid fa-plus"></i>
+                <span>Add Options</span>
+              </button>
+            ) : null}
+
             <button
-              onClick={() => setOptions([...options, ""])}
-              className="btn-primary w-fit border border-grey bg-white text-black hover:bg-secondary hover:text-white"
+              type="submit"
+              className="btn-primary disabled:btn-secondary w-fit"
+              onClick={handleQuestionSubmit}
+              disabled={loading.save}
             >
-              <i className="fa-solid fa-plus"></i>
-              <span>Add Options</span>
+              {loading.save ? "Saving..." : "Save"}
             </button>
-          ) : null}
-
-          <button
-            className="btn-primary disabled:btn-secondary w-fit"
-            onClick={handleQuestionSubmit}
-            disabled={loading.save}
-          >
-            {loading.save ? "Saving..." : "Save"}
-          </button>
+          </div>
         </div>
-      </div>
+      </form>
 
       <div className="flex flex-col gap-4">
         {questions.map((question, index) => (

@@ -2,71 +2,24 @@ import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
 
 import useFetch from "@/hooks/useFetch";
+import { handleDownload } from "@/utils/buttonHandlers";
 
 import swal from "@/utils/swal";
 
 import Response from "./Response";
-import LoadingSpinner from "@helperComps/LoadingSpinner";
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-const AUTH_TOKEN = localStorage.getItem("authToken");
+import LoadingSpinner from "@/components/__helperComponents__/LoadingSpinner";
 
 export default function SurveyInfo() {
   const { slug } = useParams();
+  const resultRoute = `survey/get-survey-result?surveyId=${slug}`;
+  const downloadRoute = `/site-admin/download-response?surveyId=${slug}`;
 
-  const { loading, fetchedData } = useFetch(
-    `survey/get-survey-result?surveyId=${slug}`,
-  );
-
-  //destructuring
+  const { loading, fetchedData } = useFetch(resultRoute);
   const { surveyInfo, content, questionList } = fetchedData || {};
   const { survey_title, total_response } = surveyInfo || {};
-  const { title, type } = content || {};
 
   //loading state for download button
   const [downloading, setDownloading] = useState(false);
-
-  const handleClick = async () => {
-    const request = {
-      headers: {
-        Authorization: AUTH_TOKEN,
-      },
-    };
-
-    setDownloading(true);
-
-    try {
-      const response = await fetch(
-        `${BASE_URL}/site-admin/download-response?surveyId=${slug}`,
-        request,
-      );
-
-      const { status } = response;
-
-      if (status >= 400) {
-        const json = await response.json();
-        const { message } = json;
-        throw new Error(message);
-      }
-
-      if (status >= 500) {
-        throw new Error("Something went wrong!!");
-      }
-
-      const blob = await response.blob();
-
-      const a = document.createElement("a");
-      const url = window.URL.createObjectURL(blob);
-
-      a.href = url;
-      a.download = `${slug}.xlsx`;
-      a.click();
-    } catch (error) {
-      swal("error", error.message);
-    } finally {
-      setDownloading(false);
-    }
-  };
 
   if (loading) return <LoadingSpinner />;
 
@@ -91,7 +44,13 @@ export default function SurveyInfo() {
           <button
             className="btn-primary disabled:btn-secondary h-fit"
             disabled={downloading}
-            onClick={handleClick}
+            onClick={() =>
+              handleDownload(
+                setDownloading,
+                downloadRoute,
+                surveyInfo.survey_title,
+              )
+            }
           >
             <i className="fa-solid fa-cloud-arrow-down" />
             {downloading ? "Exporting..." : "Export"}
@@ -102,12 +61,12 @@ export default function SurveyInfo() {
       {content ? (
         <div className="flex items-center gap-2">
           <span className="text-xl font-medium">Linked Content :</span>
-          <span>{title}</span>
-          <span>({type})</span>
+          <span>{content.title}</span>
+          <span>({content.type})</span>
         </div>
       ) : null}
 
-      <div className="grid grid-cols-1 gap-20 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-20 py-12 md:grid-cols-2 lg:grid-cols-3">
         {questionList?.map((question, index) => (
           <Response key={index} index={index} question={question} />
         ))}

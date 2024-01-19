@@ -50,13 +50,19 @@ export default function TertFilterCreate({
   };
 
   const handleSubmit = async () => {
+    //remove empty strings from the options array
+    const optionsArr = [...tertFilterState.options];
+    const optionsTrimmed = optionsArr.filter((options) => options !== "");
+
+    const requestObj = { ...tertFilterState, options: optionsTrimmed };
+
     setLoading(true);
 
     try {
       const response = await makeRequest(
         "config/add-profile-key-value",
         "POST",
-        tertFilterState,
+        requestObj,
       );
 
       if (!response.isSuccess) throw new Error(response.message);
@@ -93,9 +99,8 @@ export default function TertFilterCreate({
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className={`${
-            loading ? "text-tertiary" : "text-[#EA525F]"
-          } font-semibold transition hover:text-black`}
+          className={`${loading ? "text-tertiary" : "text-[#EA525F]"
+            } font-semibold transition hover:text-black`}
         >
           {loading ? "Adding..." : "Done"}
         </button>

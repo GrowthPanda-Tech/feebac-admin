@@ -318,7 +318,7 @@ export default function Survey() {
                                 </div>
                               </div>
                             ) : null}
-                            {status === "expired" ? (
+                            {/* {status === "expired" ? (
                               <img
                                 src={survey_rerun}
                                 alt="survey_rerun"
@@ -332,7 +332,7 @@ export default function Survey() {
                                   )
                                 }
                               />
-                            ) : null}
+                            ) : null} */}
                           </div>
                         ) : null}
                         {status === "upcoming" || status === "draft" ? (

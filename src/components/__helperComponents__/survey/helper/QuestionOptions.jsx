@@ -2,11 +2,11 @@ import QuestionInput from "./QuestionInput";
 import delete_options from "@/assets/delete.svg";
 
 export default function QuestionOptions(props) {
-  const { mappableOptions, optionState, setOptionState } = props;
+  const { optionState, setOptionState } = props;
 
   return (
     <div className="flex flex-col gap-4">
-      {mappableOptions.map(({ element, uuid }, index) => (
+      {optionState.map(({ element, uuid }, index) => (
         <div key={uuid} className="flex gap-8">
           <QuestionInput
             value={element}
@@ -15,7 +15,10 @@ export default function QuestionOptions(props) {
               setOptionState((prev) => {
                 const { value } = event.target;
                 const curr = [...prev];
-                curr[index] = value;
+
+                if (!curr[index]) return (curr[index] = value);
+
+                curr[index].element = value;
                 return curr;
               })
             }

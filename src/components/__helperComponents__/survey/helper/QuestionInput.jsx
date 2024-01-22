@@ -8,6 +8,7 @@ export default function QuestionInput(props) {
       value={value}
       onChange={setState}
       className="w-full rounded-md bg-[#EFEFEF] px-8 py-5"
+      required
     />
   );
 }

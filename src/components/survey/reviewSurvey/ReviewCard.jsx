@@ -39,9 +39,9 @@ export default function ReviewCard({
             <i className="fa-regular fa-pen-to-square text-xl"></i>
           </button>
         </div>
-        <div className="flex h-80 flex-col gap-8 overflow-y-scroll rounded-lg bg-white p-8 font-semibold shadow-md">
+        <div className="flex h-80 flex-col gap-8 overflow-hidden rounded-lg bg-white p-8 font-semibold shadow-md">
           <h2 className="text-black">{question.question_title}</h2>
-          <div className="flex flex-col gap-6 opacity-60">
+          <div className="flex flex-col gap-6 overflow-auto opacity-60">
             {Object.values(question.question_values).map((option, index) => (
               <div key={index}>
                 {Array.isArray(option) ? option[0] : option}

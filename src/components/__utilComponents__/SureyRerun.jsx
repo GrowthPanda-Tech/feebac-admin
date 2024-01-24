@@ -1,18 +1,16 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { calculateRuntime } from "@/utils/calculateRuntime";
 import makeRequest from "@/utils/makeRequest";
 import swal from "@/utils/swal";
 
 import confirm_icon from "@/assets/confirm_icon.png";
 
 export default function SurveyRerun(props) {
-  const { setConfirmRerun, rerunInfo, setRerunInfo, setSurveyData } = props;
-  const { start_date, end_date } = rerunInfo;
-  const { newStartLocal, newEndLocal } = calculateRuntime(start_date, end_date);
+  const navigate = useNavigate();
 
-  const [startDate, startTime] = newStartLocal.split(",");
-  const [endDate, endTime] = newEndLocal.split(",");
+  const { setConfirmRerun, rerunInfo, setRerunInfo, setSurveyData } = props;
+  const { survey_id } = rerunInfo;
 
   const [loading, setLoading] = useState(false);
 
@@ -21,19 +19,21 @@ export default function SurveyRerun(props) {
 
     try {
       const response = await makeRequest("survey/re-run", "PUT", {
-        id: rerunInfo.survey_id,
+        id: survey_id,
       });
 
       if (!response.isSuccess) throw new Error(response.message);
 
       swal("success", response.message);
 
-      setRerunInfo({ survey_id: null, start_time: null, end_time: null });
+      setRerunInfo({ survey_id: null, table_index: null });
       setConfirmRerun(false);
 
       setSurveyData((prev) =>
         prev.filter((_, index) => index !== rerunInfo.table_index),
       );
+
+      navigate(`/survey/edit-survey/${survey_id}`);
     } catch (error) {
       swal("error", error.message);
     } finally {
@@ -54,14 +54,10 @@ export default function SurveyRerun(props) {
 
           {/* TODO: should I make a component for this? */}
           <span className="flex flex-wrap gap-1 font-light opacity-50">
-            <span>The survey will run from</span>
-            <span className="font-semibold">{startDate}</span>
-            <span>-</span>
-            <span className="font-semibold">{endDate}</span>
-            <span>,</span>
-            <span className="font-semibold">{startTime}</span>
-            <span>-</span>
-            <span className="font-semibold">{endTime}</span>
+            <span>
+              A copy of this survey will be created and added to the Drafts
+              section. You will be redirected to it&apos;s edit page.
+            </span>
           </span>
         </div>
 

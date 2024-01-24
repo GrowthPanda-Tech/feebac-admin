@@ -1,7 +1,12 @@
+//hooks
 import { useState } from "react";
-import { Checkbox, Select, Option } from "@material-tailwind/react";
 
+//components
+import { Checkbox, Select, Option } from "@material-tailwind/react";
 import QuestionInput from "./QuestionInput";
+
+//utils
+import { revertOptions } from "@/utils/revertOptions";
 
 export default function QuestionTitle(props) {
   const {
@@ -12,6 +17,7 @@ export default function QuestionTitle(props) {
     setIsFilterChecked,
     tertiaryFilters,
     setTertFilterIdx,
+    setOptionState,
   } = props;
 
   /* https://www.material-tailwind.com/docs/react/select */
@@ -24,6 +30,10 @@ export default function QuestionTitle(props) {
     setIsFilterChecked((prev) => !prev);
     setSelectVal(undefined);
     setTertFilterIdx(null);
+    setOptionState((prev) => {
+      const update = revertOptions(prev);
+      return update;
+    });
   };
 
   return (

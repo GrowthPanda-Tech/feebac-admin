@@ -92,6 +92,7 @@ export default function CurrentQuestion(props) {
           setIsFilterChecked={setIsFilterChecked}
           tertiaryFilters={TERTIARY_FILTERS}
           setTertFilterIdx={setTertFilterIdx}
+          setOptionState={setOptionState}
         />
 
         <QuestionTypeSelector

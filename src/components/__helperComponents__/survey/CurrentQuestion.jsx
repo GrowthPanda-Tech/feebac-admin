@@ -1,6 +1,9 @@
 //hooks
 import { useState, useMemo } from "react";
 
+//contexts
+import { useFilterContext } from "@/contexts/FilterContext";
+
 //utils
 import makeRequest from "@/utils/makeRequest";
 import swal from "@/utils/swal";
@@ -15,6 +18,12 @@ import QuestionActionRow from "./helper/QuestionActionRow";
 
 export default function CurrentQuestion(props) {
   const { questionNumber = 1, surveyId, setQuestionList } = props;
+  const { fetchedData } = useFilterContext();
+
+  const TERTIARY_FILTERS = useMemo(
+    () => fetchedData?.data[2]?.key,
+    [fetchedData],
+  );
 
   //needs survey ID from the render scope
   const INIT_SURVEY = useMemo(
@@ -27,9 +36,12 @@ export default function CurrentQuestion(props) {
     [surveyId],
   );
 
+  //states (Do I need so much?)
   const [questionState, setQuestionState] = useState(INIT_SURVEY);
   const [optionState, setOptionState] = useState(initWithUUID(["", ""]));
   const [loading, setLoading] = useState(false);
+  const [isFilterChecked, setIsFilterChecked] = useState(false);
+  const [tertFilterIdx, setTertFilterIdx] = useState(null);
 
   //calculate option arrange during rendering
   const questionValue = useMemo(
@@ -75,17 +87,24 @@ export default function CurrentQuestion(props) {
         <QuestionTitle
           questionNumber={questionNumber}
           value={questionState.questionTitle}
-          setState={setQuestionState}
+          setQuestionState={setQuestionState}
+          isFilterChecked={isFilterChecked}
+          setIsFilterChecked={setIsFilterChecked}
+          tertiaryFilters={TERTIARY_FILTERS}
+          setTertFilterIdx={setTertFilterIdx}
         />
 
         <QuestionTypeSelector
           type={questionState.questionType}
-          setType={setQuestionState}
+          setQuestionState={setQuestionState}
         />
 
         <QuestionOptions
           optionState={optionState}
           setOptionState={setOptionState}
+          tertFilterIdx={tertFilterIdx}
+          tertiaryFilters={TERTIARY_FILTERS}
+          isFilterChecked={isFilterChecked}
         />
 
         <QuestionActionRow

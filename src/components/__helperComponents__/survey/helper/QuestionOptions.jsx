@@ -29,21 +29,25 @@ export default function QuestionOptions(props) {
     <div className="flex flex-col gap-4">
       {optionState.map(({ element, uuid }, index) => {
         //check if keyword is present
-        const option = Array.isArray(element) ? element[0] : element;
+        const value = Array.isArray(element) ? element[0] : element;
 
         return (
           <div key={uuid} className="flex items-center justify-between gap-8">
             <QuestionInput
-              value={option}
+              value={value}
               setState={(event) =>
                 setOptionState((prev) => {
                   const { value } = event.target;
-                  const curr = [...prev];
 
-                  //TODO: check for array and update 0 index
-                  if (!curr[index]) return (curr[index] = value);
+                  //has reference object
+                  const curr = structuredClone(prev);
 
-                  curr[index].element = value;
+                  if (Array.isArray(curr[index].element)) {
+                    curr[index].element[0] = value;
+                  } else {
+                    curr[index].element = value;
+                  }
+
                   return curr;
                 })
               }

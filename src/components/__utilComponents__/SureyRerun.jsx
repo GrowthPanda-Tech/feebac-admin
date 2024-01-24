@@ -33,7 +33,7 @@ export default function SurveyRerun(props) {
         prev.filter((_, index) => index !== rerunInfo.table_index),
       );
 
-      navigate(`/survey/edit-survey/${survey_id}`);
+      navigate(`/survey/edit-survey/${response.data.id}`);
     } catch (error) {
       swal("error", error.message);
     } finally {

@@ -148,12 +148,12 @@ export default function SurveyEdit() {
             className="btn-primary disabled:btn-secondary bg-white text-black/50 hover:text-white"
             disabled={actionloader.schedule || actionloader.publish}
             onClick={() =>
-              surveyActions(
-                "publish",
-                surveyInfo.survey_id,
-                setActionloader,
+              surveyActions({
+                type: "publish",
+                surveyId: surveyInfo.survey_id,
+                setLoading: setActionloader,
                 navigate,
-              )
+              })
             }
           >
             {actionloader.publish ? "Publishing..." : "Publish"}
@@ -163,12 +163,12 @@ export default function SurveyEdit() {
             className="btn-primary disabled:btn-secondary"
             disabled={actionloader.schedule || actionloader.publish}
             onClick={() =>
-              surveyActions(
-                "schedule",
-                surveyInfo.survey_id,
-                setActionloader,
+              surveyActions({
+                type: "schedule",
+                surveyId: surveyInfo.survey_id,
+                setLoading: setActionloader,
                 navigate,
-              )
+              })
             }
           >
             {actionloader.schedule ? "Scheduling..." : "Schedule"}

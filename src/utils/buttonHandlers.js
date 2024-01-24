@@ -4,7 +4,7 @@ import swal from "./swal";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const AUTH_TOKEN = localStorage.getItem("authToken");
 
-export async function surveyActions(type, surveyId, setLoading, navigate) {
+export async function surveyActions({ type, surveyId, setLoading, navigate }) {
   const route = "survey/start-survey";
   const method = "PATCH";
   const request = {

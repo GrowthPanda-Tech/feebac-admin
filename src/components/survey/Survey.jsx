@@ -110,14 +110,12 @@ export default function Survey() {
   const [confirmRerun, setConfirmRerun] = useState(false);
   const [rerunInfo, setRerunInfo] = useState({
     survey_id: null,
-    start_date: null,
-    end_date: null,
     table_index: null,
   });
 
-  const handleRerun = (survey_id, start_date, end_date, table_index) => {
+  const handleRerun = (survey_id, table_index) => {
     setConfirmRerun(true);
-    setRerunInfo({ survey_id, start_date, end_date, table_index });
+    setRerunInfo({ survey_id, table_index });
   };
 
   const handleSatus = async (surveyId, index) => {
@@ -194,7 +192,7 @@ export default function Survey() {
         <PageTitle name={"Surveys"} />
         <Link to={"/survey/create"} className="w-fit">
           <button className="btn-primary">
-            <i className="fa-solid fa-plus"></i>
+            <i className="fa-solid fa-plus" />
             Create
           </button>
         </Link>
@@ -223,7 +221,7 @@ export default function Survey() {
         />
       </div>
 
-      <div className=" h-[60vh] overflow-y-scroll bg-white">
+      <div className="h-[60vh] overflow-y-scroll bg-white">
         {loading ? (
           <LoadingSpinner />
         ) : (
@@ -318,21 +316,14 @@ export default function Survey() {
                                 </div>
                               </div>
                             ) : null}
-                            {/* {status === "expired" ? (
+                            {status === "expired" ? (
                               <img
                                 src={survey_rerun}
                                 alt="survey_rerun"
                                 className="cursor-pointer"
-                                onClick={() =>
-                                  handleRerun(
-                                    survey_id,
-                                    start_date,
-                                    end_date,
-                                    index,
-                                  )
-                                }
+                                onClick={() => handleRerun(survey_id, index)}
                               />
-                            ) : null} */}
+                            ) : null}
                           </div>
                         ) : null}
                         {status === "upcoming" || status === "draft" ? (

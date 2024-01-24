@@ -43,6 +43,10 @@ export default function CurrentQuestion(props) {
   const [isFilterChecked, setIsFilterChecked] = useState(false);
   const [tertFilterIdx, setTertFilterIdx] = useState(null);
 
+  /* https://www.material-tailwind.com/docs/react/select */
+  //TLDR: Default value of Select component is undefined
+  const [selectVal, setSelectVal] = useState(undefined);
+
   //calculate option arrange during rendering
   const questionValue = useMemo(
     () => arrangeOptions(optionState),
@@ -71,6 +75,9 @@ export default function CurrentQuestion(props) {
       //reset state
       setQuestionState(INIT_SURVEY);
       setOptionState(initWithUUID(["", ""]));
+      setIsFilterChecked(false);
+      setSelectVal(undefined);
+      setTertFilterIdx(null);
 
       //send result back to parent component
       setQuestionList((prev) => [...prev, request]);
@@ -93,6 +100,8 @@ export default function CurrentQuestion(props) {
           tertiaryFilters={TERTIARY_FILTERS}
           setTertFilterIdx={setTertFilterIdx}
           setOptionState={setOptionState}
+          selectVal={selectVal}
+          setSelectVal={setSelectVal}
         />
 
         <QuestionTypeSelector

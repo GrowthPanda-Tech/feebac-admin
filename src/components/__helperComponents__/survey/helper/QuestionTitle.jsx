@@ -18,11 +18,9 @@ export default function QuestionTitle(props) {
     tertiaryFilters,
     setTertFilterIdx,
     setOptionState,
+    selectVal,
+    setSelectVal,
   } = props;
-
-  /* https://www.material-tailwind.com/docs/react/select */
-  //TLDR: Default value of Select component is undefined
-  const [selectVal, setSelectVal] = useState(undefined);
 
   //TODO: this might be a bit buggy
   //I don't have any validation for if it is checked or not
@@ -43,7 +41,11 @@ export default function QuestionTitle(props) {
 
         {/* Filter Selector */}
         <div className="flex gap-2">
-          <Checkbox ripple={false} onClick={handleClick} />
+          <Checkbox
+            ripple={false}
+            onClick={handleClick}
+            checked={isFilterChecked}
+          />
           <div className="w-52">
             <Select
               label="Select Filter"

@@ -1,11 +1,11 @@
-export function searchTertKeys({ tertKeys, filterName }) {
-  if (!filterName) {
+export function searchTertKeys({ tertKeys, filterId }) {
+  if (!filterId) {
     return [{ id: 0, name: null }];
   }
 
   for (const key of tertKeys) {
-    const { key_name, options } = key;
-    if (key_name === filterName) {
+    const { id, options } = key;
+    if (id === filterId) {
       return options;
     }
   }

@@ -15,7 +15,7 @@ export default function QuestionOptions(props) {
 
   const keywords = searchTertKeys({
     tertKeys: tertiaryFilters,
-    filterName: profile_field,
+    filterId: parseInt(profile_field),
   });
 
   return (

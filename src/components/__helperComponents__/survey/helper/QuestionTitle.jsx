@@ -38,14 +38,20 @@ export default function QuestionTitle(props) {
           <div className="w-52">
             <Select
               label="Select Filter"
-              value={profile_field}
+              //have to typecast it to string
+              //this component won't accept number as value
+              value={profile_field.toString()}
               onChange={(value) =>
-                setOptionState((prev) => ({ ...prev, profile_field: value }))
+                setOptionState((prev) => ({
+                  ...prev,
+                  //backend needs it in number
+                  profile_field: parseInt(value),
+                }))
               }
               disabled={!checked}
             >
               {tertiaryFilters.map(({ id, key_name }) => (
-                <Option key={id} value={key_name}>
+                <Option key={id} value={id.toString()}>
                   {key_name}
                 </Option>
               ))}

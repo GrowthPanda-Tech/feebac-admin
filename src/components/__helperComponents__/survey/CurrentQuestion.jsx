@@ -34,7 +34,7 @@ export default function CurrentQuestion(props) {
   const INIT_SURVEY = useMemo(() => {
     const {
       question_id = null,
-      profile_field = { key_name: null },
+      profile_field = { id: null },
       question_title = "",
       question_type = { type_id: 2 },
       question_values = { 1: "", 2: "" },
@@ -42,7 +42,7 @@ export default function CurrentQuestion(props) {
 
     return {
       survey_id: surveyId,
-      profile_field: profile_field?.key_name || null,
+      profile_field: profile_field?.id || null,
       question_id,
       question_title,
       question_type: question_type?.type_id || 2,

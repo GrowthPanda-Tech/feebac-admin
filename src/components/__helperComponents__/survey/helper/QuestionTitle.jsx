@@ -1,6 +1,3 @@
-//hooks
-import { useState } from "react";
-
 //components
 import { Checkbox, Select, Option } from "@material-tailwind/react";
 import QuestionInput from "./QuestionInput";
@@ -11,27 +8,19 @@ import { revertOptions } from "@/utils/revertOptions";
 export default function QuestionTitle(props) {
   const {
     questionNumber,
-    value,
+    questionState,
     setQuestionState,
-    isFilterChecked,
-    setIsFilterChecked,
     tertiaryFilters,
-    setTertFilterIdx,
     setOptionState,
-    selectVal,
-    setSelectVal,
   } = props;
 
-  //TODO: this might be a bit buggy
-  //I don't have any validation for if it is checked or not
+  const { profile_field = null, question_title = "" } = questionState || {};
+
+  const checked = profile_field ? true : false;
+
   const handleClick = () => {
-    setIsFilterChecked((prev) => !prev);
-    setSelectVal(undefined);
-    setTertFilterIdx(null);
-    setOptionState((prev) => {
-      const update = revertOptions(prev);
-      return update;
-    });
+    setQuestionState((prev) => ({ ...prev, profile_field: null }));
+    setOptionState((prev) => revertOptions(prev));
   };
 
   return (
@@ -44,21 +33,19 @@ export default function QuestionTitle(props) {
           <Checkbox
             ripple={false}
             onClick={handleClick}
-            checked={isFilterChecked}
+            defaultChecked={checked}
           />
           <div className="w-52">
             <Select
               label="Select Filter"
-              value={selectVal}
-              onChange={(value) => setSelectVal(value)}
-              disabled={!isFilterChecked}
+              value={profile_field}
+              onChange={(value) =>
+                setOptionState((prev) => ({ ...prev, profile_field: value }))
+              }
+              disabled={!checked}
             >
-              {tertiaryFilters.map(({ id, key_name }, index) => (
-                <Option
-                  key={id}
-                  value={key_name}
-                  onClick={() => setTertFilterIdx(index)}
-                >
+              {tertiaryFilters.map(({ id, key_name }) => (
+                <Option key={id} value={key_name}>
                   {key_name}
                 </Option>
               ))}
@@ -67,8 +54,8 @@ export default function QuestionTitle(props) {
         </div>
       </div>
       <QuestionInput
-        name={"questionTitle"}
-        value={value}
+        name={"question_title"}
+        value={question_title}
         setState={(event) =>
           setQuestionState((prev) => {
             const { name, value } = event.target;

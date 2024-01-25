@@ -26,7 +26,7 @@ export default function QuestionTypeSelector(props) {
               if (!disabled) {
                 setQuestionState((prev) => ({
                   ...prev,
-                  questionType: typeInt,
+                  question_type: typeInt,
                 }));
               }
             }}

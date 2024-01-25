@@ -4,32 +4,27 @@ import QuestionInput from "./QuestionInput";
 
 //utils
 import { transformOptions } from "@/utils/transformOptions";
+import { searchTertKeys } from "@/utils/searchTertKeys";
 
 //assets
 import delete_options from "@/assets/delete.svg";
 
 export default function QuestionOptions(props) {
-  const {
-    optionState,
-    setOptionState,
-    tertFilterIdx,
-    tertiaryFilters,
-    isFilterChecked,
-  } = props;
+  const { questionState, optionState, setOptionState, tertiaryFilters } = props;
+  const { profile_field } = questionState;
 
-  const defaultKeywordOption = { id: 0, name: undefined };
-
-  //takes into account the 0 index (falsy value)
-  const keywords =
-    tertFilterIdx !== undefined && tertFilterIdx !== null
-      ? tertiaryFilters[tertFilterIdx]?.options ?? [defaultKeywordOption]
-      : [defaultKeywordOption];
+  const keywords = searchTertKeys({
+    tertKeys: tertiaryFilters,
+    filterName: profile_field,
+  });
 
   return (
     <div className="flex flex-col gap-4">
       {optionState.map(({ element, uuid }, index) => {
-        //check if keyword is present
-        const value = Array.isArray(element) ? element[0] : element;
+        let value = element;
+        let keyword = null;
+
+        if (Array.isArray(element)) [value, keyword] = element;
 
         return (
           <div key={uuid} className="flex items-center justify-between gap-8">
@@ -53,11 +48,11 @@ export default function QuestionOptions(props) {
               }
             />
 
-            {isFilterChecked && (
+            {profile_field && (
               <div className="w-52">
                 <Select
                   label="Select Keywords"
-                  //onChange returns value. thanks the lord!!
+                  value={keyword}
                   onChange={(value) => {
                     const transform = transformOptions({
                       options: optionState,

@@ -1,8 +1,11 @@
+//utils
 import { initWithUUID } from "@/utils/initWithUUID";
+
+//assets
 import add_options from "@/assets/add.svg";
 
 export default function QuestionActionRow(props) {
-  const { setOptionState, loading } = props;
+  const { setOptionState, setEditPop, loading } = props;
 
   return (
     <div className="flex justify-between">
@@ -17,13 +20,25 @@ export default function QuestionActionRow(props) {
         <span className="font-medium">Add Options</span>
       </button>
 
-      <button
-        type="submit"
-        className="btn-primary disabled:btn-secondary disabled:cursor-not-allowed"
-        disabled={loading}
-      >
-        <span>{loading ? "Saving..." : "Save"}</span>
-      </button>
+      <div className="flex gap-4">
+        {setEditPop ? (
+          <button
+            type="button"
+            className="btn-secondary disabled:cursor-not-allowed"
+            disabled={loading}
+            onClick={() => setEditPop((prev) => !prev)}
+          >
+            Cancel
+          </button>
+        ) : null}
+        <button
+          type="submit"
+          className="btn-primary disabled:btn-secondary disabled:cursor-not-allowed"
+          disabled={loading}
+        >
+          <span>{loading ? "Saving..." : "Save"}</span>
+        </button>
+      </div>
     </div>
   );
 }

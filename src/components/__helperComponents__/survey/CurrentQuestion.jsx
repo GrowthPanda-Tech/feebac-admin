@@ -17,7 +17,13 @@ import QuestionOptions from "./helper/QuestionOptions";
 import QuestionActionRow from "./helper/QuestionActionRow";
 
 export default function CurrentQuestion(props) {
-  const { questionNumber = 1, surveyId, setQuestionList } = props;
+  const {
+    questionNumber = 1,
+    surveyId,
+    question,
+    setEditPop,
+    setQuestionList,
+  } = props;
   const { fetchedData } = useFilterContext();
 
   const TERTIARY_FILTERS = useMemo(
@@ -25,62 +31,55 @@ export default function CurrentQuestion(props) {
     [fetchedData],
   );
 
-  //needs survey ID from the render scope
-  const INIT_SURVEY = useMemo(
-    () => ({
-      surveyId,
-      questionTitle: "",
-      questionType: 2,
-      questionValue: {}, //TODO: can I use this somehow in the render pass?
-    }),
-    [surveyId],
-  );
+  const INIT_SURVEY = useMemo(() => {
+    const {
+      question_id = null,
+      profile_field = { key_name: null },
+      question_title = "",
+      question_type = { type_id: 2 },
+      question_values = { 1: "", 2: "" },
+    } = question || {};
 
-  //states (Do I need so much?)
-  const [questionState, setQuestionState] = useState(INIT_SURVEY);
-  const [optionState, setOptionState] = useState(initWithUUID(["", ""]));
+    return {
+      survey_id: surveyId,
+      profile_field: profile_field?.key_name || null,
+      question_id,
+      question_title,
+      question_type: question_type?.type_id || 2,
+      question_values,
+    };
+  }, [question, surveyId]);
+
+  //states
   const [loading, setLoading] = useState(false);
-  const [isFilterChecked, setIsFilterChecked] = useState(false);
-  const [tertFilterIdx, setTertFilterIdx] = useState(null);
-
-  /* https://www.material-tailwind.com/docs/react/select */
-  //TLDR: Default value of Select component is undefined
-  const [selectVal, setSelectVal] = useState(undefined);
-
-  //calculate option arrange during rendering
-  const questionValue = useMemo(
-    () => arrangeOptions(optionState),
-    [optionState],
+  const [questionState, setQuestionState] = useState(INIT_SURVEY);
+  const [optionState, setOptionState] = useState(
+    initWithUUID(Object.values(questionState.question_values)),
   );
 
-  /* Event handlers */
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const request = { ...questionState, questionValue };
+    const question_values = arrangeOptions(optionState);
+    const request = { ...questionState, question_values };
+
+    const route = question ? "survey/update-question" : "survey/add-question";
+    const method = question ? "PUT" : "POST";
 
     setLoading(true);
 
     try {
-      const response = await makeRequest(
-        "survey/add-question",
-        "POST",
-        request,
-      );
-
+      const response = await makeRequest(route, method, request);
       if (!response.isSuccess) throw new Error(response.message);
 
       /* Manage state */
-
-      //reset state
-      setQuestionState(INIT_SURVEY);
-      setOptionState(initWithUUID(["", ""]));
-      setIsFilterChecked(false);
-      setSelectVal(undefined);
-      setTertFilterIdx(null);
-
-      //send result back to parent component
-      setQuestionList((prev) => [...prev, request]);
+      if (question) {
+        setEditPop((prev) => !prev);
+      } else {
+        setQuestionState(INIT_SURVEY);
+        setOptionState(initWithUUID(["", ""]));
+        setQuestionList((prev) => [...prev, request]);
+      }
     } catch (error) {
       swal("error", error.message);
     } finally {
@@ -89,37 +88,32 @@ export default function CurrentQuestion(props) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="w-full">
       <div className="flex flex-col gap-12 rounded-md bg-white px-8 py-10">
         <QuestionTitle
           questionNumber={questionNumber}
-          value={questionState.questionTitle}
+          questionState={questionState}
           setQuestionState={setQuestionState}
-          isFilterChecked={isFilterChecked}
-          setIsFilterChecked={setIsFilterChecked}
           tertiaryFilters={TERTIARY_FILTERS}
-          setTertFilterIdx={setTertFilterIdx}
           setOptionState={setOptionState}
-          selectVal={selectVal}
-          setSelectVal={setSelectVal}
         />
 
         <QuestionTypeSelector
-          type={questionState.questionType}
+          type={questionState.question_type}
           setQuestionState={setQuestionState}
         />
 
         <QuestionOptions
+          questionState={questionState}
           optionState={optionState}
           setOptionState={setOptionState}
-          tertFilterIdx={tertFilterIdx}
           tertiaryFilters={TERTIARY_FILTERS}
-          isFilterChecked={isFilterChecked}
         />
 
         <QuestionActionRow
           questionState={questionState}
           setOptionState={setOptionState}
+          setEditPop={setEditPop}
           loading={loading}
         />
       </div>

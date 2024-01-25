@@ -16,7 +16,7 @@ export function objCompare({ source, sink }) {
     if (sinkValue === "") return true;
 
     //TODO: can i clean this up?
-    if (typeof sourceValue === "string") {
+    if (typeof sourceValue === "string" && typeof sinkValue === "string") {
       if (sourceValue.toLowerCase() !== sinkValue.toLowerCase()) {
         return false;
       }

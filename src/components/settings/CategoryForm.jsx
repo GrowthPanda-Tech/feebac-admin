@@ -36,6 +36,9 @@ export default function CategoryForm({
   const [imgPreview, setImgPreview] = useState(INIT_PREVIEW);
   const [loading, setLoading] = useState(false);
 
+  //objects cannot be strictly compared. it's a reference value
+  const editStatus = JSON.stringify(category) === JSON.stringify(INIT_STATE);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -147,7 +150,7 @@ export default function CategoryForm({
           <div className="flex flex-col gap-4 md:flex-row">
             <button
               className="btn-primary disabled:btn-secondary disabled:cursor-not-allowed"
-              disabled={loading}
+              disabled={loading || editStatus}
             >
               {loading ? "Saving..." : "Save"}
             </button>

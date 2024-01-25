@@ -8,6 +8,7 @@ import fileReader from "@/utils/fileReader";
 
 //assets
 import defaultImgPreview from "@/assets/defaultImgPreview.png";
+import { objCompare } from "@/utils/objCompare";
 
 export default function CategoryForm({
   setIsShowCategoryCreate,
@@ -35,6 +36,10 @@ export default function CategoryForm({
   const [category, setCategory] = useState(INIT_STATE);
   const [imgPreview, setImgPreview] = useState(INIT_PREVIEW);
   const [loading, setLoading] = useState(false);
+
+  //objects cannot be strictly compared. it's a reference value
+  // const editStatus = JSON.stringify(category) === JSON.stringify(INIT_STATE);
+  const editStatus = objCompare({ source: INIT_STATE, sink: category });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -125,7 +130,7 @@ export default function CategoryForm({
           className="flex h-full flex-col justify-evenly gap-6"
         >
           <label className="flex flex-col font-semibold">
-            Enter Category Name *
+            Enter Category Name
             <input
               type="text"
               name="category_name"
@@ -135,7 +140,7 @@ export default function CategoryForm({
             />
           </label>
           <label className="flex flex-col font-semibold">
-            Upload Image *
+            Upload Image
             <input
               type="file"
               className="input-primary"
@@ -147,7 +152,7 @@ export default function CategoryForm({
           <div className="flex flex-col gap-4 md:flex-row">
             <button
               className="btn-primary disabled:btn-secondary disabled:cursor-not-allowed"
-              disabled={loading}
+              disabled={loading || editStatus}
             >
               {loading ? "Saving..." : "Save"}
             </button>

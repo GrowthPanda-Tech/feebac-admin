@@ -19,8 +19,11 @@ export default function QuestionTitle(props) {
   const checked = profile_field ? true : false;
 
   const handleClick = () => {
-    setQuestionState((prev) => ({ ...prev, profile_field: null }));
     setOptionState((prev) => revertOptions(prev));
+    setQuestionState((prev) => ({
+      ...prev,
+      profile_field: checked ? null : " ",
+    }));
   };
 
   return (
@@ -40,9 +43,9 @@ export default function QuestionTitle(props) {
               label="Select Filter"
               //have to typecast it to string
               //this component won't accept number as value
-              value={profile_field.toString()}
+              value={profile_field ? profile_field.toString() : profile_field}
               onChange={(value) =>
-                setOptionState((prev) => ({
+                setQuestionState((prev) => ({
                   ...prev,
                   //backend needs it in number
                   profile_field: parseInt(value),

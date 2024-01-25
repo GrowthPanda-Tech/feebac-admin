@@ -24,7 +24,10 @@ export default function QuestionOptions(props) {
         let value = element;
         let keyword = null;
 
-        if (Array.isArray(element)) [value, keyword] = element;
+        if (Array.isArray(element)) {
+          value = element[0];
+          keyword = element[1];
+        }
 
         return (
           <div key={uuid} className="flex items-center justify-between gap-8">

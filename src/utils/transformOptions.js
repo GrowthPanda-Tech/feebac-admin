@@ -7,7 +7,13 @@ export function transformOptions({ options, keyword, index }) {
       return;
     }
 
-    const transormedOption = { ...option, element: [option.element, keyword] };
+    const transormedOption = {
+      ...option,
+      element: [
+        Array.isArray(option.element) ? option.element[0] : option.element,
+        keyword,
+      ],
+    };
     transform.push(transormedOption);
   });
 

@@ -1,22 +1,21 @@
-import Question from "../createSurvey/Question";
+import CurrentQuestion from "@/components/__helperComponents__/survey/CurrentQuestion";
 
 function AddMoreQuestionPop({
-  surveyInfo,
-  setQuestionAddPop,
+  questionNumber,
+  surveyId,
+  setPop,
   setQuestionList,
-  setSurveyInfo,
 }) {
   return (
     <div className="update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center ">
-      <Question
-        surveyId={surveyInfo?.survey_id}
-        surveyTitle={surveyInfo?.survey_title}
-        editAdd={true}
-        surveyInfo={surveyInfo}
-        setSurveyInfo={setSurveyInfo}
-        setQuestionAddPop={setQuestionAddPop}
-        setQuestionList={setQuestionList}
-      />
+      <div className="w-3/4">
+        <CurrentQuestion
+          questionNumber={questionNumber + 1}
+          surveyId={surveyId}
+          setPop={setPop}
+          setQuestionList={setQuestionList}
+        />
+      </div>
     </div>
   );
 }

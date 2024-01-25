@@ -21,7 +21,7 @@ export default function CurrentQuestion(props) {
     questionNumber = 1,
     surveyId,
     question,
-    setEditPop,
+    setPop,
     setQuestionList,
   } = props;
   const { fetchedData } = useFilterContext();
@@ -73,8 +73,8 @@ export default function CurrentQuestion(props) {
       if (!response.isSuccess) throw new Error(response.message);
 
       /* Manage state */
-      if (question) {
-        setEditPop((prev) => !prev);
+      if (setPop) {
+        setPop((prev) => !prev);
       } else {
         setQuestionState(INIT_SURVEY);
         setOptionState(initWithUUID(["", ""]));
@@ -113,7 +113,7 @@ export default function CurrentQuestion(props) {
         <QuestionActionRow
           questionState={questionState}
           setOptionState={setOptionState}
-          setEditPop={setEditPop}
+          setPop={setPop}
           loading={loading}
         />
       </div>

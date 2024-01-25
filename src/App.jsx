@@ -13,7 +13,6 @@ import Survey from "@/components/survey/Survey";
 import SurveyInfo from "@/components/survey/SurveyInfo";
 import SurveyContent from "@/components/content/SurveyContent";
 import CreateSurvey from "@/components/survey/createSurvey/CreateSurvey";
-import SurveyReview from "@/components/survey/reviewSurvey/SurveyReview";
 import Content from "@/components/content/Content";
 import ContentCreate from "@/components/content/ContentCreate";
 import ContentEdit from "@/components/content/ContentEdit";
@@ -26,7 +25,6 @@ import InsightEdit from "@/components/insights/InsightEdit";
 import Settings from "@/components/settings/Settings";
 import PageNotFound from "@/components/pageNotFound/PageNotFound";
 import ProfileUpdate from "@/components/profile/ProfileUpdate";
-import AddQuestions from "@/components/survey/createSurvey/AddQuestions";
 import SurveyEdit from "@/components/survey/surveyEdit/SurveyEdit";
 import Loyalty from "@/components/loyaltyPoint/Loyalty";
 import RedeemInfo from "@/components/loyaltyPoint/RedeemInfo";
@@ -41,12 +39,7 @@ export default function App() {
     { path: "profile-update", element: <ProfileUpdate /> },
     { path: "survey", element: <Survey /> },
     { path: "survey/create", element: <CreateSurvey /> },
-    {
-      path: "survey/create/add-questions/:slug",
-      element: <AddQuestions />,
-    },
     { path: "survey/details/:slug", element: <SurveyInfo /> },
-    { path: "survey/review/:slug", element: <SurveyReview /> },
     { path: "survey/edit-survey/:slug", element: <SurveyEdit /> },
     { path: "content", element: <Content /> },
     { path: "content/create", element: <ContentCreate /> },

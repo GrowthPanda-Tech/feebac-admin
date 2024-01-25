@@ -125,10 +125,10 @@ export default function SurveyEdit() {
 
       {questionAddPop && (
         <AddMoreQuestionPop
+          questionNumber={questionList.length}
+          surveyId={surveyInfo.survey_id}
+          setPop={setQuestionAddPop}
           setQuestionList={setQuestionList}
-          surveyInfo={surveyInfo}
-          setQuestionAddPop={setQuestionAddPop}
-          setSurveyInfo={setSurveyInfo}
         />
       )}
 

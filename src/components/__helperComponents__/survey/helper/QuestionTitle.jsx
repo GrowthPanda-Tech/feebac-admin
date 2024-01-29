@@ -17,7 +17,7 @@ export default function QuestionTitle(props) {
 
   const { profile_field = null, question_title = "" } = questionState || {};
 
-  const checked = profile_field ? true : false;
+  const checked = !!profile_field;
 
   const handleClick = () => {
     setOptionState((prev) => revertOptions(prev));
@@ -35,17 +35,13 @@ export default function QuestionTitle(props) {
         {/* Filter Selector */}
         {!isRerun ? (
           <div className="flex gap-2">
-            <Checkbox
-              ripple={false}
-              onClick={handleClick}
-              defaultChecked={checked}
-            />
+            <Checkbox ripple={false} onClick={handleClick} checked={checked} />
             <div className="w-52">
               <Select
                 label="Select Filter"
                 //have to typecast it to string
                 //this component won't accept number as value
-                value={profile_field ? profile_field.toString() : profile_field}
+                value={profile_field ? profile_field.toString() : undefined}
                 onChange={(value) =>
                   setQuestionState((prev) => ({
                     ...prev,

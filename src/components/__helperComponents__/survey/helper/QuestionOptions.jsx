@@ -27,13 +27,9 @@ export default function QuestionOptions(props) {
   return (
     <div className="flex flex-col gap-4">
       {optionState.map(({ element, uuid }, index) => {
-        let value = element;
-        let keyword = null;
-
-        if (Array.isArray(element)) {
-          value = element[0];
-          keyword = element[1];
-        }
+        let [value, keyword] = Array.isArray(element)
+          ? element
+          : [element, null];
 
         return (
           <div key={uuid} className="flex items-center justify-between gap-8">
@@ -68,14 +64,11 @@ export default function QuestionOptions(props) {
                       keyword: value,
                       index,
                     });
-
-                    console.log(transform);
-
                     setOptionState(transform);
                   }}
                 >
                   {keywords.map(({ id, name }) => (
-                    <Option key={id} value={id}>
+                    <Option key={id} value={name}>
                       {name}
                     </Option>
                   ))}

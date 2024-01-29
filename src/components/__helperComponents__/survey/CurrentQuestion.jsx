@@ -75,10 +75,23 @@ export default function CurrentQuestion(props) {
       /* Manage state */
       if (setPop) {
         setPop((prev) => !prev);
+        //search for that question and update it
+        setQuestionList((prev) => {
+          const currList = structuredClone(prev);
+          const updateIndex = currList.findIndex(
+            (question) => question.question_id === questionState.question_id,
+          );
+
+          //element not found
+          if (updateIndex === -1) return [...currList, response.data];
+
+          currList[updateIndex] = response.question;
+          return currList;
+        });
       } else {
         setQuestionState(INIT_SURVEY);
         setOptionState(initWithUUID(["", ""]));
-        setQuestionList((prev) => [...prev, request]);
+        setQuestionList((prev) => [...prev, request.question]);
       }
     } catch (error) {
       swal("error", error.message);

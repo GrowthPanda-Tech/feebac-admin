@@ -44,7 +44,6 @@ export default function SurveyEdit() {
           setLoading(false);
         }
       } catch (error) {
-        console.error(error);
         setLoading(false);
       }
     }

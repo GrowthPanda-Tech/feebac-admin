@@ -12,6 +12,7 @@ export default function QuestionTitle(props) {
     setQuestionState,
     tertiaryFilters,
     setOptionState,
+    isRerun,
   } = props;
 
   const { profile_field = null, question_title = "" } = questionState || {};
@@ -32,35 +33,37 @@ export default function QuestionTitle(props) {
         <span className="font-semibold">Question {questionNumber}</span>
 
         {/* Filter Selector */}
-        <div className="flex gap-2">
-          <Checkbox
-            ripple={false}
-            onClick={handleClick}
-            defaultChecked={checked}
-          />
-          <div className="w-52">
-            <Select
-              label="Select Filter"
-              //have to typecast it to string
-              //this component won't accept number as value
-              value={profile_field ? profile_field.toString() : profile_field}
-              onChange={(value) =>
-                setQuestionState((prev) => ({
-                  ...prev,
-                  //backend needs it in number
-                  profile_field: parseInt(value),
-                }))
-              }
-              disabled={!checked}
-            >
-              {tertiaryFilters.map(({ id, key_name }) => (
-                <Option key={id} value={id.toString()}>
-                  {key_name}
-                </Option>
-              ))}
-            </Select>
+        {!isRerun ? (
+          <div className="flex gap-2">
+            <Checkbox
+              ripple={false}
+              onClick={handleClick}
+              defaultChecked={checked}
+            />
+            <div className="w-52">
+              <Select
+                label="Select Filter"
+                //have to typecast it to string
+                //this component won't accept number as value
+                value={profile_field ? profile_field.toString() : profile_field}
+                onChange={(value) =>
+                  setQuestionState((prev) => ({
+                    ...prev,
+                    //backend needs it in number
+                    profile_field: parseInt(value),
+                  }))
+                }
+                disabled={!checked}
+              >
+                {tertiaryFilters.map(({ id, key_name }) => (
+                  <Option key={id} value={id.toString()}>
+                    {key_name}
+                  </Option>
+                ))}
+              </Select>
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
       <QuestionInput
         name={"question_title"}

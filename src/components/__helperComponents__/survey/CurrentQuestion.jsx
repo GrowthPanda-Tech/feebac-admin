@@ -23,6 +23,7 @@ export default function CurrentQuestion(props) {
     question,
     setPop,
     setQuestionList,
+    isRerun,
   } = props;
   const { fetchedData } = useFilterContext();
 
@@ -91,7 +92,7 @@ export default function CurrentQuestion(props) {
       } else {
         setQuestionState(INIT_SURVEY);
         setOptionState(initWithUUID(["", ""]));
-        setQuestionList((prev) => [...prev, request.question]);
+        setQuestionList((prev) => [...prev, response.data]);
       }
     } catch (error) {
       swal("error", error.message);
@@ -109,6 +110,7 @@ export default function CurrentQuestion(props) {
           setQuestionState={setQuestionState}
           tertiaryFilters={TERTIARY_FILTERS}
           setOptionState={setOptionState}
+          isRerun={isRerun}
         />
 
         <QuestionTypeSelector

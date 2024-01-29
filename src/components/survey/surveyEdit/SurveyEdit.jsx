@@ -118,6 +118,7 @@ export default function SurveyEdit() {
             setSurveyInfo={setSurveyInfo}
             setQuestionList={setQuestionList}
             questionList={questionList}
+            isRerun={surveyInfo.is_rerun}
           />
         ))}
       </div>
@@ -128,6 +129,7 @@ export default function SurveyEdit() {
           surveyId={surveyInfo.survey_id}
           setPop={setQuestionAddPop}
           setQuestionList={setQuestionList}
+          isRerun={surveyInfo.is_rerun}
         />
       )}
 

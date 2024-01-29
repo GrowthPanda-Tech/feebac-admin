@@ -7,6 +7,7 @@ export default function ReviewCard({
   surveyId,
   setQuestionList,
   setSurveyInfo,
+  isRerun,
 }) {
   const [editPop, setEditPop] = useState(false);
 
@@ -54,11 +55,12 @@ export default function ReviewCard({
       {editPop && (
         <EditPop
           question={question}
-          setEditPop={setEditPop}
+          setPop={setEditPop}
           surveyId={surveyId}
           questionNo={index}
           setQuestionList={setQuestionList}
           setSurveyInfo={setSurveyInfo}
+          isRerun={isRerun}
         />
       )}
     </>

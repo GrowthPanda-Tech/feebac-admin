@@ -44,7 +44,6 @@ export default function SurveyEdit() {
           setLoading(false);
         }
       } catch (error) {
-        console.error(error);
         setLoading(false);
       }
     }
@@ -119,16 +118,18 @@ export default function SurveyEdit() {
             setSurveyInfo={setSurveyInfo}
             setQuestionList={setQuestionList}
             questionList={questionList}
+            isRerun={surveyInfo.is_rerun}
           />
         ))}
       </div>
 
       {questionAddPop && (
         <AddMoreQuestionPop
+          questionNumber={questionList.length}
+          surveyId={surveyInfo.survey_id}
+          setPop={setQuestionAddPop}
           setQuestionList={setQuestionList}
-          surveyInfo={surveyInfo}
-          setQuestionAddPop={setQuestionAddPop}
-          setSurveyInfo={setSurveyInfo}
+          isRerun={surveyInfo.is_rerun}
         />
       )}
 
@@ -148,12 +149,12 @@ export default function SurveyEdit() {
             className="btn-primary disabled:btn-secondary bg-white text-black/50 hover:text-white"
             disabled={actionloader.schedule || actionloader.publish}
             onClick={() =>
-              surveyActions(
-                "publish",
-                surveyInfo.survey_id,
-                setActionloader,
+              surveyActions({
+                type: "publish",
+                surveyId: surveyInfo.survey_id,
+                setLoading: setActionloader,
                 navigate,
-              )
+              })
             }
           >
             {actionloader.publish ? "Publishing..." : "Publish"}
@@ -163,12 +164,12 @@ export default function SurveyEdit() {
             className="btn-primary disabled:btn-secondary"
             disabled={actionloader.schedule || actionloader.publish}
             onClick={() =>
-              surveyActions(
-                "schedule",
-                surveyInfo.survey_id,
-                setActionloader,
+              surveyActions({
+                type: "schedule",
+                surveyId: surveyInfo.survey_id,
+                setLoading: setActionloader,
                 navigate,
-              )
+              })
             }
           >
             {actionloader.schedule ? "Scheduling..." : "Schedule"}

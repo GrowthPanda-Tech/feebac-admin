@@ -1,23 +1,23 @@
-import EditQuestion from "./EditQuestion";
+import CurrentQuestion from "@/components/__helperComponents__/survey/CurrentQuestion";
 
 function EditPop({
   question,
-  setEditPop,
+  setPop,
   surveyId,
   questionNo,
   setQuestionList,
-  setSurveyInfo,
+  isRerun,
 }) {
   return (
     <div className="update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center ">
-      <div className="flex flex-col">
-        <EditQuestion
-          questions={question}
-          setEditPop={setEditPop}
+      <div className="w-3/4">
+        <CurrentQuestion
+          questionNumber={questionNo + 1}
           surveyId={surveyId}
-          questionNo={questionNo}
+          question={question}
+          setPop={setPop}
           setQuestionList={setQuestionList}
-          setSurveyInfo={setSurveyInfo}
+          isRerun={isRerun}
         />
       </div>
     </div>

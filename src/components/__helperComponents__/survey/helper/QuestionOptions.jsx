@@ -10,7 +10,13 @@ import { searchTertKeys } from "@/utils/searchTertKeys";
 import delete_options from "@/assets/delete.svg";
 
 export default function QuestionOptions(props) {
-  const { questionState, optionState, setOptionState, tertiaryFilters } = props;
+  const {
+    questionState,
+    optionState,
+    setOptionState,
+    tertiaryFilters,
+    isRerun,
+  } = props;
   const { profile_field } = questionState;
 
   const keywords = searchTertKeys({
@@ -51,7 +57,7 @@ export default function QuestionOptions(props) {
               }
             />
 
-            {profile_field && (
+            {profile_field && !isRerun ? (
               <div className="w-52">
                 <Select
                   label="Select Keywords"
@@ -63,17 +69,19 @@ export default function QuestionOptions(props) {
                       index,
                     });
 
+                    console.log(transform);
+
                     setOptionState(transform);
                   }}
                 >
                   {keywords.map(({ id, name }) => (
-                    <Option key={id} value={name}>
+                    <Option key={id} value={id}>
                       {name}
                     </Option>
                   ))}
                 </Select>
               </div>
-            )}
+            ) : null}
 
             {optionState.length > 2 && (
               <img

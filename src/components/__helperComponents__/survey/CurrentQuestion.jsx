@@ -123,6 +123,7 @@ export default function CurrentQuestion(props) {
           optionState={optionState}
           setOptionState={setOptionState}
           tertiaryFilters={TERTIARY_FILTERS}
+          isRerun={isRerun}
         />
 
         <QuestionActionRow

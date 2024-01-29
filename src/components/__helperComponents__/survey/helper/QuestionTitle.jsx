@@ -83,12 +83,13 @@ export default function QuestionTitle(props) {
       <QuestionInput
         name={"question_title"}
         value={question_title}
-        setState={(event) =>
+        setState={(event) => {
           setQuestionState((prev) => {
             const { name, value } = event.target;
+            if (value.trim() === "" && value.length === 1) return prev;
             return { ...prev, [name]: value };
-          })
-        }
+          });
+        }}
       />
 
       {isCreateFilter ? (

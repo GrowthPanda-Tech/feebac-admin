@@ -38,6 +38,7 @@ export default function QuestionOptions(props) {
               setState={(event) =>
                 setOptionState((prev) => {
                   const { value } = event.target;
+                  if (value.trim() === "" && value.length === 1) return prev;
 
                   //has reference object
                   const curr = structuredClone(prev);

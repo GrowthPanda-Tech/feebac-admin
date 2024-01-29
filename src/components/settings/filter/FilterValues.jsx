@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import { useFilterContext } from "@/contexts/FilterContext";
 
@@ -13,7 +14,7 @@ export default function FilterValues({ id, options, filterIdx }) {
 
   const handleOptionRemove = async (index) => {
     const option = options[index];
-    const params = new URLSearchParams({ id, option });
+    const params = new URLSearchParams({ id, option: option.name });
     const url = `config/delete-profile-key-option?${params}`;
 
     try {
@@ -46,6 +47,10 @@ export default function FilterValues({ id, options, filterIdx }) {
     const optionsSetArr = Array.from(optionsSet);
 
     const request = { id, newOptions: optionsSetArr };
+    const setArrWithID = optionsSetArr.map((option) => ({
+      id: uuidv4(),
+      name: option,
+    }));
 
     try {
       //optimistically update state
@@ -53,7 +58,7 @@ export default function FilterValues({ id, options, filterIdx }) {
         const curr = { ...prev };
         const currArr = [
           ...curr.data[2].key[filterIdx].options,
-          ...optionsSetArr,
+          ...setArrWithID,
         ];
         curr.data[2].key[filterIdx].options = currArr;
 
@@ -83,9 +88,9 @@ export default function FilterValues({ id, options, filterIdx }) {
 
   return (
     <div className="flex flex-col gap-4">
-      {options.map((option, index) => (
-        <div key={option} className="flex items-center justify-between">
-          <span className="font-semibold text-accent">{option}</span>
+      {options?.map(({ id, name }, index) => (
+        <div key={id} className="flex items-center justify-between">
+          <span className="font-semibold text-accent">{name}</span>
           <i
             className="fa-solid fa-xmark cursor-pointer"
             onClick={() => handleOptionRemove(index)}

@@ -19,7 +19,6 @@ export default function SurveyEdit() {
 
   const [surveyInfo, setSurveyInfo] = useState({});
   const [questionList, setQuestionList] = useState([]);
-
   const [surveyEditPop, setSurveyEditPop] = useState(false);
   const [questionAddPop, setQuestionAddPop] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -63,6 +62,10 @@ export default function SurveyEdit() {
 
   const [startDate, startTime] = localStartDate.split(",");
   const [endDate, endTime] = localEndDate.split(",");
+
+  const currentDate = new Date();
+  const surveyStartDate = new Date(surveyInfo.start_date);
+  const ahead = currentDate > surveyStartDate;
 
   return (
     <div className="flex flex-grow flex-col gap-10">
@@ -162,7 +165,7 @@ export default function SurveyEdit() {
           <button
             type="button"
             className="btn-primary disabled:btn-secondary"
-            disabled={actionloader.schedule || actionloader.publish}
+            disabled={actionloader.schedule || actionloader.publish || ahead}
             onClick={() =>
               surveyActions({
                 type: "schedule",

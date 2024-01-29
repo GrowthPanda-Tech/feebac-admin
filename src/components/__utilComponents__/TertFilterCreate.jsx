@@ -70,7 +70,9 @@ export default function TertFilterCreate({
       /* State management */
 
       //local filter state
-      setFilters((prev) => [...prev, response.data]);
+      if (setFilters) {
+        setFilters((prev) => [...prev, response.data]);
+      }
 
       //context state update
       const spread = { ...fetchedData };
@@ -99,8 +101,9 @@ export default function TertFilterCreate({
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className={`${loading ? "text-tertiary" : "text-[#EA525F]"
-            } font-semibold transition hover:text-black`}
+          className={`${
+            loading ? "text-tertiary" : "text-[#EA525F]"
+          } font-semibold transition hover:text-black`}
         >
           {loading ? "Adding..." : "Done"}
         </button>

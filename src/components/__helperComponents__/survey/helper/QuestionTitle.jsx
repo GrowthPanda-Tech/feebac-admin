@@ -1,6 +1,9 @@
+import { useState } from "react";
+
 //components
 import { Checkbox, Select, Option } from "@material-tailwind/react";
 import QuestionInput from "./QuestionInput";
+import TertFilterCreate from "@/components/__utilComponents__/TertFilterCreate";
 
 //utils
 import { revertOptions } from "@/utils/revertOptions";
@@ -19,6 +22,9 @@ export default function QuestionTitle(props) {
 
   const checked = !!profile_field;
 
+  //states
+  const [isCreateFilter, setIsCreateFilter] = useState(false);
+
   const handleClick = () => {
     setOptionState((prev) => revertOptions(prev));
     setQuestionState((prev) => ({
@@ -34,29 +40,42 @@ export default function QuestionTitle(props) {
 
         {/* Filter Selector */}
         {!isRerun ? (
-          <div className="flex gap-2">
-            <Checkbox ripple={false} onClick={handleClick} checked={checked} />
-            <div className="w-52">
-              <Select
-                label="Select Filter"
-                //have to typecast it to string
-                //this component won't accept number as value
-                value={profile_field ? profile_field.toString() : undefined}
-                onChange={(value) =>
-                  setQuestionState((prev) => ({
-                    ...prev,
-                    //backend needs it in number
-                    profile_field: parseInt(value),
-                  }))
-                }
-                disabled={!checked}
-              >
-                {tertiaryFilters.map(({ id, key_name }) => (
-                  <Option key={id} value={id.toString()}>
-                    {key_name}
-                  </Option>
-                ))}
-              </Select>
+          <div className="flex gap-4">
+            <button
+              type="button"
+              className="text-lg font-medium text-[#EA525F] transition hover:text-black"
+              onClick={() => setIsCreateFilter(true)}
+            >
+              Create Filter
+            </button>
+            <div className="flex gap-2">
+              <Checkbox
+                ripple={false}
+                onClick={handleClick}
+                checked={checked}
+              />
+              <div className="w-52">
+                <Select
+                  label="Select Filter"
+                  //have to typecast it to string
+                  //this component won't accept number as value
+                  value={profile_field ? profile_field.toString() : undefined}
+                  onChange={(value) =>
+                    setQuestionState((prev) => ({
+                      ...prev,
+                      //backend needs it in number
+                      profile_field: parseInt(value),
+                    }))
+                  }
+                  disabled={!checked}
+                >
+                  {tertiaryFilters.map(({ id, key_name }) => (
+                    <Option key={id} value={id.toString()}>
+                      {key_name}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
             </div>
           </div>
         ) : null}
@@ -71,6 +90,18 @@ export default function QuestionTitle(props) {
           })
         }
       />
+
+      {isCreateFilter ? (
+        <div
+          className={`update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center`}
+          onClick={() => setIsCreateFilter(false)}
+        >
+          <TertFilterCreate
+            stopPropgation={(e) => e.stopPropagation()}
+            setIsFilterCreate={setIsCreateFilter}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-export default function Counter({ count, max, type }) {
+export default function Counter({ count, max }) {
   return (
     <div className="flex gap-1 font-semibold text-dark-grey">
       <span className={`${count >= max ? `font-bold text-red-500` : ""}`}>

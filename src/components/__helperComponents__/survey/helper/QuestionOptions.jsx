@@ -67,6 +67,9 @@ export default function QuestionOptions(props) {
                     });
                     setOptionState(transform);
                   }}
+                  selected={() => {
+                    return keyword;
+                  }}
                 >
                   {keywords.map(({ id, name }) => (
                     <Option key={id} value={name}>

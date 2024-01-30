@@ -26,6 +26,25 @@ export default function SurveyEdit() {
     publish: false,
     schedule: false,
   });
+  const [ahead, setAhead] = useState(false);
+
+  const [startDate, startTime] = dateConvert(surveyInfo?.start_date).split(",");
+  const [endDate, endTime] = dateConvert(surveyInfo?.end_date).split(",");
+
+  useEffect(() => {
+    function compareTime() {
+      const currentDate = new Date();
+      const surveyStartDate = new Date(surveyInfo.start_date);
+      const isAhead = currentDate > surveyStartDate;
+      setAhead(isAhead);
+    }
+
+    compareTime();
+
+    const intervalId = setInterval(compareTime, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [surveyInfo.start_date]);
 
   useEffect(() => {
     let ignore = false;
@@ -49,23 +68,10 @@ export default function SurveyEdit() {
 
     fetchSurveyData();
 
-    return () => {
-      ignore = true;
-    };
+    return () => (ignore = true);
   }, [slug]);
 
   if (loading) return <LoadingSpinner />;
-
-  //Date and time
-  const localStartDate = dateConvert(surveyInfo.start_date, "local");
-  const localEndDate = dateConvert(surveyInfo.end_date, "local");
-
-  const [startDate, startTime] = localStartDate.split(",");
-  const [endDate, endTime] = localEndDate.split(",");
-
-  const currentDate = new Date();
-  const surveyStartDate = new Date(surveyInfo.start_date);
-  const ahead = currentDate > surveyStartDate;
 
   return (
     <div className="flex flex-grow flex-col gap-10">

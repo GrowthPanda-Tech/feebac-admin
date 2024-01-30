@@ -1,3 +1,6 @@
+//components
+import Button from "../../Button";
+
 //utils
 import { initWithUUID } from "@/utils/initWithUUID";
 
@@ -22,22 +25,19 @@ export default function QuestionActionRow(props) {
 
       <div className="flex gap-4">
         {setPop ? (
-          <button
-            type="button"
-            className="btn-secondary disabled:cursor-not-allowed"
-            disabled={loading}
-            onClick={() => setPop((prev) => !prev)}
-          >
-            Cancel
-          </button>
+          <Button
+            handler={() => setPop((prev) => !prev)}
+            loading={loading}
+            action={"Cancel"}
+            secondary
+          />
         ) : null}
-        <button
-          type="submit"
-          className="btn-primary disabled:btn-secondary disabled:cursor-not-allowed"
-          disabled={loading}
-        >
-          <span>{loading ? "Saving..." : "Save"}</span>
-        </button>
+        <Button
+          type={"submit"}
+          loading={loading}
+          action={"Save"}
+          loadText={"Saving..."}
+        />
       </div>
     </div>
   );

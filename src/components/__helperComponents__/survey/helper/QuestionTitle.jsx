@@ -1,3 +1,4 @@
+//hooks
 import { useState } from "react";
 
 //components
@@ -7,6 +8,7 @@ import TertFilterCreate from "@/components/__utilComponents__/TertFilterCreate";
 
 //utils
 import { revertOptions } from "@/utils/revertOptions";
+import Button from "../../Button";
 
 export default function QuestionTitle(props) {
   const {
@@ -22,36 +24,32 @@ export default function QuestionTitle(props) {
 
   const checked = !!profile_field;
 
-  //states
   const [isCreateFilter, setIsCreateFilter] = useState(false);
 
-  const handleClick = () => {
-    setOptionState((prev) => revertOptions(prev));
-    setQuestionState((prev) => ({
-      ...prev,
-      profile_field: checked ? null : " ",
-    }));
-  };
-
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <span className="font-semibold">Question {questionNumber}</span>
 
         {/* Filter Selector */}
         {!isRerun ? (
-          <div className="flex gap-4">
-            <button
+          <div className="flex items-center gap-4">
+            <Button
               type="button"
-              className="text-lg font-medium text-[#EA525F] transition hover:text-black"
-              onClick={() => setIsCreateFilter(true)}
-            >
-              Create Filter
-            </button>
+              handler={() => setIsCreateFilter(true)}
+              action="Create Filter"
+              secondary
+            />
             <div className="flex gap-2">
               <Checkbox
                 ripple={false}
-                onClick={handleClick}
+                onClick={() => {
+                  setOptionState((prev) => revertOptions(prev));
+                  setQuestionState((prev) => ({
+                    ...prev,
+                    profile_field: checked ? null : " ",
+                  }));
+                }}
                 checked={checked}
               />
               <div className="w-52">
@@ -63,7 +61,7 @@ export default function QuestionTitle(props) {
                   onChange={(value) =>
                     setQuestionState((prev) => ({
                       ...prev,
-                      //backend needs it in number
+                      //but backend needs it as number
                       profile_field: parseInt(value),
                     }))
                   }

@@ -4,8 +4,6 @@ import { useState } from "react";
 import useFetch from "@/hooks/useFetch";
 import { handleDownload } from "@/utils/buttonHandlers";
 
-import swal from "@/utils/swal";
-
 import Response from "./Response";
 import LoadingSpinner from "@/components/__helperComponents__/LoadingSpinner";
 

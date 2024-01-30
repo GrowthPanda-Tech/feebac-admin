@@ -24,11 +24,11 @@ export default function Response({ index, question }) {
         Question {index + 1} ({questionType(type_name)})
       </div>
       <div className="overflow-hidden rounded-xl">
-        <div className="flex h-80 flex-col gap-8 overflow-auto bg-white p-8 shadow-md">
+        <div className="flex h-80 flex-col gap-8 bg-white p-8 shadow-md">
           <div className="text-lg font-semibold leading-snug">
             {question_title}
           </div>
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5 overflow-auto">
             {options?.map((option, index) => (
               <div key={index} className="flex flex-col">
                 <span className="font-semibold">{option[1]}</span>

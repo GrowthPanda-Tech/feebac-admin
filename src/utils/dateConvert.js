@@ -1,4 +1,4 @@
-export default function dateConvert(date, zone) {
+export default function dateConvert(date, zone = "local") {
   const dateObject = new Date(date);
 
   switch (zone) {

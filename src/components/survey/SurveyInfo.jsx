@@ -10,7 +10,6 @@ import LoadingSpinner from "@/components/__helperComponents__/LoadingSpinner";
 export default function SurveyInfo() {
   const { slug } = useParams();
   const resultRoute = `survey/get-survey-result?surveyId=${slug}`;
-  const downloadRoute = `/site-admin/download-response?surveyId=${slug}`;
 
   const { loading, fetchedData } = useFetch(resultRoute);
   const { surveyInfo, content, questionList } = fetchedData || {};
@@ -43,11 +42,7 @@ export default function SurveyInfo() {
             className="btn-primary disabled:btn-secondary h-fit"
             disabled={downloading}
             onClick={() =>
-              handleDownload(
-                setDownloading,
-                downloadRoute,
-                surveyInfo.survey_title,
-              )
+              handleDownload({ id: slug, setLoading: setDownloading })
             }
           >
             <i className="fa-solid fa-cloud-arrow-down" />

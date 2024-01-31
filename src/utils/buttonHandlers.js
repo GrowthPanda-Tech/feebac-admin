@@ -1,9 +1,6 @@
 import makeRequest from "./makeRequest";
 import swal from "./swal";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-const AUTH_TOKEN = localStorage.getItem("authToken");
-
 export async function surveyActions({ type, surveyId, setLoading, navigate }) {
   const route = "survey/start-survey";
   const method = "PATCH";
@@ -27,20 +24,27 @@ export async function surveyActions({ type, surveyId, setLoading, navigate }) {
   }
 }
 
-export async function handleDownload(setDownloading, route, fileName) {
-  const request = {
-    headers: {
-      Authorization: `Bearer ${AUTH_TOKEN}`,
-    },
-  };
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+const AUTH_TOKEN = localStorage.getItem("authToken");
 
-  setDownloading(true);
+export async function handleDownload({ id, setLoading }) {
+  setLoading(true);
 
   try {
-    const response = await fetch(`${BASE_URL}/${route}`, request);
+    const response = await fetch(
+      `${BASE_URL}/site-admin/download-response?surveyId=${id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${AUTH_TOKEN}`,
+        },
+      },
+    );
 
-    if (response.status >= 500) {
-      throw new Error(response.status);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch: ${response.status} ${response.statusText}`,
+      );
     }
 
     const blob = await response.blob();
@@ -49,11 +53,11 @@ export async function handleDownload(setDownloading, route, fileName) {
     const url = window.URL.createObjectURL(blob);
 
     a.href = url;
-    a.download = `${fileName}.xlsx`;
+    a.download = `${id}.xlsx`;
     a.click();
   } catch (error) {
-    console.error(error);
+    swal("error", error.message);
   } finally {
-    setDownloading(false);
+    setLoading(false);
   }
 }

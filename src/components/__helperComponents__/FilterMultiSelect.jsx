@@ -1,6 +1,8 @@
 import { useState, useCallback } from "react";
 import { searchObjects } from "@/utils/searchObjects";
 
+import FilterSwitch from "../__utilComponents__/FilterSwitch";
+
 const LOCATION_KEYS = ["country", "state", "city"];
 
 export default function FilterMultiSelect({
@@ -67,16 +69,27 @@ export default function FilterMultiSelect({
   return (
     <div className="flex flex-col gap-3">
       {filteredResults.map(({ id, name }) => (
-        <label key={id} className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            value={LOCATION_KEYS.includes(keyName) ? id : name}
-            className="w-4"
-            onChange={(e) => handleClick(id, e.target.checked, e.target.value)}
-            checked={checked.includes(id)}
-          />
-          <span>{name}</span>
-        </label>
+        <div key={id} className="flex justify-between">
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              value={LOCATION_KEYS.includes(keyName) ? id : name}
+              className="w-4"
+              onChange={(e) =>
+                handleClick(id, e.target.checked, e.target.value)
+              }
+              checked={checked.includes(id)}
+            />
+            <span>{name}</span>
+          </label>
+          {checked.includes(id) ? (
+            <FilterSwitch
+              keyName={keyName}
+              filterName={name}
+              setTarget={setTarget}
+            />
+          ) : null}
+        </div>
       ))}
     </div>
   );

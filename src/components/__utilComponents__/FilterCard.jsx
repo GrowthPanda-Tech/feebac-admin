@@ -8,6 +8,7 @@ import swal from "@/utils/swal";
 //components
 import FilterSearchBar from "@helperComps/FilterSearchBar";
 import FilterMultiSelect from "@helperComps/FilterMultiSelect";
+import FilterRange from "@helperComps/FilterRange";
 
 const LOCATION_KEYS = ["country", "state", "city"];
 
@@ -88,8 +89,13 @@ export default function Filtercard({
             setTarget={setTarget}
           />
         </>
-      ) : null}
-      {/* TODO: Add dropdown type instead of null */}
+      ) : (
+        <FilterRange
+          keyName={key_name}
+          options={options}
+          setTarget={setTarget}
+        />
+      )}
     </div>
   );
 }

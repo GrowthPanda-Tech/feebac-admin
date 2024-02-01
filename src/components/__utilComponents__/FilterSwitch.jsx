@@ -11,8 +11,7 @@ export default function FilterSwitch({ keyName, filterName, setTarget }) {
       const curr = structuredClone(prev);
 
       const map = curr[keyName].map((element) => {
-        let elementTrimmed = element;
-        elementTrimmed = element.startsWith("!")
+        const elementTrimmed = element.startsWith("!")
           ? element.substring(1)
           : element;
 

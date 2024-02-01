@@ -27,14 +27,18 @@ export default function FilterMultiSelect({
       setTarget((prev) => {
         if (!checked) {
           const update = prev
-            ? prev[keyName].filter((item) => item !== value)
+            ? prev[keyName].filter((item) => {
+                const itemTrimmed = item.startsWith("!")
+                  ? item.substring(1)
+                  : item;
+                return itemTrimmed !== value;
+              })
             : null;
 
-          //delete key if update array length is 0
           const updatedTarget = { ...prev, [keyName]: update };
-          if (update && update.length === 0) {
-            delete updatedTarget[keyName];
-          }
+
+          //delete key if update array length is 0
+          if (update && update.length === 0) delete updatedTarget[keyName];
 
           return updatedTarget;
         }

@@ -68,7 +68,7 @@ export default function CreateSurveyForm({
   const [loading, setLoading] = useState(false);
   const [surveyData, setSurveyData] = useState({
     startDate: null,
-    endData: null,
+    endDate: null,
     surveyTitle: "",
     surveyDescription: "",
     loyaltyPoint: "",
@@ -136,7 +136,11 @@ export default function CreateSurveyForm({
 
     const formdata = new FormData();
 
-    formdata.append("target", JSON.stringify(target));
+    //check if it an empty object or not
+    if (Object.keys(target).length > 0) {
+      console.log("appending target object");
+      formdata.append("target", JSON.stringify(target));
+    }
 
     for (const [key, value] of Object.entries(surveyData)) {
       if (key === "category" && !value) {

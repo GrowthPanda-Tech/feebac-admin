@@ -57,7 +57,7 @@ export default function QuestionTitle(props) {
                   label="Select Filter"
                   //have to typecast it to string
                   //this component won't accept number as value
-                  value={profile_field ? profile_field.toString() : undefined}
+                  value={profile_field?.toString()}
                   onChange={(value) =>
                     setQuestionState((prev) => ({
                       ...prev,

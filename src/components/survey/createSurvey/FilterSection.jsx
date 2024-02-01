@@ -15,7 +15,7 @@ export default function FilterSection({
   const targetObjKeys = Object.keys(target);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex w-3/5 flex-col gap-8">
       {fetchedData?.data.map(({ id, dataType, key }) => (
         <div key={id} className="flex flex-col gap-4">
           <h1 className="text-xl font-medium">{dataType} filters</h1>
@@ -24,7 +24,7 @@ export default function FilterSection({
               <FilterPills key={id} name={key_name} setTarget={setTarget} />
             ))}
           </div>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap gap-6">
             {key
               .filter((data) => targetObjKeys.includes(data.key_name))
               .map((data) => (

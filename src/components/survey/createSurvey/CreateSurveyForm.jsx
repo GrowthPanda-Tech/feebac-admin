@@ -17,6 +17,7 @@ import PageTitle from "@helperComps/PageTitle";
 import Button from "@helperComps/Button";
 import FilterSection from "./FilterSection";
 import TargetCountSection from "./TargetCountSection";
+import SelectedFilterSection from "./SelectedFilterSection";
 
 function Select({ name, value, onChange, children }) {
   return (
@@ -371,12 +372,17 @@ export default function CreateSurveyForm({
       <TargetCountSection count={count} />
 
       {/* Filter Section */}
-      <FilterSection
-        route={route}
-        setParamObj={setParamObj}
-        target={target}
-        setTarget={setTarget}
-      />
+      <div className="flex gap-6">
+        <FilterSection
+          route={route}
+          setParamObj={setParamObj}
+          target={target}
+          setTarget={setTarget}
+        />
+        {Object.keys(target).length > 0 ? (
+          <SelectedFilterSection target={target} setTarget={setTarget} />
+        ) : null}
+      </div>
 
       <div className="flex gap-6">
         <Button

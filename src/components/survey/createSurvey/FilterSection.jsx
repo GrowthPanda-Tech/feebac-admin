@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { FilterContext } from "@/contexts/FilterContext";
 
 import Filtercard from "@utilComps/FilterCard";
@@ -30,6 +30,7 @@ export default function FilterSection({
               .map((data) => (
                 <Filtercard
                   key={data.id}
+                  dataType={dataType}
                   data={data}
                   route={route}
                   setParamObj={setParamObj}

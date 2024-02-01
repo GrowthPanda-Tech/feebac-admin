@@ -11,7 +11,13 @@ import FilterMultiSelect from "@helperComps/FilterMultiSelect";
 
 const LOCATION_KEYS = ["country", "state", "city"];
 
-export default function Filtercard({ data, route, setParamObj, setTarget }) {
+export default function Filtercard({
+  data,
+  dataType,
+  route,
+  setParamObj,
+  setTarget,
+}) {
   const { key_name, is_select, options } = data;
   const { setFetchedData } = useContext(FilterContext);
 
@@ -74,6 +80,7 @@ export default function Filtercard({ data, route, setParamObj, setTarget }) {
         <>
           <FilterSearchBar value={searchTerm} setter={setSearchTerm} />
           <FilterMultiSelect
+            dataType={dataType}
             keyName={key_name}
             options={options}
             searchTerm={searchTerm}

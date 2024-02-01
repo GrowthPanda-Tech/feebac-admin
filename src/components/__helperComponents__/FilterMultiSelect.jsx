@@ -6,6 +6,7 @@ import FilterSwitch from "../__utilComponents__/FilterSwitch";
 const LOCATION_KEYS = ["country", "state", "city"];
 
 export default function FilterMultiSelect({
+  dataType,
   keyName,
   options,
   searchTerm,
@@ -82,7 +83,7 @@ export default function FilterMultiSelect({
             />
             <span>{name}</span>
           </label>
-          {checked.includes(id) ? (
+          {checked.includes(id) && dataType === "Tertiary" ? (
             <FilterSwitch
               keyName={keyName}
               filterName={name}

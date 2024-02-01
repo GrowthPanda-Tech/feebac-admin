@@ -136,8 +136,11 @@ export default function CreateSurveyForm({
 
     const formdata = new FormData();
 
-    if (Object.keys(target) > 0)
+    //check if it an empty object or not
+    if (Object.keys(target).length > 0) {
+      console.log("appending target object");
       formdata.append("target", JSON.stringify(target));
+    }
 
     for (const [key, value] of Object.entries(surveyData)) {
       if (key === "category" && !value) {

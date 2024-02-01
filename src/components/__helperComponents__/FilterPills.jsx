@@ -1,11 +1,22 @@
 import { useState } from "react";
 
-export default function FilterPills({ name, handlePillClick }) {
+export default function FilterPills({ name, setTarget }) {
   const [clicked, setClicked] = useState(false);
 
   const handleClick = () => {
-    handlePillClick(name);
     setClicked((prev) => !prev);
+
+    setTarget((prev) => {
+      const prevClone = structuredClone(prev);
+
+      if (!Object.keys(prev).includes(name)) {
+        prevClone[name] = [];
+        return prevClone;
+      }
+
+      delete prevClone[name];
+      return prevClone;
+    });
   };
 
   return (

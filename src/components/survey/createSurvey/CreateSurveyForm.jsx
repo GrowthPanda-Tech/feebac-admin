@@ -374,6 +374,7 @@ export default function CreateSurveyForm({
       <FilterSection
         route={route}
         setParamObj={setParamObj}
+        target={target}
         setTarget={setTarget}
       />
 

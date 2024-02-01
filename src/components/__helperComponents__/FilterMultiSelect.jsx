@@ -36,10 +36,6 @@ export default function FilterMultiSelect({
             : null;
 
           const updatedTarget = { ...prev, [keyName]: update };
-
-          //delete key if update array length is 0
-          if (update && update.length === 0) delete updatedTarget[keyName];
-
           return updatedTarget;
         }
 

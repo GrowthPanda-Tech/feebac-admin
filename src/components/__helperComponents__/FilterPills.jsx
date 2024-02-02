@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+const LOCATION_KEYS = ["country", "state", "city"];
+
 export default function FilterPills({ name, setTarget }) {
   const [clicked, setClicked] = useState(false);
 
@@ -7,14 +9,18 @@ export default function FilterPills({ name, setTarget }) {
     setClicked((prev) => !prev);
 
     setTarget((prev) => {
-      const prevClone = structuredClone(prev);
-
-      if (!Object.keys(prev).includes(name)) {
-        prevClone[name] = [];
-        return prevClone;
+      if (!Object.keys(prev).includes(name) || !prev[name]) {
+        return { ...prev, [name]: [] };
       }
 
-      delete prevClone[name];
+      const prevClone = structuredClone(prev);
+
+      if (!LOCATION_KEYS.includes(name)) {
+        delete prevClone[name];
+      } else {
+        prevClone[name] = null;
+      }
+
       return prevClone;
     });
   };

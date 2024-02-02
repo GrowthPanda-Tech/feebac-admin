@@ -4,15 +4,12 @@ import { FilterContext } from "@/contexts/FilterContext";
 import Filtercard from "@utilComps/FilterCard";
 import FilterPills from "@helperComps/FilterPills";
 
-export default function FilterSection({
-  route,
-  setParamObj,
-  target,
-  setTarget,
-}) {
+export default function FilterSection({ route, target, setTarget }) {
   const { fetchedData } = useContext(FilterContext);
 
-  const targetObjKeys = Object.keys(target);
+  const targetObjKeys = Object.keys(target).filter(
+    (key) => target[key] !== null,
+  );
 
   return (
     <div className="flex flex-col gap-8">
@@ -33,7 +30,6 @@ export default function FilterSection({
                   dataType={dataType}
                   data={data}
                   route={route}
-                  setParamObj={setParamObj}
                   setTarget={setTarget}
                 />
               ))}

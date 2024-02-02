@@ -1,5 +1,6 @@
 import { useState, useContext, useRef, useEffect } from "react";
 import { CategoryContext } from "@/contexts/CategoryContext";
+import { useFilterContext } from "@/contexts/FilterContext";
 
 //utils
 import swal from "@/utils/swal";
@@ -53,35 +54,48 @@ function Label({ name, children }) {
   );
 }
 
+const INIT_SURVEY_DATA = {
+  startDate: null,
+  endDate: null,
+  surveyTitle: "",
+  surveyDescription: "",
+  loyaltyPoint: "",
+  category: null,
+  surveyImg: null,
+  featured_image: null,
+};
+
+const INIT_TARGET_DATA = {
+  //primary
+  country: null,
+  state: null,
+  city: null,
+  age: null,
+  //secondary
+};
+
 export default function CreateSurveyForm({
   setSurveyId,
   setSurveyTitle,
   setIsSurveyCreate,
 }) {
   const { categories } = useContext(CategoryContext);
-
-  //Location filter params
-  const [paramObj, setParamObj] = useState({ country: null, state: null });
-  const params = makeParams(paramObj);
-  const route = `config/get-profile-key-value?${params}`;
+  const { setFetchedData } = useFilterContext();
 
   const [loading, setLoading] = useState(false);
-  const [surveyData, setSurveyData] = useState({
-    startDate: null,
-    endDate: null,
-    surveyTitle: "",
-    surveyDescription: "",
-    loyaltyPoint: "",
-    category: null,
-    surveyImg: null,
-    featured_image: null,
-  });
-  const [target, setTarget] = useState({});
+  const [surveyData, setSurveyData] = useState(INIT_SURVEY_DATA);
+  const [target, setTarget] = useState(INIT_TARGET_DATA);
   const [count, setCount] = useState({ total: 0, target: 0 });
   const [imgPreview, setImgPreview] = useState({
     surveyImg: null,
     featured_image: null,
   });
+
+  console.log(target);
+
+  const paramObj = { country: target.country, state: target.state };
+  const params = makeParams(paramObj);
+  const route = `config/get-profile-key-value?${params}`;
 
   const surveyImgRef = useRef(null);
   const featuredImgRef = useRef(null);
@@ -137,9 +151,19 @@ export default function CreateSurveyForm({
     const formdata = new FormData();
 
     //check if it an empty object or not
+    //and trim any null or empty arrays
     if (Object.keys(target).length > 0) {
-      console.log("appending target object");
-      formdata.append("target", JSON.stringify(target));
+      const trimmedTarget = Object.fromEntries(
+        Object.entries(target).filter(([, value]) => {
+          return (
+            value !== null && !(Array.isArray(value) && value.length === 0)
+          );
+        }),
+      );
+
+      if (Object.keys(trimmedTarget).length > 0) {
+        formdata.append("target", JSON.stringify(trimmedTarget));
+      }
     }
 
     for (const [key, value] of Object.entries(surveyData)) {
@@ -176,7 +200,26 @@ export default function CreateSurveyForm({
     }
   };
 
-  //TODO: get rid of this
+  //TODO: I ain't proud
+  useEffect(() => {
+    let ignore = false;
+
+    async function handleLocationFetch() {
+      try {
+        const response = await makeRequest(route);
+        if (!response.isSuccess) throw new Error(response.message);
+        if (!ignore) setFetchedData(response);
+      } catch (error) {
+        swal("error", error.message);
+      }
+    }
+
+    handleLocationFetch();
+
+    return () => (ignore = true);
+  }, [route, setFetchedData]);
+
+  //TODO: still not
   useEffect(() => {
     let ignore = false;
 
@@ -186,7 +229,6 @@ export default function CreateSurveyForm({
           "site-admin/get-target-profile-count?target={}",
         );
         if (!response.isSuccess) throw new Error(response.message);
-
         if (!ignore) setCount((prev) => ({ ...prev, total: response.data }));
       } catch (error) {
         swal("error", error.message);
@@ -195,9 +237,7 @@ export default function CreateSurveyForm({
 
     getTotalCount();
 
-    return () => {
-      ignore = true;
-    };
+    return () => (ignore = true);
   }, []);
 
   return (
@@ -371,12 +411,7 @@ export default function CreateSurveyForm({
       <TargetCountSection count={count} />
 
       {/* Filter Section */}
-      <FilterSection
-        route={route}
-        setParamObj={setParamObj}
-        target={target}
-        setTarget={setTarget}
-      />
+      <FilterSection route={route} target={target} setTarget={setTarget} />
 
       <div className="flex gap-6">
         <Button

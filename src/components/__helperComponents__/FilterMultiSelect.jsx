@@ -10,7 +10,6 @@ export default function FilterMultiSelect({
   keyName,
   options,
   searchTerm,
-  setParamObj,
   setTarget,
 }) {
   const [checked, setChecked] = useState([]);
@@ -45,26 +44,8 @@ export default function FilterMultiSelect({
           [keyName]: prev[keyName] ? [...prev[keyName], value] : [value],
         };
       });
-
-      //set query param (for location data)
-      setParamObj((prev) => {
-        const curr = prev[keyName];
-
-        if (!checked) {
-          const update = curr
-            ? curr
-                .split(",")
-                .filter((item) => item !== value)
-                .join(",") || null
-            : null;
-
-          return { ...prev, [keyName]: update };
-        }
-
-        return { ...prev, [keyName]: curr ? `${curr},${value}` : value };
-      });
     },
-    [keyName, setTarget, setParamObj],
+    [keyName, setTarget],
   );
 
   return (

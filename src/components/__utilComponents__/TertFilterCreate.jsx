@@ -94,13 +94,14 @@ export default function TertFilterCreate({
   return (
     <form
       onClick={stopPropgation}
-      onSubmit={handleSubmit}
+      onSubmit={(e) => handleSubmit(e)}
       className="flex aspect-square h-[40rem] flex-col gap-7 rounded-xl bg-white p-12 shadow-md"
     >
       <div className="flex justify-between text-xl">
         <span className="font-medium"> Create Filter </span>
         <button
           type="submit"
+          onClick={(e) => handleSubmit(e)}
           disabled={loading}
           className={`${
             loading ? "text-tertiary" : "text-[#EA525F]"
@@ -129,7 +130,7 @@ export default function TertFilterCreate({
                 handleChange={(e) => handleChange(e, idx)}
                 placeholder={"Enter Keyword Name"}
               />
-              <button onClick={() => handleDelete(idx)}>
+              <button type="button" onClick={() => handleDelete(idx)}>
                 <i className="fa-regular fa-trash-can text-xl" />
               </button>
             </div>
@@ -138,7 +139,7 @@ export default function TertFilterCreate({
       </div>
 
       <button
-        type="submit"
+        type="button"
         onClick={handleClick}
         className="w-fit rounded-xl border-2 border-[#EA8552] px-6 py-3 font-medium text-[#EA8552] transition hover:bg-[#EA8552] hover:text-white"
       >

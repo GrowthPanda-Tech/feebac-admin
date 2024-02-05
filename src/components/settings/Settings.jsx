@@ -7,13 +7,14 @@ import CategoryDelete from "@utilComps/CategoryDelete";
 import CategoryForm from "./CategoryForm";
 import Categories from "./Categories";
 import Filter from "./filter/Filter";
-import FilterCreate from "./filter/FilterCreate";
+import TertFilterCreate from "../__utilComponents__/TertFilterCreate";
 
 function Pill({ section, isActive, onClick }) {
   return (
     <div
-      className={`cursor-pointer ${isActive ? "pill-primary" : "pill-secondary"
-        }`}
+      className={`cursor-pointer ${
+        isActive ? "pill-primary" : "pill-secondary"
+      }`}
       onClick={onClick}
     >
       {section}
@@ -25,11 +26,6 @@ export default function Settings() {
   const [isShowCategoryCreate, setIsShowCategoryCreate] = useState(false);
   const [isShowFilterCreate, setIsShowFilterCreate] = useState(false);
   const [visibleSection, setVisibleSection] = useState("category");
-  const [filterVals, setFilterVals] = useState({
-    dataType: 3,
-    isSelect: true,
-    options: [],
-  });
   const [showDelete, setShowDelete] = useState(false);
   const [delIndex, setDelIndex] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
@@ -118,11 +114,11 @@ export default function Settings() {
       {isShowFilterCreate && visibleSection === "filter" ? (
         <div
           className={`update-user fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center`}
+          onClick={() => setIsShowFilterCreate(false)}
         >
-          <FilterCreate
-            filterVals={filterVals}
-            setFilterVals={setFilterVals}
-            setIsShowFilterCreate={setIsShowFilterCreate}
+          <TertFilterCreate
+            stopPropgation={(e) => e.stopPropagation()}
+            setIsFilterCreate={setIsShowFilterCreate}
           />
         </div>
       ) : null}

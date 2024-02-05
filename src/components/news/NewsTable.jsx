@@ -97,7 +97,7 @@ export default function NewsTable() {
           <LoadingSpinner />
         ) : error?.message == 204 ? (
           <div className="flex h-full items-center justify-center opacity-50">
-            No Case Studies found !!
+            No Quick Reads found !!
           </div>
         ) : (
           <Table>

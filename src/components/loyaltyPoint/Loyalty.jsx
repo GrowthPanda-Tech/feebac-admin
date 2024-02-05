@@ -37,16 +37,10 @@ export default function Loyalty() {
     async function fetchrRedeemData() {
       try {
         const response = await makeRequest(
-          `/loyalty/get-all-redeem-request?status=pending`,
+          `loyalty/get-all-redeem-request?status=pending`,
         );
-
-        if (!response.isSuccess) {
-          throw new Error(json.message);
-        }
-
-        if (!ignore) {
-          setLength(response.data.length);
-        }
+        if (!response.isSuccess) throw new Error(response.message);
+        if (!ignore) setLength(response.data.length);
       } catch (error) {
         console.error(error);
       }

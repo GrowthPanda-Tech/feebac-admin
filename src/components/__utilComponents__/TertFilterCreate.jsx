@@ -1,3 +1,5 @@
+import clsx from "clsx";
+
 import { useState, useContext } from "react";
 import { FilterContext } from "@/contexts/FilterContext";
 
@@ -10,7 +12,7 @@ const INIT_STATE = {
   dataType: 3,
   name: "",
   isSelect: true,
-  options: null,
+  options: [],
 };
 
 export default function TertFilterCreate({
@@ -22,32 +24,6 @@ export default function TertFilterCreate({
   const [loading, setLoading] = useState(false);
 
   const { fetchedData, setFetchedData } = useContext(FilterContext);
-
-  const handleChange = (e, idx) => {
-    const spread = { ...tertFilterState };
-    spread.options[idx] = e.target.value;
-
-    setTertFilterState(spread);
-  };
-
-  const handleClick = () => {
-    const spread = { ...tertFilterState };
-
-    if (spread.options) {
-      spread.options.push("");
-    } else {
-      spread.options = [""];
-    }
-
-    setTertFilterState(spread);
-  };
-
-  const handleDelete = (idx) => {
-    const spread = { ...tertFilterState };
-    spread.options.splice(idx, 1);
-
-    setTertFilterState(spread);
-  };
 
   const handleSubmit = async () => {
     //remove empty strings from the options array
@@ -99,10 +75,14 @@ export default function TertFilterCreate({
         <button
           type="submit"
           onClick={handleSubmit}
-          disabled={loading}
-          className={`${
-            loading ? "text-tertiary" : "text-[#EA525F]"
-          } font-semibold transition hover:text-black`}
+          disabled={loading || tertFilterState.options.length === 0}
+          className={clsx(
+            "font-semibold",
+            "transition",
+            "enabled:hover:text-black",
+            "disabled:opacity-50",
+            loading ? "text-tertiary" : "text-[#EA525F]",
+          )}
         >
           {loading ? "Adding..." : "Done"}
         </button>
@@ -124,10 +104,21 @@ export default function TertFilterCreate({
               <span> {idx + 1}. </span>
               <TertCreateInput
                 value={option}
-                handleChange={(e) => handleChange(e, idx)}
+                handleChange={(e) => {
+                  const spread = { ...tertFilterState };
+                  spread.options[idx] = e.target.value;
+                  setTertFilterState(spread);
+                }}
                 placeholder={"Enter Keyword Name"}
               />
-              <button type="button" onClick={() => handleDelete(idx)}>
+              <button
+                type="button"
+                onClick={() => {
+                  const spread = { ...tertFilterState };
+                  spread.options.splice(idx, 1);
+                  setTertFilterState(spread);
+                }}
+              >
                 <i className="fa-regular fa-trash-can text-xl" />
               </button>
             </div>
@@ -137,7 +128,11 @@ export default function TertFilterCreate({
 
       <button
         type="button"
-        onClick={handleClick}
+        onClick={() => {
+          const spread = { ...tertFilterState };
+          spread.options.push("");
+          setTertFilterState(spread);
+        }}
         className="w-fit rounded-xl border-2 border-[#EA8552] px-6 py-3 font-medium text-[#EA8552] transition hover:bg-[#EA8552] hover:text-white"
       >
         Add keywords

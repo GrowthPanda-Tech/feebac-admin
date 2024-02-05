@@ -20,7 +20,9 @@ export default function TertFilterCreate({
   setIsFilterCreate,
   setFilters,
 }) {
-  const [tertFilterState, setTertFilterState] = useState(INIT_STATE);
+  const [tertFilterState, setTertFilterState] = useState(
+    structuredClone(INIT_STATE),
+  );
   const [loading, setLoading] = useState(false);
 
   const { fetchedData, setFetchedData } = useContext(FilterContext);
@@ -54,7 +56,7 @@ export default function TertFilterCreate({
       setFetchedData(spread);
 
       //state reset
-      setTertFilterState(INIT_STATE);
+      setTertFilterState(structuredClone(INIT_STATE));
       setIsFilterCreate(false);
 
       swal("success", response.message);

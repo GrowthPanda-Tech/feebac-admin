@@ -13,6 +13,7 @@ export default function TertCreateInput({
       placeholder={placeholder}
       onChange={handleChange}
       className="w-full rounded-md bg-background px-8 py-5 disabled:cursor-not-allowed"
+      required
     />
   );
 }

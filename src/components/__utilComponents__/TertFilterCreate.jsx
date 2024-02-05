@@ -49,9 +49,7 @@ export default function TertFilterCreate({
     setTertFilterState(spread);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     //remove empty strings from the options array
     const optionsArr = [...tertFilterState.options];
     const optionsTrimmed = optionsArr.filter((options) => options !== "");
@@ -92,16 +90,15 @@ export default function TertFilterCreate({
   };
 
   return (
-    <form
+    <div
       onClick={stopPropgation}
-      onSubmit={(e) => handleSubmit(e)}
       className="flex aspect-square h-[40rem] flex-col gap-7 rounded-xl bg-white p-12 shadow-md"
     >
       <div className="flex justify-between text-xl">
         <span className="font-medium"> Create Filter </span>
         <button
           type="submit"
-          onClick={(e) => handleSubmit(e)}
+          onClick={handleSubmit}
           disabled={loading}
           className={`${
             loading ? "text-tertiary" : "text-[#EA525F]"
@@ -145,6 +142,6 @@ export default function TertFilterCreate({
       >
         Add keywords
       </button>
-    </form>
+    </div>
   );
 }

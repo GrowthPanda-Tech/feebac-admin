@@ -5,10 +5,11 @@ import { useState } from "react";
 import { Checkbox, Select, Option } from "@material-tailwind/react";
 import QuestionInput from "./QuestionInput";
 import TertFilterCreate from "@/components/__utilComponents__/TertFilterCreate";
+import Button from "../../Button";
 
 //utils
 import { revertOptions } from "@/utils/revertOptions";
-import Button from "../../Button";
+import { searchProfileName } from "@/utils/searchProfileName";
 
 export default function QuestionTitle(props) {
   const {
@@ -23,6 +24,10 @@ export default function QuestionTitle(props) {
   const { profile_field = null, question_title = "" } = questionState || {};
 
   const checked = !!profile_field;
+  const selected = searchProfileName({
+    tertiaryFilters,
+    queryId: profile_field,
+  });
 
   const [isCreateFilter, setIsCreateFilter] = useState(false);
 
@@ -65,6 +70,7 @@ export default function QuestionTitle(props) {
                       profile_field: parseInt(value),
                     }))
                   }
+                  selected={() => selected}
                   disabled={!checked}
                 >
                   {tertiaryFilters.map(({ id, key_name }) => (

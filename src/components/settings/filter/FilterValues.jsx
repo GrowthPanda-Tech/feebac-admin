@@ -88,15 +88,16 @@ export default function FilterValues({ id, options, filterIdx }) {
 
   return (
     <div className="flex flex-col gap-4">
-      {options?.map(({ id, name }, index) => (
-        <div key={id} className="flex items-center justify-between">
-          <span className="font-semibold text-accent">{name}</span>
-          <i
-            className="fa-solid fa-xmark cursor-pointer"
-            onClick={() => handleOptionRemove(index)}
-          />
-        </div>
-      ))}
+      {Array.isArray(options) &&
+        options.map(({ id, name }, index) => (
+          <div key={id} className="flex items-center justify-between">
+            <span className="font-semibold text-accent">{name}</span>
+            <i
+              className="fa-solid fa-xmark cursor-pointer"
+              onClick={() => handleOptionRemove(index)}
+            />
+          </div>
+        ))}
 
       {addingOption ? (
         <input

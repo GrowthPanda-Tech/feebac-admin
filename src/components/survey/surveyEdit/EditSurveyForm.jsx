@@ -85,7 +85,7 @@ export default function EditSurveyForm({
 
   //TODO: nested API calls?
   const handleSubmit = async (event) => {
-    if (!updatedData) {
+    if (!imgPreview.image_url || !imgPreview.featured_image) {
       swal("error", "Blank image fields are not allowed");
       return;
     }
@@ -310,9 +310,9 @@ export default function EditSurveyForm({
 
       <div className="flex gap-4">
         <button
-          className="btn-primary disabled:btn-secondary w-fit"
+          className="btn-primary disabled:btn-secondary w-fit disabled:opacity-50"
           onClick={handleSubmit}
-          disabled={loading}
+          disabled={loading || !updatedData}
         >
           {loading ? "Saving..." : "Save Changes"}
         </button>

@@ -1,5 +1,6 @@
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import "animate.css";
 
 const MySwal = withReactContent(Swal);
 
@@ -10,16 +11,20 @@ const MySwal = withReactContent(Swal);
  * @param {string} message - The message to be displayed in the toast notification.
  */
 export default function swal(type, message) {
-  const title = type.charAt(0).toUpperCase() + type.substring(1);
-
   MySwal.fire({
-    title,
     icon: type,
     text: message,
     toast: true,
     position: "top-end",
     timer: 3000,
-    timerProgressBar: true,
+    showCloseButton: true,
     showConfirmButton: false,
+    animation: false,
+    showClass: {
+      popup: "animate__animated animate__slideInRight animate__faster",
+    },
+    hideClass: {
+      popup: "animate__animated animate__slideOutRight animate__faster",
+    },
   });
 }

@@ -37,8 +37,7 @@ export default function CategoryForm({
   const [imgPreview, setImgPreview] = useState(INIT_PREVIEW);
   const [loading, setLoading] = useState(false);
 
-  //objects cannot be strictly compared. it's a reference value
-  // const editStatus = JSON.stringify(category) === JSON.stringify(INIT_STATE);
+  // objects cannot be strictly compared. it's a reference value
   const editStatus = objCompare({ source: INIT_STATE, sink: category });
 
   const handleChange = (e) => {
@@ -54,13 +53,12 @@ export default function CategoryForm({
     const file = e.target.files[0];
 
     if (file) {
-      setCategory((prev) => ({ ...prev, icon_url: file }));
-
       try {
         const preview = await fileReader(file);
+        setCategory((prev) => ({ ...prev, icon_url: file }));
         setImgPreview(preview);
       } catch (error) {
-        console.error(error);
+        swal("error", error.message);
       }
     }
   };
@@ -93,10 +91,7 @@ export default function CategoryForm({
 
     try {
       const response = await makeRequest(route, method, formdata);
-
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
+      if (!response.isSuccess) throw new Error(response.message);
 
       swal("success", response.message);
 
@@ -152,7 +147,7 @@ export default function CategoryForm({
           <div className="flex flex-col gap-4 md:flex-row">
             <button
               className="btn-primary disabled:btn-secondary disabled:cursor-not-allowed"
-              disabled={loading || editStatus}
+              disabled={loading || editStatus || !category.icon_url}
             >
               {loading ? "Saving..." : "Save"}
             </button>

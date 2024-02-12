@@ -1,7 +1,4 @@
 export function searchProfileName({ tertiaryFilters, queryId }) {
-  console.log(tertiaryFilters);
-  console.log(queryId);
-
   if (!queryId) return null;
 
   let result = null;

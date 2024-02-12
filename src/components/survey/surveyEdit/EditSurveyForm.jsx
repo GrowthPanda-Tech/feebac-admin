@@ -111,7 +111,9 @@ export default function EditSurveyForm({
       if (response.isSuccess) {
         swal("success", response.message);
         const getData = async () => {
-          const response = await makeRequest(`survey/show-survey?sid=${slug}`);
+          const response = await makeRequest(
+            `site-admin/show-survey?sid=${slug}`,
+          );
           if (response.isSuccess) {
             setSurveyInfo(response.surveyInfo);
           }

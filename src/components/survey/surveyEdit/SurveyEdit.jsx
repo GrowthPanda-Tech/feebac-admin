@@ -53,7 +53,9 @@ export default function SurveyEdit() {
       setLoading(true);
 
       try {
-        const response = await makeRequest(`survey/show-survey?sid=${slug}`);
+        const response = await makeRequest(
+          `site-admin/show-survey?sid=${slug}`,
+        );
         if (!response.isSuccess) throw new Error(response.message);
 
         if (!ignore) {

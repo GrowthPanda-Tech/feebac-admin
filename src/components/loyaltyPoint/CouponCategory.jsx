@@ -36,8 +36,6 @@ export default function CouponCategory({
     }
   }, [selectedValueProp]);
 
-  console.log(options);
-
   return (
     <div className="mb-2 flex items-center gap-4">
       <label className="font-semibold ">Select Category for Coupon</label>

@@ -130,9 +130,16 @@ export default function CreateSurveyForm({
   const handleCount = async () => {
     setLoading(true);
 
+    //trim out null value keys
+    const filteredTarget = Object.fromEntries(
+      Object.entries(target).filter(([, value]) => value !== null),
+    );
+
     try {
       const response = await makeRequest(
-        `site-admin/get-target-profile-count?target=${JSON.stringify(target)}`,
+        `site-admin/get-target-profile-count?target=${JSON.stringify(
+          filteredTarget,
+        )}`,
       );
       if (!response.isSuccess) throw new Error(response.message);
       setCount((prev) => ({ ...prev, target: response.data }));

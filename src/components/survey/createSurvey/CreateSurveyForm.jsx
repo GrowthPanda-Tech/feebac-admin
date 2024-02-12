@@ -91,8 +91,6 @@ export default function CreateSurveyForm({
     featured_image: null,
   });
 
-  console.log(target);
-
   const paramObj = { country: target.country, state: target.state };
   const params = makeParams(paramObj);
   const route = `config/get-profile-key-value?${params}`;

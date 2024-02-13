@@ -18,6 +18,7 @@ import PageTitle from "@helperComps/PageTitle";
 import Button from "@helperComps/Button";
 import FilterSection from "./FilterSection";
 import TargetCountSection from "./TargetCountSection";
+import fileReader from "@/utils/fileReader";
 
 function Select({ name, value, onChange, children }) {
   return (
@@ -98,7 +99,7 @@ export default function CreateSurveyForm({
   const surveyImgRef = useRef(null);
   const featuredImgRef = useRef(null);
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const name = e.target.name;
     const value = e.target.value;
 
@@ -110,11 +111,18 @@ export default function CreateSurveyForm({
 
     if (name === "surveyImg" || name === "featured_image") {
       const file = e.target.files[0];
-      setSurveyData({ ...surveyData, [name]: file });
-      setImgPreview({
-        ...imgPreview,
-        [name]: `url(${URL.createObjectURL(file)})`,
-      });
+
+      try {
+        await fileReader(file);
+
+        setSurveyData({ ...surveyData, [name]: file });
+        setImgPreview({
+          ...imgPreview,
+          [name]: `url(${URL.createObjectURL(file)})`,
+        });
+      } catch (error) {
+        swal("error", error.message);
+      }
 
       return;
     }

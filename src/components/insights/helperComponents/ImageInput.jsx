@@ -1,4 +1,9 @@
+//hooks
 import { useRef } from "react";
+
+//utils
+import fileReader from "@/utils/fileReader";
+import swal from "@/utils/swal";
 
 export default function ImageInput({ image, setter }) {
   const imgRef = useRef(null);
@@ -9,9 +14,17 @@ export default function ImageInput({ image, setter }) {
     ? image.name
     : image.split("/").pop();
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const file = e.target.files[0];
-    setter((prev) => ({ ...prev, image: file }));
+
+    if (file) {
+      try {
+        await fileReader(file);
+        setter((prev) => ({ ...prev, image: file }));
+      } catch (error) {
+        swal("error", error.message);
+      }
+    }
   };
 
   return (

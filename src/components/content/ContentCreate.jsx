@@ -1,39 +1,49 @@
-import { useState, useContext } from "react";
+//hooks and stuff
+import { useState, useContext, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CategoryContext } from "../../contexts/CategoryContext";
+import { CategoryContext } from "@/contexts/CategoryContext";
 
-import swal from "../../utils/swal";
-import makeRequest from "../../utils/makeRequest";
-import defaultImgPreview from "../../assets/defaultImgPreview.png";
+//utils
+import swal from "@/utils/swal";
+import makeRequest from "@/utils/makeRequest";
+import fileReader from "@/utils/fileReader";
 
+//assets
+import defaultImgPreview from "@/assets/defaultImgPreview.png";
+
+//compoenents
 import ContentForm from "./ContentForm";
-import PageTitle from "../__helperComponents__/PageTitle";
+import PageTitle from "@helperComps/PageTitle";
 
 export default function ContentCreate({ surveyId }) {
   const { slug } = useParams();
-
   const { categories } = useContext(CategoryContext);
-  const initCat = categories[0]?.category_id ? categories[0].category_id : "";
 
+  const editorRef = useRef(null);
   const navigate = useNavigate();
+
+  // states
   const [articleData, setArticleData] = useState({
-    surveyId: surveyId ? surveyId : null,
-    category: initCat,
+    surveyId: surveyId || null,
+    category: categories[0]?.category_id || "",
   });
   const [imgPreview, setImgPreview] = useState(defaultImgPreview);
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     if (event.target.name === "articleImg") {
       const file = event.target.files[0];
-      setArticleData({ ...articleData, [event.target.name]: file });
 
       if (file) {
-        const reader = new FileReader();
-        reader.onload = () => setImgPreview(reader.result);
-        reader.readAsDataURL(file);
-      }
+        try {
+          const preview = await fileReader(file);
 
+          setImgPreview(preview);
+          setArticleData({ ...articleData, [event.target.name]: file });
+        } catch (error) {
+          swal("error", error.message);
+        }
+      }
       return;
     }
 
@@ -43,25 +53,27 @@ export default function ContentCreate({ surveyId }) {
     });
   };
 
-  const handleEditorChange = (content) =>
-    setArticleData({ ...articleData, article_content: content });
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append("articleTitle", articleData.article_title);
-    formData.append("articleDescription", articleData.article_description);
-    formData.append("articleContent", articleData.article_content);
-    formData.append("category", articleData.category);
-    formData.append("caption", articleData.caption);
-    articleData.articleImg &&
-      formData.append(
-        "articleImg",
-        articleData.articleImg,
-        articleData.articleImg.name,
-      );
+    const articleContent = editorRef.current.getContent();
+    const {
+      article_title,
+      article_description,
+      category,
+      caption,
+      articleImg,
+    } = articleData;
 
+    const formData = new FormData();
+
+    formData.append("articleTitle", article_title);
+    formData.append("articleDescription", article_description);
+    formData.append("articleContent", articleContent);
+    formData.append("category", category);
+    formData.append("caption", caption);
+
+    if (articleImg) formData.append("articleImg", articleImg);
     if (slug) formData.append("surveyId", slug);
 
     try {
@@ -95,7 +107,7 @@ export default function ContentCreate({ surveyId }) {
             <ContentForm
               articleData={articleData}
               handleChange={handleChange}
-              handleEditorChange={handleEditorChange}
+              editorRef={editorRef}
               isSaving={isSaving}
             />
             <button

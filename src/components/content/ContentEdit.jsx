@@ -1,35 +1,43 @@
-import { useState, useEffect } from "react";
+//hooks and stuff
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import makeRequest from "../../utils/makeRequest";
-import swal from "../../utils/swal";
+//utils
+import swal from "@/utils/swal";
+import makeRequest from "@/utils/makeRequest";
+import fileReader from "@/utils/fileReader";
 
-import defaultImgPreview from "../../assets/defaultImgPreview.png";
-
+//compoenents
 import ContentForm from "./ContentForm";
-import PageTitle from "../__helperComponents__/PageTitle";
+import PageTitle from "@helperComps/PageTitle";
 
 export default function ContentEdit() {
   const { slug } = useParams();
+
+  const editorRef = useRef(null);
   const navigate = useNavigate();
 
   const [articleData, setArticleData] = useState({});
-  const [imgPreview, setImgPreview] = useState(defaultImgPreview);
+  const [imgPreview, setImgPreview] = useState(articleData?.image_url);
   const [imgUpdate, setImgUpdate] = useState({
     isUpdate: false,
     articleImg: null,
   });
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     if (event.target.name === "articleImg") {
       const file = event.target.files[0];
-      setImgUpdate({ isUpdate: true, articleImg: file });
 
       if (file) {
-        const reader = new FileReader();
-        reader.onload = () => setImgPreview(reader.result);
-        reader.readAsDataURL(file);
+        try {
+          const preview = await fileReader(file);
+
+          setImgPreview(preview);
+          setImgUpdate({ isUpdate: true, articleImg: file });
+        } catch (error) {
+          swal("error", error.message);
+        }
       }
 
       return;
@@ -41,20 +49,26 @@ export default function ContentEdit() {
     });
   };
 
-  const handleEditorChange = (content) =>
-    setArticleData({ ...articleData, article_content: content });
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const articleContent = editorRef.current.getContent();
+    const {
+      article_id,
+      article_title,
+      article_description,
+      category,
+      caption,
+    } = articleData;
+
     const formData = new FormData();
 
-    formData.append("articleId", articleData.article_id);
-    formData.append("articleTitle", articleData.article_title);
-    formData.append("articleDesctiption", articleData.article_desctiption);
-    formData.append("articleContent", articleData.article_content);
-    formData.append("caption", articleData.caption);
-    formData.append("category", articleData.category);
+    formData.append("articleId", article_id);
+    formData.append("articleTitle", article_title);
+    formData.append("articleDescription", article_description);
+    formData.append("articleContent", articleContent);
+    formData.append("category", category);
+    formData.append("caption", caption);
     formData.append("isUpdateImage", imgUpdate.isUpdate);
 
     if (imgUpdate.isUpdate) {
@@ -96,16 +110,15 @@ export default function ContentEdit() {
           `site-admin/show-article-info?articleId=${slug}`,
         );
 
-        if (!response.isSuccess) {
-          throw new Error(response.message);
-        }
+        if (!response.isSuccess) throw new Error(response.message);
 
         if (!ignore) {
-          const antiAnwarObj = {
+          const flatResponse = {
             ...response.articleInfo,
             category: response.articleInfo.category.category_id,
           };
-          setArticleData(antiAnwarObj);
+
+          setArticleData(flatResponse);
         }
       } catch (error) {
         console.error(error.message);
@@ -117,7 +130,8 @@ export default function ContentEdit() {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [slug]);
+
   return (
     <div className="flex flex-col gap-8">
       <PageTitle name={"Edit Article"} />
@@ -126,7 +140,7 @@ export default function ContentEdit() {
           <ContentForm
             articleData={articleData}
             handleChange={handleChange}
-            handleEditorChange={handleEditorChange}
+            editorRef={editorRef}
             isSaving={isSaving}
           />
 
@@ -144,7 +158,7 @@ export default function ContentEdit() {
 
         <div className="flex h-60 items-center justify-center rounded-xl bg-white p-4 md:w-1/4">
           <img
-            src={articleData.image_url ? articleData.image_url : imgPreview}
+            src={imgPreview || articleData.image_url}
             className="max-h-full max-w-full"
           />
         </div>

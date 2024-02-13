@@ -9,7 +9,7 @@ export default function PageFactory({ data, setter }) {
       {pages.map(({ element: page, uuid }, idx) => (
         <div className="flex flex-col gap-3" key={uuid}>
           <span className="font-medium leading-snug text-accent">
-            Page {idx + 1}
+            {`Page ${idx + 1}`}
           </span>
 
           <ImgPicker bg={image} page={page} setter={setter} idx={idx} />

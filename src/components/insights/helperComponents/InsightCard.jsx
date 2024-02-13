@@ -1,12 +1,15 @@
+import { v4 as uuid4 } from "uuid";
+import clsx from "clsx";
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 //utils
 import makeRequest from "@/utils/makeRequest";
 import swal from "@/utils/swal";
 
 //components
+import { Link } from "react-router-dom";
 import { Tooltip } from "@material-tailwind/react";
 import ThreeDotMenu from "@utilComps/ThreeDotMenu";
 
@@ -86,9 +89,10 @@ export default function InsightCard({ data, cardIndex, setter }) {
     backgroundSize: "cover",
   };
 
-  const cardClasses = `flex h-80 w-40 flex-col rounded-2xl border border-black ${
-    !cardData.is_public ? "disabled-card" : ""
-  }`;
+  const cardClasses = clsx(
+    "flex h-80 w-40 flex-col rounded-2xl border border-black",
+    { "disabled-card": !cardData.is_public },
+  );
 
   return (
     <div className="relative">
@@ -115,7 +119,7 @@ export default function InsightCard({ data, cardIndex, setter }) {
         handleDelete={handleDelete}
         loading={loading}
       />
-      <div className={cardClasses} style={cardStyle}>
+      <div className={cardClasses} id={uuid4()} style={cardStyle}>
         <img className="my-auto p-4" src={cardData.pages[0]} />
       </div>
     </div>

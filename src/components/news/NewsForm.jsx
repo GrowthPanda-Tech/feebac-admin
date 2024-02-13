@@ -245,9 +245,10 @@ export default function NewsForm({ newsData }) {
           </div>
 
           <div
-            className={`flex flex-col gap-4 transition ${newsState.banner_type === "video" &&
+            className={`flex flex-col gap-4 transition ${
+              newsState.banner_type === "video" &&
               "cursor-not-allowed opacity-50"
-              }`}
+            }`}
           >
             <div className="flex h-60 items-center justify-center rounded-xl bg-white p-4 shadow-md">
               <img src={preview} className="max-h-full max-w-full" />

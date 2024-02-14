@@ -1,4 +1,9 @@
-export default function NewsDelPop({ delPop, setDelPop, handleDelete }) {
+export default function NewsDelPop({
+  delPop,
+  setDelPop,
+  handleDelete,
+  isDelete,
+}) {
   return (
     <div
       className={`update-user fixed left-0 top-0 flex h-[100vh] w-full items-center  justify-center ${
@@ -12,15 +17,20 @@ export default function NewsDelPop({ delPop, setDelPop, handleDelete }) {
         <h3>This action can&apos;t be reversed</h3>
         <div className="item-center flex justify-center gap-6 p-2">
           <button
-            className="btn-secondary"
+            className="btn-secondary disabled:cursor-not-allowed"
+            disabled={isDelete}
             onClick={() => {
               setDelPop(false);
             }}
           >
             Cancel
           </button>
-          <button className="btn-primary" onClick={handleDelete}>
-            Delete
+          <button
+            className="btn-primary disabled:btn-secondary disabled:cursor-not-allowed"
+            disabled={isDelete}
+            onClick={handleDelete}
+          >
+            {isDelete ? "Deleting..." : "Delete"}
           </button>
         </div>
       </div>

@@ -1,13 +1,17 @@
+//hooks & stuff
 import { useState, useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { CategoryContext } from "../../../contexts/CategoryContext";
+import { CategoryContext } from "@/contexts/CategoryContext";
 
-import dateConvert from "../../../utils/dateConvert";
-import dateToday from "../../../utils/dateToday";
-import makeRequest from "../../../utils/makeRequest";
-import swal from "../../../utils/swal";
+//utils
+import dateConvert from "@/utils/dateConvert";
+import dateToday from "@/utils/dateToday";
+import makeRequest from "@/utils/makeRequest";
+import fileReader from "@/utils/fileReader";
+import swal from "@/utils/swal";
 
-import upload from "../../../assets/upload.png";
+//assets
+import upload from "@/assets/upload.png";
 
 function Input({ type, min, value, name, onChange }) {
   return (
@@ -51,7 +55,7 @@ export default function EditSurveyForm({
   const surveyImgRef = useRef(null);
   const featuredImgRef = useRef(null);
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
 
     if (name === "start_date" || name === "end_date") {
@@ -65,11 +69,17 @@ export default function EditSurveyForm({
     if (name === "image_url" || name === "featured_image") {
       const file = e.target.files[0];
 
-      setUpdatedData({ ...updatedData, [name]: file });
-      setImgPreview({
-        ...imgPreview,
-        [name]: `url(${URL.createObjectURL(file)})`,
-      });
+      try {
+        await fileReader(file);
+
+        setUpdatedData({ ...updatedData, [name]: file });
+        setImgPreview({
+          ...imgPreview,
+          [name]: `url(${URL.createObjectURL(file)})`,
+        });
+      } catch (error) {
+        swal("error", error.message);
+      }
 
       return;
     }

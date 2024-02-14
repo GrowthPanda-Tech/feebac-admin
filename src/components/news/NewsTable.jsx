@@ -32,6 +32,7 @@ export default function NewsTable() {
   const { loading, fetchedData, setFetchedData, error } = useFetch(
     `news/get-news-admin?${params}`,
   );
+  const [isDelete, setIsDelete] = useState(false);
 
   //Rest of the states
   const [delInfo, setDelInfo] = useState({});
@@ -43,6 +44,8 @@ export default function NewsTable() {
   };
 
   const handleDelete = async () => {
+    setIsDelete(true);
+
     try {
       const response = await makeRequest(
         `news/delete-news?id=${delInfo.id}`,
@@ -50,7 +53,6 @@ export default function NewsTable() {
       );
 
       if (!response.isSuccess) throw new Error(response.message);
-
       swal("success", response.message);
 
       //update context
@@ -61,6 +63,8 @@ export default function NewsTable() {
       setDelPop(false);
     } catch (error) {
       swal("error", error.message);
+    } finally {
+      setIsDelete(false);
     }
   };
 
@@ -168,6 +172,7 @@ export default function NewsTable() {
         delPop={delPop}
         setDelPop={setDelPop}
         handleDelete={handleDelete}
+        isDelete={isDelete}
       />
     </div>
   );

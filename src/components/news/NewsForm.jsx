@@ -97,13 +97,13 @@ export default function NewsForm({ newsData }) {
     const file = e.target.files[0];
 
     if (file) {
-      setNewsState((prev) => ({ ...prev, banner: file }));
-
       try {
         const preview = await fileReader(file);
+
         setPreview(preview);
+        setNewsState((prev) => ({ ...prev, banner: file }));
       } catch (error) {
-        console.error(error);
+        swal("error", error.message);
       }
     }
   };
@@ -220,7 +220,7 @@ export default function NewsForm({ newsData }) {
               <span className="font-semibold">Description</span>
               <Counter
                 count={calculateLength("word", newsState.description)}
-                max={80}
+                max={60}
               />
             </div>
             <textarea
@@ -230,7 +230,7 @@ export default function NewsForm({ newsData }) {
               rows={10}
               disabled={loading}
               value={newsState.description}
-              onChange={(e) => handleChange(e, "word", 80)}
+              onChange={(e) => handleChange(e, "word", 60)}
               required
             />
           </label>
@@ -245,9 +245,10 @@ export default function NewsForm({ newsData }) {
           </div>
 
           <div
-            className={`flex flex-col gap-4 transition ${newsState.banner_type === "video" &&
+            className={`flex flex-col gap-4 transition ${
+              newsState.banner_type === "video" &&
               "cursor-not-allowed opacity-50"
-              }`}
+            }`}
           >
             <div className="flex h-60 items-center justify-center rounded-xl bg-white p-4 shadow-md">
               <img src={preview} className="max-h-full max-w-full" />

@@ -1,6 +1,7 @@
-import { Editor } from "@tinymce/tinymce-react";
 import { useContext } from "react";
-import { CategoryContext } from "../../contexts/CategoryContext";
+
+import { Editor } from "@tinymce/tinymce-react";
+import { CategoryContext } from "@/contexts/CategoryContext";
 
 const TINY_API_KEY = import.meta.env.VITE_TINY_API_KEY;
 
@@ -51,7 +52,7 @@ function Input({ label, name, value, onChange, disabled }) {
 export default function ContentForm({
   articleData,
   handleChange,
-  handleEditorChange,
+  editorRef,
   isSaving,
 }) {
   const { categories } = useContext(CategoryContext);
@@ -83,8 +84,8 @@ export default function ContentForm({
       </div>
       <Input
         label={"Description"}
-        name={"article_desctiption"}
-        value={articleData ? articleData.article_desctiption : ""}
+        name={"article_description"}
+        value={articleData ? articleData.article_description : ""}
         onChange={handleChange}
         disabled={isSaving}
       />
@@ -115,38 +116,13 @@ export default function ContentForm({
         <span className="mb-2 font-semibold"> Content </span>
         <Editor
           apiKey={TINY_API_KEY}
-          onEditorChange={handleEditorChange}
-          value={articleData.article_content ? articleData.article_content : ""}
+          initialValue={articleData.article_content || ""}
+          onInit={(_, editor) => (editorRef.current = editor)}
           init={{
-            selector: "textarea", // change this value according to your HTML
-            content_css: "tinymce-5",
-            height: 500,
-            menubar: false,
-            plugins: [
-              "advlist",
-              "autolink",
-              "lists",
-              "link",
-              "image",
-              "charmap",
-              "preview",
-              "anchor",
-              "searchreplace",
-              "visualblocks",
-              "code",
-              "fullscreen",
-              "insertdatetime",
-              "media",
-              "table",
-              "code",
-              "help",
-              "wordcount",
-            ],
+            plugins:
+              "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker",
             toolbar:
-              "undo redo | blocks | " +
-              "bold italic forecolor | image | alignleft aligncenter " +
-              "alignright alignjustify | bullist numlist outdent indent | " +
-              "removeformat | help",
+              "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
           }}
         />
       </label>

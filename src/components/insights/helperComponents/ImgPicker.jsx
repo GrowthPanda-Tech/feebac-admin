@@ -2,10 +2,11 @@ import { useState, useRef, useMemo } from "react";
 
 //utils
 import fileReader from "@/utils/fileReader";
+import swal from "@/utils/swal";
 
 //assets
-import uploadArrow from "@/assets/upload.png";
 import deleteIcon from "@/assets/delete.svg";
+import uploadIcon from "@/assets/upload.png";
 
 export default function ImgPicker({ bg, page, setter, idx }) {
   const imgRef = useRef(null);
@@ -13,15 +14,17 @@ export default function ImgPicker({ bg, page, setter, idx }) {
   const [preview, setPreview] = useState(page);
 
   const background = useMemo(() => {
-    if (typeof bg === "string") {
-      return `url(${bg})`;
-    }
+    switch (typeof bg) {
+      case "string":
+        return `url(${bg})`;
 
-    if (bg instanceof File) {
-      return `url(${URL.createObjectURL(bg)})`;
-    }
+      case "object":
+        if (bg instanceof File) return `url(${URL.createObjectURL(bg)})`;
+        break;
 
-    return "none";
+      default:
+        return "none";
+    }
   }, [bg]);
 
   const handleChange = async (e) => {
@@ -32,14 +35,13 @@ export default function ImgPicker({ bg, page, setter, idx }) {
         const preview = await fileReader(file);
 
         setPreview(preview);
-
         setter((prev) => {
-          const getter = { ...prev };
+          const getter = structuredClone(prev);
           getter.pages[idx].element = file;
           return getter;
         });
       } catch (error) {
-        console.error(error);
+        swal("error", error.message);
       }
     }
   };
@@ -60,41 +62,37 @@ export default function ImgPicker({ bg, page, setter, idx }) {
   };
 
   return (
-    <div
-      className={`relative flex h-80 w-40 flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-[#00000080] bg-white px-3 text-center text-sm`}
-      style={{ backgroundImage: background, backgroundSize: "cover" }}
-    >
-      {preview ? (
+    <div className="flex flex-col items-center gap-4">
+      <div
+        className="flex h-80 w-40 flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-[#00000080] bg-white px-3 text-center text-sm"
+        style={{ backgroundImage: background, backgroundSize: "cover" }}
+      >
         <img src={preview} />
-      ) : (
-        <>
-          <img src={uploadArrow} className="w-10" />
-          <span className="font-medium">Drag & Drop Image</span>
-          <span>
-            Or{" "}
-            <span
-              className="cursor-pointer text-secondary underline"
-              onClick={() => imgRef.current.click()}
-            >
-              browse file
-            </span>{" "}
-            on your computer
-          </span>
-          <input
-            onChange={(e) => handleChange(e)}
-            ref={imgRef}
-            type="file"
-            accept="image/png"
-            name="pages"
-            hidden
-          />
-        </>
-      )}
-      <img
-        src={deleteIcon}
-        className="absolute right-0 top-0 cursor-pointer p-4 text-lg"
-        onClick={handleDelete}
-      />
+      </div>
+      <div className="cursor-pointer">
+        <span
+          className="flex items-center gap-2 hover:underline"
+          onClick={() => imgRef.current.click()}
+        >
+          <img src={uploadIcon} className="w-4" />
+          <span>{`${preview ? "Change" : "Browse"} file`}</span>
+        </span>
+        <span
+          className="flex items-center gap-2 hover:underline"
+          onClick={handleDelete}
+        >
+          <img src={deleteIcon} className="w-4" />
+          <span>Delete Page</span>
+        </span>
+        <input
+          onChange={(e) => handleChange(e)}
+          ref={imgRef}
+          type="file"
+          accept="image/*"
+          name="pages"
+          hidden
+        />
+      </div>
     </div>
   );
 }

@@ -82,8 +82,9 @@ function Pagination({ itemsPerPage, page, setPage, totalItems, setter }) {
     return (
       <button
         key={pageNumber}
-        className={`rounded-md border px-4 py-2 ${pageNumber === page ? "pill-primary" : "pill-secondary"
-          }`}
+        className={`rounded-md border px-4 py-2 ${
+          pageNumber === page ? "pill-primary" : "pill-secondary"
+        }`}
         onClick={() => handlePageClick(pageNumber)}
       >
         {pageNumber}

@@ -2,9 +2,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
       "@helperComps/*": ["./src/components/__helperComponents__/*"],
-      "@utilComps/*": ["./src/components/__utilComponents__/*"]
+      "@utilComps/*": ["./src/components/__utilComponents__/*"],
+      "@/*": ["./src/*"],
     }
   },
   "exclude": ["node_modules", "dist"]

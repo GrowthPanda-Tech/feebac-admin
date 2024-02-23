@@ -1,44 +1,20 @@
 import { useState } from "react";
-import loginBanner from "../../assets/loginBanner.png";
 
-import makeRequest from "../../utils/makeRequest";
-import forbidChars from "../../utils/forbidChars";
+import makeRequest from "@/utils/makeRequest";
 
-import OtpField from "./OtpField";
+// assets
+import loginBanner from "@/assets/loginBanner.png";
+import eye_open from "@/assets/outline_eye_open.png";
+import eye_closed from "@/assets/outline_eye_closed.png";
+
+// components
 import { Spinner } from "@material-tailwind/react";
 
-function LargeBtn({ children }) {
-  return (
-    <button className="flex items-center justify-center rounded-3xl bg-primary py-6 text-xl font-semibold text-white transition hover:bg-accent">
-      {children}
-    </button>
-  );
-}
-
 export default function Login() {
-  const [inputData, setInputData] = useState({});
-  const [loginInfo, setLoginInfo] = useState({
-    mobile: "",
-    isAdminLogin: true,
-  });
+  const [loginInfo, setLoginInfo] = useState({ email: "", password: "" });
   const [alertInfo, setAlertInfo] = useState({ message: "", type: null });
-  const [otpStatus, setOtpStatus] = useState(true);
-
+  const [isShowPassword, setIsShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (event) => {
-    if (event.target.name === "mobile") {
-      setLoginInfo({
-        ...loginInfo,
-        [event.target.name]: event.target.value.slice(0, 10),
-      });
-    } else {
-      setInputData({
-        ...inputData,
-        [event.target.name]: event.target.value.slice(0, 1),
-      });
-    }
-  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -46,56 +22,18 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await makeRequest("auth/login", "POST", loginInfo);
+      const response = await makeRequest(
+        "site-admin/auth/login",
+        "POST",
+        loginInfo,
+      );
+      if (!response.isSuccess) throw new Error(response.message);
 
-      if (!response.isSuccess) {
-        setLoading(false);
-        throw new Error(response.message);
-      }
-
-      setAlertInfo({
-        ...alertInfo,
-        message: response.message,
-        type: "success",
-      });
-
-      setOtpStatus(false);
-    } catch (error) {
-      setAlertInfo({ message: error.message });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerify = async (e) => {
-    e.preventDefault();
-
-    let otp = "";
-
-    Object.values(inputData).forEach((element) => {
-      otp += element;
-    });
-
-    setLoading(true);
-
-    try {
-      const response = await makeRequest("auth/verify-otp", "POST", {
-        mobile: loginInfo.mobile,
-        otp: otp,
-      });
-
-      if (!response.isSuccess) {
-        throw new Error(response.message);
-      }
-
-      localStorage.setItem("authToken", response.authToken);
+      // set JWT in localstorage (lord forgive me)
+      localStorage.setItem("authToken", response.data.authToken);
       location.replace("/");
     } catch (error) {
-      setAlertInfo({
-        ...alertInfo,
-        message: error.message,
-        type: "error",
-      });
+      setAlertInfo({ type: "error", message: error.message });
     } finally {
       setLoading(false);
     }
@@ -110,53 +48,67 @@ export default function Login() {
       {/* Separation bar */}
       <div className="w-0.5 bg-black"></div>
 
-      <div className="flex w-1/2 flex-col justify-center gap-6 px-16">
+      <div className="flex w-1/2 flex-col justify-center gap-16 px-16">
         <div className="text-3xl font-bold text-secondary">Login as Admin</div>
 
         <form className="flex flex-col gap-6" onSubmit={handleLogin}>
-          <input
-            type="number"
-            name="mobile"
-            placeholder="Enter mobile number"
-            value={loginInfo.mobile}
-            onChange={(event) => handleChange(event, 10)}
-            onKeyDown={(event) => forbidChars(event)}
-            onPaste={(event) => forbidChars(event)}
-            disabled={!otpStatus}
-            className="login-input disabled:cursor-not-allowed disabled:opacity-50"
-            required
-          />
-          {otpStatus ? (
-            <LargeBtn>
-              {loading ? <Spinner className="h-7 w-7" /> : "Send OTP"}
-            </LargeBtn>
-          ) : null}
-        </form>
+          <div className="flex flex-col gap-6 text-xl">
+            <input
+              type="email"
+              name="email"
+              placeholder="Email ID"
+              value={loginInfo.email}
+              onChange={(e) =>
+                setLoginInfo((prev) => ({
+                  ...prev,
+                  email: e.target.value,
+                }))
+              }
+              className="rounded-3xl border-2 border-[#EA8552] px-11 py-6 disabled:cursor-not-allowed disabled:opacity-50"
+              required
+            />
 
-        <div>
-          {alertInfo.message}
-          {alertInfo.type == "success" && (
-            <i className="fa-solid fa-circle-check ml-2 text-green"></i>
-          )}
-          {alertInfo.type == "error" && (
-            <i className="fa-solid fa-circle-xmark ml-2 text-secondary"></i>
-          )}
-        </div>
+            <div className="relative flex items-center">
+              <input
+                type={!isShowPassword ? "password" : "text"}
+                name="password"
+                placeholder="Password"
+                value={loginInfo.password}
+                onChange={(e) =>
+                  setLoginInfo((prev) => ({
+                    ...prev,
+                    password: e.target.value,
+                  }))
+                }
+                className="w-full rounded-3xl border-2 border-[#EA8552] py-6 pl-11 pr-14 disabled:cursor-not-allowed disabled:opacity-50"
+                required
+              />
 
-        {!otpStatus && (
-          <form className="flex flex-col gap-6" onSubmit={handleVerify}>
-            <div className="flex gap-4">
-              <OtpField
-                quantity={6}
-                inputData={inputData}
-                inputOnChange={handleChange}
+              <img
+                src={!isShowPassword ? eye_open : eye_closed}
+                className="absolute right-6 top-1/2 w-8 -translate-y-1/2 transform cursor-pointer"
+                onClick={() => setIsShowPassword((prev) => !prev)}
               />
             </div>
-            <LargeBtn>
-              {loading ? <Spinner className="h-7 w-7" /> : "LOGIN"}
-            </LargeBtn>
-          </form>
-        )}
+          </div>
+
+          <div>
+            {alertInfo.message}
+            {alertInfo.type == "success" && (
+              <i className="fa-solid fa-circle-check ml-2 text-green"></i>
+            )}
+            {alertInfo.type == "error" && (
+              <i className="fa-solid fa-circle-xmark ml-2 text-secondary"></i>
+            )}
+          </div>
+          <button
+            type="submit"
+            className="mt-12 flex items-center justify-center rounded-3xl bg-secondary py-6 text-xl font-semibold text-white transition hover:bg-primary disabled:bg-light-grey disabled:text-grey"
+            disabled={loading}
+          >
+            {loading ? "Logging In..." : "Login"}
+          </button>
+        </form>
       </div>
     </div>
   );

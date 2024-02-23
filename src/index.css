@@ -13,10 +13,6 @@
     @apply bg-secondary;
   }
 
-  .login-input {
-    @apply rounded-3xl border-2 border-accent px-12 py-6 text-xl;
-  }
-
   .input-primary {
     @apply mt-2 rounded-xl border border-lighest-grey p-4 font-normal outline-2 outline-primary;
   }

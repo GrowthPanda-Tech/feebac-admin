@@ -5,34 +5,23 @@ export const HeaderMenu = ({ profilePic }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsOpen(false);
-    }
-  };
-
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
     };
-  }, []);
 
-  // const handleLinkClick = () => {
-  //   setIsOpen(false);
-  // };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <img
         src={profilePic}
         className="h-10 w-10 cursor-pointer rounded-full"
-        onClick={toggleDropdown}
+        onClick={() => setIsOpen((prev) => !prev)}
         alt="Profile"
       />
       {isOpen && (
@@ -47,7 +36,6 @@ export const HeaderMenu = ({ profilePic }) => {
               to={"profile-update"}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#EA525F] hover:text-white"
               role="menuitem"
-              // onClick={handleLinkClick} TODO : Future Bug Fixed
             >
               Update Profile
             </Link>
@@ -55,7 +43,6 @@ export const HeaderMenu = ({ profilePic }) => {
               to={"password-update"}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#EA525F] hover:text-white"
               role="menuitem"
-              // onClick={handleLinkClick}  TODO : Future Bug Fixed
             >
               Update Password
             </Link>

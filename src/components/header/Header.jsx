@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { HeaderMenu } from "./HeaderMenu";
 import { ProfileContext } from "@/contexts/ProfileContext";
 
 import defaultUser from "@/assets/defaultUser.png";
@@ -20,9 +20,7 @@ export default function Header() {
           </div>
           <div className="text-grey">Admin</div>
         </div>
-        <Link to={"profile-update"}>
-          <img src={profilePic} className="h-10 w-10 rounded-full" />
-        </Link>
+        <HeaderMenu profilePic={profilePic} />
       </div>
     </header>
   );

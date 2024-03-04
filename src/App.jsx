@@ -28,6 +28,7 @@ import ProfileUpdate from "@/components/profile/ProfileUpdate";
 import SurveyEdit from "@/components/survey/surveyEdit/SurveyEdit";
 import Loyalty from "@/components/loyaltyPoint/Loyalty";
 import RedeemInfo from "@/components/loyaltyPoint/RedeemInfo";
+import PasswordUpdate from "./components/profile/PasswordUpdate";
 
 export default function App() {
   if (!localStorage.getItem("authToken")) return <Login />;
@@ -37,6 +38,7 @@ export default function App() {
     { path: "user", element: <User /> },
     { path: "user/:slug", element: <UserInfo /> },
     { path: "profile-update", element: <ProfileUpdate /> },
+    { path: "password-update", element: <PasswordUpdate /> },
     { path: "survey", element: <Survey /> },
     { path: "survey/create", element: <CreateSurvey /> },
     { path: "survey/details/:slug", element: <SurveyInfo /> },

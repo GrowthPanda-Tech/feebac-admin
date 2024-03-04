@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import makeRequest from "../utils/makeRequest";
+import makeRequest from "@/utils/makeRequest";
 
 export default function useFetch(route) {
   const [loading, setLoading] = useState(false);
@@ -33,9 +33,7 @@ export default function useFetch(route) {
 
     fetchData();
 
-    return () => {
-      ignore = true;
-    };
+    return () => (ignore = true);
   }, [route]);
 
   return { loading, fetchedData, setFetchedData, error };

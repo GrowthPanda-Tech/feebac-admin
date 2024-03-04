@@ -13,14 +13,8 @@ export default function CategoryContextProvider({ children }) {
     async function getCategories() {
       try {
         const response = await makeRequest("site-admin/get-all-category");
-
-        if (!response.isSuccess) {
-          throw new Error(response.message);
-        }
-
-        if (!ignore) {
-          setCategories(response.data);
-        }
+        if (!response.isSuccess) throw new Error(response.message);
+        if (!ignore) setCategories(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -28,9 +22,7 @@ export default function CategoryContextProvider({ children }) {
 
     getCategories();
 
-    return () => {
-      ignore = false;
-    };
+    return () => (ignore = false);
   }, []);
 
   return (

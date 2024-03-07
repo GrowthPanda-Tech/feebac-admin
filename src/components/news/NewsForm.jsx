@@ -76,8 +76,14 @@ export default function NewsForm({ newsData }) {
 
     if (name === "category") value = parseInt(value);
 
-    if (type === "char" && value.length > max) return;
-    if (type === "word" && calculateLength("word", value) > max) return;
+    if (type === "char" && value.length > max) {
+      value = value.substring(0, max);
+    }
+
+    if (type === "word" && calculateLength("word", value) > max) {
+      const words = value.split(/\s+/);
+      value = words.slice(0, max).join(" ") + " ";
+    }
 
     setNewsState((prev) => ({ ...prev, [name]: value }));
   };

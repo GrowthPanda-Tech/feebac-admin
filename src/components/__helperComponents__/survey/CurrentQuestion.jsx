@@ -86,7 +86,7 @@ export default function CurrentQuestion(props) {
           //element not found
           if (updateIndex === -1) return [...currList, response.data];
 
-          currList[updateIndex] = response.question;
+          currList[updateIndex] = response.data;
           return currList;
         });
       } else {

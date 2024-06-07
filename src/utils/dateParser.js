@@ -10,7 +10,7 @@ export default function dateParser(dateStr) {
   const timeOpts = {
     hour: "numeric",
     minute: "numeric",
-    hour12: false,
+    hour12: true,
   };
 
   const dateFormatter = new Intl.DateTimeFormat("en-IN", dateOpts);

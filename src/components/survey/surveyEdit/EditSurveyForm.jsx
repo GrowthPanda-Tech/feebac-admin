@@ -51,8 +51,6 @@ export default function EditSurveyForm({
     featured_image: `url(${surveyData.featured_image})`,
   });
 
-  console.log(updatedData);
-
   const surveyImgRef = useRef(null);
   const featuredImgRef = useRef(null);
 
@@ -60,8 +58,9 @@ export default function EditSurveyForm({
     const { name, value } = e.target;
 
     if (name === "start_date" || name === "end_date") {
+      const formattedDate = `${value}:00.000`;
       setSurveyData({ ...surveyData, [name]: value });
-      setUpdatedData({ ...updatedData, [name]: value });
+      setUpdatedData({ ...updatedData, [name]: formattedDate });
       return;
     }
 

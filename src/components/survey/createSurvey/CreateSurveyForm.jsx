@@ -103,7 +103,8 @@ export default function CreateSurveyForm({
     const value = e.target.value;
 
     if (name === "startDate" || name === "endDate") {
-      setSurveyData({ ...surveyData, [name]: value });
+      const formattedDate = `${value}:00.000`;
+      setSurveyData({ ...surveyData, [name]: formattedDate });
       return;
     }
 

@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 
 import makeRequest from "../../utils/makeRequest";
-import dateConvert from "../../utils/dateConvert";
 import swal from "../../utils/swal";
 
 import LoadingSpinner from "../__helperComponents__/LoadingSpinner";
@@ -135,10 +134,6 @@ export default function RedeemInfo() {
           <div className="flex flex-col justify-center gap-4 rounded-xl bg-white p-8">
             <UserInfo name={"Id"} value={slug} />
             <UserInfo name={"User Id"} value={fetchedData?.data.requestBy} />
-            <UserInfo
-              name={"Request Date"}
-              value={dateConvert(fetchedData?.data.createdDate, "local")}
-            />
             <UserInfo name={"Status"} value={fetchedData?.data.status} />
             {fetchedData?.data.status === "approved" ? (
               <>

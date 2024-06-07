@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { CategoryContext } from "@/contexts/CategoryContext";
 
 //utils
-import dateConvert from "@/utils/dateConvert";
 import dateToday from "@/utils/dateToday";
 import makeRequest from "@/utils/makeRequest";
 import fileReader from "@/utils/fileReader";
@@ -52,6 +51,8 @@ export default function EditSurveyForm({
     featured_image: `url(${surveyData.featured_image})`,
   });
 
+  console.log(updatedData);
+
   const surveyImgRef = useRef(null);
   const featuredImgRef = useRef(null);
 
@@ -59,10 +60,8 @@ export default function EditSurveyForm({
     const { name, value } = e.target;
 
     if (name === "start_date" || name === "end_date") {
-      const dateUTC = dateConvert(value, "UTC");
       setSurveyData({ ...surveyData, [name]: value });
-      setUpdatedData({ ...updatedData, [name]: dateUTC });
-
+      setUpdatedData({ ...updatedData, [name]: value });
       return;
     }
 
@@ -149,7 +148,7 @@ export default function EditSurveyForm({
           <Input
             type={"datetime-local"}
             min={dateToday()}
-            value={dateConvert(surveyData.start_date, "localISO")}
+            value={trimDate(surveyData.start_date)}
             name={"start_date"}
             onChange={handleChange}
           />
@@ -161,7 +160,7 @@ export default function EditSurveyForm({
             min={dateToday()}
             name={"end_date"}
             onChange={handleChange}
-            value={dateConvert(surveyData.end_date, "localISO")}
+            value={trimDate(surveyData.end_date)}
           />
         </Label>
 
@@ -340,4 +339,11 @@ export default function EditSurveyForm({
       </div>
     </div>
   );
+}
+
+// helper function to format date
+function trimDate(dateStr) {
+  const [datePart, timePart] = dateStr.split("T");
+  const timePartTrimmed = timePart.slice(0, 5);
+  return `${datePart}T${timePartTrimmed}`;
 }

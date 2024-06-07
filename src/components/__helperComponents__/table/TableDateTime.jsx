@@ -1,7 +1,7 @@
-import dateConvert from "../../../utils/dateConvert";
+import dateParser from "../../../utils/dateParser";
 
 export default function TableDateTime({ date }) {
-  const local = dateConvert(date, "local");
+  const local = dateParser(date);
 
   const localDate = local.split(",")[0];
   const localTime = local.split(",")[1];

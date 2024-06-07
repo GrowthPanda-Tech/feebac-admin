@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import pencil_edit from "@/assets/pencil_edit.png";
 
 import makeRequest from "@/utils/makeRequest";
-import dateConvert from "@/utils/dateConvert";
+import dateParser from "@/utils/dateParser";
 import { surveyActions } from "@/utils/buttonHandlers";
 
 import LoadingSpinner from "@helperComps/LoadingSpinner";
@@ -21,15 +21,12 @@ export default function SurveyEdit() {
   const [questionList, setQuestionList] = useState([]);
   const [surveyEditPop, setSurveyEditPop] = useState(false);
   const [questionAddPop, setQuestionAddPop] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [actionloader, setActionloader] = useState({
     publish: false,
     schedule: false,
   });
   const [ahead, setAhead] = useState(false);
-
-  const [startDate, startTime] = dateConvert(surveyInfo?.start_date).split(",");
-  const [endDate, endTime] = dateConvert(surveyInfo?.end_date).split(",");
 
   useEffect(() => {
     function compareTime() {
@@ -74,6 +71,9 @@ export default function SurveyEdit() {
   }, [slug]);
 
   if (loading) return <LoadingSpinner />;
+
+  const [startDate, startTime] = dateParser(surveyInfo?.start_date).split(",");
+  const [endDate, endTime] = dateParser(surveyInfo?.end_date).split(",");
 
   return (
     <div className="flex flex-grow flex-col gap-10">

@@ -5,7 +5,6 @@ import { useFilterContext } from "@/contexts/FilterContext";
 //utils
 import swal from "@/utils/swal";
 import dateToday from "@/utils/dateToday";
-import dateConvert from "@/utils/dateConvert";
 import makeRequest from "@/utils/makeRequest";
 import forbidChars from "@/utils/forbidChars";
 import { makeParams } from "@/utils/makeParams";
@@ -104,8 +103,7 @@ export default function CreateSurveyForm({
     const value = e.target.value;
 
     if (name === "startDate" || name === "endDate") {
-      const formattedOutput = dateConvert(value, "UTC");
-      setSurveyData({ ...surveyData, [name]: formattedOutput });
+      setSurveyData({ ...surveyData, [name]: value });
       return;
     }
 

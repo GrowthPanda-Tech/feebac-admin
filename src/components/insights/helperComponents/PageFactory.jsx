@@ -1,7 +1,7 @@
 import AddPage from "./AddPage";
 import ImgPicker from "./ImgPicker";
 
-export default function PageFactory({ data, setter }) {
+export default function PageFactory({ data, setter, hashArr, hashSetter }) {
   const { image, pages } = data;
 
   return (
@@ -12,7 +12,14 @@ export default function PageFactory({ data, setter }) {
             {`Page ${idx + 1}`}
           </span>
 
-          <ImgPicker bg={image} page={page} setter={setter} idx={idx} />
+          <ImgPicker
+            bg={image}
+            page={page}
+            setter={setter}
+            idx={idx}
+            hashArr={hashArr}
+            hashSetter={hashSetter}
+          />
         </div>
       ))}
 

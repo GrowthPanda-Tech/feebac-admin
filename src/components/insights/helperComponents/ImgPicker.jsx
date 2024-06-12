@@ -7,8 +7,16 @@ import swal from "@/utils/swal";
 //assets
 import deleteIcon from "@/assets/delete.svg";
 import uploadIcon from "@/assets/upload.png";
+import { generateFileHash } from "@/utils/generateFileHash";
 
-export default function ImgPicker({ bg, page, setter, idx }) {
+export default function ImgPicker({
+  bg,
+  page,
+  setter,
+  idx,
+  hashArr,
+  hashSetter,
+}) {
   const imgRef = useRef(null);
 
   const [preview, setPreview] = useState(page);
@@ -33,8 +41,14 @@ export default function ImgPicker({ bg, page, setter, idx }) {
     if (file) {
       try {
         const preview = await fileReader(file);
+        const hash = await generateFileHash(file);
+
+        if (hashArr.length > 0 && hashArr.includes(hash)) {
+          throw new Error("Duplicate file detected");
+        }
 
         setPreview(preview);
+        hashSetter((prev) => [...prev, hash]);
         setter((prev) => {
           const getter = structuredClone(prev);
           getter.pages[idx].element = file;
@@ -47,6 +61,8 @@ export default function ImgPicker({ bg, page, setter, idx }) {
   };
 
   const handleDelete = () => {
+    hashSetter((prev) => prev.filter((_, index) => index !== idx));
+
     setter((prev) => {
       const deletedPage = prev.pages[idx].element;
       const updatedRemovePage = prev.remove_page

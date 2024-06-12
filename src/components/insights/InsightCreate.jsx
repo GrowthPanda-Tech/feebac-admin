@@ -10,10 +10,17 @@ export default function InsightCreate() {
     pages: [],
   });
 
+  const [imageHash, setImageHash] = useState([]);
+
   return (
     <div className="flex flex-col gap-8">
       <PageTitle name={"Create Case Study"} />
-      <InsightForm data={createData} setter={setCreateData} />
+      <InsightForm
+        data={createData}
+        setter={setCreateData}
+        hashArr={imageHash}
+        hashSetter={setImageHash}
+      />
     </div>
   );
 }

@@ -18,10 +18,17 @@ export default function InsightEdit() {
     remove_page: [],
   });
 
+  const [imageHash, setImageHash] = useState([]);
+
   return (
     <div className="flex flex-col gap-8">
       <PageTitle name={"Edit Case Study"} />
-      <InsightForm data={editData} setter={setEditData} />
+      <InsightForm
+        data={editData}
+        setter={setEditData}
+        hashArr={imageHash}
+        hashSetter={setImageHash}
+      />
     </div>
   );
 }

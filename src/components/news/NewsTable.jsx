@@ -123,7 +123,6 @@ export default function NewsTable() {
                           </Link>
                           <span className="tool-tip-span -right-[1.8rem] -top-12 bg-black ">
                             Visit Link
-                            <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
                           </span>
                         </div>
                       </div>
@@ -139,7 +138,6 @@ export default function NewsTable() {
                           </Link>
                           <span className="tool-tip-span -right-[0.5rem] -top-12 bg-black ">
                             Edit
-                            <span className="tooltip-arrow bottom-[-2px] left-[46%]"></span>
                           </span>
                         </div>
                       </div>
@@ -150,7 +148,6 @@ export default function NewsTable() {
                           </button>
                           <span className="tool-tip-span -right-[1.2rem] -top-12 bg-black ">
                             Delete
-                            <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
                           </span>
                         </div>
                       </div>

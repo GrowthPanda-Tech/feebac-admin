@@ -93,7 +93,6 @@ export default function User() {
                           </Link>
                           <span className="tool-tip-span -right-[2.8rem] -top-12 bg-black ">
                             See User Info
-                            <span className="tooltip-arrow bottom-[-2px] left-[41%]"></span>
                           </span>
                         </div>
                       </div>

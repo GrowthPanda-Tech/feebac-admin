@@ -128,10 +128,6 @@
     @apply blur-none brightness-[35%] contrast-[110%];
   }
 
-  .tooltip-arrow {
-    @apply absolute h-3 w-3 rotate-45 transform border-2 border-solid border-[transparent_transparent_black_transparent] border-black bg-black;
-  }
-
   .chip-red {
     @apply rounded-md border border-[#EA525F] bg-[#ea525f1f] px-4 text-[#EA525F];
   }

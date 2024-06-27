@@ -160,7 +160,6 @@ export default function RedeemRequest() {
                             </div>
                             <span className="tool-tip-span -right-[4.8rem] -top-12 bg-black ">
                               See Redeem Request
-                              <span className="tooltip-arrow bottom-[-2px] left-[45%]"></span>
                             </span>
                           </div>
                         </div>
@@ -181,7 +180,6 @@ export default function RedeemRequest() {
                             </Link>
                             <span className="tool-tip-span -right-[3.8rem] -top-12 bg-black ">
                               See Approved Info
-                              <span className="tooltip-arrow bottom-[-2px] left-[47%]"></span>
                             </span>
                           </div>
                         </div>

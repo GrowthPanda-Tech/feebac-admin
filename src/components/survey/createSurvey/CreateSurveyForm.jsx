@@ -137,9 +137,12 @@ export default function CreateSurveyForm({
   const handleCount = async () => {
     setLoading(true);
 
-    //trim out null value keys
+    //filter out null and empty array
     const filteredTarget = Object.fromEntries(
-      Object.entries(target).filter(([, value]) => value !== null),
+      Object.entries(target).filter(
+        ([, value]) =>
+          value !== null && (!Array.isArray(value) || value.length > 0),
+      ),
     );
 
     try {

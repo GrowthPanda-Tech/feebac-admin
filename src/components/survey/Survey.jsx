@@ -274,7 +274,6 @@ export default function Survey() {
                                 </Link>
                                 <span className="tool-tip-span -right-[3.4rem] -top-12 bg-black ">
                                   View Response
-                                  <span className="tooltip-arrow bottom-[-2px] left-[45%]" />
                                 </span>
                               </div>
                               <div className="tool-tip-div group">
@@ -291,7 +290,6 @@ export default function Survey() {
                                   {content
                                     ? "Article Linked"
                                     : "No article linked"}
-                                  <span className="tooltip-arrow bottom-[-2px] left-[30%]"></span>
                                 </span>
                               </div>
                             </div>
@@ -311,18 +309,22 @@ export default function Survey() {
                                   </button>
                                   <span className="tool-tip-span -right-[2.8rem] -top-12 bg-black ">
                                     {is_public ? "Make Private" : "Make Public"}
-                                    <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
                                   </span>
                                 </div>
                               </div>
                             ) : null}
                             {status === "expired" ? (
-                              <img
-                                src={survey_rerun}
-                                alt="survey_rerun"
-                                className="cursor-pointer"
-                                onClick={() => handleRerun(survey_id, index)}
-                              />
+                              <div className="tool-tip-div group">
+                                <img
+                                  src={survey_rerun}
+                                  alt="survey_rerun"
+                                  className="cursor-pointer"
+                                  onClick={() => handleRerun(survey_id, index)}
+                                />
+                                <span className="tool-tip-span -right-[2.8rem] -top-12 bg-black ">
+                                  Re-run Survey
+                                </span>
+                              </div>
                             ) : null}
                           </div>
                         ) : null}
@@ -335,7 +337,6 @@ export default function Survey() {
                                 </Link>
                                 <span className="tool-tip-span -right-[2.8rem] -top-12 bg-black ">
                                   Edit Survey
-                                  <span className="tooltip-arrow bottom-[-2px] left-[38%]"></span>
                                 </span>
                               </div>
                             </div>
@@ -355,7 +356,6 @@ export default function Survey() {
                                   </button>
                                   <span className="tool-tip-span  -right-[2.8rem] -top-12 bg-black ">
                                     {is_public ? "Make Private" : "Make Public"}
-                                    <span className="tooltip-arrow bottom-[-2px] left-[50%]"></span>
                                   </span>
                                 </div>
                               </div>

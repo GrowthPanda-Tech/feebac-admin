@@ -83,7 +83,7 @@ export default function ContentEdit() {
       setIsSaving(true);
 
       const response = await makeRequest(
-        "/site-admin/update-article",
+        "site-admin/update-article",
         "PUT",
         formData,
       );

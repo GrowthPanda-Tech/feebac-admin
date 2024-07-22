@@ -74,7 +74,7 @@ function AddCoupons({ setShowCouponAddPop, setCouponsData, setLoading }) {
     e.preventDefault();
 
     const response = await makeRequest(
-      "/loyalty/add-coupon",
+      "loyalty/add-coupon",
       "POST",
       addCouponData,
     );

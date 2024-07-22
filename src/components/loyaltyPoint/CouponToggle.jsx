@@ -10,7 +10,7 @@ function CouponToggle({ couponInfo, couponId, setCouponsData }) {
       id: couponId,
     };
     const response = await makeRequest(
-      "/loyalty/toggle-coupon-status",
+      "loyalty/toggle-coupon-status",
       "PATCH",
       body,
     );

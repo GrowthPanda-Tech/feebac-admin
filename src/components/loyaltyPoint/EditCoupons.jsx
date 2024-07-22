@@ -72,9 +72,7 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
 
   const getCouponDetails = async () => {
     try {
-      const response = await makeRequest(
-        `/loyalty/get-coupon-details?id=${id}`,
-      );
+      const response = await makeRequest(`loyalty/get-coupon-details?id=${id}`);
       if (response.isSuccess) {
         setEditCouponData(response.data);
         setEditCouponData({
@@ -109,7 +107,7 @@ function EditCoupons({ setEditPop, setCouponsData, id, setLoading }) {
     e.preventDefault();
 
     const response = await makeRequest(
-      "/loyalty/update-coupon",
+      "loyalty/update-coupon",
       "PUT",
       editCouponData,
     );
